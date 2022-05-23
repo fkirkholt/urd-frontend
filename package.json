@@ -1,0 +1,43 @@
+{
+  "name": "urd",
+  "version": "1.0.0",
+  "description": "URD er et system utviklet for å kunne vise fram, registrere og søke i data fra relasjonsdatabaser.",
+  "main": "test.js",
+  "scripts": {
+    "start": "webpack js/src/index.js js/bundle.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fkirkholt/urd-frontend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fkirkholt/urd-frontend/issues"
+  },
+  "homepage": "https://github.com/fkirkholt/urd-frontend#readme",
+  "dependencies": {
+    "jquery": "^3.5.1",
+    "jquery-ui": "^1.13.1",
+    "js-cookie": "^2.2.1",
+    "jsoneditor": "^9.5.6",
+    "lodash": "^4.17.21",
+    "mermaid": "^8.14.0",
+    "mithril": "^2.0.4",
+    "moment": "^2.29.3",
+    "mousetrap": "^1.6.5",
+    "npm": "^6.14.11",
+    "numeral": "^2.0.6",
+    "pikaday": "^1.8.2",
+    "showdown": "^1.9.1",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {
+    "webpack": "^2.7.0",
+    "webpack-cli": "^4.4.0"
+  },
+  "directories": {
+    "doc": "docs"
+  }
+}
