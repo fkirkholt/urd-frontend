@@ -1,6 +1,7 @@
 
 var datapanel = {
     view: function(vnode) {
+        // load table if route changes
         if (m.route.get() != grid.url && config.show_table) {
             grid.load();
             grid.url = m.route.get();
@@ -22,12 +23,6 @@ var datapanel = {
         } else {
             var selected_idx = ds.table.selection !== null ? ds.table.selection : 0;
         }
-
-        ds.table.invalid = false;
-        $('.right.content').hide();
-        if (ds.table.modus == 'search') return;
-        $('.left.nav').show();
-        $('.right.content').show();
 
         return config.show_table && !ds.table.records ? m('div', 'laster ...') : [
             m(contents),

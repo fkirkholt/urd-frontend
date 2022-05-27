@@ -608,11 +608,6 @@ var entry = {
         }
 
 
-
-        // if (!ds.table.invalid && config.autosave) table.save();
-
-        // return;
-
         if (config.autosave == false) {
             return;
         }
