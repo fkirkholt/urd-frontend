@@ -2,18 +2,19 @@ window.m = require('mithril');
 window.$ = require('jquery');
 window.ds = require('./datastore.js');
 
-var contents = require('./contents.js');
-var header = require('./header.js');
-var breadcrumb = require('./breadcrumb.js');
-var filterpanel = require('./filterpanel.js');
-var toolbar = require('./toolbar.js');
-var home = require('./home.js');
-var datapanel = require('./datapanel.js');
-var export_dialog = require('./export.js');
-var config = require('./config.js');
-var login = require('./login.js');
-var report = require('./report.js');
-var grid = require('./grid.js');
+var contents = require('./contents.js')
+var header = require('./header.js')
+var breadcrumb = require('./breadcrumb.js')
+var filterpanel = require('./filterpanel.js')
+var toolbar = require('./toolbar.js')
+var home = require('./home.js')
+var datapanel = require('./datapanel.js')
+var export_dialog = require('./export.js')
+var convert_dialog = require('./convert.js')
+var config = require('./config.js')
+var login = require('./login.js')
+var report = require('./report.js')
+var grid = require('./grid.js')
 
 var adresse_tilbakestilling = false;
 
@@ -67,6 +68,9 @@ m.mount($filterpanel[0], filterpanel);
 
 var $export = $('#export-dialog');
 m.mount($export[0], export_dialog);
+
+var $convert = $('#convert-dialog')
+m.mount($convert[0], convert_dialog)
 
 var $config = $('#preferences');
 m.mount($config[0], config);

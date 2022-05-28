@@ -515,7 +515,15 @@ var toolbar = {
                             $('div.curtain').show();
                             $('ul#actions').hide();
                         }
-                    }, '- Eksporter poster ...'),
+                    }, 'Eksporter poster ...'),
+                    m('li', {
+                        class: 'nowrap hover-blue',
+                        onclick: function() {
+                            $('#convert-dialog').show()
+                            $('div.curtain').show()
+                            $('ul#actions').hide()
+                        }
+                    }, 'Konverter felter ...'),
                     Object.keys(ds.table.actions).map(function(label, idx) {
                         var action = ds.table.actions[label];
 
