@@ -39,12 +39,7 @@ var datapanel = {
             }, [
                 m(toolbar),
                 m(grid),
-                m(pagination, {
-                    from: Number(ds.table.offset) + 1,
-                    to: grid.row.to(),
-                    count: ds.table.count_records,
-                    table: ds.table
-                })
+                m(pagination)
             ]),
 
             !config.show_table || !ds.table.records ? '' : ds.table.search ? m(search) : m(entry, {

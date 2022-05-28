@@ -45,6 +45,16 @@ var pagination = {
 
     },
 
+    to: function() {
+        var til_post;
+        if (ds.table.count_records < (parseInt(ds.table.offset) + parseInt(ds.table.limit))) {
+            til_post = ds.table.count_records;
+        } else {
+            til_post = parseInt(ds.table.offset) + parseInt(ds.table.limit);
+        }
+        return til_post;
+    },
+
     disabled: function(name, table) {
         if (name == 'first' || name == 'previous') {
             return table.offset == 0 ? true : false;
@@ -56,13 +66,15 @@ var pagination = {
     },
 
     view: function(vnode) {
-        var args = vnode.attrs;
-        var table = vnode.attrs.table;
-        var param = m.route.param();
+        var table = ds.table
+        var param = m.route.param()
+        var count = ds.table.count_records
+        var from = Number(ds.table.offset) + 1
+        var to = pagination.to()
         return m('div', [
             m('div[name="statuslinje"]', {
                 class: 'f6 fl mb1 mt1 ml1'
-            }, [args.count ? args.from + '-' + args.to + ' av ' + args.count : args.count]),
+            }, [count ? from + '-' + to + ' av ' + count : count]),
             m('div[name="navigation"]', {
                 class: 'fr ml2 mb1 mt1 mr1',
                 onclick: function(e) {

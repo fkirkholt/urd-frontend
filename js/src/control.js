@@ -388,6 +388,32 @@ var control = {
         return value;
     },
 
+    button: function(rec, action) {
+
+        // If disabled status for the action is based on an expression
+        // then we get the status from a column with same name as alias of action
+        if (action.name && rec.columns[action.name] !== undefined) {
+            action.disabled = rec.columns[action.name];
+        }
+
+        return action.disabled ? '' : m('i', {
+            class: 'fa fa-' + action.icon,
+            title: action.label,
+            onclick: function(e) {
+                var data = {};
+                if (action.communication === 'download') {
+                    data.base = rec.base_name;
+                    data.table = rec.table_name;
+                    data.primary_key = JSON.stringify(rec.primary_key);
+
+                    var address = (action.url[0] === '/') ? action.url.substr(1) : ds.base.schema + '/' + action.url;
+                    $.download(address, data, '_blank');
+                }
+                e.stopPropagation();
+            }
+        });
+    },
+
     draw: function(rec, colname, label) {
 
         if (typeof colname === 'object') {

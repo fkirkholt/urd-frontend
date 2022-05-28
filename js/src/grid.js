@@ -93,177 +93,10 @@ var grid = {
         }
     },
 
-    column: {
-        order: function(col) {
-            return ds.table.sort_fields[col]
-                ? ds.table.sort_fields[col]['order'].toLowerCase()
-                : '';
-        },
-        align: function(list, colname) {
-            var col = list.fields[colname];
-            if (($.inArray(col.datatype, ['integer', 'float', 'decimal']) != -1 &&
-                !col.foreign_key) && col.element !== 'input[type=checkbox]') {
-                    return 'right';
-                } else {
-                    return 'left';
-                }
-        }
-    },
-
-    row: {
-        to: function() {
-            var til_post;
-            if (ds.table.count_records < (parseInt(ds.table.offset) + parseInt(ds.table.limit))) {
-                til_post = ds.table.count_records;
-            } else {
-                til_post = parseInt(ds.table.offset) + parseInt(ds.table.limit);
-            }
-            return til_post;
-        }
-    },
-
-    cell: {
-        button: function(rec, action) {
-
-            // If disabled status for the action is based on an expression
-            // then we get the status from a column with same name as alias of action
-            if (action.name && rec.columns[action.name] !== undefined) {
-                action.disabled = rec.columns[action.name];
-            }
-
-            return action.disabled ? '' : m('i', {
-                class: 'fa fa-' + action.icon,
-                title: action.label,
-                onclick: function(e) {
-                    var data = {};
-                    if (action.communication === 'download') {
-                        data.base = rec.base_name;
-                        data.table = rec.table_name;
-                        data.primary_key = JSON.stringify(rec.primary_key);
-
-                        var address = (action.url[0] === '/') ? action.url.substr(1) : ds.base.schema + '/' + action.url;
-                        $.download(address, data, '_blank');
-                    }
-                    e.stopPropagation();
-                }
-            });
-        },
-
-
-        draw: function(list, rowidx, col, options) {
-            var max_len = -1
-            var n = 0
-            $.each(list.grid.columns, function(idx, colname) {
-                field = list.fields[colname]
-                if (colname.indexOf('actions.') > -1) {
-                    return
-                }
-                if (max_len != 0 && field.size > max_len) {
-                    if (field.size == max_len) {
-                        n++
-                    } else {
-                        n = 1
-                    }
-                    max_len = list.fields[colname].size
-                }
-                if (field.datatype == 'string' && field.size == 0) {
-                    // size 0 means no size limit
-                    if (max_len == 0) {
-                        n++
-                    } else {
-                       n = 1
-                    }
-                    max_len = 0
-                }
-            })
-            var percent_width = Math.floor(10/n) * 10
-            var rec = list.records[rowidx];
-            var field = list.fields[col];
-            if (field.hidden) return;
-            var value = rec.columns[col] == null ? ''
-                : options.compressed && options.grid ? rec.values[col]
-                : rec.columns[col]
-
-            value = control.display_value(field, value);
-            var expansion = col === list.expansion_column && options.grid;
-            var is_checkbox = field.element == 'input[type=checkbox]';
-
-            var icon = m('i', {
-                    class: [
-                        expansion ? 'fa fa-fw' : '',
-                        expansion && rec.expanded ? 'fa-angle-down' : expansion ? 'fa-angle-right' : '',
-                        expansion && rec.count_children ? 'black' : 'moon-gray',
-                    ].join(' '),
-                    style: col === list.expansion_column ? 'margin-left: ' + (rec.indent * 15) + 'px;' : '',
-                    onclick: function(e) {
-                        if (!rec.count_children) return;
-                        if (rec.expanded === undefined) {
-                            m.request({
-                                method: 'get',
-                                url: 'children',
-                                params: {
-                                    base: ds.base.name,
-                                    table: ds.table.name,
-                                    primary_key: JSON.stringify(rec.primary_key)
-                                }
-                            }).then(function(result) {
-                                var indent = rec.indent ? rec.indent + 1 : 1;
-                                records = result.data.map(function(record, idx) {
-                                    record.indent = indent;
-                                    record.path = rec.path ? rec.path + '.' + idx : rowidx + '.' + idx;
-                                    record.parent = rec.primary_key;
-                                    return record;
-                                })
-                                list.records.splice.apply(list.records, [rowidx+1, 0].concat(records));
-                            });
-                        } else if (rec.expanded === false) {
-                            list.records = list.records.map(function(record) {
-                                if (_isEqual(record.parent, rec.primary_key)) record.hidden = false;
-
-                                return record;
-                            });
-                        } else {
-                            var path = rec.path ? rec.path : rowidx;
-
-                            list.records = list.records.map(function(record) {
-
-                                // Check if record.path starts with path
-                                if(record.path && record.path.lastIndexOf(path, 0) === 0 && record.path !== path) {
-                                    record.hidden = true;
-                                    if (record.expanded) record.expanded = false;
-                                }
-
-                                return record;
-                            });
-                        }
-
-                        rec.expanded = !rec.expanded;
-                    }
-                });
-
-            return m('td', {
-                class: [
-                    field.datatype == 'string' && field.size == max_len ? 'w-' + percent_width : '',
-                    grid.column.align(list, col) === 'right' ? 'tr' : 'tl',
-                    options.compressed || (field.datatype !== 'string' && field.datatype !== 'binary' && field.element != 'select') || (value.length < 30) ? 'nowrap' : '',
-                    options.compressed && value.length > 30 ? 'pt0 pb0' : '',
-                    options.border ? 'bl b--light-gray' : '',
-                    ds.table.sort_fields[col] ? 'min-w3' : 'min-w2',
-                    'f6 pl1 pr1',
-                    rowidx < ds.table.records.length - 1 ? 'bb b--light-gray' : '',
-                ].join(' '),
-                title: options.compressed && value.length > 30 ? value : ''
-            }, [
-
-                !(value.length > 30 && options.compressed) ? [m('div', [icon, value])]
-                    : m('table', {
-                        class: 'w-100',
-                        style: 'table-layout:fixed; border-spacing:0px'
-                    }, [
-                        m('tr', m('td.pa0', {class: options.compressed ? 'truncate': 'overflow-wrap'}, [icon, value]))
-                    ]),
-            ]);
-        }
+    column_order: function(col) {
+        return ds.table.sort_fields[col]
+            ? ds.table.sort_fields[col]['order'].toLowerCase()
+            : '';
     },
 
     sort: function(col) {
@@ -491,80 +324,14 @@ var grid = {
         }
     },
 
-    draw_row: function(record, idx, indent) {
-
-        return m('tr', {
-            tabindex: 0,
-            onclick: function(e) {
-                e.redraw = false;
-                if (ds.table.type != 'view') {
-                    entry.select(ds.table, idx);
-                }
-            },
-            onkeydown: function(e) {
-                e.redraw = false;
-                if (e.keyCode == 38) { // arrow up
-                    $(this).prev('tr').focus();
-                    e.preventDefault();
-                } else if (e.keyCode == 40) { // arrow down
-                    $(this).next('tr').focus();
-                    e.preventDefault();
-                } else if (e.keyCode == 13) { // enter
-                    e.redraw = false;
-                    $(this).trigger('click');
-                    $('#main form:first').find(':input:enabled:not([readonly]):first').focus();
-                } else if (e.keyCode == 32) { // space
-                    $(this).trigger('click');
-                    e.preventDefault();
-                } else if (e.shiftKey && e.keyCode == 9) { // shift tab
-                    $(this).prev('tr').trigger('click');
-                } else if (e.keyCode == 9) { // tab
-                    $(this).next('tr').trigger('click');
-                }
-            },
-            class: [
-                (ds.table.selection == idx && ds.table.type != 'view') ? 'bg-light-blue focus' : '',
-                'bb b--light-gray lh-copy cursor-default',
-                record.class ? record.class : '',
-            ].join(' ')
-        }, [
-            m('td', {
-                align: 'right',
-                class: [
-                    'linjenr pa0 w1',
-                    idx < ds.table.records.length - 1 ? 'bb b--light-gray' : '',
-                ].join(' ')
-            }, [
-                config.autosave ? m.trust('&nbsp;') : m('i', {
-                    class: [
-                        record.delete  ? 'fa fa-trash'       :
-                            record.invalid ? 'fa fa-warning red' :
-                            record.new     ? 'fa fa-plus-circle' :
-                            record.dirty   ? 'fa fa-pencil light-gray' : ''
-                    ]
-                })
-            ]),
-            Object.keys(ds.table.grid.columns).map(function(label, colidx) {
-                var col = ds.table.grid.columns[label];
-
-                return grid.cell.draw(ds.table, idx, col, {compressed: config.compressed, border: true, grid: true});
-            }),
-            m('td', {class: 'w-100 bl bb b--light-gray pa0 f6 tr'}, [
-                ds.table.grid.actions.map(function(name, idx) {
-                    var action = ds.table.actions[name]
-                    action.name = name
-
-                    return grid.cell.button(record, action)
-                })
-            ])
-        ]);
-    },
-
     view: function(vnode) {
 
         if (ds.table.search) return;
 
-        return [m('table#urdgrid.tbl', {class: 'max-w10 bb bt b--moon-gray flex flex-column overflow-auto bg-white', style: 'border-spacing: 0;'}, [
+        return [m('table#urdgrid.tbl', {
+            class: 'max-w10 bb bt b--moon-gray flex flex-column overflow-auto bg-white',
+            style: 'border-spacing: 0;'
+        }, [
             m('thead', {class: 'db'}, [
                 m('tr', {class: 'cursor-default'}, [
                     m('th', {class: 'tl bb b--moon-gray bg-light-gray normal f6 pa0 w1'}, ''),
@@ -587,8 +354,8 @@ var grid = {
                             class: 'tl bl bb b--moon-gray bg-light-gray f6 pa1 pb0 nowrap truncate dib',
                             onclick: grid.sort.bind(grid, col)
                         }, m('div', {class: 'flex'}, [ m('span', {class: "flex-auto truncate", title: label}, label), [
-                            !grid.column.order(col) ? '' : m('i.fa', {
-                                class: 'pl1 di fa-angle-' + (grid.column.order(col) === 'asc' ? 'down' : 'up')
+                            !grid.column_order(col) ? '' : m('i.fa', {
+                                class: 'pl1 di fa-angle-' + (grid.column_order(col) === 'asc' ? 'down' : 'up')
                             })
                         ]]));
                     }),
@@ -601,7 +368,8 @@ var grid = {
                     record.table_name = ds.table.name;
                     if (record.dirty) entry.validate(record);
 
-                    return record.hidden ? '' : grid.draw_row(record, idx, 0);
+                    // return record.hidden ? '' : grid.draw_row(record, idx, 0);
+                    return record.hidden ? '' : m(row, {record: record, idx: idx})
                 })
             ]),
             (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
@@ -623,15 +391,14 @@ module.exports = grid;
 
 // Place here modules which requires grid (circular reference)
 var filterpanel = require('./filterpanel.js');
-
-
-
-var m = require('mithril');
-var $ = require('jquery');
-var moment = require('moment');
-var numeral = require('numeral');
-require('numeral/locales/no');
-var entry = require('./entry.js');
-var control = require('./control.js');
-var config = require('./config.js');
-var ds = require('./datastore.js');
+var m = require('mithril')
+var $ = require('jquery')
+var moment = require('moment')
+var numeral = require('numeral')
+require('numeral/locales/no')
+var entry = require('./entry.js')
+var control = require('./control.js')
+var row = require('./row.js')
+var cell = require('./cell.js')
+var config = require('./config.js')
+var ds = require('./datastore.js')

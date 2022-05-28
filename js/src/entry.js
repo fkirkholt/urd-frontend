@@ -814,14 +814,19 @@ var entry = {
                                         var action = rel.actions[action_name];
                                         action.alias = action_name;
 
-                                        return grid.cell.button(rec, action);
+                                        return control.button(rec, action);
                                     }
 
                                     var field = rel.fields[field_name];
 
                                     return field.defines_relation
                                         ? ''
-                                        : grid.cell.draw(rel, rowidx, field_name, {compressed: true});
+                                        : m(cell, {
+                                            list: rel,
+                                            rowidx: rowidx,
+                                            col: field_name,
+                                            compressed: true
+                                        })
                                 }),
                                 m('td', {class: 'bb b--light-gray'}, [
                                     !rec.open || record.readonly ? '' : m('i', {
