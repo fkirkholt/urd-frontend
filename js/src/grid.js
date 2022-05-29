@@ -329,12 +329,12 @@ var grid = {
         if (ds.table.search) return;
 
         return [m('table#urdgrid.tbl', {
-            class: 'max-w10 bb bt b--moon-gray flex flex-column overflow-auto bg-white',
-            style: 'border-spacing: 0;'
+            class: 'max-w10 bt b--moon-gray flex flex-column overflow-auto collapse',
+            style: 'background: #f9f9f9',
         }, [
             m('thead', {class: 'db'}, [
-                m('tr', {class: 'cursor-default'}, [
-                    m('th', {class: 'tl bb b--moon-gray bg-light-gray normal f6 pa0 w1'}, ''),
+                m('tr', {class: 'cursor-default bb b-moon-gray'}, [
+                    m('th', {class: 'tl br b--moon-gray bg-light-gray normal f6 pa0 w1'}, ''),
                     Object.keys(ds.table.grid.columns).map(function(label, idx) {
                         var col = ds.table.grid.columns[label];
 
@@ -351,7 +351,7 @@ var grid = {
                             : ds.table.fields[col].label ? ds.table.fields[col].label
                             : col;
                         return m('th', {
-                            class: 'tl bl bb b--moon-gray bg-light-gray f6 pa1 pb0 nowrap truncate dib',
+                            class: 'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap truncate dib',
                             onclick: grid.sort.bind(grid, col)
                         }, m('div', {class: 'flex'}, [ m('span', {class: "flex-auto truncate", title: label}, label), [
                             !grid.column_order(col) ? '' : m('i.fa', {
@@ -359,7 +359,7 @@ var grid = {
                             })
                         ]]));
                     }),
-                    m('th', {class: 'bl bb b--moon-gray bg-light-gray f6 pa0 w-100'})
+                    !ds.table.grid.actions.length ? '' : m('th', {class: 'br bb b--moon-gray bg-light-gray f6 pa0'})
                 ])
             ]),
             m('tbody', {class: 'db overflow-y-auto overflow-x-hidden'}, [

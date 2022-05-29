@@ -11,36 +11,10 @@ var cell = {
     },
 
     view: function (vnode) {
-        var max_len = -1
-        var n = 0
         var list = vnode.attrs.list
         var rowidx = vnode.attrs.rowidx
         var col = vnode.attrs.col
         var compressed = vnode.attrs.compressed
-        $.each(list.grid.columns, function(idx, colname) {
-            field = list.fields[colname]
-            if (colname.indexOf('actions.') > -1) {
-                return
-            }
-            if (max_len != 0 && field.size > max_len) {
-                if (field.size == max_len) {
-                    n++
-                } else {
-                    n = 1
-                }
-                max_len = list.fields[colname].size
-            }
-            if (field.datatype == 'string' && field.size == 0) {
-                // size 0 means no size limit
-                if (max_len == 0) {
-                    n++
-                } else {
-                    n = 1
-                }
-                max_len = 0
-            }
-        })
-        var percent_width = Math.floor(10/n) * 10
         var rec = list.records[rowidx]
         var field = list.fields[col]
         if (field.hidden) return
@@ -107,14 +81,12 @@ var cell = {
 
         return m('td', {
             class: [
-                field.datatype == 'string' && field.size == max_len ? 'w-' + percent_width : '',
                 cell.align(list, col) === 'right' ? 'tr' : 'tl',
                 compressed || (field.datatype !== 'string' && field.datatype !== 'binary' && field.element != 'select') || (value.length < 30) ? 'nowrap' : '',
                 compressed && value.length > 30 ? 'pt0 pb0' : '',
-                vnode.attrs.border ? 'bl b--light-gray' : '',
+                vnode.attrs.border ? 'br b--light-gray' : '',
                 ds.table.sort_fields[col] ? 'min-w3' : 'min-w2',
                 'f6 pl1 pr1',
-                rowidx < ds.table.records.length - 1 ? 'bb b--light-gray' : '',
             ].join(' '),
             title: compressed && value.length > 30 ? value : ''
         }, [
@@ -122,7 +94,7 @@ var cell = {
             !(value.length > 30 && compressed) ? [m('div', [icon, value])]
                 : m('table', {
                     class: 'w-100',
-                    style: 'table-layout:fixed; border-spacing:0px'
+                    style: 'table-layout:fixed;'
                 }, [
                     m('tr', m('td.pa0', {class: compressed ? 'truncate': 'overflow-wrap'}, [icon, value]))
                 ]),

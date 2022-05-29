@@ -33,16 +33,14 @@ row = {
             },
             class: [
                 (ds.table.selection == idx && ds.table.type != 'view') ? 'bg-light-blue focus' : '',
-                'bb b--light-gray lh-copy cursor-default',
+                'lh-copy cursor-default bg-white',
                 record.class ? record.class : '',
+                idx < ds.table.records.length - 1 ? 'bb b--light-gray' : 'bb b--moon-gray',
             ].join(' ')
         }, [
             m('td', {
                 align: 'right',
-                class: [
-                    'linjenr pa0 w1',
-                    idx < ds.table.records.length - 1 ? 'bb b--light-gray' : '',
-                ].join(' ')
+                class: 'linjenr pa0 w1 br b--light-gray',
             }, [
                 config.autosave ? m.trust('&nbsp;') : m('i', {
                     class: [
@@ -65,7 +63,7 @@ row = {
                     grid: true
                 })
             }),
-            m('td', {class: 'w-100 bl bb b--light-gray pa0 f6 tr'}, [
+            m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
                 ds.table.grid.actions.map(function(name, idx) {
                     var action = ds.table.actions[name]
                     action.name = name
