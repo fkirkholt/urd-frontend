@@ -1,10 +1,10 @@
-var search = {
+var Search = {
 
     oninit: function(vnode) {
-        var table = vnode.attrs.table ? vnode.attrs.table : ds.table;
-        config.filter = false;
+        var table = vnode.attrs.table ? vnode.attrs.table : ds.table
+        config.filter = false
         if (!config.edit_search) {
-            table.filters = {};
+            table.filters = {}
         }
     },
 
@@ -19,25 +19,25 @@ var search = {
                 limit: 0
             }
         }).then(function(result) {
-            field.relation = result.data;
-            field.relation.alias = field.name;
+            field.relation = result.data
+            field.relation.alias = field.name
             // mark the relation so that we don't expand more than one level deep
-            field.relation.sublevel = true;
+            field.relation.sublevel = true
 
             if (field.expanded) {
-                field.expanded = false;
-                return;
+                field.expanded = false
+                return
             } else if (field.foreign_key) {
-                field.expanded = true;
+                field.expanded = true
             }
-        });
+        })
     },
 
     draw_field: function(table, item, label) {
 
         // If this is a heading
         if (typeof item === 'object') {
-            label = item.label ? item.label : label;
+            label = item.label ? item.label : label
 
             return [
                 m('tr', [
@@ -45,9 +45,9 @@ var search = {
                         item.inline && item.expandable === false ? '' : m('i.fa', {
                             class: item.expanded ? 'fa-angle-down' : 'fa-angle-right',
                             onclick: function() {
-                                if (item.expandable === false) return;
+                                if (item.expandable === false) return
 
-                                item.expanded = !item.expanded;
+                                item.expanded = !item.expanded
                             }
                         })
                     ]),
@@ -58,7 +58,7 @@ var search = {
                         ].join(' '),
                         colspan: item.inline ? 1 : 3,
                         onclick: function() {
-                            item.expanded = !item.expanded;
+                            item.expanded = !item.expanded
                         }
                     }, label),
                 ]),
@@ -67,8 +67,8 @@ var search = {
                     m('td', {colspan: 3}, [
                         m('table', [
                             Object.keys(item.items).map(function(label, idx) {
-                                var col = item.items[label];
-                                return search.draw_field(table, col, label);
+                                var col = item.items[label]
+                                return Search.draw_field(table, col, label)
                             })
                         ]),
                     ])
@@ -78,13 +78,13 @@ var search = {
 
         // If this is a field
         if (typeof item === 'string' && item.indexOf('relations') == -1 && item.indexOf('actions.') == -1) {
-            var field = table.fields[item];
+            var field = table.fields[item]
 
-            label = isNaN(parseInt(label)) ? label: field.label;
-            var operators = filterpanel.get_operators(field);
+            label = isNaN(parseInt(label)) ? label: field.label
+            var operators = Filterpanel.get_operators(field)
 
-            if (table.alias === undefined) table.alias = table.name;
-            var filtername = table.alias == ds.table.name ? field.name : (table.alias || table.name) + '.' + field.name;
+            if (table.alias === undefined) table.alias = table.name
+            var filtername = table.alias == ds.table.name ? field.name : (table.alias || table.name) + '.' + field.name
 
             if (!ds.table.filters[filtername]) {
                 ds.table.filters[filtername] = {
@@ -96,8 +96,8 @@ var search = {
                 }
             }
 
-            var filter = ds.table.filters[filtername];
-            field.value = filter.value;
+            var filter = ds.table.filters[filtername]
+            field.value = filter.value
 
             return [
                 m('tr', [
@@ -105,7 +105,7 @@ var search = {
                         !field.foreign_key || !field.expandable || table.sublevel ? null : m('i.fa', {
                             class: !field.expanded ? 'fa-angle-right' : field.expandable ? 'fa-angle-down' : '',
                             onclick: function() {
-                                search.toggle_relation(field)
+                                Search.toggle_relation(field)
                             }
                         })
                     ]),
@@ -115,30 +115,30 @@ var search = {
                         title: label
                     }, label),
                     // operator
-                    m(select, {
+                    m(Select, {
                         class: 'mr2 w5',
                         options: operators,
                         required: true,
                         value: filter.operator,
                         width: '100px',
                         onchange: function(e) {
-                            filter.operator = e.target['value'];
+                            filter.operator = e.target['value']
 
                             // This code recreates the value field, to run oncreate again
                             // with attributes for the new field
-                            filter.disabled = true;
-                            m.redraw();
-                            filter.disabled = false;
+                            filter.disabled = true
+                            m.redraw()
+                            filter.disabled = false
                         }
                     }),
                     // input
                     m('td', {
                         class: 'max-w7 w-100'
-                    }, filterpanel.draw_value_field(field, filter))
+                    }, Filterpanel.draw_value_field(field, filter))
                 ]),
                 !field.expanded ? null : m('tr', [
                     m('td'),
-                    m('td', {colspan: 3}, m(search, {table: field.relation}))
+                    m('td', {colspan: 3}, m(Search, {table: field.relation}))
                 ])
             ]
         }
@@ -146,53 +146,53 @@ var search = {
 
     view: function(vnode) {
 
-        var table = vnode.attrs.table ? vnode.attrs.table : ds.table;
+        var table = vnode.attrs.table ? vnode.attrs.table : ds.table
 
         return [
             m('div', {class: 'ml3'}, [vnode.attrs.table ? '' : m('div',[
             m('input[type=button]', {
                 value: 'Utfør søk',
                 onclick: function () {
-                    filterpanel.search();
+                    Filterpanel.search()
                 }
             }),
             m('input[type=button]', {
                 value: 'Avbryt',
                 onclick: function () {
-                    ds.table.search = !ds.table.search;
-                    m.redraw();
+                    ds.table.search = !ds.table.search
+                    m.redraw()
                 }
             }),
             /*
             m('input[type=button]', {
                 value: 'Avansert',
                 onclick: function() {
-                    config.filter = true;
-                    ds.table.filters = filterpanel.parse_query(ds.table.query);
-                    filterpanel.expanded = true;
-                    config.search = false;
-                    ds.table.search = false;
+                    config.filter = true
+                    ds.table.filters = Filterpanel.parse_query(ds.table.query)
+                    Filterpanel.expanded = true
+                    config.search = false
+                    ds.table.search = false
                 }
             }),
             */
             m('input[type=button]', {
                 value: 'Nullstill skjema',
                 disabled: Object.keys(ds.table.filters).filter(function (label) {
-                    var filter = ds.table.filters[label];
-                    return filter.value || ['IS NULL', 'IS NOT NULL'].includes(filter.operator);
+                    var filter = ds.table.filters[label]
+                    return filter.value || ['IS NULL', 'IS NOT NULL'].includes(filter.operator)
                 }).length === 0,
                 onclick: function () {
-                    ds.table.filters = {};
+                    ds.table.filters = {}
                 }
             }),
             m('input[type=checkbox]', {
                 class: 'ml2',
                 checked: config.edit_search,
                 onchange: function () {
-                    config.edit_search = !config.edit_search;
-                    Cookies.set('edit_search', config.edit_search, { expires: 14 });
+                    config.edit_search = !config.edit_search
+                    Cookies.set('edit_search', config.edit_search, { expires: 14 })
                     if (config.edit_search) {
-                        ds.table.filters = filterpanel.parse_query(ds.table.query);
+                        ds.table.filters = Filterpanel.parse_query(ds.table.query)
                     }
                 }
             }), ' Vis aktive søkekriterier']),
@@ -204,22 +204,22 @@ var search = {
                 style: '-ms-overflow-style:-ms-autohiding-scrollbar'
             }, m('tbody', [
                 Object.keys(table.form.items).map(function(label, idx) {
-                    var item = table.form.items[label];
+                    var item = table.form.items[label]
 
                     if (typeof item !== 'object' && item.indexOf('.') === -1 && table.fields[item].defines_relaton) {
-                        return;
+                        return
                     }
 
-                    return search.draw_field(table, item, label);
+                    return Search.draw_field(table, item, label)
                 })
             ])))])
         ]
     }
 }
 
-module.exports = search;
+module.exports = Search
 
-var control = require('./control.js');
-var filterpanel = require('./filterpanel.js');
-var select = require('./select.js');
-var config = require('./config.js');
+var control = require('./control')
+var Filterpanel = require('./filterpanel')
+var Select = require('./select')
+var config = require('./config')

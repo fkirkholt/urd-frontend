@@ -1,5 +1,5 @@
 
-var grid = {
+var Grid = {
 
     url: '',
 
@@ -78,13 +78,13 @@ var grid = {
     },
 
     oncreate: function() {
-        grid.align_thead()
+        Grid.align_thead()
         // Adjust the width of thead cells when window resizes
-        $(window).resize(grid.align_thead);
+        $(window).resize(Grid.align_thead);
     },
 
     onupdate: function() {
-        grid.align_thead();
+        Grid.align_thead();
 
         // Ensure scrolling to bottom for new records
         if ((ds.table.selection + 1) == ds.table.records.length) {
@@ -226,7 +226,7 @@ var grid = {
         p.filter = m.route.param('query') ? decodeURI(m.route.param('query')) : null;
         p.condition = m.route.param('where') ? decodeURI(m.route.param('where')) : null;
         if (!p.filter) {
-            p.filter = grid.get_filter()
+            p.filter = Grid.get_filter()
         }
         p.sort = JSON.stringify(list.grid.sort_columns);
         p.limit = list.limit;
@@ -236,7 +236,7 @@ var grid = {
         } else {
             p.prim_key = null;
         }
-        grid.get(p);
+        Grid.get(p);
     },
 
     save: function() {
@@ -275,7 +275,7 @@ var grid = {
         }).then(function(result) {
             $('#message').show().html('Lagring vellykket').delay(2000).fadeOut('slow');
 
-            grid.update(ds.table, result.data);
+            Grid.update(ds.table, result.data);
         });
 
         return true;
@@ -301,7 +301,7 @@ var grid = {
         var search = params['query'] ? params['query'] : null;
         var condition = params['where'] ? params['where'] : null;
         if (!search) {
-            search = grid.get_filter()
+            search = Grid.get_filter()
         }
 
         filterpanel.advanced = condition ? true : false;
@@ -309,7 +309,7 @@ var grid = {
         if (ds.base.name != base_name) {
             ds.load_database(base_name)
         }
-        grid.get({ base: base_name, table: table_name, filter: search, condition: condition, limit: config.limit });
+        Grid.get({ base: base_name, table: table_name, filter: search, condition: condition, limit: config.limit });
 
 
         $('div[name="vis"]').removeClass('inactive');
@@ -319,8 +319,8 @@ var grid = {
     onremove: function(vnode) {
         // Make table load again after navigation
         // grid.url is used in datapanel.view to check if table should be loaded
-        if (m.route.get() !== grid.url) {
-            grid.url = '';
+        if (m.route.get() !== Grid.url) {
+            Grid.url = '';
         }
     },
 
@@ -352,10 +352,10 @@ var grid = {
                             : col;
                         return m('th', {
                             class: 'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap truncate dib',
-                            onclick: grid.sort.bind(grid, col)
+                            onclick: Grid.sort.bind(Grid, col)
                         }, m('div', {class: 'flex'}, [ m('span', {class: "flex-auto truncate", title: label}, label), [
-                            !grid.column_order(col) ? '' : m('i.fa', {
-                                class: 'pl1 di fa-angle-' + (grid.column_order(col) === 'asc' ? 'down' : 'up')
+                            !Grid.column_order(col) ? '' : m('i.fa', {
+                                class: 'pl1 di fa-angle-' + (Grid.column_order(col) === 'asc' ? 'down' : 'up')
                             })
                         ]]));
                     }),
@@ -387,7 +387,7 @@ var grid = {
     }
 };
 
-module.exports = grid;
+module.exports = Grid;
 
 // Place here modules which requires grid (circular reference)
 var filterpanel = require('./filterpanel.js');

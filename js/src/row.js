@@ -1,4 +1,50 @@
 row = {
+
+    expand: function(list, rec, rowidx) {
+        if (!rec.count_children) return
+        if (rec.expanded === undefined) {
+            m.request({
+                method: 'get',
+                url: 'children',
+                params: {
+                    base: ds.base.name,
+                    table: ds.table.name,
+                    primary_key: JSON.stringify(rec.primary_key)
+                }
+            }).then(function(result) {
+                var indent = rec.indent ? rec.indent + 1 : 1
+                records = result.data.map(function(record, idx) {
+                    record.indent = indent
+                    record.path = rec.path ? rec.path + '.' + idx : rowidx + '.' + idx
+                    record.parent = rec.primary_key
+                    return record
+                })
+                list.records.splice.apply(list.records, [rowidx+1, 0].concat(records))
+            })
+        } else if (rec.expanded === false) {
+            list.records = list.records.map(function(record) {
+                if (_isEqual(record.parent, rec.primary_key)) record.hidden = false
+
+                return record
+            })
+        } else {
+            var path = rec.path ? rec.path : rowidx
+
+            list.records = list.records.map(function(record) {
+
+                // Check if record.path starts with path
+                if(record.path && record.path.lastIndexOf(path, 0) === 0 && record.path !== path) {
+                    record.hidden = true
+                    if (record.expanded) record.expanded = false
+                }
+
+                return record
+            })
+        }
+
+        rec.expanded = !rec.expanded
+    },
+
     view: function(vnode) {
         var record = vnode.attrs.record
         var idx = vnode.attrs.idx
@@ -83,3 +129,4 @@ var config = require('./config.js')
 var cell = require('./cell.js')
 var control = require('./control.js')
 var entry = require('./entry.js')
+var _isEqual = require('lodash/isEqual');

@@ -5,7 +5,7 @@ var _find = require('lodash/find');
 require('jquery-ui/ui/widgets/autocomplete');
 
 
-var autocomplete = {
+var Autocomplete = {
 
     view: function(vnode) {
         // Avoid onchange to attach to input
@@ -172,4 +172,4 @@ var autocomplete = {
 
 };
 
-module.exports = autocomplete;
+module.exports = Autocomplete;

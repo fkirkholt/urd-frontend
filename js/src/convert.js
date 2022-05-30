@@ -1,8 +1,8 @@
 var m = require('mithril')
 var jQuery = require('jquery')
-var grid = require('./grid')
+var Grid = require('./grid')
 
-var convert_dialog = {
+var Convert_dialog = {
 
     convert: function() {
         var param = {}
@@ -14,7 +14,7 @@ var convert_dialog = {
         var fields = []
         $('input:checkbox[name=field]:checked').each(function() {
             fields.push($(this).val())
-        });
+        })
         param.fields = JSON.stringify(fields)
 
         m.request({
@@ -22,12 +22,12 @@ var convert_dialog = {
             params: param,
             url: '/convert'
         }).then(function(data) {
-            grid.update(ds.table, {})
+            Grid.update(ds.table, {})
         })
     },
 
     view: function() {
-        if (!ds.table || !ds.table.fields) return;
+        if (!ds.table || !ds.table.fields) return
         return m('div', [
             m('label', {
                 class: 'mr2'
@@ -35,7 +35,7 @@ var convert_dialog = {
             m('select', {
                 id: 'from_format',
                 onchange: function(event) {
-                    this.from = event.target.value;
+                    this.from = event.target.value
                 }.bind(this)
             }, [
                 m('option', {value: 'markdown'}, 'Markdown'),
@@ -75,17 +75,17 @@ var convert_dialog = {
                     value: 'OK',
                     class: 'fr',
                     onclick: function() {
-                        this.convert();
-                        $('div.curtain').hide();
-                        $('#convert-dialog').hide();
+                        this.convert()
+                        $('div.curtain').hide()
+                        $('#convert-dialog').hide()
                     }.bind(this)
                 }),
                 m('input[type=button]', {
                     value: 'Avbryt',
                     class: 'fr',
                     onclick: function() {
-                        $('div.curtain').hide();
-                        $('#convert-dialog').hide();
+                        $('div.curtain').hide()
+                        $('#convert-dialog').hide()
                     }
                 }),
             ])
@@ -94,4 +94,4 @@ var convert_dialog = {
 
 }
 
-module.exports = convert_dialog
+module.exports = Convert_dialog

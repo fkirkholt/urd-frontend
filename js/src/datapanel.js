@@ -2,31 +2,31 @@
 var datapanel = {
     view: function(vnode) {
         // load table if route changes
-        if (m.route.get() != grid.url && config.show_table) {
-            grid.load();
-            grid.url = m.route.get();
+        if (m.route.get() != Grid.url && config.show_table) {
+            Grid.load()
+            Grid.url = m.route.get()
         }
 
-        if (!ds.table) return;
+        if (!ds.table) return
 
-        ds.type = 'table';
+        ds.type = 'table'
 
         if (!config.show_table) {
-            var table_name = m.route.param('table');
+            var table_name = m.route.param('table')
             if (ds.table && ds.table.name !== table_name) {
-                ds.table = ds.base.tables[table_name];
+                ds.table = ds.base.tables[table_name]
             }
 
-            if (diagram.main_table !== table_name) {
-                diagram.draw(ds.base.tables[table_name]);
+            if (Diagram.main_table !== table_name) {
+                Diagram.draw(ds.base.tables[table_name])
             }
         } else {
-            var selected_idx = ds.table.selection !== null ? ds.table.selection : 0;
+            var selected_idx = ds.table.selection !== null ? ds.table.selection : 0
         }
 
         return config.show_table && !ds.table.records ? m('div', 'laster ...') : [
-            m(contents),
-            config.show_table ? '' : m(diagram),
+            m(Contents),
+            config.show_table ? '' : m(Diagram),
             !config.show_table || ds.table.search || ds.table.edit
             ? ''
             : m('div#gridpanel', {
@@ -37,26 +37,26 @@ var datapanel = {
                     ds.table.hide ? 'display: none' : ''
                 ].join(';')
             }, [
-                m(toolbar),
-                m(grid),
-                m(pagination)
+                m(Toolbar),
+                m(Grid),
+                m(Pagination)
             ]),
 
-            !config.show_table || !ds.table.records ? '' : ds.table.search ? m(search) : m(entry, {
+            !config.show_table || !ds.table.records ? '' : ds.table.search ? m(Search) : m(Entry, {
                 record: ds.table.records[selected_idx]
             }),
             !config.show_table ? '' : m('div', {style: 'flex: 1'}),
-        ];
+        ]
     }
 }
 
-module.exports = datapanel;
+module.exports = datapanel
 
-var pagination = require('./pagination.js');
-var toolbar = require('./toolbar.js');
-var contents = require('./contents.js');
-var grid = require('./grid.js');
-var entry = require('./entry.js');
-var search = require('./search.js');
-var config = require('./config.js');
-var diagram = require('./diagram.js');
+var Pagination = require('./pagination')
+var Toolbar = require('./toolbar')
+var Contents = require('./contents')
+var Grid = require('./grid')
+var Entry = require('./entry')
+var Search = require('./search')
+var config = require('./config')
+var Diagram = require('./diagram')

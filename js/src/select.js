@@ -1,12 +1,10 @@
-var m = require('mithril');
-var _find = require('lodash/find');
+var m = require('mithril')
+var _find = require('lodash/find')
 
-var select = {
-
-
+var Select = {
 
     view: function(vnode) {
-        var value = vnode.attrs.value;
+        var value = vnode.attrs.value
 
         return m('select', {
             id: vnode.attrs.id,
@@ -37,7 +35,7 @@ var select = {
                                 class: 'black',
                                 "data-coltext": option.coltext,
                                 selected: option.value === value
-                            }, option.label);
+                            }, option.label)
                         })
                     ])
                 })
@@ -47,10 +45,10 @@ var select = {
                         class: 'black',
                         "data-coltext": option.coltext,
                         selected: option.value == value
-                    }, option.label);
+                    }, option.label)
                 })
-        ]);
+        ])
     }
 }
 
-module.exports = select;
+module.exports = Select
