@@ -42,7 +42,7 @@ var datapanel = {
                 m(Pagination)
             ]),
 
-            !config.show_table || !ds.table.records ? '' : ds.table.search ? m(Search) : m(Entry, {
+            !config.show_table || !ds.table.records ? '' : ds.table.search ? m(Search) : m(Record, {
                 record: ds.table.records[selected_idx]
             }),
             !config.show_table ? '' : m('div', {style: 'flex: 1'}),
@@ -56,7 +56,7 @@ var Pagination = require('./pagination')
 var Toolbar = require('./toolbar')
 var Contents = require('./contents')
 var Grid = require('./grid')
-var Entry = require('./entry')
+var Record = require('./record')
 var Search = require('./search')
 var config = require('./config')
 var Diagram = require('./diagram')

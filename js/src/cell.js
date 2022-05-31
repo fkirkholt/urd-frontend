@@ -34,7 +34,7 @@ var Cell = {
             ].join(' '),
             style: 'margin-left: ' + (rec.indent * 15) + 'px;',
             onclick: function() {
-                row.expand(list, rec, rowidx)
+                Row.expand(list, rec, rowidx)
             }
         })
 
@@ -69,6 +69,6 @@ var Cell = {
 
 module.exports = Cell
 
-var ds = require('./datastore.js')
-var control = require('./control.js')
+var ds = require('./datastore')
 var Field = require('./field')
+var Row = require('./row')

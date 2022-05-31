@@ -1,6 +1,6 @@
-var m = require('mithril');
-var $ = require('jquery');
-var Cookies = require('js-cookie');
+var m = require('mithril')
+var $ = require('jquery')
+var Cookies = require('js-cookie')
 
 var config = {
 
@@ -21,17 +21,17 @@ var config = {
     show_table: true,
 
     save: function() {
-        var autosave = $('#preferences [name="autosave"]').prop('checked');
+        var autosave = $('#preferences [name="autosave"]').prop('checked')
         if (autosave) {
-            grid.save();
+            Grid.save()
         }
-        var limit = $('#limit').val();
-        var search = $('#preferences [name="std_search"]').val();
-        var select = $('#preferences [name="select"]').val();
-        var theme = $('#preferences [name="theme"]').val();
-        var relation_view = $('#preferences [name="relation_view"]').val();
-        var button_view = $('#preferences [name="button_view"]').val();
-        var expand_headings = $('#preferences [name="expand_headings"]').prop('checked');
+        var limit = $('#limit').val()
+        var search = $('#preferences [name="std_search"]').val()
+        var select = $('#preferences [name="select"]').val()
+        var theme = $('#preferences [name="theme"]').val()
+        var relation_view = $('#preferences [name="relation_view"]').val()
+        var button_view = $('#preferences [name="button_view"]').val()
+        var expand_headings = $('#preferences [name="expand_headings"]').prop('checked')
         if (
             limit != config.limit
             || select != config.select
@@ -42,27 +42,27 @@ var config = {
             || button_view != config.button_view
             || expand_headings != config.expand_headings
         ) {
-            config.limit = limit ? limit : config.limit;
-            config.select = select;
-            config.autosave = autosave;
-            config.std_search = search;
-            config.theme = theme;
-            config.relation_view = relation_view;
-            config.button_view = button_view;
-            config.expand_headings = expand_headings;
+            config.limit = limit ? limit : config.limit
+            config.select = select
+            config.autosave = autosave
+            config.std_search = search
+            config.theme = theme
+            config.relation_view = relation_view
+            config.button_view = button_view
+            config.expand_headings = expand_headings
             // TODO: Update grid
         }
-        $('#preferences').hide();
-        $('div.curtain').hide();
-        Cookies.set('limit', parseInt(limit), {expires:14});
-        Cookies.set('select', select, {expires:14});
-        Cookies.set('autosave', autosave, {expires:14});
-        Cookies.set('std_search', search, {expires:14});
-        Cookies.set('theme', theme, {expires:14});
-        Cookies.set('relation_view', relation_view, {expires:14});
-        Cookies.set('button_view', button_view, {expires:14});
-        Cookies.set('expand_headings', expand_headings, {expires:14});
-        m.redraw();
+        $('#preferences').hide()
+        $('div.curtain').hide()
+        Cookies.set('limit', parseInt(limit), {expires:14})
+        Cookies.set('select', select, {expires:14})
+        Cookies.set('autosave', autosave, {expires:14})
+        Cookies.set('std_search', search, {expires:14})
+        Cookies.set('theme', theme, {expires:14})
+        Cookies.set('relation_view', relation_view, {expires:14})
+        Cookies.set('button_view', button_view, {expires:14})
+        Cookies.set('expand_headings', expand_headings, {expires:14})
+        m.redraw()
     },
 
     view: function() {
@@ -145,9 +145,9 @@ var config = {
                     class: 'fr',
                     value: 'OK',
                     onclick: function() {
-                        config.save();
-                        $('#preferences').hide();
-                        $('div.curtain').hide();
+                        config.save()
+                        $('#preferences').hide()
+                        $('div.curtain').hide()
 
                     }
                 }),
@@ -155,8 +155,8 @@ var config = {
                     class: 'fr',
                     value: 'Avbryt',
                     onclick: function() {
-                        $('#preferences').hide();
-                        $('div.curtain').hide();
+                        $('#preferences').hide()
+                        $('div.curtain').hide()
                     }
                 })
             ])
@@ -164,7 +164,7 @@ var config = {
     }
 }
 
-module.exports = config;
+module.exports = config
 
 // Placed here to avoid problems with circular inclusion
-var grid = require('./grid.js');
+var Grid = require('./grid')

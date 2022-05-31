@@ -40,7 +40,7 @@ var Pagination = {
             ds.table.offset = result.data.offset
             m.redraw(true)
             ds.table.selection = selection
-            Entry.select(ds.table, 0, true)
+            Record.select(ds.table, 0, true)
         })
 
     },
@@ -121,4 +121,4 @@ module.exports = Pagination
 var m = require('mithril')
 var ds = require('./datastore')
 var config = require('./config')
-var Entry = require('./entry')
+var Record = require('./record')

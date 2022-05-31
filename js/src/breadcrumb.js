@@ -2,8 +2,8 @@
 module.exports = {
 
     get_items: function() {
-        var items = [];
-        var param = m.route.param();
+        var items = []
+        var param = m.route.param()
 
         items.push({
             icon: "icon-crosshairs",
@@ -17,7 +17,7 @@ module.exports = {
                 icon: "fa-database",
                 text: ds.base.label,
                 addr: ds.base.name
-            });
+            })
         }
 
         if (param.table && ds.table) {
@@ -29,8 +29,8 @@ module.exports = {
         } else if (param.report) {
             // TODO: ds.base.reports sometimes undefined - unknown why
             if (ds.base.reports) {
-                var report_name = m.route.param('report');
-                var label = ds.base.reports[report_name].label;
+                var report_name = m.route.param('report')
+                var label = ds.base.reports[report_name].label
                 items.push({
                     icon: "fa-file-text-o",
                     text: label,
@@ -39,14 +39,14 @@ module.exports = {
             }
         }
 
-        return items;
+        return items
 
     },
 
     view: function(vnode) {
-        var param = m.route.param();
-        if (!param) return;
-        var sti = this.get_items();
+        var param = m.route.param()
+        if (!param) return
+        var sti = this.get_items()
 
         return m('div', {class: 'fl'}, [
             sti.map(function(item, idx) {
@@ -66,13 +66,12 @@ module.exports = {
                         ds.branch,
                     ]),
                     idx == sti.length - 1 ? '' : m('i', {class: 'fa fa-angle-right f3 fw3 ml2 mr2'})
-                ];
+                ]
             }),
-        ]);
+        ])
     }
 }
 
-var m = require('mithril');
-var ds = require('./datastore.js');
-var config = require('./config.js');
-var filterpanel = require('./filterpanel.js');
+var m = require('mithril')
+var ds = require('./datastore')
+var config = require('./config')

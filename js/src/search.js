@@ -219,7 +219,6 @@ var Search = {
 
 module.exports = Search
 
-var control = require('./control')
 var Filterpanel = require('./filterpanel')
 var Select = require('./select')
 var config = require('./config')

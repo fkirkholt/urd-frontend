@@ -1,27 +1,90 @@
 var Input = {
 
+    /**
+     * Get conditions to collect data from a foreign key field
+     *
+     * param {Object} rec - record
+     * param {Object} field - foreign key field
+     */
+    get_condition: function(rec, field) {
+
+        var kandidatbetingelser = []
+        var filter
+
+        var keys = []
+        Object.keys(rec.table.foreign_keys).map(function(label) {
+            key = rec.table.foreign_keys[label]
+
+            if (key.foreign.indexOf(field.name) > 0) {
+                last_fk_col = key.foreign.slice(-1)
+                if (last_fk_col != field.name && rec.fields[last_fk_col].nullable == true) {
+                    return
+                }
+                key.foreign_idx = $.inArray(field.name, key.foreign)
+                keys.push(key)
+            }
+        })
+
+        $.each(keys, function(idx, key) {
+
+            if (key.filter) {
+                filter = key.filter
+                $.each(rec.fields, function(name, field2) {
+                    var re = new RegExp('\\b'+field2.table+'\\.'+field2.name+'\\b', 'g')
+                    filter = filter.replace(re, "'"+field2.value+"'")
+                    re = new RegExp('\!= null\\b', 'g')
+                    filter = filter.replace(re, 'is not null')
+                    re = new RegExp('\= null\\b', 'g')
+                    filter = filter.replace(re, 'is null')
+                })
+                kandidatbetingelser.push(filter)
+            }
+
+            if (key.foreign && key.foreign.length > 1) {
+                $.each(key.foreign, function(i, column) {
+                    if (column === field.name) return
+                    var condition
+                    if (rec.fields[column].value != null && column in rec.fields) {
+                        var col = field.foreign_key.primary.slice(-1)[0]
+
+                        if (key.table == field.foreign_key.table) {
+                            condition = key.primary[i] + " = '" + rec.fields[column].value + "'"
+                        } else {
+                            condition = col + ' in (select ' + key.primary[key.foreign_idx]
+                            condition += ' from ' + key.table + ' where ' + key.foreign[i]
+                            condition += " = '" + rec.fields[column].value + "')"
+                        }
+                        kandidatbetingelser.push(condition)
+                    }
+                })
+            }
+        })
+
+        return kandidatbetingelser.join(' AND ')
+    },
+
     validate: function(value, field) {
-        field.invalid = false;
-        field.errormsg = '';
-        if (field.editable == false) return;
+        field.invalid = false
+        field.errormsg = ''
+        if (field.editable == false) return
         if ((field.nullable || field.extra) && (value == '' || value == null)) {
-            field.invalid = false;
+            field.invalid = false
         } else if (!field.nullable && (value === '' || value === null) && !field.source) {
-            field.errormsg = 'Feltet kan ikke stå tomt';
-            field.invalid = true;
+            field.errormsg = 'Feltet kan ikke stå tomt'
+            field.invalid = true
         } else if (field.datatype == 'integer' && field.format === 'byte') {
-            field.errormsg = 'Må ha enhet (B, kB, MB, GB) til slutt';
-            field.invalid = false;
+            field.errormsg = 'Må ha enhet (B, kB, MB, GB) til slutt'
+            field.invalid = false
         } else if (field.datatype == 'integer') {
-            var pattern = new RegExp("^-?[0-9]*$");
+            var pattern = new RegExp("^-?[0-9]*$")
             if (!pattern.test(value)) {
-                field.errormsg = 'Feltet skal ha heltall som verdi';
-                field.invalid = true;
+                field.errormsg = 'Feltet skal ha heltall som verdi'
+                field.invalid = true
             }
         } else if (field.datatype == 'date') {
             if (moment(value, 'YYYY-MM-DD').isValid() == false) {
-                field.errormsg = 'Feil datoformat';
-                field.invalid = true;
+                field.errormsg = 'Feil datoformat'
+                field.invalid = true
             }
         } else if (field.datatype == 'string' && field.placeholder == 'yyyy(-mm(-dd))') {
             if (
@@ -29,12 +92,12 @@ var Input = {
                 moment(value, 'YYYY-MM', true).isValid() == false &&
                 moment(value, 'YYYY', true).isValid() == false
             ) {
-                field.errormsg = 'Feil datoformat';
-                field.invalid = true;
+                field.errormsg = 'Feil datoformat'
+                field.invalid = true
             }
         }
         if (field.invalid) {
-            field.errormsg += '. Verdien er nå ' + value;
+            field.errormsg += '. Verdien er nå ' + value
         }
     },
 
@@ -72,37 +135,41 @@ var Input = {
             }) : 0
 
 
-            return readOnly ? m('input', {disabled: true, value: option ? option.label : field.value}) : m(select, {
-                name: field.name,
-                // style: field.expandable ? 'width: calc(100% - 30px)' : '',
-                class: [
-                    'max-w7',
-                    maxlength >= 30 ? 'w-100' : '',
-                ].join(' '),
-                options: field.options,
-                optgroups: filtered_optgroups,
-                required: !field.nullable,
-                value: field.value,
-                text: field.text,
-                label: field.label,
-                clear: true,
-                placeholder: placeholder,
-                disabled: readOnly,
-                onchange: function(event) {
-                    if (field.optgroup_field) {
-                        var optgroup = $(':selected', event.target).closest('optgroup').data('value')
-                        rec.fields[field.optgroup_field].value = optgroup
+            return readOnly
+                ? m('input', {
+                    disabled: true, value: option ? option.label : field.value
+                })
+                : m(Select, {
+                    name: field.name,
+                    // style: field.expandable ? 'width: calc(100% - 30px)' : '',
+                    class: [
+                        'max-w7',
+                        maxlength >= 30 ? 'w-100' : '',
+                    ].join(' '),
+                    options: field.options,
+                    optgroups: filtered_optgroups,
+                    required: !field.nullable,
+                    value: field.value,
+                    text: field.text,
+                    label: field.label,
+                    clear: true,
+                    placeholder: placeholder,
+                    disabled: readOnly,
+                    onchange: function(event) {
+                        if (field.optgroup_field) {
+                            var optgroup = $(':selected', event.target).closest('optgroup').data('value')
+                            rec.fields[field.optgroup_field].value = optgroup
+                        }
+                        if (event.target.value == field.value) {
+                            return
+                        }
+                        Input.validate(event.target.value, field)
+                        var text = event.target.options[event.target.selectedIndex].text
+                        var coltext = event.target.options[event.target.selectedIndex].dataset.coltext
+                        field.text = text
+                        field.coltext = coltext
+                        Field.update(event.target.value, field.name, rec)
                     }
-                    if (event.target.value == field.value) {
-                        return
-                    }
-                    Input.validate(event.target.value, field)
-                    var text = event.target.options[event.target.selectedIndex].text
-                    var coltext = event.target.options[event.target.selectedIndex].dataset.coltext
-                    field.text = text
-                    field.coltext = coltext
-                    entry.update_field(event.target.value, field.name, rec)
-                }
             })
         } else if (field.element === 'select') {
 
@@ -110,7 +177,7 @@ var Input = {
 
             key_json = JSON.stringify(field.foreign_key ? field.foreign_key.primary: [field.name])
 
-            return m(autocomplete, {
+            return m(Autocomplete, {
                 name: field.name,
                 style: field.expandable ? 'width: calc(100% - 30px)' : 'width: 100%',
                 required: !field.nullable,
@@ -130,7 +197,7 @@ var Input = {
                         view: field.view,
                         column_view: field.column_view,
                         key: key_json,
-                        condition: control.get_condition(rec, field)
+                        condition: Input.get_condition(rec, field)
                     }
                 },
                 onchange: function(event) {
@@ -147,7 +214,7 @@ var Input = {
                     }
 
                     Input.validate(value, field)
-                    entry.update_field(value, field.name, rec)
+                    Field.update(value, field.name, rec)
                 },
                 onclick: function(event) {
                     if (event.target.value === '') {
@@ -157,14 +224,14 @@ var Input = {
 
             })
         } else if (field.datatype == 'json') {
-            return m(jsoned, {
+            return m(JSONed, {
                 name: field.name,
                 field: field,
                 rec: rec,
                 style: "width: 350px; height: 400px;",
                 value: JSON.parse(field.value),
                 onchange: function(value) {
-                    entry.update_field(value, field.name, rec)
+                    Field.update(value, field.name, rec)
                 }
             })
         } else if (field.element == 'textarea' && field.expanded === true) {
@@ -188,7 +255,7 @@ var Input = {
                 },
                 onchange: function(event) {
                     Input.validate(event.target.value, field)
-                    entry.update_field(event.target.value, field.name, rec)
+                    Field.update(event.target.value, field.name, rec)
                 }
             })
 
@@ -201,7 +268,7 @@ var Input = {
                 onchange: function(event) {
                     var value = event.target.checked ? 1 : 0
                     Input.validate(value, field)
-                    entry.update_field(value, field.name, rec)
+                    Field.update(value, field.name, rec)
                 },
                 checked: +field.value
             })
@@ -209,7 +276,7 @@ var Input = {
             var value = typeof field.value === 'object' && field.value !== null
                 ? field.value.date
                 : field.value
-            return m(datepicker, {
+            return m(Datepicker, {
                 name: field.name,
                 class: 'w4',
                 // required: !field.nullable,
@@ -225,7 +292,7 @@ var Input = {
                         return
                     }
                     Input.validate(value, field)
-                    entry.update_field(value, field.name, rec)
+                    Field.update(value, field.name, rec)
                 }
             })
         } else {
@@ -264,7 +331,7 @@ var Input = {
                         ? numeral(event.target.value).value()
                         : event.target.value.replace(/\u21a9/g, "\n")
                     Input.validate(value, field)
-                    entry.update_field(value, field.name, rec)
+                    Field.update(value, field.name, rec)
                 }
             })
         }
@@ -273,9 +340,12 @@ var Input = {
 
 module.exports = Input
 
-var select = require('./select.js');
-var datepicker = require('./datepicker.js');
-var autocomplete = require('./autocomplete.js');
-var jsoned = require('./jsoned.js');
-var numeral = require('numeral'); require('numeral/locales/no');
-var control = require('./control')
+var Record = require('./record')
+var Select = require('./select')
+var Datepicker = require('./datepicker')
+var Autocomplete = require('./autocomplete')
+var JSONed = require('./jsoned')
+var Field = require('./field')
+var numeral = require('numeral')
+require('numeral/locales/no')
+var _find = require('lodash/find')

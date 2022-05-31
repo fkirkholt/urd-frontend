@@ -6,11 +6,11 @@ var Toolbar = {
             return false
         })
         mousetrap(document.body).bind('mod+n', function(e) {
-            Entry.create(ds.table)
+            Record.create(ds.table)
             return false
         })
         mousetrap(document.body).bind('mod+f', function(e) {
-            filterpanel.expanded = !filterpanel.expanded
+            Filterpanel.expanded = !Filterpanel.expanded
             m.redraw()
             return false
         })
@@ -69,7 +69,7 @@ var Toolbar = {
             }).done(function(result) {
                 if (action.update_field) {
                     var field = ds.table.records[rec_idx].fields[action.update_field]
-                    Entry.update_field(result.value, field.name, ds.table.records[rec_idx])
+                    Field.update(result.value, field.name, ds.table.records[rec_idx])
                     m.redraw()
                 }
                 if (result.msg) {
@@ -136,7 +136,7 @@ var Toolbar = {
             if (rec.new) {
                 ds.table.records.splice(idx, 1)
             } else {
-                Entry.delete(rec)
+                Record.delete(rec)
             }
 
             if (!config.edit_mode) {
@@ -146,6 +146,7 @@ var Toolbar = {
     },
 
     view: function(vnode) {
+        var search_params
 
         if (!ds.table || !ds.table.records || ds.type === 'dblist') return
 
@@ -212,8 +213,8 @@ var Toolbar = {
                     title: 'Filtrer tabell',
                     onclick: function() {
                         config.filter = true
-                        ds.table.filters = filterpanel.parse_query(ds.table.query)
-                        filterpanel.expanded = !filterpanel.expanded
+                        ds.table.filters = Filterpanel.parse_query(ds.table.query)
+                        Filterpanel.expanded = !Filterpanel.expanded
                     }
                 }),
             ]),
@@ -222,7 +223,7 @@ var Toolbar = {
                 title: 'Søk',
                 onclick: function() {
                     config.filter = false
-                    ds.table.filters = filterpanel.parse_query(ds.table.query)
+                    ds.table.filters = Filterpanel.parse_query(ds.table.query)
                     ds.table.search = !ds.table.search
                 }
             }),
@@ -271,14 +272,14 @@ var Toolbar = {
                     var query
 
                     if (id == 'save_search') {
-                        filterpanel.save_filter(ds.table)
+                        Filterpanel.save_filter(ds.table)
                         return
                     }
 
                     if (id == 'delete_search') {
                         $(vnode.dom).find('option[value="custom"]').show()
                         $(vnode.dom).val('custom')
-                        filterpanel.delete_filter()
+                        Filterpanel.delete_filter()
                         return
                     }
 
@@ -329,7 +330,7 @@ var Toolbar = {
                         title: 'Ny post',
                         onclick: function() {
                             if (ds.table.privilege.insert != true) return
-                            Entry.create(ds.table)
+                            Record.create(ds.table)
                             if (!config.edit_mode) {
                                 ds.table.edit = true
                                 config.edit_mode = true
@@ -340,7 +341,7 @@ var Toolbar = {
                         class: ds.table.privilege.insert == true ? 'dim pointer' : 'moon-gray',
                         onclick: function() {
                             if (ds.table.privilege.insert != true) return
-                            Entry.create(ds.table)
+                            Record.create(ds.table)
                             if (!config.edit_mode) {
                                 ds.table.edit = true
                                 config.edit_mode = true
@@ -353,7 +354,7 @@ var Toolbar = {
                     disabled: ds.table.privilege.insert == false,
                     onclick: function() {
                         if (ds.table.privilege.insert != true) return
-                        Entry.create(ds.table)
+                        Record.create(ds.table)
                         if (!config.edit_mode) {
                             ds.table.edit = true
                             config.edit_mode = true
@@ -372,7 +373,7 @@ var Toolbar = {
                         title: 'Kopier post',
                         onclick: function() {
                             if (ds.table.privilege.insert != true) return
-                            Entry.copy()
+                            Record.copy()
                             if (!config.edit_mode) {
                                 ds.table.edit = true
                                 config.edit_mode = true
@@ -383,7 +384,7 @@ var Toolbar = {
                         class: ds.table.privilege.insert == true ? 'dim pointer' : 'moon-gray',
                         onclick: function() {
                             if (ds.table.privilege.insert != true) return
-                            Entry.copy()
+                            Record.copy()
                             if (!config.edit_mode) {
                                 ds.table.edit = true
                                 config.edit_mode = true
@@ -397,7 +398,7 @@ var Toolbar = {
                     disabled: ds.table.privilege.insert == false,
                     onclick: function() {
                         if (ds.table.privilege.insert != true) return
-                        Entry.copy()
+                        Record.copy()
                         if (!config.edit_mode) {
                             ds.table.edit = true
                             config.edit_mode = true
@@ -561,9 +562,9 @@ var Toolbar = {
                     disabled: Toolbar.button.disabled('first'),
                     onclick: function() {
                         if (ds.table.offset == 0) {
-                            Entry.select(ds.table, 0, true)
+                            Record.select(ds.table, 0, true)
                         } else {
-                            pagination.navigate('first')
+                            Pagination.navigate('first')
                         }
                     }
                 }),
@@ -577,9 +578,9 @@ var Toolbar = {
                         var idx = ds.table.selection
                         var prev = idx - 1
                         if (prev == -1) {
-                            pagination.navigate('previous')
+                            Pagination.navigate('previous')
                         } else {
-                            Entry.select(ds.table, prev, true)
+                            Record.select(ds.table, prev, true)
                         }
                     }
                 }),
@@ -593,9 +594,9 @@ var Toolbar = {
                         var idx = ds.table.selection
                         var next = idx + 1
                         if (next == ds.table.records.length) {
-                            pagination.navigate('next')
+                            Pagination.navigate('next')
                         } else {
-                            Entry.select(ds.table, next, true)
+                            Record.select(ds.table, next, true)
                         }
                     }
                 }),
@@ -606,7 +607,7 @@ var Toolbar = {
                     ].join(' '),
                     disabled: Toolbar.button.disabled('last'),
                     onclick: function() {
-                        pagination.navigate('last')
+                        Pagination.navigate('last')
                     }
                 }),
             ]),
@@ -642,12 +643,13 @@ var Toolbar = {
 
 module.exports = Toolbar
 
-var m = require('mithril');
-var mousetrap = require('mousetrap');
-var config = require('./config');
-var Grid = require('./grid');
-var filterpanel = require('./filterpanel');
-var Entry = require('./entry');
-var pagination = require('./pagination');
-var Cookies = require('js-cookie');
-var Diagram = require('./diagram');
+var m = require('mithril')
+var mousetrap = require('mousetrap')
+var config = require('./config')
+var Grid = require('./grid')
+var Filterpanel = require('./filterpanel')
+var Record = require('./record')
+var Pagination = require('./pagination')
+var Cookies = require('js-cookie')
+var Diagram = require('./diagram')
+var Searchinput = require('./searchinput')

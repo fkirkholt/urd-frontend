@@ -1,4 +1,4 @@
-row = {
+var Row = {
 
     expand: function(list, rec, rowidx) {
         if (!rec.count_children) return
@@ -51,30 +51,30 @@ row = {
         return m('tr', {
             tabindex: 0,
             onclick: function(e) {
-                e.redraw = false;
+                e.redraw = false
                 if (ds.table.type != 'view') {
-                    entry.select(ds.table, idx);
+                    Record.select(ds.table, idx)
                 }
             },
             onkeydown: function(e) {
-                e.redraw = false;
+                e.redraw = false
                 if (e.keyCode == 38) { // arrow up
-                    $(this).prev('tr').focus();
-                    e.preventDefault();
+                    $(this).prev('tr').focus()
+                    e.preventDefault()
                 } else if (e.keyCode == 40) { // arrow down
-                    $(this).next('tr').focus();
-                    e.preventDefault();
+                    $(this).next('tr').focus()
+                    e.preventDefault()
                 } else if (e.keyCode == 13) { // enter
-                    e.redraw = false;
-                    $(this).trigger('click');
-                    $('#main form:first').find(':input:enabled:not([readonly]):first').focus();
+                    e.redraw = false
+                    $(this).trigger('click')
+                    $('#main form:first').find(':input:enabled:not([readonly]):first').focus()
                 } else if (e.keyCode == 32) { // space
-                    $(this).trigger('click');
-                    e.preventDefault();
+                    $(this).trigger('click')
+                    e.preventDefault()
                 } else if (e.shiftKey && e.keyCode == 9) { // shift tab
-                    $(this).prev('tr').trigger('click');
+                    $(this).prev('tr').trigger('click')
                 } else if (e.keyCode == 9) { // tab
-                    $(this).next('tr').trigger('click');
+                    $(this).next('tr').trigger('click')
                 }
             },
             class: [
@@ -98,9 +98,9 @@ row = {
                 })
             ]),
             Object.keys(ds.table.grid.columns).map(function(label, colidx) {
-                var col = ds.table.grid.columns[label];
+                var col = ds.table.grid.columns[label]
 
-                return m(cell, {
+                return m(Cell, {
                     list: ds.table,
                     rowidx: idx,
                     col: col,
@@ -114,19 +114,18 @@ row = {
                     var action = ds.table.actions[name]
                     action.name = name
 
-                    return control.button(record, action)
+                    return Record.action_button(record, action)
                 })
             ])
-        ]);
+        ])
 
     }
 }
 
-module.exports = row
+module.exports = Row
 
-var ds = require('./datastore.js')
-var config = require('./config.js')
-var cell = require('./cell.js')
-var control = require('./control.js')
-var entry = require('./entry.js')
-var _isEqual = require('lodash/isEqual');
+var ds = require('./datastore')
+var config = require('./config')
+var Cell = require('./cell')
+var Record = require('./record')
+var _isEqual = require('lodash/isEqual')
