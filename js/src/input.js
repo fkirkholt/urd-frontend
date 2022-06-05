@@ -191,7 +191,9 @@ var Input = {
                     data: {
                         limit: 1000,
                         schema: field.foreign_key ? field.foreign_key.schema : '',
-                        base: field.foreign_key ? field.foreign_key.base : rec.base_name,
+                        base: (field.foreign_key && field.foreign_key.base)
+                            ? field.foreign_key.base
+                            : rec.base_name,
                         table: field.foreign_key ? field.foreign_key.table : rec.table_name,
                         alias: field.name,
                         view: field.view,
