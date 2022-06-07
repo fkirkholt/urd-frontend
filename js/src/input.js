@@ -20,7 +20,7 @@ var Input = {
                 if (last_fk_col != field.name && rec.fields[last_fk_col].nullable == true) {
                     return
                 }
-                key.foreign_idx = $.inArray(field.name, key.foreign)
+                key.foreign_idx = key.foreign.indexOf(field.name)
                 keys.push(key)
             }
         })
@@ -348,6 +348,7 @@ var Datepicker = require('./datepicker')
 var Autocomplete = require('./autocomplete')
 var JSONed = require('./jsoned')
 var Field = require('./field')
+var showdown = require('showdown')
 var numeral = require('numeral')
 require('numeral/locales/no')
 var _find = require('lodash/find')

@@ -27,7 +27,7 @@ var Field = {
 
             if (other_field.element == 'select' && other_field.foreign_key.foreign.length > 1) {
                 // If the field is part of the dropdowns foreign keys
-                if ($.inArray(field.name, other_field.foreign_key.foreign) != -1) {
+                if (other_field.foreign_key.foreign.includes(field.name)) {
                     if (rec.fields[name].value !== null) {
                         rec.fields[name].value = null
                         rec.fields[name].dirty = true

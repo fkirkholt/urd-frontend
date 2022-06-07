@@ -2,7 +2,7 @@ var Cell = {
 
     align: function(list, colname) {
         var col = list.fields[colname];
-        if (($.inArray(col.datatype, ['integer', 'float', 'decimal']) != -1 &&
+        if ((['integer', 'float', 'decimal'].includes(col.datatype) &&
             !col.foreign_key) && col.element !== 'input[type=checkbox]') {
                 return 'right';
             } else {

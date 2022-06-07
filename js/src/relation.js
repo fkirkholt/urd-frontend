@@ -335,4 +335,8 @@ var Relation = {
 module.exports = Relation
 
 var Record = require('./record')
+var Cell = require('./cell')
 var ds = require('./datastore')
+var config = require('./config')
+var _isMatch = require('lodash/isMatch')
+var _isEqual = require('lodash/isEqual')
