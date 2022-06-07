@@ -507,11 +507,8 @@ var Record = {
 
 module.exports = Record
 
-var m = require('mithril')
-var $ = require('jquery')
 var moment = require('moment')
 var config = require('./config')
-var ds = require('./datastore')
 var _merge = require('lodash/merge')
 var _isEqual = require('lodash/isEqual')
 var _get = require('lodash/get')

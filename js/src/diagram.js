@@ -1,5 +1,3 @@
-var m = require('mithril');
-var $ = require('jquery');
 var mermaid = require('mermaid').default;
 var _union = require('lodash/union');
 var _repeat = require('lodash/repeat');

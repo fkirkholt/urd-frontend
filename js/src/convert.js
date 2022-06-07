@@ -1,5 +1,3 @@
-var m = require('mithril')
-var jQuery = require('jquery')
 var Grid = require('./grid')
 
 var Convert_dialog = {

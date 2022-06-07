@@ -1,5 +1,3 @@
-var m = require('mithril')
-var $ = require('jquery')
 var _last = require('lodash/last')
 var _find = require('lodash/find')
 require('jquery-ui/ui/widgets/autocomplete')

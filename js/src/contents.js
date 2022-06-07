@@ -1,9 +1,6 @@
-var m = require('mithril')
-var $ = require('jquery')
 var _assign = require('lodash/assign')
 var _get = require('lodash/get')
 var _isArray = require('lodash/isArray')
-var ds = require('./datastore.js')
 var Stream = require('mithril/stream')
 var config = require('./config.js')
 

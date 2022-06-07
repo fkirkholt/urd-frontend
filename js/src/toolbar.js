@@ -643,7 +643,6 @@ var Toolbar = {
 
 module.exports = Toolbar
 
-var m = require('mithril')
 var mousetrap = require('mousetrap')
 var config = require('./config')
 var Grid = require('./grid')
@@ -652,4 +651,3 @@ var Record = require('./record')
 var Pagination = require('./pagination')
 var Cookies = require('js-cookie')
 var Diagram = require('./diagram')
-var Searchinput = require('./searchinput')

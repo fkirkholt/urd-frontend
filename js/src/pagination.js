@@ -118,7 +118,5 @@ var Pagination = {
 
 module.exports = Pagination
 
-var m = require('mithril')
-var ds = require('./datastore')
 var config = require('./config')
 var Record = require('./record')

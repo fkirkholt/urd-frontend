@@ -339,8 +339,6 @@ var Field = {
 
 module.exports = Field
 
-var m = require('mithril')
-var ds = require('./datastore')
 var config = require('./config')
 var showdown = require('showdown')
 var numeral = require('numeral')

@@ -621,13 +621,10 @@ var Filterpanel = {
 
 module.exports = Filterpanel
 
-var m = require('mithril')
-var $ = require('jquery')
 var _last = require('lodash/last')
 var _find = require('lodash/find')
 var Datepicker = require('./datepicker')
 var Select = require('./select')
 var Autocomplete = require('./autocomplete')
 var numeral = require('numeral')
-var ds = require('./datastore')
 var config = require('./config')

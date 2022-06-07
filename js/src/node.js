@@ -225,9 +225,7 @@ var Node = {
 
 module.exports = Node
 
-var m = require('mithril')
-var $ = require('jquery')
-// var _get = require('lodash/get');
+var _get = require('lodash/get');
 var config = require('./config')
 var Field = require('./field')
 var Relation = require('./relation')

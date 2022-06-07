@@ -1,4 +1,3 @@
-var m = require('mithril')
 var _find = require('lodash/find')
 
 var Select = {

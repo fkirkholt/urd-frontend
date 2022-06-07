@@ -1,5 +1,3 @@
-var m = require('mithril')
-var $ = require('jquery')
 var Cookies = require('js-cookie')
 
 var config = {

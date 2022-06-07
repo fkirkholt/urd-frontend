@@ -1,6 +1,3 @@
-var m = require('mithril')
-var ds = require('./datastore')
-
 var Report = {
 
     get: function(url) {

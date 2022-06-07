@@ -72,6 +72,4 @@ module.exports = {
     }
 }
 
-var m = require('mithril')
-var ds = require('./datastore')
 var config = require('./config')

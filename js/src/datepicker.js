@@ -1,5 +1,3 @@
-var m = require('mithril')
-var $ = require('jquery')
 var moment = require('moment')
 var Pikaday = require('pikaday')
 

@@ -1,5 +1,3 @@
-var m = require('mithril');
-var $ = require('jquery');
 var select = require('./select.js');
 
 var login = {

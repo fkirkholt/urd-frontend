@@ -22,7 +22,6 @@ var JSONed = {
     }
 }
 
-var m = require('mithril')
 var jsoneditor = require('jsoneditor')
 
 module.exports = JSONed;
