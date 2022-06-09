@@ -553,7 +553,9 @@ var Filterpanel = {
                     data: {
                         limit: 550,
                         schema: field.foreign_key ? field.foreign_key.schema : '',
-                        base: field.foreign_key ? field.foreign_key.base : ds.base.name,
+                        base: (field.foreign_key && field.foreign_key.base)
+                            ? field.foreign_key.base
+                            : ds.base.name,
                         table: field.foreign_key ? field.foreign_key.table : field.table,
                         alias: field.name,
                         view: field.view,
