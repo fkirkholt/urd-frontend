@@ -584,11 +584,10 @@ var Filterpanel = {
                 })
             ]
         } else if (field.element == 'input' && field.attr.type == 'date') {
-            return m(Datepicker, {
+            return m('input[type=date]', {
                 name: filter.field,
                 value: filter.value,
                 style: 'flex: 2;',
-                dateFormat: 'yy-mm-dd',
                 onchange: function() {
                     filter.value = e.target['value']
                 }
@@ -626,7 +625,6 @@ module.exports = Filterpanel
 
 var _last = require('lodash/last')
 var _find = require('lodash/find')
-var Datepicker = require('./datepicker')
 var Select = require('./select')
 var Autocomplete = require('./seeker')
 var numeral = require('numeral')

@@ -273,9 +273,9 @@ var Input = {
             var value = typeof field.value === 'object' && field.value !== null
                 ? field.value.date
                 : field.value
-            return m(Datepicker, {
+            return m('input[type=date]', {
                 name: field.name,
-                class: 'w4',
+                class: 'w5',
                 // required: !field.nullable,
                 disabled: readOnly,
                 dateFormat: 'yy-mm-dd',
@@ -339,7 +339,6 @@ module.exports = Input
 
 var Record = require('./record')
 var Select = require('./select')
-var Datepicker = require('./datepicker')
 var Autocomplete = require('./seeker')
 var JSONed = require('./jsoned')
 var Field = require('./field')
