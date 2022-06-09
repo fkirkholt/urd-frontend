@@ -37,7 +37,7 @@ var store = {
                 login.error = true
                 $('div.curtain').show();
                 $('#login').show();
-                $('#brukernavn').focus();
+                $('#brukernavn').trigger('focus');
             } else {
                 alert(e.response.detail)
             }

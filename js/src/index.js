@@ -1,5 +1,5 @@
 window.m = require('mithril');
-window.$ = require('jquery');
+window.$ = require('cash-dom');
 window.ds = require('./datastore.js');
 
 var contents = require('./contents.js')

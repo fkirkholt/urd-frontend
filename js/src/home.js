@@ -21,7 +21,7 @@ var home = {
             if (e.code === 401) {
                 $('div.curtain').show();
                 $('#login').show();
-                $('#brukernavn').focus();
+                $('#brukernavn').trigger('focus');
             } else {
                 alert(e.response.detail);
             }

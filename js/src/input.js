@@ -250,12 +250,6 @@ var Input = {
                 required: !field.nullable,
                 value: field.value,
                 disabled: readOnly,
-                oncreate: function(vnode) {
-                    $(vnode.dom).outerHeight(38).outerHeight($(vnode.dom).scrollHeight)
-                    $(vnode.dom).on('input', function() {
-                        $(this).outerHeight(38).outerHeight(this.scrollHeight)
-                    })
-                },
                 onchange: function(event) {
                     Input.validate(event.target.value, field)
                     Field.update(event.target.value, field.name, rec)

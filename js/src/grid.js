@@ -6,7 +6,7 @@ var Grid = {
     align_thead: function() {
         var $table = $('#urdgrid')
         var $headCells = $table.find('thead tr').children()
-        var $bodyCells = $table.find('tbody tr:first').children()
+        var $bodyCells = $table.find('tbody tr').first().children()
         var $footCells = $table.find('tfoot tr').children()
         var colWidth
 
@@ -40,7 +40,7 @@ var Grid = {
             $.each(colWidthFoot, function(idx, width) {
                 var n
                 if (width > colWidthBody[idx]) {
-                    $table.find('tbody tr:first td:nth-child(' + (idx+1) + ')').width(width)
+                    $table.find('tbody tr').first().find('td:nth-child(' + (idx+1) + ')').width(width)
                 }
             })
         }
@@ -49,7 +49,7 @@ var Grid = {
             $.each(colWidthHead, function(idx, width) {
                 var n
                 if (width > colWidthBody[idx]) {
-                    $col = $table.find('tbody tr:first td:nth-child(' + (idx+1) + ') div' )
+                    $col = $table.find('tbody tr').first().find('td:nth-child(' + (idx+1) + ') div' )
                     $col.width(width)
                 }
             })
@@ -80,7 +80,7 @@ var Grid = {
     oncreate: function() {
         Grid.align_thead()
         // Adjust the width of thead cells when window resizes
-        $(window).resize(Grid.align_thead)
+        window.onresize = Grid.align_thead
     },
 
     onupdate: function() {
@@ -89,7 +89,7 @@ var Grid = {
         // Ensure scrolling to bottom for new records
         if ((ds.table.selection + 1) == ds.table.records.length) {
             var height = $('#urdgrid tbody')[0].scrollHeight
-            $('#urdgrid tbody').scrollTop(height)
+            $('#urdgrid tbody').get().pageYOffset = height //.scrollTop(height)
         }
     },
 
@@ -176,12 +176,13 @@ var Grid = {
             if (ds.table.type != 'view') {
                 Record.select(ds.table, ds.table.selection, true)
             }
-            $('#urdgrid tr.focus').focus()
+            $('#urdgrid tr.focus').trigger('focus')
         }).catch(function(e) {
+            console.log('error:', e)
             if (e.code === 401) {
                 $('div.curtain').show()
                 $('#login').show()
-                $('#brukernavn').focus()
+                $('#brukernavn').trigger('focus')
             } else {
                 alert(e.response.detail)
             }
@@ -273,7 +274,11 @@ var Grid = {
             url: 'table',
             body: data
         }).then(function(result) {
-            $('#message').show().html('Lagring vellykket').delay(2000).fadeOut('slow')
+            $('#message').show().html('Lagring vellykket')
+
+            setTimeout(function() {
+                $('#message').hide()
+            }, 2000)
 
             Grid.update(ds.table, result.data)
         })

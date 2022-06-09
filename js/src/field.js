@@ -60,6 +60,9 @@ var Field = {
         // Updates conditions for relations
         if (rec.relations) {
             $.each(rec.relations, function(i, relation) {
+                if (!relation.betingelse) {
+                    return
+                }
                 $.each(relation.betingelse, function(relation_field, relation_value) {
                     if (relation_field == field.name) {
                         $.each(relation.records, function(i, post) {

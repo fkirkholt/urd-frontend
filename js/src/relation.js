@@ -59,7 +59,7 @@ var Relation = {
                         config.relation_view !== 'column' ? '' : m('td'),
                     ]),
                     // draw records
-                    rel.records.map(function(rec, rowidx) {
+                    !rel.records ? '' : rel.records.map(function(rec, rowidx) {
                         rec.table_name = rel.name
 
                         // Make editable only relations attached directly to record
@@ -72,12 +72,14 @@ var Relation = {
 
                         rec.deletable = rec.relations ? true : false
 
-                        $.each(rec.relations, function(idx, rel) {
-                            var count_local = rel.count_records - rel.count_inherited
-                            if (count_local && rel.delete_rule != "cascade") {
-                                rec.deletable = false
-                            }
-                        })
+                        if (rec.relations) {
+                            $.each(rec.relations, function(idx, rel) {
+                                var count_local = rel.count_records - rel.count_inherited
+                                if (count_local && rel.delete_rule != "cascade") {
+                                    rec.deletable = false
+                                }
+                            })
+                        }
 
                         return [
                             m('tr', {
@@ -275,9 +277,11 @@ var Relation = {
         var url = '#/' + base_path + '/' + rel.name + '?'
 
         conditions = []
-        $.each(rel.conds, function(col, val) {
-            conditions.push(col + "=" + val)
-        })
+        if (rel.conds) {
+            $.each(rel.conds, function(col, val) {
+                conditions.push(col + "=" + val)
+            })
+        }
 
         if (conditions.length == 0) conditions = rel.conditions
 

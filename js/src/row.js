@@ -59,15 +59,15 @@ var Row = {
             onkeydown: function(e) {
                 e.redraw = false
                 if (e.keyCode == 38) { // arrow up
-                    $(this).prev('tr').focus()
+                    $(this).prev('tr').trigger('focus')
                     e.preventDefault()
                 } else if (e.keyCode == 40) { // arrow down
-                    $(this).next('tr').focus()
+                    $(this).next('tr').trigger('focus')
                     e.preventDefault()
                 } else if (e.keyCode == 13) { // enter
                     e.redraw = false
                     $(this).trigger('click')
-                    $('#main form:first').find(':input:enabled:not([readonly]):first').focus()
+                    $('#main form:first').find(':input:enabled:not([readonly]):first').trigger('focus')
                 } else if (e.keyCode == 32) { // space
                     $(this).trigger('click')
                     e.preventDefault()

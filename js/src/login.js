@@ -55,7 +55,7 @@ var login = {
                 class: 'db w-100 mb1',
                 onkeypress: function(e) {
                     if (e.which == 13) {
-                        $('#btn_login').click();
+                        $('#btn_login').trigger('click');
                     }
                 }
             }),
@@ -94,7 +94,7 @@ var login = {
                     }).catch(function(e) {
                         if (e.code == 401) {
                             login.error = true
-                            $('#brukernavn').focus().select()
+                            $('#brukernavn').trigger('focus').trigger('select')
                         }
                     })
                 }

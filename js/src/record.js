@@ -36,7 +36,7 @@ var Record = {
             if (e.code === 401) {
                 $('div.curtain').show()
                 $('#login').show()
-                $('#brukernavn').focus()
+                $('#brukernavn').trigger('focus')
             }
         })
     },
@@ -194,7 +194,7 @@ var Record = {
 
         Record.get_relations_count(rec)
 
-        $('#main form:first').find(':input:enabled:not([readonly]):first').focus()
+        $('#main form:first').find(':input:enabled:not([readonly]):first').trigger('focus')
 
         return rec
     },
@@ -285,7 +285,7 @@ var Record = {
             rec.loaded = true
             Record.get_relations_count(rel)
             setTimeout(function() {
-                $('#main').scrollLeft(420)
+                $('#main').get().scrollLeft = 420
             }, 50)
         })
     },
@@ -415,8 +415,11 @@ var Record = {
                     data.table = rec.table_name;
                     data.primary_key = JSON.stringify(rec.primary_key);
 
-                    var address = (action.url[0] === '/') ? action.url.substr(1) : ds.base.schema + '/' + action.url;
-                    $.download(address, data, '_blank');
+                    params = Object.keys(data).map(function(k) {
+                        return k + '=' + data[k]
+                    }).join('&')
+                    var address = (action.url[0] === '/') ? action.url : ds.base.schema + '/' + action.url;
+                    window.open(address + '?' + params, '_blank')
                 }
                 e.stopPropagation();
             }

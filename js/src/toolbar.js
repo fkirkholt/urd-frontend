@@ -15,7 +15,7 @@ var Toolbar = {
             return false
         })
         mousetrap(document.body).bind('esc', function(e) {
-            $('#urdgrid tr.focus').focus()
+            $('#urdgrid tr.focus').trigger('focus')
         })
     },
 
@@ -76,7 +76,7 @@ var Toolbar = {
                     $('#progress').show().children('[name=message]').text(result.msg)
                     $btn = $('#progress [value="OK"]')
                     $btn.show("fast", function() {
-                       $btn[0].focus()
+                        $btn[0].trigger('focus')
                     })
                 }
                 if (result.warn && result.warn.length) {
@@ -164,7 +164,7 @@ var Toolbar = {
         var rec = ds.table.records[idx]
         var deletable = rec && rec.relations ? true : false
 
-        if (rec) {
+        if (rec && rec.relations) {
             $.each(rec.relations, function(idx, rel) {
                 var count_local = rel.count_records - rel.count_inherited
                 if (count_local && rel.delete_rule != "cascade") {

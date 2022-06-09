@@ -67,27 +67,28 @@ var Node = {
                  : 'field'
 
         switch (type) {
-            case 'heading':
-                // For headings we validate each subitem
-                Object.keys(item.items).map(function(label, idx) {
-                    var subitem = item.items[label]
+        case 'heading':
+            // For headings we validate each subitem
+            Object.keys(item.items).map(function(label, idx) {
+                var subitem = item.items[label]
 
-                    var status = Node.validate(rec, subitem)
+                var status = Node.validate(rec, subitem)
 
-                    if (status.dirty) item.dirty = true
-                    if (status.invalid) item.invalid = true
+                if (status.dirty) item.dirty = true
+                if (status.invalid) item.invalid = true
 
-                })
+            })
 
-                return {dirty: item.dirty, invalid: item.invalid}
-            case 'relation':
-                // If relations isn't loaded yet
-                if (!rec.relations) return {dirty: false, invalid: false}
+            return {dirty: item.dirty, invalid: item.invalid}
+        case 'relation':
+            // If relations isn't loaded yet
+            if (!rec.relations) return {dirty: false, invalid: false}
 
-                parts = item.split('.')
-                var rel_key = parts[1]
-                var rel = rec.relations[rel_key]
-                if (!rel) return {dirty: false, invalid: false}
+            parts = item.split('.')
+            var rel_key = parts[1]
+            var rel = rec.relations[rel_key]
+            if (!rel) return {dirty: false, invalid: false}
+            if (rel.records) {
                 $.each(rel.records, function(i, rec) {
                     if (!rec.loaded) return
                     Record.validate(rec)
@@ -98,33 +99,34 @@ var Node = {
                         rel.dirty = true
                     }
                 })
-                if (rel.invalid) rec.invalid = false
-                if (rel.dirty) rec.dirty = true
+            }
+            if (rel.invalid) rec.invalid = false
+            if (rel.dirty) rec.dirty = true
 
-                return {dirty: rel.dirty, invalid: rel.invalid}
-            case 'field':
-                // If record of relation isn't loaded from server yet
-                if (!rec.fields) return {dirty: false, invalid: false}
+            return {dirty: rel.dirty, invalid: rel.invalid}
+        case 'field':
+            // If record of relation isn't loaded from server yet
+            if (!rec.fields) return {dirty: false, invalid: false}
 
-                parts = item.split('.')
-                var field_name = parts.pop()
+            parts = item.split('.')
+            var field_name = parts.pop()
 
-                var field = rec.fields[field_name]
+            var field = rec.fields[field_name]
 
-                if (revalidate) {
-                    Input.validate(field.value, field)
-                }
-                var status = {
-                    dirty: field.dirty,
-                    invalid: field.invalid
-                }
+            if (revalidate) {
+                Input.validate(field.value, field)
+            }
+            var status = {
+                dirty: field.dirty,
+                invalid: field.invalid
+            }
 
-                if (field.dirty) rec.dirty = true
-                if (field.invalid) rec.invalid = true
+            if (field.dirty) rec.dirty = true
+            if (field.invalid) rec.invalid = true
 
-                return status
-            case 'action':
-                return {}
+            return status
+        case 'action':
+            return {}
         }
     },
 
