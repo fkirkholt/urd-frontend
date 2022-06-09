@@ -545,7 +545,8 @@ var Filterpanel = {
                 placeholder: 'Velg',
                 multiple: filter.operator === 'IN' ? true : false,
                 options: field.options ? field.options : null,
-                value: filter.text,
+                value: filter.value,
+                text: filter.text,
                 class: 'w-100',
                 style: 'flex: 2;',
                 ajax: field.options ? null : {
@@ -627,6 +628,6 @@ var _last = require('lodash/last')
 var _find = require('lodash/find')
 var Datepicker = require('./datepicker')
 var Select = require('./select')
-var Autocomplete = require('./autocomplete')
+var Autocomplete = require('./seeker')
 var numeral = require('numeral')
 var config = require('./config')

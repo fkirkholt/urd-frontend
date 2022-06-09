@@ -183,7 +183,8 @@ var Input = {
                 required: !field.nullable,
                 class: 'max-w7 border-box',
                 item: field,
-                value: field.text,
+                value: field.value,
+                text: field.text,
                 placeholder: 'Velg',
                 disabled: readOnly,
                 ajax: {
@@ -345,7 +346,7 @@ module.exports = Input
 var Record = require('./record')
 var Select = require('./select')
 var Datepicker = require('./datepicker')
-var Autocomplete = require('./autocomplete')
+var Autocomplete = require('./seeker')
 var JSONed = require('./jsoned')
 var Field = require('./field')
 var showdown = require('showdown')
