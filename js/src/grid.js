@@ -396,7 +396,6 @@ module.exports = Grid
 
 // Place here modules which requires grid (circular reference)
 var Filterpanel = require('./filterpanel')
-var moment = require('moment')
 var numeral = require('numeral')
 require('numeral/locales/no')
 var Record = require('./record')

@@ -510,7 +510,6 @@ var Record = {
 
 module.exports = Record
 
-var moment = require('moment')
 var config = require('./config')
 var _merge = require('lodash/merge')
 var _get = require('lodash/get')

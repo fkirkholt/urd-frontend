@@ -82,15 +82,15 @@ var Input = {
                 field.invalid = true
             }
         } else if (field.datatype == 'date') {
-            if (moment(value, 'YYYY-MM-DD').isValid() == false) {
+            if (dayjs(value, 'YYYY-MM-DD', true).isValid() == false) {
                 field.errormsg = 'Feil datoformat'
                 field.invalid = true
             }
         } else if (field.datatype == 'string' && field.placeholder == 'yyyy(-mm(-dd))') {
             if (
-                moment(value, 'YYYY-MM-DD', true).isValid() == false &&
-                moment(value, 'YYYY-MM', true).isValid() == false &&
-                moment(value, 'YYYY', true).isValid() == false
+                dayjs(value, 'YYYY-MM-DD', true).isValid() == false &&
+                dayjs(value, 'YYYY-MM', true).isValid() == false &&
+                dayjs(value, 'YYYY', true).isValid() == false
             ) {
                 field.errormsg = 'Feil datoformat'
                 field.invalid = true
@@ -346,3 +346,6 @@ var showdown = require('showdown')
 var numeral = require('numeral')
 require('numeral/locales/no')
 var _find = require('lodash/find')
+var dayjs = require('dayjs')
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)

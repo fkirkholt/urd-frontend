@@ -127,9 +127,9 @@ var Field = {
             }
         } else if (is_timestamp) {
             // var parts = value.split(' ')
-            // value = moment(value, 'YYYY-MM-DD').format('DD.MM.YYYY') + ' ' + parts[1]
+            // value = dayjs(value, 'YYYY-MM-DD').format('DD.MM.YYYY') + ' ' + parts[1]
         } else if (is_date) {
-            // value = value ? moment(value, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
+            // value = value ? dayjs(value, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
         } else if (is_checkbox) {
             var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
             value = m('i', {class: 'fa ' + icon})
@@ -346,7 +346,6 @@ var config = require('./config')
 var showdown = require('showdown')
 var numeral = require('numeral')
 require('numeral/locales/no')
-var moment = require('moment')
 var sprintf = require("sprintf-js").sprintf
 var Input = require('./input')
 var Record = require('./record')
