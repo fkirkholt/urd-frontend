@@ -1,6 +1,6 @@
-var mermaid = require('mermaid').default
 var _union = require('lodash/union')
 var _repeat = require('lodash/repeat')
+var mermaid
 
 diagram = {
     def: "",
@@ -27,21 +27,25 @@ diagram = {
     },
 
     oninit: function(vnode) {
-        $('body').on('click', 'svg g', function() {
-            var table_name = $(this).attr('id')
-            var table = ds.base.tables[table_name]
+        import(/* webpackChunkName: "mermaid" */ 'mermaid').then(module => {
+            mermaid = module.default
+            $('body').on('click', 'svg g', function() {
+                var table_name = $(this).attr('id')
+                var table = ds.base.tables[table_name]
 
-            diagram.draw(table)
+                diagram.draw(table)
 
-            $('#mermaid').html(diagram.def).removeAttr('data-processed')
-            mermaid.init(undefined, $("#mermaid"))
-            $('#mermaid svg g').addClass('pointer')
-            $('#mermaid svg').addClass('center')
+                $('#mermaid').html(diagram.def).removeAttr('data-processed')
+                mermaid.init(undefined, $("#mermaid"))
+                $('#mermaid svg g').addClass('pointer')
+                $('#mermaid svg').addClass('center')
+            })
         })
     },
 
     onupdate: function(vnode) {
         if (this.def !== "") {
+            console.log('mermaid', mermaid)
             mermaid.mermaidAPI.initialize({
                 securityLevel: 'loose',
                 themeCSS: 'g.classGroup text{font-family: Consolas, monaco, monospace;}'
