@@ -384,7 +384,7 @@ var Grid = {
                         var col = ds.table.grid.columns[label]
                         return m('td', {
                             class: 'tr bl bt b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib'
-                        }, (col in ds.table.grid.sums) ? m.trust(numeral(ds.table.grid.sums[col]).format()) : m.trust('&nbsp'))
+                        }, (col in ds.table.grid.sums) ? m.trust(ds.table.grid.sums[col]) : m.trust('&nbsp'))
                     })
                 ])
             ])
@@ -396,8 +396,6 @@ module.exports = Grid
 
 // Place here modules which requires grid (circular reference)
 var Filterpanel = require('./filterpanel')
-var numeral = require('numeral')
-require('numeral/locales/no')
 var Record = require('./record')
 var Row = require('./row')
 var config = require('./config')

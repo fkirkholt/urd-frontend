@@ -133,9 +133,6 @@ var Field = {
         } else if (is_checkbox) {
             var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
             value = m('i', {class: 'fa ' + icon})
-        } else if (is_integer && field.size > 5) {
-            numeral.locale('no')
-            value = value === null ? null : numeral(value).format()
         } else if (field.datatype == 'json' && field.value) {
             console.log('field.value', field.value)
             value = m(jsoned, {
@@ -344,8 +341,6 @@ module.exports = Field
 
 var config = require('./config')
 var showdown = require('showdown')
-var numeral = require('numeral')
-require('numeral/locales/no')
 var sprintf = require("sprintf-js").sprintf
 var Input = require('./input')
 var Record = require('./record')

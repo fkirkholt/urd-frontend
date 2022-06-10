@@ -602,10 +602,7 @@ var Filterpanel = {
                 style: config.filter ? 'flex:2;' : 'width: ' + width,
                 disabled: filter.operator === '' ? true : false,
                 onchange: function(e) {
-                    value = field.attr && field.attr.class === 'byte'
-                        ? numeral(e.target['value']).value()
-                        : e.target['value']
-                    filter.value = value
+                    filter.value = e.target['value']
                 },
                 onkeydown: function(e) {
                     if (e.keyCode == 13) {
@@ -627,5 +624,4 @@ var _last = require('lodash/last')
 var _find = require('lodash/find')
 var Select = require('./select')
 var Autocomplete = require('./seeker')
-var numeral = require('numeral')
 var config = require('./config')

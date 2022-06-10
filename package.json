@@ -28,7 +28,6 @@
     "mithril": "^2.2.2",
     "mousetrap": "^1.6.5",
     "npm": "^6.14.11",
-    "numeral": "^2.0.6",
     "showdown": "^1.9.1",
     "sprintf-js": "^1.1.2"
   },
