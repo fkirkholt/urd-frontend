@@ -23,7 +23,7 @@ var Row = {
             })
         } else if (rec.expanded === false) {
             list.records = list.records.map(function(record) {
-                if (_isEqual(record.parent, rec.primary_key)) record.hidden = false
+                if (compare(record.parent, rec.primary_key)) record.hidden = false
 
                 return record
             })
@@ -124,8 +124,8 @@ var Row = {
 
 module.exports = Row
 
+var compare = require('just-compare')
 var ds = require('./datastore')
 var config = require('./config')
 var Cell = require('./cell')
 var Record = require('./record')
-var _isEqual = require('lodash/isEqual')

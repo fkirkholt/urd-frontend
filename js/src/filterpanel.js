@@ -620,8 +620,6 @@ var Filterpanel = {
 
 module.exports = Filterpanel
 
-var _last = require('lodash/last')
-var _find = require('lodash/find')
 var Select = require('./select')
 var Autocomplete = require('./seeker')
 var config = require('./config')

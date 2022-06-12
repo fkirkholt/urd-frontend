@@ -431,7 +431,7 @@ var Record = {
 
         // Clone record so the registration can be cancelled easily
         if (ds.table.edit && !ds.rec) {
-            rec = _cloneDeep(rec)
+            rec = structuredClone(rec)
             ds.rec = rec
         } else if (ds.table.edit) {
             rec = ds.rec
@@ -457,7 +457,7 @@ var Record = {
                         onclick: function() {
                             var saved = true
                             if (ds.table.dirty) {
-                                vnode.attrs.record = _merge(vnode.attrs.record, rec)
+                                vnode.attrs.record = merge(vnode.attrs.record, rec)
                                 delete ds.rec
                                 saved = Grid.save()
                             }
@@ -493,7 +493,11 @@ var Record = {
                     Object.keys(rec.table.form.items).map(function(label, idx) {
                         var item = rec.table.form.items[label]
 
-                        if (typeof item !== 'object' && item.indexOf('.') === -1 && rec.table.fields[item].defines_relation) {
+                        if (
+                            typeof item !== 'object' &&
+                                item.indexOf('.') === -1 &&
+                                rec.table.fields[item].defines_relation
+                        ) {
                             return
                         }
                         return m(Node, {rec: rec, colname: item, label: label})
@@ -501,7 +505,7 @@ var Record = {
                 ])
             ])
         ]),
-            config.relation_view === 'expansion' || (rec.active_relation && rec.active_relation.table && !rec.active_relation.table.expanded) ? '' : m(Record, {
+                config.relation_view === 'expansion' || get(rec, 'active_relation.table.expanded') ? '' : m(Record, {
                 record: rec.active_relation
             })
         ]
@@ -511,9 +515,8 @@ var Record = {
 module.exports = Record
 
 var config = require('./config')
-var _merge = require('lodash/merge')
-var _get = require('lodash/get')
-var _cloneDeep = require('lodash/cloneDeep')
+var merge = require('just-merge')
+var get = require('just-safe-get')
 var Grid = require('./grid')
 var Toolbar = require('./toolbar')
 var Input = require('./input')

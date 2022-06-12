@@ -59,7 +59,6 @@ window.onbeforeunload = function(event) {
     }
 };
 
-
 var $header = $('#header');
 m.mount($header[0], header);
 

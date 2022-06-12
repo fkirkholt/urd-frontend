@@ -1,5 +1,3 @@
-var _union = require('lodash/union')
-var _repeat = require('lodash/repeat')
 var mermaid
 
 diagram = {
@@ -153,7 +151,7 @@ diagram = {
             var sign = field.hidden ? '# ' : field.nullable ? '- ' : '+ '
             // number of invicible spaces to align column names
             var count = 6 - field.datatype.length
-            def.push(table.name + ' : ' + sign + field.datatype + _repeat('\u2000', count) + ' ' + field.name)
+            def.push(table.name + ' : ' + sign + field.datatype + '\u2000'.repeat(count) + ' ' + field.name)
         })
 
         Object.keys(table.foreign_keys).map(function(alias) {
@@ -256,13 +254,14 @@ diagram = {
             new_path.push(table.name + symbol + '--o{ ' + fk.table + ' : ' + fk_field_name)
 
             if (fk.table == diagram.main_table) {
-                found_path = _union(found_path, new_path)
+                // merge found_path and new_path and remove duplicates
+                found_path = Array.from(new Set(found_path.concat(new_path)))
 
                 return
             } else {
                 new_path = diagram.get_path(fk_table, new_path)
                 if (new_path) {
-                    found_path = _union(found_path, new_path)
+                    found_path = Array.from(new Set(found_path.concat(new_path)))
 
                     return new_path
                 }
@@ -293,7 +292,7 @@ diagram = {
 
                 new_path = diagram.get_path(fk_table, new_path)
                 if (new_path) {
-                    found_path = _union(found_path, new_path)
+                    found_path = Array.from(new Set(found_path.concat(new_path)))
 
                     return new_path
                 }

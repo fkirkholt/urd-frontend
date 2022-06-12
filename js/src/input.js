@@ -126,7 +126,9 @@ var Input = {
                 filtered_optgroups = field.optgroups
             }
 
-            var option = _find(field.options, {value: field.value})
+            var option = field.options.find(function(opt) {
+                return opt.value == field.value
+            })
 
             maxlength = field.options && field.options.length ? field.options.map(function(el) {
                 return el.label ? el.label.length : 0
@@ -336,7 +338,6 @@ var Autocomplete = require('./seeker')
 var JSONed = require('./jsoned')
 var Field = require('./field')
 var showdown = require('showdown')
-var _find = require('lodash/find')
 var dayjs = require('dayjs')
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)

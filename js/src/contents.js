@@ -1,7 +1,5 @@
-var _assign = require('lodash/assign')
-var _get = require('lodash/get')
-var _isArray = require('lodash/isArray')
 var Stream = require('mithril/stream')
+var get = require('just-safe-get')
 var config = require('./config.js')
 
 Contents = {
@@ -27,7 +25,7 @@ Contents = {
                         item.display = subitem.display
                     }
                 } else {
-                    var object = _get(ds.base, subitem, ds.base.tables[subitem])
+                    var object = get(ds.base, subitem, ds.base.tables[subitem])
                     if (object === undefined) return
                     if (object.type != 'reference' || config.admin == true) {
                         item.display('block')
@@ -45,7 +43,7 @@ Contents = {
             if (typeof(subitem) == 'object') {
                 display = Contents.display_header(subitem, display)
             } else {
-                var object = _get(ds.base, subitem, ds.base.tables[subitem])
+                var object = get(ds.base, subitem, ds.base.tables[subitem])
                 if (object.hidden != true || config.admin) {
                     display = 'block'
                 }
@@ -98,8 +96,8 @@ Contents = {
                     }, [
                     Object.keys(node.subitems).map(function(label) {
                         var subitem = node.subitems[label]
-                        if (_isArray(node.subitems)) {
-                            var obj = _get(ds.base, subitem)
+                        if (Array.isArray(node.subitems)) {
+                            var obj = get(ds.base, subitem)
                             if (obj === undefined) return
                             label = obj.label
                         }
@@ -117,7 +115,7 @@ Contents = {
                 subitems = false
                 item = node
             }
-            var object = _get(ds.base, item, ds.base.tables[item])
+            var object = get(ds.base, item, ds.base.tables[item])
             var grid_idx_name = object.name + '_grid_idx'
             var grid_defined = false
             if (object.indexes && object.indexes[grid_idx_name]) {
@@ -208,7 +206,7 @@ Contents = {
 
     draw_foreign_keys: function(node, def) {
         var item = node.item ? node.item : node
-        var object = _get(ds.base, item, ds.base.tables[item])
+        var object = get(ds.base, item, ds.base.tables[item])
         diagram.draw_foreign_keys(object, def, ds.base.contents[module])
 
         if (!node.subitems) {

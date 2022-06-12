@@ -35,7 +35,7 @@ var Node = {
                              })
                     )
                 case 'action':
-                    var action = _get(ds.table, fieldname)
+                    var action = ds.table.actions[fieldname]
                     return m('span', {class: 'mr2'}, [
                         m('input', {
                             type: 'button',
@@ -212,7 +212,7 @@ var Node = {
                 ])
             ];
         } else {
-            // var item = _get(rec, colname, rec.fields[colname]);
+            // var item = get(rec, colname, rec.fields[colname]);
         }
 
         if (typeof colname === "string" && colname.indexOf('relations') > -1) {
@@ -227,7 +227,6 @@ var Node = {
 
 module.exports = Node
 
-var _get = require('lodash/get');
 var config = require('./config')
 var Field = require('./field')
 var Relation = require('./relation')

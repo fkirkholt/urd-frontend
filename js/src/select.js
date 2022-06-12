@@ -1,5 +1,3 @@
-var _find = require('lodash/find')
-
 var Select = {
 
     view: function(vnode) {

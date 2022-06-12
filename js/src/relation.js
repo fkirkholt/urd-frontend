@@ -61,14 +61,14 @@ var Relation = {
                     // draw records
                     !rel.records ? '' : rel.records.map(function(rec, rowidx) {
                         rec.table_name = rel.name
+                        rec.rowidx = rowidx
 
                         // Make editable only relations attached directly to record
                         // and not to parent records
-                        rec.readonly = !rec.new && !_isMatch(rec.values, rel.conds) &&
-                            // all keys of rel.conds should be in rec.values
-                            Object.keys(rel.conds).every(function(val) {
-                                return Object.keys(rec.values).indexOf(val) >= 0
-                            })
+                        var ismatch = Object.keys(rel.conds).every(function(k) {
+                            return rel.conds[k] == rec.values[k]
+                        })
+                        rec.readonly = !rec.new && !ismatch
 
                         rec.deletable = rec.relations ? true : false
 
@@ -84,7 +84,8 @@ var Relation = {
                         return [
                             m('tr', {
                                 class: [
-                                    config.relation_view === 'column' && _isEqual(rec, record.active_relation) ? 'bg-blue white' : '',
+                                    config.relation_view === 'column' && rowidx == get(record, 'active_relation.rowidx')
+                                        ? 'bg-blue white' : '',
                                     rec.readonly ? 'gray' : 'black'
                                 ].join(' '),
                                 onclick: function() {
@@ -192,9 +193,13 @@ var Relation = {
             m('td', {colspan:3}, [
                 m('table', {class: 'w-100 collapse'}, [
                     rel.records.map(function(rec, rowidx) {
+                        rec.rowidx = rowidx
                         // Make editable only relations attached directly to record
                         // and not to parent records
-                        rec.readonly = !rec.new && !_isMatch(rec.values, rel.conds)
+                        var ismatch = Object.keys(rel.conds).every(function(k) {
+                            return rel.conds[k] == rec.values[k]
+                        })
+                        rec.readonly = !rec.new && !ismatch
                         if (rec.readonly) rec.inherited = true
 
                         if (rec.delete) return
@@ -237,7 +242,6 @@ var Relation = {
                                     if (!rec) return
 
                                     rel.modus = 'edit'
-                                    record.active_relation = rec
                                 }
                             }, m('i', {class: 'fa fa-plus light-blue hover-blue pointer ml1'}))
                         ])
@@ -338,9 +342,8 @@ var Relation = {
 
 module.exports = Relation
 
+var get = require('just-safe-get')
 var Record = require('./record')
 var Cell = require('./cell')
 var ds = require('./datastore')
 var config = require('./config')
-var _isMatch = require('lodash/isMatch')
-var _isEqual = require('lodash/isEqual')

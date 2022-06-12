@@ -113,9 +113,6 @@ var Field = {
 
         if (field.text) {
             value = field.text
-        } else if (field.element == 'select' && field.options && field.value) {
-            var option = _find(field.options, value)
-            value = option ? option.label : value
         } else if (is_date_as_string) {
             if (field.size === 8) {
                 date_items = [
@@ -344,4 +341,3 @@ var showdown = require('showdown')
 var sprintf = require("sprintf-js").sprintf
 var Input = require('./input')
 var Record = require('./record')
-var _find = require('lodash/find')
