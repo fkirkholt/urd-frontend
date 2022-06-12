@@ -302,11 +302,6 @@ var Input = {
                 ? field.value.replace(/\n/g, '\u21a9')
                 : field.value
 
-            if (field.format === 'byte') {
-                numeral.locale('no')
-                value = numeral(value).format('0.00b')
-            }
-
             return m('input', {
                 name: field.name,
                 maxlength: size ? size : '',
@@ -324,9 +319,7 @@ var Input = {
                 value: value,
                 placeholder: placeholder,
                 onchange: function(event) {
-                    value = field.format === 'byte'
-                        ? numeral(event.target.value).value()
-                        : event.target.value.replace(/\u21a9/g, "\n")
+                    value = event.target.value.replace(/\u21a9/g, "\n")
                     Input.validate(value, field)
                     Field.update(value, field.name, rec)
                 }
@@ -343,8 +336,6 @@ var Autocomplete = require('./seeker')
 var JSONed = require('./jsoned')
 var Field = require('./field')
 var showdown = require('showdown')
-var numeral = require('numeral')
-require('numeral/locales/no')
 var _find = require('lodash/find')
 var dayjs = require('dayjs')
 var customParseFormat = require('dayjs/plugin/customParseFormat')
