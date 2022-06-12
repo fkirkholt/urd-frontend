@@ -26,11 +26,11 @@
     "just-compare": "^2.1.0",
     "just-merge": "^3.0.1",
     "just-safe-get": "^4.0.1",
+    "marked": "^4.0.16",
     "mermaid": "^8.14.0",
     "mithril": "^2.2.2",
     "mousetrap": "^1.6.5",
     "npm": "^6.14.11",
-    "showdown": "^1.9.1",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {

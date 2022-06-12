@@ -240,8 +240,7 @@ var Input = {
                 }
             })
         } else if (field.element == 'textarea' && field.expanded === true) {
-            var converter = new showdown.Converter()
-            text = converter.makeHtml(field.value)
+            text = marked.parse(field.value)
 
             return readOnly ? m.trust(text) : m('textarea', {
                 name: field.name,
@@ -337,7 +336,7 @@ var Select = require('./select')
 var Autocomplete = require('./seeker')
 var JSONed = require('./jsoned')
 var Field = require('./field')
-var showdown = require('showdown')
+var marked = require('marked')
 var dayjs = require('dayjs')
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)

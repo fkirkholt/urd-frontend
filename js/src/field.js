@@ -141,8 +141,7 @@ var Field = {
                 value: JSON.parse(field.value)
             })
         } else if (field.element == "textarea" && field.expanded) {
-            var converter = new showdown.Converter()
-            value = m.trust(converter.makeHtml(field.value))
+            value = m.trust(marked.parse(field.value))
         }
 
         return value
@@ -337,7 +336,7 @@ var Field = {
 module.exports = Field
 
 var config = require('./config')
-var showdown = require('showdown')
+var marked = require('marked')
 var sprintf = require("sprintf-js").sprintf
 var Input = require('./input')
 var Record = require('./record')
