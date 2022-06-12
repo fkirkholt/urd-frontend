@@ -12,7 +12,6 @@ function Seeker(initialVnode) {
     function keydown(event, attrs) {
         if (event.keyCode == KEY_CODE_ENTER) {
             option = options[index]
-            console.log('option', option)
             event.target.value = option.label
             event.target.dataset.value = option.value
             attrs.onchange(event)
@@ -52,23 +51,28 @@ function Seeker(initialVnode) {
 
     return {
 
+        onupdate: function(vnode) {
+            var input_width = $(vnode.dom).outerWidth()
+            var offset = $(vnode.dom).offset()
+            $('ul.options').css('min-width', input_width)
+            $('ul.options').css('left', offset.left)
+            $('ul.options').css('overflow', 'hidden')
+        },
+
         view: function(vnode) {
-            console.log('option i view', option)
             if (vnode.attrs.value != option.value) {
                 option = {
                     value: vnode.attrs.value,
                     label: vnode.attrs.text
                 }
             }
-            return m('span', {
-                class: 'dib',
-            }, [
+            return [
                 m('input.search', {
-                    // id: vnode.attrs.id,
-                    // name: vnode.attrs.name,
+                    id: vnode.attrs.id,
+                    name: vnode.attrs.name,
                     value: option.label,
                     placeholder: 'Search',
-                    // style: vnode.attrs.style,
+                    style: vnode.attrs.style,
                     oninput: function(event) {
                         option.label = event.target.value
                     },
@@ -91,7 +95,7 @@ function Seeker(initialVnode) {
                         }, row.label)
                     })
                 ])
-            ])
+            ]
         }
     }
 }
