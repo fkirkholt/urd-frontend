@@ -82,17 +82,14 @@ var schema_dialog = {
                         var config = ds.schema.config
                         var config_json = JSON.stringify(config)
 
-                        $.ajax({
+                        m.request({
                             method: "put",
                             url: 'urd/update_schema',
-                            dataType: 'json',
-                            contentType: "application/json",
-                            data: JSON.stringify({
+                            params: {
                                 base: ds.base.name,
-                                primary_key: prim_nokler_json,
                                 config: config_json
-                            }),
-                        }).done(function(result) {
+                            },
+                        }).then(function(result) {
                             $('#progress').show().children('[name=message]').text(result.msg)
                             $btn = $('#progress [value="OK"]')
                             $btn.show("fast", function() {
@@ -107,8 +104,8 @@ var schema_dialog = {
                                 $('#progress').show().children('[name=message]').html(txt)
                             }
                             ds.load_database(ds.base.name)
-                        }).fail(function(jqXHR, textStatus, error) {
-                            alert(jqXHR.responseText)
+                        }).catch(function(error) {
+                            alert(error.response.detail)
                         })
 
                         $('#action-dialog').hide()
