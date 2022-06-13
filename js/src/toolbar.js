@@ -97,7 +97,12 @@ var Toolbar = {
                 this.track_progress()
             }
         } else if (kommunikasjon == 'dialog') {
-            $('#action-dialog').load(address + '?version=1')
+            m.request({
+                url: address + '?version=1',
+                responseType: "text",
+            }).then(function(result) {
+                $('#action-dialog').append(result)
+            })
             $('div.curtain').show()
             $('#action-dialog').show()
         }

@@ -65,8 +65,13 @@ var header = {
                                 $('#meny option[value="utskrift"]').html('Utskriftsvisning');
                             }
                             else {
-                                var adresse = 'printable_table';
-                                $('#print-view .content').load(adresse);
+                                m.request({
+                                    url: 'printable_table',
+                                    responseType: "text",
+                                }).then(function(result) {
+                                    $('#print-view .content').append(result)
+                                })
+
                                 $('#header').hide();
                                 $('#page-container').hide();
                                 $('#print-view').show();
@@ -86,8 +91,12 @@ var header = {
                             if ($('#test_window').is(':visible')) {
                                 $('#test_window').hide();
                             } else {
-                                var adr = 'templates/urd/handlinger/test/test.htm';
-                                $('#action-dialog').load(adr+'?version=1').show();
+                                m.request({
+                                    url: ad + 'templates/urd/handlinger/test/test.htm?version=1',
+                                    responseType: "text",
+                                }).then(function(result) {
+                                    $('#action-dialog').append(result).show()
+                                })
                             }
                         }
                     }, 'Test'),

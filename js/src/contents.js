@@ -332,7 +332,12 @@ Contents = {
                                     class: 'fa fa-edit',
                                     title: 'Oppdater skjema fra database',
                                     onclick: function () {
-                                        $('#action-dialog').load('urd/dialog_schema?version=1')
+                                        m.request({
+                                            url: 'urd/dialog_schema?version=1',
+                                            responseType: "text",
+                                        }).then(function(result) {
+                                            $('#action-dialog').append(result)
+                                        })
                                         $('div.curtain').show()
                                         $('#action-dialog').show()
                                     }
