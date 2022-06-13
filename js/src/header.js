@@ -80,27 +80,6 @@ var header = {
                         }
                     }, 'Utskrift'),
                     m('li', {
-                        class: 'dn',
-                        onclick: function() {
-
-                        }
-                    }, 'Test'),
-                    m('li', {
-                        class: 'dn',
-                        onclick: function() {
-                            if ($('#test_window').is(':visible')) {
-                                $('#test_window').hide();
-                            } else {
-                                m.request({
-                                    url: ad + 'templates/urd/handlinger/test/test.htm?version=1',
-                                    responseType: "text",
-                                }).then(function(result) {
-                                    $('#action-dialog').append(result).show()
-                                })
-                            }
-                        }
-                    }, 'Test'),
-                    m('li', {
                         onclick: function() {
                             $.getJSON('logout', function() {
                                 ds.base.server = null
