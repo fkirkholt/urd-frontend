@@ -446,66 +446,68 @@ var Record = {
         Record.validate(rec)
 
         rec.dirty = rec.dirty == undefined ? false : rec.dirty
-        return [m('form[name="record"]', {
-            class: 'flex flex-column',
-        }, [
-            !ds.table.edit && !ds.table.hide
-                ? '' 
-                : m('div', [
-                    m('input[type=button]', {
-                        value: 'Lagre og lukk',
-                        onclick: function() {
-                            var saved = true
-                            if (ds.table.dirty) {
-                                vnode.attrs.record = merge(vnode.attrs.record, rec)
-                                delete ds.rec
-                                saved = Grid.save()
+
+        return [
+            m('form[name="record"]', {
+                class: 'flex flex-column',
+            }, [
+                !ds.table.edit && !ds.table.hide
+                    ? ''
+                    : m('div', [
+                        m('input[type=button]', {
+                            value: 'Lagre og lukk',
+                            onclick: function() {
+                                var saved = true
+                                if (ds.table.dirty) {
+                                    vnode.attrs.record = merge(vnode.attrs.record, rec)
+                                    delete ds.rec
+                                    saved = Grid.save()
+                                }
+                                if (saved) {
+                                    ds.table.edit = false
+                                    config.edit_mode = false
+                                }
                             }
-                            if (saved) {
+                        }),
+                        m('input[type=button]', {
+                            value: 'Avbryt',
+                            onclick: function() {
                                 ds.table.edit = false
                                 config.edit_mode = false
+                                delete ds.rec
+                                if (rec.new) {
+                                    var idx = ds.table.selection
+                                    ds.table.records.splice(idx, 1)
+                                    Record.select(ds.table, 0, true)
+                                }
                             }
-                        }
-                    }),
-                    m('input[type=button]', {
-                        value: 'Avbryt',
-                        onclick: function() {
-                            ds.table.edit = false
-                            config.edit_mode = false
-                            delete ds.rec
-                            if (rec.new) {
-                                var idx = ds.table.selection
-                                ds.table.records.splice(idx, 1)
-                                Record.select(ds.table, 0, true)
-                            }
-                        }
-                    })
-                ]),
-            m('table[name=view]', {
-                class: [
-                    'pt1 pl1 pr2 flex flex-column',
-                    config.theme === 'material' ? 'md' : '',
-                    'overflow-auto',
-                ].join(' '),
-                style: '-ms-overflow-style:-ms-autohiding-scrollbar'
-            }, [
-                m('tbody', [
-                    Object.keys(rec.table.form.items).map(function(label, idx) {
-                        var item = rec.table.form.items[label]
+                        })
+                    ]),
+                m('table[name=view]', {
+                    class: [
+                        'pt1 pl1 pr2 flex flex-column',
+                        config.theme === 'material' ? 'md' : '',
+                        'overflow-auto',
+                    ].join(' '),
+                    style: '-ms-overflow-style:-ms-autohiding-scrollbar'
+                }, [
+                    m('tbody', [
+                        Object.keys(rec.table.form.items).map(function(label, idx) {
+                            var item = rec.table.form.items[label]
 
-                        if (
-                            typeof item !== 'object' &&
-                                item.indexOf('.') === -1 &&
-                                rec.table.fields[item].defines_relation
-                        ) {
-                            return
-                        }
-                        return m(Node, {rec: rec, colname: item, label: label})
-                    })
+                            if (
+                                typeof item !== 'object' &&
+                                    item.indexOf('.') === -1 &&
+                                    rec.table.fields[item].defines_relation
+                            ) {
+                                return
+                            }
+                            return m(Node, {rec: rec, colname: item, label: label})
+                        })
+                    ])
                 ])
-            ])
-        ]),
-                config.relation_view === 'expansion' || get(rec, 'active_relation.table.expanded') ? '' : m(Record, {
+            ]),
+            config.relation_view === 'expansion' || get(rec, 'active_relation.table.expanded') ? '' : m(Record, {
                 record: rec.active_relation
             })
         ]

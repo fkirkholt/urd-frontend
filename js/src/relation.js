@@ -29,9 +29,9 @@ var Relation = {
             m('td', {colspan:3}, [
                 m('table', {class: 'w-100 collapse'}, [
                     // draw header cells
-                    m('tr', [
+                    m('tr', {class: 'bb' }, [
                         m('td'),
-                        config.relation_view === 'column' || rel.primary_key.length == 0 ? '' : m('td', {class: 'w0 gray'}),
+                        config.relation_view === 'column' || rel.primary_key.length == 0 ? '' : m('td', {class: 'w0'}),
                         Object.keys(rel.grid.columns).map(function(label, idx) {
                             var field_name = rel.grid.columns[label]
 
@@ -52,7 +52,7 @@ var Relation = {
                                 ? ''
                                 : m('td', {
                                     style: 'text-align: left',
-                                    class: 'gray f6 pa1 pb0'
+                                    class: 'f6 pa1 pb0'
                                 }, label)
                         }),
                         m('td'),
@@ -81,90 +81,13 @@ var Relation = {
                             })
                         }
 
-                        return [
-                            m('tr', {
-                                class: [
-                                    config.relation_view === 'column' && rowidx == get(record, 'active_relation.rowidx')
-                                        ? 'bg-blue white' : '',
-                                    rec.readonly ? 'gray' : 'black'
-                                ].join(' '),
-                                onclick: function() {
-                                    if (rec.primary_key == null) return
-                                    record.active_relation = rec
-                                    Record.toggle_record(rec, rel)
-                                }
-                            }, [
-                                m('td', {
-                                    align: 'center',
-                                    class: 'bg-white'
-                                }, [
-                                    m('i', {
-                                        class: [
-                                            rec.delete ? 'fa fa-trash light-gray mr1' :
-                                            rec.invalid ? 'fa fa-warning red mr1' :
-                                            rec.dirty ? 'fa fa-pencil light-gray mr1' : '',
-                                        ].join(' ')
-                                    })
-                                ]),
-                                config.relation_view === 'column' || rec.primary_key == null ? '' : m('td.fa', {
-                                    class: [
-                                        rec.open ? 'fa-angle-down' : 'fa-angle-right',
-                                        rec.invalid ? 'invalid' : rec.dirty ? 'dirty' : '',
-                                    ].join(' ')
-                                }),
-                                Object.keys(rel.grid.columns).map(function(label, colidx) {
-                                    var field_name = rel.grid.columns[label]
-
-                                    // Check if this is an action
-                                    if (field_name.indexOf('actions.') > -1) {
-                                        var parts = field_name.split('.')
-                                        var action_name = parts[1]
-                                        var action = rel.actions[action_name]
-                                        action.alias = action_name
-
-                                        return Record.action_button(rec, action)
-                                    }
-
-                                    var field = rel.fields[field_name]
-
-                                    return field.defines_relation
-                                        ? ''
-                                        : m(Cell, {
-                                            list: rel,
-                                            rowidx: rowidx,
-                                            col: field_name,
-                                            compressed: true
-                                        })
-                                }),
-                                m('td', {class: 'bb b--light-gray'}, [
-                                    !rec.open || record.readonly ? '' : m('i', {
-                                        class: [
-                                            rel.privilege.delete && config.edit_mode ? 'fa fa-trash-o pl1' : '',
-                                            rec.deletable ? 'light-blue' : 'moon-gray',
-                                            rec.deletable ? (config.relation_view === 'column' ? 'hover-white' : 'hover-blue') : '',
-                                        ].join(' '),
-                                        style: 'cursor: pointer',
-                                        onclick: Record.delete.bind(this, rec),
-                                        title: 'Slett'
-                                    })
-                                ]),
-                                config.relation_view !== 'column' || record.readonly ? '' : m('td', {class: 'bb b--light-gray'}, [
-                                    m('i', {
-                                        class: 'fa fa-angle-right'
-                                    })
-                                ]),
-                            ]),
-                            !rec.open || config.relation_view === 'column' ? null : m('tr', [
-                                m('td'),
-                                m('td'),
-                                m('td', {
-                                    colspan: count_columns+1,
-                                    class: 'bl b--moon-gray'
-                                }, [
-                                    m(Record, {record: rec})
-                                ])
-                            ])
-                        ]
+                        return m(Row, {
+                            list: rel,
+                            record: rec,
+                            idx: rowidx,
+                            parent: record,
+                            colspan: count_columns+1
+                        })
                     }),
                     record.readonly || !config.edit_mode ? '' : m('tr', [
                         m('td'),
@@ -344,6 +267,7 @@ module.exports = Relation
 
 var get = require('just-safe-get')
 var Record = require('./record')
+var Row = require('./row')
 var Cell = require('./cell')
 var ds = require('./datastore')
 var config = require('./config')

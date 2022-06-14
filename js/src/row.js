@@ -8,7 +8,7 @@ var Row = {
                 url: 'children',
                 params: {
                     base: ds.base.name,
-                    table: ds.table.name,
+                    table: list.name,
                     primary_key: JSON.stringify(rec.primary_key)
                 }
             }).then(function(result) {
@@ -47,13 +47,22 @@ var Row = {
 
     view: function(vnode) {
         var record = vnode.attrs.record
+        var parent = vnode.attrs.parent
+        var list = vnode.attrs.list
         var idx = vnode.attrs.idx
-        return m('tr', {
+        return [m('tr', {
             tabindex: 0,
             onclick: function(e) {
-                e.redraw = false
-                if (ds.table.type != 'view') {
-                    Record.select(ds.table, idx)
+                if (record.root) {
+                    e.redraw = false
+                    if (list.type != 'view') {
+                        Record.select(list, idx)
+                    }
+                } else {
+                    if (record.primary_key == null) return
+
+                    parent.active_relation = record
+                    Record.toggle_record(record, list)
                 }
             },
             onkeydown: function(e) {
@@ -78,15 +87,19 @@ var Row = {
                 }
             },
             class: [
-                (ds.table.selection == idx && ds.table.type != 'view') ? 'bg-light-blue focus' : '',
+                (list.selection == idx && list.type != 'view')
+                    ? 'bg-light-blue focus'
+                    : '',
                 'lh-copy cursor-default bg-white',
                 record.class ? record.class : '',
-                idx < ds.table.records.length - 1 ? 'bb b--light-gray' : 'bb b--moon-gray',
+                !record.root ? '' : (idx < list.records.length - 1)
+                    ? 'bb b--light-gray'
+                    : 'bb b--moon-gray',
             ].join(' ')
         }, [
             m('td', {
                 align: 'right',
-                class: 'linjenr pa0 w1 br b--light-gray',
+                class: !record.root ? '' : 'linjenr pa0 w1 br b--light-gray',
             }, [
                 config.autosave ? m.trust('&nbsp;') : m('i', {
                     class: [
@@ -97,34 +110,54 @@ var Row = {
                     ]
                 })
             ]),
-            Object.keys(ds.table.grid.columns).map(function(label, colidx) {
-                var col = ds.table.grid.columns[label]
+            (   record.root || // only records in relations should be expanded
+                config.relation_view === 'column' ||
+                record.primary_key == null
+            ) ? '' : m('td.fa', {
+                class: [
+                    record.open ? 'fa-angle-down' : 'fa-angle-right',
+                    record.invalid ? 'invalid' : record.dirty ? 'dirty' : '',
+                ].join(' ')
+            }),
+            Object.keys(list.grid.columns).map(function(label, colidx) {
+                var col = list.grid.columns[label]
+                var defines_relation = get(list.fields, col + '.defines_relation')
 
-                return m(Cell, {
-                    list: ds.table,
+                return defines_relation ? '' : m(Cell, {
+                    list: list,
                     rowidx: idx,
                     col: col,
                     compressed: config.compressed,
-                    border: true,
+                    border: record.root ? true : false,
                     grid: true
                 })
             }),
-            m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
-                ds.table.grid.actions.map(function(name, idx) {
-                    var action = ds.table.actions[name]
+            !record.root ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
+                list.grid.actions.map(function(name, idx) {
+                    var action = list.actions[name]
                     action.name = name
 
                     return Record.action_button(record, action)
                 })
             ])
-        ])
-
+        ]),
+        !record.open || config.relation_view === 'column' ? null : m('tr', [
+            m('td'),
+            m('td'),
+            m('td', {
+                colspan: vnode.attrs.colspan,
+                class: 'bl b--moon-gray'
+            }, [
+                m(Record, {record: record})
+            ])
+        ])]
     }
 }
 
 module.exports = Row
 
 var compare = require('just-compare')
+var get = require('just-safe-get')
 var ds = require('./datastore')
 var config = require('./config')
 var Cell = require('./cell')
