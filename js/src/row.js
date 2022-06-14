@@ -111,7 +111,6 @@ var Row = {
                 })
             ]),
             (   record.root || // only records in relations should be expanded
-                config.relation_view === 'column' ||
                 record.primary_key == null
             ) ? '' : m('td.fa', {
                 class: [
@@ -141,7 +140,7 @@ var Row = {
                 })
             ])
         ]),
-        !record.open || config.relation_view === 'column' ? null : m('tr', [
+        !record.open ? null : m('tr', [
             m('td'),
             m('td'),
             m('td', {

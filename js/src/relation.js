@@ -31,7 +31,7 @@ var Relation = {
                     // draw header cells
                     m('tr', {class: 'bb' }, [
                         m('td'),
-                        config.relation_view === 'column' || rel.primary_key.length == 0 ? '' : m('td', {class: 'w0'}),
+                        rel.primary_key.length == 0 ? '' : m('td', {class: 'w0'}),
                         Object.keys(rel.grid.columns).map(function(label, idx) {
                             var field_name = rel.grid.columns[label]
 
@@ -56,7 +56,6 @@ var Relation = {
                                 }, label)
                         }),
                         m('td'),
-                        config.relation_view !== 'column' ? '' : m('td'),
                     ]),
                     // draw records
                     !rel.records ? '' : rel.records.map(function(rec, rowidx) {
@@ -91,7 +90,7 @@ var Relation = {
                     }),
                     record.readonly || !config.edit_mode ? '' : m('tr', [
                         m('td'),
-                        config.relation_view !== 'expansion' ? '' : m('td'),
+                        m('td'),
                         m('td', [
                             !rel.privilege.insert ? '' : m('a', {
                                 onclick: function(e) {
@@ -156,7 +155,7 @@ var Relation = {
                     }),
                     record.readonly || !config.edit_mode || rel.relationship == "1:1" ? '' : m('tr', [
                         m('td'),
-                        config.relation_view !== 'expansion' ? '' : m('td'),
+                        m('td'),
                         m('td', [
                             !rel.privilege.insert ? '' : m('a', {
                                 onclick: function(e) {
