@@ -73,11 +73,17 @@ diagram = {
 
         def.push(table.name + ' {')
         if (table.fields) {
+            var n = 0
             Object.keys(table.fields).map(function(alias) {
-                var field = table.fields[alias]
-                var sign = ''
-                def.push(sign + field.datatype + ' ' + field.name)
-            })
+                var field = table.fields[alias];
+                if (!field.hidden) {
+                    n++
+                    if (n>10) {
+                        return
+                    }
+                    def.push(field.datatype + ' ' + field.name);
+                }
+            });
         }
         def.push('}')
 
