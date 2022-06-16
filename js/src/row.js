@@ -1,5 +1,6 @@
 var Row = {
 
+    /** Expand row to show children */
     expand: function(list, rec, rowidx) {
         if (!rec.count_children) return
         if (rec.expanded === undefined) {
@@ -45,6 +46,41 @@ var Row = {
         rec.expanded = !rec.expanded
     },
 
+    /** Toggle detailed view of record beneath row in relation list */
+    toggle_record: function(rec, tbl) {
+
+        if (rec.open) {
+            rec.open = false
+        } else {
+            rec.open = true
+        }
+
+        // Don't load record if it's already loaded
+        if (rec.loaded) {
+            return
+        }
+
+        m.request({
+            method: "GET",
+            url: "record",
+            params: {
+                base: rec.base_name ? rec.base_name : ds.base.name,
+                table: tbl.name,
+                primary_key: JSON.stringify(rec.primary_key)
+            }
+        }).then(function(result) {
+            var rel = $.extend(rec, result.data)
+            rel.table = tbl
+            rel.list = tbl
+            rec.loaded = true
+            Record.get_relations_count(rel)
+            setTimeout(function() {
+                $('#main').get().scrollLeft = 420
+            }, 50)
+        })
+    },
+
+
     view: function(vnode) {
         var record = vnode.attrs.record
         var parent = vnode.attrs.parent
@@ -62,7 +98,7 @@ var Row = {
                     if (record.primary_key == null) return
 
                     parent.active_relation = record
-                    Record.toggle_record(record, list)
+                    Row.toggle_record(record, list)
                 }
             },
             onkeydown: function(e) {
@@ -119,16 +155,15 @@ var Row = {
                 ].join(' ')
             }),
             Object.keys(list.grid.columns).map(function(label, colidx) {
-                var col = list.grid.columns[label]
-                var defines_relation = get(list.fields, col + '.defines_relation')
+                var colname = list.grid.columns[label]
+                var defines_relation = get(list.fields, colname + '.defines_relation')
 
                 return defines_relation ? '' : m(Cell, {
                     list: list,
                     rowidx: idx,
-                    col: col,
+                    colname: colname,
                     compressed: config.compressed,
                     border: record.root ? true : false,
-                    grid: true
                 })
             }),
             !record.root ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [

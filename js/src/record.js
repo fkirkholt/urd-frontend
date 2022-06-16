@@ -249,42 +249,6 @@ var Record = {
     },
 
     /**
-     * Toggle detailed view of record in relation list
-     */
-    toggle_record: function(rec, tbl) {
-
-        if (rec.open) {
-            rec.open = false
-        } else {
-            rec.open = true
-        }
-
-        // Don't load record if it's already loaded
-        if (rec.loaded) {
-            return
-        }
-
-        m.request({
-            method: "GET",
-            url: "record",
-            params: {
-                base: rec.base_name ? rec.base_name : ds.base.name,
-                table: tbl.name,
-                primary_key: JSON.stringify(rec.primary_key)
-            }
-        }).then(function(result) {
-            var rel = $.extend(rec, result.data)
-            rel.table = tbl
-            rel.list = tbl
-            rec.loaded = true
-            Record.get_relations_count(rel)
-            setTimeout(function() {
-                $('#main').get().scrollLeft = 420
-            }, 50)
-        })
-    },
-
-    /**
      * Oppdaterer record ved autosave
      */
     save: function(rec) {

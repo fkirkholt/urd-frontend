@@ -63,6 +63,7 @@ var Input = {
         return kandidatbetingelser.join(' AND ')
     },
 
+    /** Validate field and check if it's mandatory */
     validate: function(value, field) {
         field.invalid = false
         field.errormsg = ''

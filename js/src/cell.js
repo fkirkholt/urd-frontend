@@ -1,5 +1,6 @@
 var Cell = {
 
+    /** Text alignment in cell */
     align: function(list, colname) {
         var col = list.fields[colname];
         if ((['integer', 'float', 'decimal'].includes(col.datatype) &&
@@ -13,17 +14,20 @@ var Cell = {
     view: function (vnode) {
         var list = vnode.attrs.list
         var rowidx = vnode.attrs.rowidx
-        var col = vnode.attrs.col
+        var colname = vnode.attrs.colname
+        // if table is displayed in compressed mode
         var compressed = vnode.attrs.compressed
         var rec = list.records[rowidx]
-        var field = list.fields[col]
+        var field = list.fields[colname]
         if (field.hidden) return
-        var value = rec.columns[col] == null ? ''
-            : compressed && vnode.attrs.grid ? rec.values[col]
-            : rec.columns[col]
+        var value = rec.columns[colname] == null ? ''
+            // Show value if the table is displayed in compressed mode
+            : compressed ? rec.values[colname]
+            // else show the display text (that also shows in a select box)
+            : rec.columns[colname]
 
         value = Field.display_value(field, value)
-        var expansion = col === list.expansion_column && vnode.attrs.grid
+        var expansion = colname === list.expansion_column && vnode.attrs.grid
         var is_checkbox = field.element == 'input[type=checkbox]'
 
         var icon = m('i', {
@@ -40,14 +44,14 @@ var Cell = {
 
         return m('td', {
             class: [
-                Cell.align(list, col) === 'right' ? 'tr' : 'tl',
+                Cell.align(list, colname) === 'right' ? 'tr' : 'tl',
                 compressed || (field.datatype !== 'string' &&
                                field.datatype !== 'binary' &&
                                field.element != 'select') || (value.length < 30)
                     ? 'nowrap' : '',
                 compressed && value.length > 30 ? 'pt0 pb0' : '',
                 vnode.attrs.border ? 'br b--light-gray' : '',
-                ds.table.sort_fields[col] ? 'min-w3' : 'min-w2',
+                ds.table.sort_fields[colname] ? 'min-w3' : 'min-w2',
                 'f6 pl1 pr1',
             ].join(' '),
             title: compressed && value.length > 30 ? value : ''
