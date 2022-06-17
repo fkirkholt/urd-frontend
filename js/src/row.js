@@ -89,7 +89,7 @@ var Row = {
         return [m('tr', {
             tabindex: 0,
             onclick: function(e) {
-                if (record.root) {
+                if (!parent) { // if in main grid
                     e.redraw = false
                     if (list.type != 'view') {
                         Record.select(list, idx)
@@ -97,7 +97,6 @@ var Row = {
                 } else {
                     if (record.primary_key == null) return
 
-                    parent.active_relation = record
                     Row.toggle_record(record, list)
                 }
             },
@@ -112,7 +111,7 @@ var Row = {
                 } else if (e.keyCode == 13) { // enter
                     e.redraw = false
                     $(this).trigger('click')
-                    $('#main form:first').find(':input:enabled:not([readonly]):first').trigger('focus')
+                    $('form[name=record]').find('input,textarea,select').first().trigger('focus')
                 } else if (e.keyCode == 32) { // space
                     $(this).trigger('click')
                     e.preventDefault()
@@ -128,14 +127,14 @@ var Row = {
                     : '',
                 'lh-copy cursor-default bg-white',
                 record.class ? record.class : '',
-                !record.root ? '' : (idx < list.records.length - 1)
+                parent ? '' : (idx < list.records.length - 1)
                     ? 'bb b--light-gray'
                     : 'bb b--moon-gray',
             ].join(' ')
         }, [
             m('td', {
                 align: 'right',
-                class: !record.root ? '' : 'linjenr pa0 w1 br b--light-gray',
+                class: parent ? '' : 'linjenr pa0 w1 br b--light-gray',
             }, [
                 config.autosave ? m.trust('&nbsp;') : m('i', {
                     class: [
@@ -146,7 +145,7 @@ var Row = {
                     ]
                 })
             ]),
-            (   record.root || // only records in relations should be expanded
+            (   !parent || // only records in relations should be expanded
                 record.primary_key == null
             ) ? '' : m('td.fa', {
                 class: [
@@ -163,10 +162,10 @@ var Row = {
                     rowidx: idx,
                     colname: colname,
                     compressed: config.compressed,
-                    border: record.root ? true : false,
+                    border: !parent ? true : false,
                 })
             }),
-            !record.root ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
+            parent ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
                 list.grid.actions.map(function(name, idx) {
                     var action = list.actions[name]
                     action.name = name

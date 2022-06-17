@@ -194,7 +194,7 @@ var Record = {
 
         Record.get_relations_count(rec)
 
-        $('#main form:first').find(':input:enabled:not([readonly]):first').trigger('focus')
+        $('form[name=record]').find('input,select,textarea').first().trigger('focus')
 
         return rec
     },

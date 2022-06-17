@@ -373,7 +373,6 @@ var Grid = {
                     record.table_name = ds.table.name
                     if (record.dirty) Record.validate(record)
 
-                    // return record.hidden ? '' : grid.draw_row(record, idx, 0)
                     return record.hidden ? '' : m(Row, {list: ds.table, record: record, idx: idx})
                 })
             ]),

@@ -99,7 +99,6 @@ var Relation = {
                                     if (!rec) return
 
                                     rel.modus = 'edit'
-                                    record.active_relation = rec
                                 }
                             }, m('i', {class: 'fa fa-plus light-blue hover-blue pointer ml1'}))
                         ])
