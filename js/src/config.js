@@ -11,6 +11,7 @@ var config = {
     compressed: Cookies.get('compressed') ? Cookies.get('compressed') : false,
     button_view: Cookies.get('button_view') ? Cookies.get('button_view') : 'both',
     expand_headings: Cookies.get('expand_headings') === 'true' ? 1 : 0,
+    threshold: Cookies.get('threshold') ? Cookies.get('threshold') : 0,
 
     admin: false,
     edit_mode: false,
@@ -28,6 +29,7 @@ var config = {
         var theme = $('#preferences [name="theme"]').val()
         var button_view = $('#preferences [name="button_view"]').val()
         var expand_headings = $('#preferences [name="expand_headings"]').prop('checked')
+        var threshold = $('#preferences [name="threshold"]').val()/100
         if (
             limit != config.limit
             || select != config.select
@@ -36,6 +38,7 @@ var config = {
             || theme != config.theme
             || button_view != config.button_view
             || expand_headings != config.expand_headings
+            || threshold != config.threshold
         ) {
             config.limit = limit ? limit : config.limit
             config.select = select
@@ -44,6 +47,7 @@ var config = {
             config.theme = theme
             config.button_view = button_view
             config.expand_headings = expand_headings
+            config.threshold = threshold
             // TODO: Update grid
         }
         $('#preferences').hide()
@@ -55,6 +59,7 @@ var config = {
         Cookies.set('theme', theme, {expires:14})
         Cookies.set('button_view', button_view, {expires:14})
         Cookies.set('expand_headings', expand_headings, {expires:14})
+        Cookies.set('threshold', threshold, {expires:14})
         m.redraw()
     },
 
@@ -93,27 +98,6 @@ var config = {
                         m('option', {value: 'both'}, 'Begge')
                     ]))
                 ]),
-                /*
-                m('tr', [
-                    m('td', 'Nedtrekksliste'),
-                    m('td', [
-                        m('select[name=select]', {value: config.select}, [
-                            m('option', {value: 'native'}, 'Standard'),
-                            m('option', {value: 'selectize'}, 'Selectize'),
-                            m('option', {value: 'select2'})
-                        ])
-                    ])
-                ]),
-                m('tr', [
-                    m('td', 'Stil'),
-                    m('td', [
-                        m('select[name=theme]', {value: config.theme}, [
-                            m('option', {value: 'default'}, 'Standard'),
-                            m('option', {value: 'material'}, 'Material design')
-                        ])
-                    ])
-                ]),
-                */
                 m('tr', [
                     m('td', 'Ekspander overskrifter'),
                     m('td', [
@@ -121,6 +105,17 @@ var config = {
                             name: 'expand_headings',
                             checked: config.expand_headings
                         })
+                    ])
+                ]),
+                m('tr', [
+                    m('td', 'Visningsterskel'),
+                    m('td', [
+                        m('input[type=text]', {
+                            name: 'threshold',
+                            value: config.threshold * 100,
+                            title: 'Terskel for at feltet skal vises',
+                            class: 'w3'
+                        }), ' %'
                     ])
                 ])
             ]),

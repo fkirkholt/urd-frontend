@@ -178,6 +178,11 @@ var Relation = {
         var label = vnode.attrs.label
         var key = colname.replace('relations.', '')
         var rel = rec.relations && rec.relations[key] ? rec.relations[key] : {}
+        var usage = rec.table.relations[key].use
+
+        if (usage && usage < config.threshold) {
+            return
+        }
 
         if (rel.show_if) {
             hidden = false

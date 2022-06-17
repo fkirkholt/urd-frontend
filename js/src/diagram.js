@@ -1,4 +1,5 @@
 var mermaid
+var config = require('./config')
 
 diagram = {
     def: "",
@@ -120,6 +121,9 @@ diagram = {
                         skip = true
                     }
                 })
+            }
+            if (rel.use && rel.use < config.threshold) {
+                skip = true
             }
             if (skip) {
                 return

@@ -217,6 +217,15 @@ var Field = {
             field.text = rec.columns[colname]
         }
 
+        // Don't show fields used below threshold value
+        if (field.use && field.use < config.threshold) {
+            return
+        }
+        // Don't show fields where one value is used very frequent
+        if (field.frequency && field.frequency > (1 - config.threshold)) {
+            return
+        }
+
         // Show hidden fields only in edit mode
         if (rec.table.fields[colname].hidden && !config.edit_mode) return
 
