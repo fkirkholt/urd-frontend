@@ -148,7 +148,10 @@ var Input = {
                     class: [
                         'max-w7',
                         maxlength >= 30 ? 'w-100' : '',
+                        field.attrs ? field.attrs.class : ''
                     ].join(' '),
+                    style: field.attrs ? field.attrs.style : '',
+                    title: field.attrs ? field.attrs.title : '',
                     options: field.options,
                     optgroups: filtered_optgroups,
                     required: !field.nullable,
@@ -184,7 +187,12 @@ var Input = {
                 name: field.name,
                 style: field.expandable ? 'width: calc(100% - 30px)' : 'width: 100%',
                 required: !field.nullable,
-                class: 'max-w7 border-box',
+                class: [
+                    'max-w7 border-box',
+                    field.attrs ? field.attrs.class : ''
+                ].join(' '),
+                style: field.attrs ? field.attrs.style : '',
+                title: field.attrs ? field.attrs.title : '',
                 item: field,
                 value: field.value,
                 text: field.text,
@@ -241,14 +249,17 @@ var Input = {
                 }
             })
         } else if (field.element == 'textarea' && field.expanded === true) {
-            text = marked.parse(field.value)
+            text = field.value ? marked.parse(field.value) : ''
 
             return readOnly ? m.trust(text) : m('textarea', {
                 name: field.name,
                 class: [
                     'ba b--light-grey w-100 max-w7',
-                    field.format == 'markdown' ? 'code' : ''
+                    field.format == 'markdown' ? 'code' : '',
+                    field.attrs ? field.attrs.class : '',
                 ].join(' '),
+                style: field.attrs ? field.attrs.style : '',
+                title: field.attrs ? field.attrs.title : '',
                 required: !field.nullable,
                 value: field.value,
                 disabled: readOnly,
@@ -264,6 +275,8 @@ var Input = {
         ) {
             return m('input[type=checkbox][name=' + field.name +']', {
                 disabled: readOnly,
+                class: field.attrs ? field.attrs.class : '',
+                style: field.attrs ? field.attrs.style : '',
                 onchange: function(event) {
                     var value = event.target.checked ? 1 : 0
                     Input.validate(value, field)
@@ -277,7 +290,12 @@ var Input = {
                 : field.value
             return m('input[type=date]', {
                 name: field.name,
-                class: 'w5',
+                class: [
+                    'w5',
+                    field.attrs ? field.attrs.class : '',
+                ].join(' '),
+                style: field.attrs ? field.attrs.style : '',
+                title: field.attrs ? field.attrs.title : '',
                 // required: !field.nullable,
                 disabled: readOnly,
                 dateFormat: 'yy-mm-dd',
@@ -307,19 +325,23 @@ var Input = {
             return m('input', {
                 name: field.name,
                 maxlength: size ? size : '',
+                title: field.attrs ? field.attrs.title : '',
                 // required: !field.nullable && field.extra !== 'auto_increment',
                 class: [
                     !field.nullable && field.value === '' ? 'invalid' : '',
                     field.size >= 30 ? 'w-100' : '',
                     'min-w3 max-w7 border-box',
+                    field.attrs ? field.attrs.class : ''
                 ].join(' '),
                 style: [
                     'width: ' + width,
                     'text-overflow: ellipsis',
+                    field.attrs ? field.attrs.style : ''
                 ].join(';'),
                 disabled: readOnly,
                 value: value,
-                placeholder: placeholder,
+                placeholder: get(field, 'attrs.placeholder') || placeholder,
+                pattern: get(field, 'attrs.pattern'),
                 onchange: function(event) {
                     value = event.target.value.replace(/\u21a9/g, "\n")
                     Input.validate(value, field)
@@ -337,6 +359,7 @@ var Select = require('./select')
 var Autocomplete = require('./seeker')
 var JSONed = require('./jsoned')
 var Field = require('./field')
+var get = require('just-safe-get')
 var marked = require('marked')
 var dayjs = require('dayjs')
 var customParseFormat = require('dayjs/plugin/customParseFormat')

@@ -235,6 +235,7 @@ var Toolbar = {
             !config.show_table || ds.table.hide ? '' : m('input[type=text]', {
                 placeholder: "Søk i alle tekstfelter",
                 value: search,
+                style: 'width: 10em',
                 onfocus: function(event) {
                     event.target.select()
                 },

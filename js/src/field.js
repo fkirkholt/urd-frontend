@@ -116,8 +116,10 @@ var Field = {
                 style: "width: 350px; height: 400px;",
                 value: JSON.parse(field.value)
             })
-        } else if (field.element == "textarea" && field.expanded) {
+        } else if (get(field, 'attrs.data-format') == 'markdown' && field.expanded) {
             value = m.trust(marked.parse(field.value))
+        } else if (field.expanded) {
+            value = m.trust(value.replace("\n", '<br>'))
         }
 
         return value
@@ -250,9 +252,8 @@ var Field = {
                     class: [
                         'f6 pr1 v-top',
                         field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
-                        'max-w5 w1 truncate'
+                        'max-w5 w1 truncate',
                     ].join(' '),
-                    title: label,
                     onclick: function() {
                         if (field.foreign_key && field.expandable && rec.fields[colname].value) {
                             Field.toggle_fkey(rec, colname)
@@ -262,8 +263,8 @@ var Field = {
                         }
                     }
                 }, [
-                    field.description
-                        ? m('abbr', {title: field.description}, label)
+                    get(field, 'attrs.title')
+                        ? m('abbr', {title: field.attrs.title}, label)
                         : label,
                     ':'
                 ]),
@@ -325,3 +326,4 @@ var marked = require('marked')
 var sprintf = require("sprintf-js").sprintf
 var Input = require('./input')
 var Record = require('./record')
+var get = require('just-safe-get')
