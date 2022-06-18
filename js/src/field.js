@@ -98,40 +98,16 @@ var Field = {
     },
 
     display_value: function(field, value) {
-        if (value === '') return ''
-        if (typeof value === 'undefined') value = field.value
-        // Different types of fields
-        var is_date_as_string = value &&
-            field.placeholder == 'yyyy(-mm(-dd))' &&
-            field.datatype == 'string'
-        var is_timestamp = field.element == 'input' &&
-            field.attr.class == 'timestamp'
-        var is_date = field.element == 'input[type=date]'
-        var is_integer = field.datatype == 'integer' && !field.options && !field.foreign_key
-        var is_checkbox = field.element == 'input[type=checkbox]'
-        var date_items
+        // field.value is not set for cells in grid
+        value = field.value || value
+
 
         if (field.text) {
             value = field.text
-        } else if (is_date_as_string) {
-            if (field.size === 8) {
-                date_items = [
-                    value.substr(0,4),
-                    value.substr(4,2),
-                    value.substr(6,2)
-                ]
-                value = $.grep(date_items, Boolean).join('-')
-            }
-        } else if (is_timestamp) {
-            // var parts = value.split(' ')
-            // value = dayjs(value, 'YYYY-MM-DD').format('DD.MM.YYYY') + ' ' + parts[1]
-        } else if (is_date) {
-            // value = value ? dayjs(value, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
-        } else if (is_checkbox) {
+        } else if (field.element == 'input[type=checkbox]') {
             var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
             value = m('i', {class: 'fa ' + icon})
         } else if (field.datatype == 'json' && field.value) {
-            console.log('field.value', field.value)
             value = m(jsoned, {
                 name: field.name,
                 mode: 'view',
