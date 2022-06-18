@@ -10,11 +10,11 @@ var Field = {
 
         // Update value in grid cell
         if (rec.columns && field.name in rec.columns) {
-            rec.columns[field.name] =
+            rec.columns[field.name].text =
                 field.coltext ? field.coltext :
                 field.text    ? field.text    :
                 typeof value == "string" ? value.substring(0, 256) : value
-            rec.values[field.name] = value
+            rec.columns[field.name].value = value
         }
 
         rec.fields[field.name].value = value
@@ -31,7 +31,7 @@ var Field = {
                     if (rec.fields[name].value !== null) {
                         rec.fields[name].value = null
                         rec.fields[name].dirty = true
-                        rec.columns[name] = null
+                        rec.columns[name].text = null
                     }
                     // Get new options for select
                     m.request({
@@ -192,7 +192,7 @@ var Field = {
         var field = rec.fields[colname]
 
         if (field.virtual) {
-            field.text = rec.columns[colname]
+            field.text = rec.columns[colname].text
         }
 
         // Don't show fields used below threshold value

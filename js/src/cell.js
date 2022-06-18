@@ -20,11 +20,11 @@ var Cell = {
         var rec = list.records[rowidx]
         var field = list.fields[colname]
         if (field.hidden) return
-        var value = rec.columns[colname] == null ? ''
+        var value = rec.columns[colname].value == null ? ''
             // Show value if the table is displayed in compressed mode
-            : compressed ? rec.values[colname]
+            : compressed ? rec.columns[colname].value
             // else show the display text (that also shows in a select box)
-            : rec.columns[colname]
+            : rec.columns[colname].text
 
         value = Field.display_value(field, value)
         var expansion = colname === list.expansion_column && vnode.attrs.grid

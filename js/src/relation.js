@@ -65,7 +65,7 @@ var Relation = {
                         // Make editable only relations attached directly to record
                         // and not to parent records
                         var ismatch = Object.keys(rel.conds).every(function(k) {
-                            return rel.conds[k] == rec.values[k]
+                            return rel.conds[k] == rec.columns[k].value
                         })
                         rec.readonly = !rec.new && !ismatch
 
@@ -118,7 +118,7 @@ var Relation = {
                         // Make editable only relations attached directly to record
                         // and not to parent records
                         var ismatch = Object.keys(rel.conds).every(function(k) {
-                            return rel.conds[k] == rec.values[k]
+                            return rel.conds[k] == rec.columns[k].value
                         })
                         rec.readonly = !rec.new && !ismatch
                         if (rec.readonly) rec.inherited = true
@@ -133,10 +133,10 @@ var Relation = {
                         Object.keys(rel.fields).map(function (key) {
                             var field = rec.fields[key]
                             if (field.value === undefined) {
-                                field.value = rec.values
-                                    ? rec.values[key]
+                                field.value = rec.columns[key].value
+                                    ? rec.columns[key].value
                                     : null
-                                field.text = rec.columns[key]
+                                field.text = rec.columns[key].text
                                 field.editable = rel.privilege.update
                             }
                         })

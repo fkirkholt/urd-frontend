@@ -101,10 +101,11 @@ var Record = {
 
         // all columns and values defaults to null
         var columns = {}
-        var values = {}
         $.each(list.grid.columns, function(i, col) {
-            columns[col] = null
-            values[col] = null
+            columns[col] = {
+                text: null,
+                value: null
+            }
         })
 
         // Adds record to end of table
@@ -115,7 +116,6 @@ var Record = {
         list.records.splice(idx, 0, {
             primary_key: {},
             columns: columns,
-            values: values,
             new: true
         })
 
@@ -128,7 +128,6 @@ var Record = {
             table_name: list.name,
             table: list,
             columns: list.records[idx].columns,
-            values: list.records[idx].values,
             fields: $.extend(true, {}, list.fields),
             primary_key: {},
             groups: [] // TODO: This should be removed
@@ -222,7 +221,7 @@ var Record = {
         $.each(ds.table.fields, function(name, field) {
             if (field.extra) {
                 clone.fields[name].value = field.default
-                clone.columns[name] = field.default
+                clone.columns[name].text = field.default
                 clone.fields[name].dirty = true
                 if (field.options) {
                     if (field.default) {
@@ -275,7 +274,7 @@ var Record = {
 
                 // Update value in grid cell
                 if (rec.columns && fieldname in rec.columns) {
-                    rec.columns[fieldname] = value
+                    rec.columns[fieldname].value = value
                 }
 
             })
@@ -360,7 +359,7 @@ var Record = {
         // If disabled status for the action is based on an expression
         // then we get the status from a column with same name as alias of action
         if (action.name && rec.columns[action.name] !== undefined) {
-            action.disabled = rec.columns[action.name];
+            action.disabled = rec.columns[action.name].text;
         }
 
         return action.disabled ? '' : m('i', {
