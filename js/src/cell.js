@@ -53,6 +53,7 @@ var Cell = {
                 vnode.attrs.border ? 'br b--light-gray' : '',
                 ds.table.sort_fields[colname] ? 'min-w3' : 'min-w2',
                 'f6 pl1 pr1',
+                get(field, 'attrs.class') ? field.attrs.class : ''
             ].join(' '),
             title: compressed && value.length > 30 ? value : ''
         }, [
@@ -76,3 +77,4 @@ module.exports = Cell
 var ds = require('./datastore')
 var Field = require('./field')
 var Row = require('./row')
+var get = require('just-safe-get')
