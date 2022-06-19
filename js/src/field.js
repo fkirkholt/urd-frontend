@@ -302,9 +302,6 @@ var Field = {
                     !field.attr || !field.attr.href ? '' : m('a', {
                         href: sprintf(field.attr.href, field.value)
                     }, m('i', {class: 'icon-crosshairs light-blue hover-blue pointer'})),
-                    ds.base.schema != 'urd' || rec.table.name != 'database_' || field.name != 'name' ? '' : m('a', {
-                        href: '#/' + (rec.columns.alias ? rec.columns.alias : rec.columns.name)
-                    }, m('i', {class: 'icon-crosshairs light-blue hover-blue pointer'}))
                 ])
             ]),
             !field.foreign_key || !field.expanded ? null : m('tr', [
