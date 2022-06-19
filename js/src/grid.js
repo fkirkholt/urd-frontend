@@ -136,6 +136,7 @@ var Grid = {
         }).then(function(result) {
             ds.table = result.data
             ds.table.dirty = false
+            ds.table.ismain = true // represents main grid, and not relations
 
             // Parses sort data
             // TODO: Virker rart å måtte gjøre dette

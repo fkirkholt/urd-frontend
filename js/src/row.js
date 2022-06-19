@@ -89,7 +89,7 @@ var Row = {
         return [m('tr', {
             tabindex: 0,
             onclick: function(e) {
-                if (!parent) { // if in main grid
+                if (list.ismain) { // if in main grid
                     e.redraw = false
                     if (list.type != 'view') {
                         Record.select(list, idx)
@@ -127,14 +127,14 @@ var Row = {
                     : '',
                 'lh-copy cursor-default bg-white',
                 record.class ? record.class : '',
-                parent ? '' : (idx < list.records.length - 1)
+                !list.ismain ? '' : (idx < list.records.length - 1)
                     ? 'bb b--light-gray'
                     : 'bb b--moon-gray',
             ].join(' ')
         }, [
             m('td', {
                 align: 'right',
-                class: parent ? '' : 'linjenr pa0 w1 br b--light-gray',
+                class: !list.ismain ? '' : 'linjenr pa0 w1 br b--light-gray',
             }, [
                 config.autosave ? m.trust('&nbsp;') : m('i', {
                     class: [
@@ -145,7 +145,7 @@ var Row = {
                     ]
                 })
             ]),
-            (   !parent || // only records in relations should be expanded
+            (   list.ismain || // only records in relations should be expanded
                 record.primary_key == null
             ) ? '' : m('td.fa', {
                 class: [
@@ -162,10 +162,10 @@ var Row = {
                     rowidx: idx,
                     colname: colname,
                     compressed: config.compressed,
-                    border: !parent ? true : false,
+                    border: list.ismain ? true : false,
                 })
             }),
-            parent ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
+            !list.ismain ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
                 list.grid.actions.map(function(name, idx) {
                     var action = list.actions[name]
                     action.name = name

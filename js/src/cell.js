@@ -27,7 +27,7 @@ var Cell = {
             : rec.columns[colname].text
 
         value = Field.display_value(field, value)
-        var expansion = colname === list.expansion_column && vnode.attrs.grid
+        var expansion = colname === list.expansion_column && list.ismain
         var is_checkbox = field.element == 'input[type=checkbox]'
 
         var icon = m('i', {
