@@ -1,8 +1,10 @@
 var Stream = require('mithril/stream')
 var get = require('just-safe-get')
-var config = require('./config.js')
+var config = require('./config')
+var Diagram = require('./diagram')
+var Grid = require('./grid')
 
-Contents = {
+var Contents = {
 
     oninit: function(vnode) {
         $('#right_content').hide()
@@ -186,7 +188,10 @@ Contents = {
                     ].join(' '),
                     title: object.description ? object.description : '',
                     style: 'display:' + display,
-                    href: '#/' + ds.base.name + '/' + object.name
+                    href: '#/' + ds.base.name + '/' + object.name,
+                    onclick: function() {
+                        Diagram.draw(ds.base.tables[object.name])
+                    }
                 }, label),
                 !object.rowcount || !config.admin ? '' : m('span', {
                     class: 'ml2 light-silver',
@@ -207,7 +212,7 @@ Contents = {
     draw_foreign_keys: function(node, def) {
         var item = node.item ? node.item : node
         var object = get(ds.base, item, ds.base.tables[item])
-        diagram.draw_foreign_keys(object, def, ds.base.contents[module])
+        Diagram.draw_foreign_keys(object, def, ds.base.contents[module])
 
         if (!node.subitems) {
             return
@@ -237,7 +242,7 @@ Contents = {
                             Contents.draw_foreign_keys(node, def)
                         })
 
-                        diagram.def = def.join("\n")
+                        Diagram.def = def.join("\n")
                         $('ul#context-module').hide()
                     }
                 }, 'Vis diagram')
@@ -248,7 +253,7 @@ Contents = {
                 config.show_table ? '' : m('li', {
                     class: 'hover-blue',
                     onclick: function() {
-                        diagram.add_path(Contents.context_table)
+                        Diagram.add_path(Contents.context_table)
                         $('ul#context-table').hide()
                     }
                 }, 'Vis koblinger til denne tabellen'),
@@ -322,7 +327,7 @@ Contents = {
 
                                         if (config.show_table) {
                                             m.redraw()
-                                            grid.align_thead()
+                                            Grid.align_thead()
                                         }
                                     }
                                 })

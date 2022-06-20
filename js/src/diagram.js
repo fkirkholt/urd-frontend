@@ -1,7 +1,7 @@
 var mermaid
 var config = require('./config')
 
-diagram = {
+var Diagram = {
     def: "",
     main_table: "",
 
@@ -11,7 +11,6 @@ diagram = {
         var svg_height = $('svg').height()
         var max_width = parseInt($('svg').css('max-width'))
         var text = $(evt.target).parent().attr('id')
-        console.log('viser tooltip')
         if (max_width/svg_width > 2) {
             tooltip.innerHTML = text
             tooltip.style.display = "block"
@@ -32,19 +31,20 @@ diagram = {
                 var table_name = $(this).attr('id')
                 var table = ds.base.tables[table_name]
 
-                diagram.draw(table)
+                Diagram.draw(table)
 
-                $('#mermaid').html(diagram.def).removeAttr('data-processed')
+                $('#mermaid').html(Diagram.def).removeAttr('data-processed')
                 mermaid.init(undefined, $("#mermaid"))
                 $('#mermaid svg g').addClass('pointer')
                 $('#mermaid svg').addClass('center')
             })
+            $('body').on('mouseenter', '#mermaid svg g rect', Diagram.show_tooltip)
+                .on('mouseout', '#mermaid svg g rect', Diagram.hide_tooltip)
         })
     },
 
     onupdate: function(vnode) {
         if (this.def !== "") {
-            console.log('mermaid', mermaid)
             mermaid.mermaidAPI.initialize({
                 securityLevel: 'loose',
                 themeCSS: 'g.classGroup text{font-family: Consolas, monaco, monospace;}'
@@ -52,11 +52,7 @@ diagram = {
             $('#mermaid').html(this.def).removeAttr('data-processed')
             mermaid.init(undefined, $("#mermaid"))
 
-            console.log('legger til pointer')
             $('#mermaid svg g').addClass('pointer')
-            console.log('legger til onmousénter')
-            $('#mermaid svg g rect').attr('onmouseenter', "diagram.show_tooltip(evt);")
-                .attr('onmouseout', "diagram.hide_tooltip()")
             $('#mermaid svg').addClass('center')
         }
 
@@ -70,7 +66,7 @@ diagram = {
 
     draw: function(table) {
         var def = ["erDiagram"]
-        diagram.main_table = table.name
+        Diagram.main_table = table.name
 
         def.push(table.name + ' {')
         if (table.fields) {
@@ -150,7 +146,7 @@ diagram = {
         var def = ["classDiagram"]
         def.push("class " + table.name)
 
-        diagram.main_table = table.name
+        Diagram.main_table = table.name
 
         if (table.rowcount) {
             def.push(table.name + ' : ' + 'count(' + table.rowcount+ ')')
@@ -216,13 +212,13 @@ diagram = {
     add_path: function(table) {
         var path = []
         var level = 0
-        path = diagram.get_path(table, path)
+        path = Diagram.get_path(table, path)
 
         if (path) {
             path = path.filter(function(line) {
-                if (diagram.def.indexOf(line) !== -1) return false
+                if (Diagram.def.indexOf(line) !== -1) return false
                 // Check reversed relation
-                if (diagram.def.indexOf(line.replace('<--', '-->').split(" ").reverse().join(" ")) !== -1) return false
+                if (Diagram.def.indexOf(line.replace('<--', '-->').split(" ").reverse().join(" ")) !== -1) return false
 
                 return true
             })
@@ -254,7 +250,7 @@ diagram = {
                 : null
             var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
-            if (path.inculdes(table.name + symbol + '--{o ' + fk.table + ' : ' + fk_field_name)) {
+            if (path.includes(table.name + symbol + '--{o ' + fk.table + ' : ' + fk_field_name)) {
                 return
             }
 
@@ -263,13 +259,13 @@ diagram = {
 
             new_path.push(table.name + symbol + '--o{ ' + fk.table + ' : ' + fk_field_name)
 
-            if (fk.table == diagram.main_table) {
+            if (fk.table == Diagram.main_table) {
                 // merge found_path and new_path and remove duplicates
                 found_path = Array.from(new Set(found_path.concat(new_path)))
 
                 return
             } else {
-                new_path = diagram.get_path(fk_table, new_path)
+                new_path = Diagram.get_path(fk_table, new_path)
                 if (new_path) {
                     found_path = Array.from(new Set(found_path.concat(new_path)))
 
@@ -292,7 +288,7 @@ diagram = {
 
             if (fk_table.hidden) return
 
-            if (fk.table == diagram.main_table) {
+            if (fk.table == Diagram.main_table) {
                 found_path = found_path.concat(new_path)
                 return new_path
             } else {
@@ -300,7 +296,7 @@ diagram = {
 
                 new_path.push(fk.table + symbol + '--o{ ' + table.name + ' : ' + fk_field_name)
 
-                new_path = diagram.get_path(fk_table, new_path)
+                new_path = Diagram.get_path(fk_table, new_path)
                 if (new_path) {
                     found_path = Array.from(new Set(found_path.concat(new_path)))
 
@@ -320,4 +316,4 @@ diagram = {
     }
 }
 
-module.exports = diagram
+module.exports = Diagram

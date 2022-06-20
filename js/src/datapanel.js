@@ -16,10 +16,6 @@ var datapanel = {
             if (ds.table && ds.table.name !== table_name) {
                 ds.table = ds.base.tables[table_name]
             }
-
-            if (Diagram.main_table !== table_name) {
-                Diagram.draw(ds.base.tables[table_name])
-            }
         } else {
             var selected_idx = ds.table.selection !== null ? ds.table.selection : 0
         }
