@@ -190,7 +190,8 @@ var Contents = {
                     style: 'display:' + display,
                     href: '#/' + ds.base.name + '/' + object.name,
                     onclick: function() {
-                        Diagram.draw(ds.base.tables[object.name])
+                        Diagram.type = 'table'
+                        Diagram.root = object.name
                     }
                 }, label),
                 !object.rowcount || !config.admin ? '' : m('span', {
@@ -235,14 +236,8 @@ var Contents = {
                 m('li', {
                     class: 'hover-blue',
                     onclick: function() {
-                        var module = Contents.context_module
-                        var def = ['erDiagram']
-
-                        Object.values(ds.base.contents[module].subitems).map(function(node) {
-                            Contents.draw_foreign_keys(node, def)
-                        })
-
-                        Diagram.def = def.join("\n")
+                        Diagram.type = 'module'
+                        Diagram.root = Contents.context_module
                         $('ul#context-module').hide()
                     }
                 }, 'Vis diagram')
@@ -253,6 +248,15 @@ var Contents = {
                 config.show_table ? '' : m('li', {
                     class: 'hover-blue',
                     onclick: function() {
+                        Diagram.type = 'descendants'
+                        Diagram.root = Contents.context_table.name
+                        $('ul#context-table').hide()
+                    }
+                }, 'Vis relasjoner'),
+                config.show_table ? '' : m('li', {
+                    class: 'hover-blue',
+                    onclick: function() {
+                        Diagram.type = 'custom'
                         Diagram.add_path(Contents.context_table)
                         $('ul#context-table').hide()
                     }

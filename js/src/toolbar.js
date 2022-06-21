@@ -199,7 +199,8 @@ var Toolbar = {
                         if (config.show_table) {
                             Grid.align_thead()
                         } else {
-                            Diagram.draw(ds.base.tables[ds.table.name])
+                            Diagram.type = 'table'
+                            Diagram.root = ds.table.name
                         }
                         m.redraw()
                     }

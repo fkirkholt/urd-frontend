@@ -1,9 +1,11 @@
 var mermaid
 var config = require('./config')
+var get = require('just-safe-get')
 
 var Diagram = {
     def: "",
-    main_table: "",
+    root: "",
+    type: "",
 
     show_tooltip: function(evt) {
         let tooltip = document.getElementById("tooltip")
@@ -29,18 +31,34 @@ var Diagram = {
             mermaid = module.default
             $('body').on('click', 'svg g', function() {
                 var table_name = $(this).attr('id')
-                var table = ds.base.tables[table_name]
 
-                Diagram.draw(table)
+                Diagram.type = 'table'
+                Diagram.root = table_name
 
                 $('#mermaid').html(Diagram.def).removeAttr('data-processed')
                 mermaid.init(undefined, $("#mermaid"))
                 $('#mermaid svg g').addClass('pointer')
                 $('#mermaid svg').addClass('center')
+
+                m.redraw()
             })
             $('body').on('mouseenter', '#mermaid svg g rect', Diagram.show_tooltip)
                 .on('mouseout', '#mermaid svg g rect', Diagram.hide_tooltip)
         })
+    },
+
+    onbeforeupdate: function(vnode) {
+        if (Diagram.type == 'module') {
+            var def = ['erDiagram']
+            Object.values(ds.base.contents[Diagram.root].subitems).map(function(node) {
+                Diagram.draw_foreign_keys_node(node, def)
+            })
+            Diagram.def = def.join("\n")
+        } else if (Diagram.type == 'table') {
+            Diagram.def = Diagram.get_table_def(ds.base.tables[Diagram.root])
+        } else if (Diagram.type == 'descendants') {
+            Diagram.def = Diagram.get_table_def(ds.base.tables[Diagram.root], [])
+        }
     },
 
     onupdate: function(vnode) {
@@ -64,25 +82,33 @@ var Diagram = {
         })
     },
 
-    draw: function(table) {
-        var def = ["erDiagram"]
-        Diagram.main_table = table.name
-
-        def.push(table.name + ' {')
-        if (table.fields) {
-            var n = 0
-            Object.keys(table.fields).map(function(alias) {
-                var field = table.fields[alias];
-                if (!field.hidden) {
-                    n++
-                    if (n>10) {
-                        return
-                    }
-                    def.push(field.datatype + ' ' + field.name);
-                }
-            });
+    get_table_def: function(table, tablenames) {
+        var recursive = false
+        if (typeof tablenames == 'object') {
+            recursive = true
+            tablenames.push(table.name)
         }
-        def.push('}')
+        var def = []
+        var def2
+
+        if (!recursive || tablenames.length == 1) {
+            def.push("erDiagram")
+            def.push(table.name + ' {')
+            if (table.fields) {
+                var n = 0
+                Object.keys(table.fields).map(function(alias) {
+                    var field = table.fields[alias];
+                    if (!field.hidden) {
+                        n++
+                        if (n>10) {
+                            return
+                        }
+                        def.push(field.datatype + ' ' + field.name);
+                    }
+                });
+            }
+            def.push('}')
+        }
 
         Object.keys(table.foreign_keys).map(function(alias) {
             var fk = table.foreign_keys[alias]
@@ -97,6 +123,10 @@ var Diagram = {
             // def.push(fk.table + ' : pk(' + fk_table.primary_key.join(', ') + ')')
             if (fk_table.rowcount && fk.table != table.name) {
                 // def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
+            }
+            if (false && recursive && !tablenames.includes(fk.table)) {
+                def2 = Diagram.get_table_def(fk_table, tablenames)
+                def = def.concat(def2)
             }
         })
 
@@ -137,16 +167,18 @@ var Diagram = {
             if (rel_table.rowcount) {
                 def.push(rel.table + ' : count(' + rel_table.rowcount + ')')
             }
+            if (recursive && !tablenames.includes(rel.table)) {
+                def2 = Diagram.get_table_def(rel_table, tablenames)
+                def = def.concat(def2)
+            }
         })
 
-        this.def = def.join("\n")
+        return def.join("\n")
     },
 
     draw_class: function(table) {
         var def = ["classDiagram"]
         def.push("class " + table.name)
-
-        Diagram.main_table = table.name
 
         if (table.rowcount) {
             def.push(table.name + ' : ' + 'count(' + table.rowcount+ ')')
@@ -194,6 +226,20 @@ var Diagram = {
         this.def = def.join("\n")
     },
 
+    draw_foreign_keys_node: function(node, def) {
+        var item = node.item ? node.item : node
+        var object = get(ds.base, item, ds.base.tables[item])
+        Diagram.draw_foreign_keys(object, def, ds.base.contents[module])
+
+        if (!node.subitems) {
+            return
+        }
+
+        Object.values(node.subitems).map(function(subnode) {
+            Diagram.draw_foreign_keys_node(subnode, def)
+        })
+    },
+
     draw_foreign_keys: function(table, def, module) {
         if (table.hidden) return
         Object.keys(table.foreign_keys).map(function(alias) {
@@ -223,7 +269,7 @@ var Diagram = {
                 return true
             })
 
-            this.def += "\n" + path.join("\n")
+            Diagram.def += "\n" + path.join("\n")
         }
     },
 
@@ -259,7 +305,7 @@ var Diagram = {
 
             new_path.push(table.name + symbol + '--o{ ' + fk.table + ' : ' + fk_field_name)
 
-            if (fk.table == Diagram.main_table) {
+            if (fk.table == Diagram.root) {
                 // merge found_path and new_path and remove duplicates
                 found_path = Array.from(new Set(found_path.concat(new_path)))
 
@@ -288,7 +334,7 @@ var Diagram = {
 
             if (fk_table.hidden) return
 
-            if (fk.table == Diagram.main_table) {
+            if (fk.table == Diagram.root) {
                 found_path = found_path.concat(new_path)
                 return new_path
             } else {
@@ -312,7 +358,7 @@ var Diagram = {
         return m('div.mermaid', {
             id: "mermaid",
             class: "flex flex-grow flex-column overflow-auto w-100"
-        }, this.def)
+        }, Diagram.def)
     }
 }
 
