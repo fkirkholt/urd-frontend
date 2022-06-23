@@ -7,6 +7,7 @@ var Diagram = {
     root: "",
     type: "",
 
+    /** Show tooltip for boxes on mouseover when text is too small to read */
     show_tooltip: function(evt) {
         let tooltip = document.getElementById("tooltip")
         var svg_width = $('svg').width()
@@ -29,25 +30,25 @@ var Diagram = {
     oninit: function(vnode) {
         import(/* webpackChunkName: "mermaid" */ 'mermaid').then(module => {
             mermaid = module.default
+
+            // Show diagram for table when clicking on table box
             $('body').on('click', 'svg g', function() {
                 var table_name = $(this).attr('id')
 
                 Diagram.type = 'table'
                 Diagram.root = table_name
 
-                $('#mermaid').html(Diagram.def).removeAttr('data-processed')
-                mermaid.init(undefined, $("#mermaid"))
-                $('#mermaid svg g').addClass('pointer')
-                $('#mermaid svg').addClass('center')
-
                 m.redraw()
             })
+
             $('body').on('mouseenter', '#mermaid svg g rect', Diagram.show_tooltip)
                 .on('mouseout', '#mermaid svg g rect', Diagram.hide_tooltip)
         })
     },
 
     onbeforeupdate: function(vnode) {
+        // Define diagram based on type before redraw
+        // This makes the diagram respond to changes in threshold value
         if (Diagram.type == 'module') {
             var def = ['erDiagram']
             Object.values(ds.base.contents[Diagram.root].subitems).map(function(node) {
@@ -63,6 +64,7 @@ var Diagram = {
 
     onupdate: function(vnode) {
         if (this.def !== "") {
+            // Redraw the graph if it's changed
             mermaid.mermaidAPI.initialize({
                 securityLevel: 'loose',
                 themeCSS: 'g.classGroup text{font-family: Consolas, monaco, monospace;}'
@@ -74,6 +76,7 @@ var Diagram = {
             $('#mermaid svg').addClass('center')
         }
 
+        // Title for reference tables should be in italic
         $('svg g.classGroup text tspan.title').each(function(index) {
             var table_name = $(this).html()
             if (ds.base.tables[table_name].type == 'reference') {
@@ -82,20 +85,30 @@ var Diagram = {
         })
     },
 
+    /**
+     * Define ER-diagram for table with relations
+     *
+     * @param {object} table - the table that should be drawn
+     * @param {array} tablenames - used for recursion
+     */
     get_table_def: function(table, tablenames) {
-        var recursive = false
+        var recursion = false
         if (typeof tablenames == 'object') {
-            recursive = true
+            recursion = true
             tablenames.push(table.name)
         }
+        // array with definition strings
         var def = []
-        var def2
+        // array with definition strings used with recursion
+        var def_recur
 
-        if (!recursive || tablenames.length == 1) {
+        // definition for main table
+        if (!recursion || tablenames.length == 1) {
             def.push("erDiagram")
             def.push(table.name + ' {')
             if (table.fields) {
                 var n = 0
+                // defines first 10 columns (any more would take too much space)
                 Object.keys(table.fields).map(function(alias) {
                     var field = table.fields[alias];
                     if (!field.hidden) {
@@ -124,9 +137,9 @@ var Diagram = {
             if (fk_table.rowcount && fk.table != table.name) {
                 // def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
             }
-            if (false && recursive && !tablenames.includes(fk.table)) {
-                def2 = Diagram.get_table_def(fk_table, tablenames)
-                def = def.concat(def2)
+            if (false && recursion && !tablenames.includes(fk.table)) {
+                def_recur = Diagram.get_table_def(fk_table, tablenames)
+                def = def.concat(def_recur)
             }
         })
 
@@ -167,9 +180,9 @@ var Diagram = {
             if (rel_table.rowcount) {
                 def.push(rel.table + ' : count(' + rel_table.rowcount + ')')
             }
-            if (recursive && !tablenames.includes(rel.table)) {
-                def2 = Diagram.get_table_def(rel_table, tablenames)
-                def = def.concat(def2)
+            if (recursion && !tablenames.includes(rel.table)) {
+                def_recur = Diagram.get_table_def(rel_table, tablenames)
+                def = def.concat(def_recur)
             }
         })
 
