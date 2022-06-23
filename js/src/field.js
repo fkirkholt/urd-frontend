@@ -108,7 +108,7 @@ var Field = {
             var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
             value = m('i', {class: 'fa ' + icon})
         } else if (field.datatype == 'json' && field.value) {
-            value = m(jsoned, {
+            value = m(JSONed, {
                 name: field.name,
                 mode: 'view',
                 field: field,
@@ -324,3 +324,4 @@ var sprintf = require("sprintf-js").sprintf
 var Input = require('./input')
 var Record = require('./record')
 var get = require('just-safe-get')
+var JSONed = require('./jsoned')

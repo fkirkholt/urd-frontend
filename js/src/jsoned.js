@@ -6,7 +6,8 @@ var JSONed = {
     },
 
     oncreate: function(vnode) {
-        import(/* webpackChunkName: "jsoneditor" */ 'jsoneditor').then(jsoneditor => {
+        import(/* webpackChunkName: "jsoneditor" */ 'jsoneditor').then(module => {
+            var jsoneditor = module.default
             var options = {
                 "mode": vnode.attrs.mode || "tree",
                 "mainMenuBar": false,
