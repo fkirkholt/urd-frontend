@@ -95,6 +95,21 @@ var header = {
                 ])
             ]),
             m('div#user', {class: 'fr mr1 mt2'}, ds.user.name),
+            (!ds.user.admin) ? null : m('label', {
+                class: 'fr mr3 mt1'
+            }, [
+                'Terskel ',
+                m('input.threshold', {
+                    type: "number",
+                    class: "w3",
+                    value: config.threshold * 100,
+                    title: 'Terskel',
+                    label: 'heisann ku',
+                    onchange: function(ev) {
+                        config.threshold = ev.target.value/100
+                    }
+                }), ' %',
+            ]),
             (!ds.user.admin) ? null : m('label', {class: 'fr mr3 mt2'}, [
                 m('input#admin_checkbox', {
                     class: 'mr1',
