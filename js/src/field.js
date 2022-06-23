@@ -113,7 +113,7 @@ var Field = {
                 mode: 'view',
                 field: field,
                 rec: rec,
-                style: "width: 350px; height: 400px;",
+                style: "width: 330px; height: 400px;",
                 value: JSON.parse(field.value)
             })
         } else if (get(field, 'attrs.data-format') == 'markdown' && field.expanded) {
