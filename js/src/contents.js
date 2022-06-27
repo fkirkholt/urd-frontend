@@ -64,34 +64,36 @@ var Contents = {
                 class: node.class_module,
                 style: 'display:' + display_header
             }, [
-                m('i', {
-                    class: [
-                        node.expanded ? 'fa fa-angle-down': 'fa fa-angle-right',
-                        node.class_label,
-                        'w1 tc',
-                        'light-silver'
-                    ].join(' '),
-                    onclick: function(e) {
-                        node.expanded = !node.expanded
-                    }
-                }),
-                m('.label', {
-                    class: [
-                        node.class_label,
-                        'di b'
-                    ].join(' '),
-                    onclick: function(e) {
-                        node.expanded = !node.expanded
-                    },
-                    oncontextmenu: function(event) {
-                        Contents.context_module = label
-                        $('ul#context-module').css({top: event.clientY, left: event.clientX}).toggle()
-                        return false
-                    }
-                }, label),
-                !node.count || !config.admin ? '' : m('span', {
-                    class: 'ml2 light-silver'
-                }, '(' + node.count + ')'),
+                m('span.nowrap', [
+                    m('i', {
+                        class: [
+                            node.expanded ? 'fa fa-angle-down': 'fa fa-angle-right',
+                            node.class_label,
+                            'w1 tc',
+                            'light-silver'
+                        ].join(' '),
+                        onclick: function(e) {
+                            node.expanded = !node.expanded
+                        }
+                    }),
+                    m('.label', {
+                        class: [
+                            node.class_label,
+                            'di b'
+                        ].join(' '),
+                        onclick: function(e) {
+                            node.expanded = !node.expanded
+                        },
+                        oncontextmenu: function(event) {
+                            Contents.context_module = label
+                            $('ul#context-module').css({top: event.clientY, left: event.clientX}).toggle()
+                            return false
+                        }
+                    }, label),
+                    !node.count || !config.admin ? '' : m('span', {
+                        class: 'ml2 light-silver'
+                    }, '(' + node.count + ')'),
+                ]),
                 m('.content', {
                     class: node.class_content,
                     style: 'display: ' + display
@@ -271,21 +273,19 @@ var Contents = {
                         ds.set_cfg_value(tbl, 'hidden', tbl.hidden)
                     }
                 }, 'Skjul tabell'),
-                /*
                 m('li.type', {
                     class: 'hover-blue',
                     onclick: function() {
                         console.log('valgte contextmenyitem')
                         var tbl = Contents.context_table
-                        tbl.type = tbl.type == 'data'
-                            ? 'reference'
-                            : 'data'
+                        tbl.type = tbl.type == 'table'
+                            ? 'list'
+                            : 'table'
                         $('ul#context-table').hide()
 
-                        Contents.set_cfg_value(tbl, 'type', tbl.type)
+                        ds.set_cfg_value(tbl, 'type', tbl.type)
                     }
                 }, 'Sett til referansetabell???')
-                */
             ]),
             m('.list', {class: "flex flex-column overflow-auto min-w5"}, [
                 !ds.base.schemata || ds.base.schemata.length < 2 ? '' : m('select', {
