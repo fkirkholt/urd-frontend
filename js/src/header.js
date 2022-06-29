@@ -81,7 +81,9 @@ var header = {
                     }, 'Utskrift'),
                     m('li', {
                         onclick: function() {
-                            $.getJSON('logout', function() {
+                            m.request({
+                                url: 'logout'
+                            }).then(function() {
                                 ds.base.server = null
                                 ds.base.name = null
                                 if (m.route.get() == "") {
@@ -89,7 +91,7 @@ var header = {
                                 } else {
                                     m.route.set('')
                                 }
-                            });
+                            })
                         }
                     }, 'Logg ut'),
                 ])
