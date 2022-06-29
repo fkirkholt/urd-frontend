@@ -146,14 +146,23 @@ var Diagram = {
         var rel_tables = []
         Object.keys(table.relations).map(function(alias) {
             var rel = table.relations[alias]
-            rel_tables.push(rel.table)
+            if (rel.table != table.name) {
+                rel_tables.push(rel.table)
+            }
         })
 
         Object.keys(table.relations).map(function(alias) {
             var rel = table.relations[alias]
             var rel_table = ds.base.tables[rel.table]
             var skip = false
-            if (true) {
+
+            if (rel_table.hidden) {
+                skip = true
+            }
+
+            // Removes relations that represents grand children and down
+            // Deactivated until we get config for this
+            if (false) {
                 Object.keys(rel_table.foreign_keys).map(function(alias) {
                     var rel_fk = rel_table.foreign_keys[alias]
                     if (rel_tables.includes(rel_fk.table)) {
@@ -161,6 +170,8 @@ var Diagram = {
                     }
                 })
             }
+
+            // Remove relations
             if (rel.use && rel.use < config.threshold) {
                 skip = true
             }
@@ -172,14 +183,13 @@ var Diagram = {
                 ? ds.base.tables[rel.table].fields[fk_field_name]
                 : null
             var symbol = fk_field && fk_field.nullable ? ' o|' : ' ||'
-            if (rel.table == table.name) return
+            if (rel.table == table.name) {
+                return
+            }
 
             var line  = rel.hidden ? '..' : '--'
             def.push(table.name + symbol + line + 'o{ ' + rel.table + ' : ' + fk_field_name)
 
-            if (rel_table.rowcount) {
-                def.push(rel.table + ' : count(' + rel_table.rowcount + ')')
-            }
             if (recursion && !tablenames.includes(rel.table)) {
                 def_recur = Diagram.get_table_def(rel_table, tablenames)
                 def = def.concat(def_recur)
@@ -314,7 +324,9 @@ var Diagram = {
             }
 
             var fk_table = ds.base.tables[fk.table]
-            if (fk_table.hidden) return
+            if (fk_table.hidden || fk_table.type == 'list') {
+                return
+            }
 
             new_path.push(table.name + symbol + '--o{ ' + fk.table + ' : ' + fk_field_name)
 
@@ -345,7 +357,9 @@ var Diagram = {
             }
             var fk_table = ds.base.tables[fk.table]
 
-            if (fk_table.hidden) return
+            if (fk_table.hidden || fk_table.type == 'list') {
+                return
+            }
 
             if (fk.table == Diagram.root) {
                 found_path = found_path.concat(new_path)
