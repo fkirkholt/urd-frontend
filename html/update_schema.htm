@@ -87,8 +87,9 @@ var schema_dialog = {
                         $('#action-dialog').hide()
 
                         // show progress bar
-                        $('#progress').show().children('[name="percent"]').text('0%')
-                        this.track_progress()
+                        // $('#progress').show().children('[name="percent"]').text('0%')
+                        $('#progress').show().children('[name=message]').html('Genererer cache ...')
+                        // this.track_progress()
                     }.bind(this)
                 }),
                 m('input[type=button]', {
