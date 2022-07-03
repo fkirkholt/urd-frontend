@@ -190,7 +190,7 @@ var Contents = {
                     ].join(' '),
                     title: object.description ? object.description : '',
                     style: 'display:' + display,
-                    href: '#/' + ds.base.name + '/' + object.name,
+                    href: '#/' + ds.base.name + '/' + (config.tab || 'data')  + '/' + object.name,
                     onclick: function() {
                         Diagram.type = 'table'
                         Diagram.root = object.name
@@ -247,7 +247,7 @@ var Contents = {
             m('ul#context-table', {
                 class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
             }, [
-                config.show_table ? '' : m('li', {
+                config.tab == 'data' ? '' : m('li', {
                     class: 'hover-blue',
                     onclick: function() {
                         Diagram.type = 'descendants'
@@ -255,7 +255,7 @@ var Contents = {
                         $('ul#context-table').hide()
                     }
                 }, 'Vis relasjoner'),
-                config.show_table ? '' : m('li', {
+                config.tab == 'data' ? '' : m('li', {
                     class: 'hover-blue',
                     onclick: function() {
                         Diagram.type = 'custom'
@@ -317,25 +317,8 @@ var Contents = {
                         return Contents.draw_node(table.label, 'tables.'+name, 3)
                     }),
                 m('div', [
-                    !((ds.type == 'contents' || !config.show_table) && config.admin)
+                    !((ds.type == 'contents' || config.tab == 'diagram') && config.admin)
                         ? '' : m('ul', { target: '_blank', class: 'f6 list pa1' }, [
-                            m('li', { class: 'dib' }, [
-                                m('i', {
-                                    class: [
-                                        'fa ml1 mr3 pointer dim',
-                                        config.show_table ? 'fa-project-diagram' : 'fa-table'
-                                    ].join(' '),
-                                    title: config.show_table ? 'Vis ER-diagram' : 'Vis tabell',
-                                    onclick: function () {
-                                        config.show_table = !config.show_table
-
-                                        if (config.show_table) {
-                                            m.redraw()
-                                            Grid.align_thead()
-                                        }
-                                    }
-                                })
-                            ]),
                             m('li', { class: 'dib' }, [
                                 m('i', {
                                     class: 'fa fa-edit',

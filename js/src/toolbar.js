@@ -186,34 +186,14 @@ var Toolbar = {
                     m('input', {type: 'hidden', name: 'primary_key'}),
                 ]),
             ]),
-            !config.admin ? '' : m('li', {class: 'dib'}, [
-                m('i', {
-                    class: [
-                        'fa ml1 mr3 pointer dim',
-                        config.show_table ? 'fa-sitemap' : 'fa-table'
-                    ].join(' '),
-                    title: config.show_table ? 'Vis ER-diagram' : 'Vis tabell',
-                    onclick: function() {
-                        config.show_table = !config.show_table
-
-                        if (config.show_table) {
-                            Grid.align_thead()
-                        } else {
-                            Diagram.type = 'table'
-                            Diagram.root = ds.table.name
-                        }
-                        m.redraw()
-                    }
-                })
-            ]),
-            !config.show_table || ds.table.hide  ? '' : m('i', {
+            ds.table.hide  ? '' : m('i', {
                 class: 'ml1 mr2 fa pointer ' + (config.compressed ? 'fa-expand' : 'fa-compress'),
                 title: config.compressed ? 'Ekspander' : 'Komprimer',
                 onclick: function() {
                     config.compressed = !config.compressed
                 }
             }),
-            !config.show_table || config.std_search == 'simple' ? '' : m('li', {class: 'dib'}, [
+            config.std_search == 'simple' ? '' : m('li', {class: 'dib'}, [
                 m('i', {
                     class: 'fa fa-filter ml1 mr2 pointer dim',
                     title: 'Filtrer tabell',
@@ -224,7 +204,7 @@ var Toolbar = {
                     }
                 }),
             ]),
-            !config.show_table || config.std_search == 'advanced' ? '' : m('i', {
+            config.std_search == 'advanced' ? '' : m('i', {
                 class: 'fa fa-search ml1 mr2 pointer dim',
                 title: 'Søk',
                 onclick: function() {
@@ -233,7 +213,7 @@ var Toolbar = {
                     ds.table.search = !ds.table.search
                 }
             }),
-            !config.show_table || ds.table.hide ? '' : m('input[type=text]', {
+            ds.table.hide ? '' : m('input[type=text]', {
                 placeholder: "Søk i alle tekstfelter",
                 value: search,
                 style: 'width: 10em',
@@ -245,7 +225,7 @@ var Toolbar = {
 
                 }
             }),
-            !config.show_table || ds.table.hide ? '' : m('select', {
+            ds.table.hide ? '' : m('select', {
                 class: 'ml1 mr2 dn',
                 name: 'btn_saved_searches',
                 title: 'Lagrede søk',
@@ -497,7 +477,7 @@ var Toolbar = {
                     onclick: Toolbar.delete_record
                 }) : ''
             ]),
-            config.show_table ? '' : m('li', {class: 'dib'}, [
+            m('li', {class: 'dib'}, [
                 m('i', {
                     class: 'fa fa-print ml1 mr2 pointer dim',
                     onclick: function() {
@@ -556,7 +536,9 @@ var Toolbar = {
                     Grid.update(ds.table, {})
                 }
             })),
-            config.show_table ? '' : m('li.dib', {
+            // When single record is shown.
+            // NOTE: show_record is never set, so this never shows
+            !config.show_record ? '' : m('li.dib', {
                 onclick: function(e) {
                     // Toolbar.navigate(e.target.name)
                 }

@@ -9,14 +9,14 @@ var config = {
     select: Cookies.get('select') ? Cookies.get('select') : 'native',
     theme: Cookies.get('theme') ? Cookies.get('theme') : 'standard',
     compressed: Cookies.get('compressed') ? Cookies.get('compressed') : false,
-    button_view: Cookies.get('button_view') ? Cookies.get('button_view') : 'both',
+    button_view: Cookies.get('button_view') ? Cookies.get('button_view') : 'icon',
     expand_headings: Cookies.get('expand_headings') === 'true' ? 1 : 0,
     threshold: Cookies.get('threshold') ? Cookies.get('threshold') : 0,
 
     admin: false,
     edit_mode: false,
     hide_empty: false,
-    show_table: true,
+    tab: 'data',
 
     save: function() {
         var autosave = $('#preferences [name="autosave"]').prop('checked')

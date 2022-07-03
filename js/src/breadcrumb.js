@@ -16,7 +16,7 @@ module.exports = {
             items.push({
                 icon: "fa-database",
                 text: ds.base.label,
-                addr: ds.base.name
+                addr: ds.base.name + '/data'
             })
         }
 
@@ -24,7 +24,7 @@ module.exports = {
             items.push({
                 icon: "fa-table",
                 text: ds.table.label,
-                addr: ds.base.name + '/' + ds.table.name
+                addr: ds.base.name + '/data/' + ds.table.name
             })
         } else if (param.report) {
             // TODO: ds.base.reports sometimes undefined - unknown why

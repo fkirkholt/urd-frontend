@@ -1,20 +1,11 @@
-var config = require('./config.js');
-var breadcrumb = require('./breadcrumb.js');
+var config = require('./config.js')
+var breadcrumb = require('./breadcrumb.js')
 
 var header = {
 
     set_admin: function(value) {
-        config.admin = value;
-        if (value == 0) config.show_table = true;
-        m.redraw();
-    },
-
-    set_view: function(value) {
-        config.edit_mode = value;
-    },
-
-    set_hidden: function(value) {
-        config.hide_empty = value;
+        config.admin = value
+        m.redraw()
     },
 
     view: function(vnode) {
@@ -26,32 +17,32 @@ var header = {
                 m('div', {
                     class: 'fa fa-cog ml3 mr3',
                     onclick: function() {
-                        $('div#menu ul').toggle();
+                        $('div#menu ul').toggle()
                     }
                 }),
                 m('ul', {
                     class: 'fixed right-0 list dn pa1 shadow-5 pointer bg-white black mt0',
                     onclick: function() {
-                        $('div#menu ul').hide();
+                        $('div#menu ul').hide()
                     }
                 }, [
                     m('li', {
                         onclick: function() {
-                            $('#preferences').show();
-                            $('#preferences [name=autosave]').prop('checked', config.autosave);
-                            $('div.curtain').show();
+                            $('#preferences').show()
+                            $('#preferences [name=autosave]').prop('checked', config.autosave)
+                            $('div.curtain').show()
                         }
                     }, 'Innstillinger'),
                     m('li', {
                         class: 'dn',
                         onclick: function() {
                             if ($('#keyboard-shortcuts').css('visibility') == 'visible') {
-                                $('#keyboard-shortcuts').css('visibility', 'hidden');
-                                $(this).html('Vis hurtigtaster');
+                                $('#keyboard-shortcuts').css('visibility', 'hidden')
+                                $(this).html('Vis hurtigtaster')
                             }
                             else {
-                                $('#keyboard-shortcuts').css('visibility', 'visible');
-                                $(this).html('Skjul hurtigtaster');
+                                $('#keyboard-shortcuts').css('visibility', 'visible')
+                                $(this).html('Skjul hurtigtaster')
                             }
                         }
                     }, 'Hurtigtaster'),
@@ -59,10 +50,10 @@ var header = {
                         class: '',
                         onclick: function() {
                             if ($('div.print-view').is(':visible')) {
-                                $('div.print-view').hide();
-                                $('#header').show();
-                                $('#page-container').show();
-                                $('#meny option[value="utskrift"]').html('Utskriftsvisning');
+                                $('div.print-view').hide()
+                                $('#header').show()
+                                $('#page-container').show()
+                                $('#meny option[value="utskrift"]').html('Utskriftsvisning')
                             }
                             else {
                                 m.request({
@@ -72,10 +63,10 @@ var header = {
                                     $('#print-view .content').append(result)
                                 })
 
-                                $('#header').hide();
-                                $('#page-container').hide();
-                                $('#print-view').show();
-                                $('#meny option[value="utskrift"]').html('Lukk utskriftsvisning');
+                                $('#header').hide()
+                                $('#page-container').hide()
+                                $('#print-view').show()
+                                $('#meny option[value="utskrift"]').html('Lukk utskriftsvisning')
                             }
                         }
                     }, 'Utskrift'),
@@ -97,21 +88,6 @@ var header = {
                 ])
             ]),
             m('div#user', {class: 'fr mr1 mt2'}, ds.user.name),
-            (!ds.user.admin) ? null : m('label', {
-                class: 'fr mr3 mt1'
-            }, [
-                'Terskel ',
-                m('input.threshold', {
-                    type: "number",
-                    class: "w3",
-                    value: config.threshold * 100,
-                    title: 'Terskel',
-                    label: 'heisann ku',
-                    onchange: function(ev) {
-                        config.threshold = ev.target.value/100
-                    }
-                }), ' %',
-            ]),
             (!ds.user.admin) ? null : m('label', {class: 'fr mr3 mt2'}, [
                 m('input#admin_checkbox', {
                     class: 'mr1',
@@ -123,34 +99,8 @@ var header = {
                     }
                 }),
             ], 'Adminmodus'),
-            m('label', {
-                class: 'fr mr3 mt2'
-            }, [
-                m('input#view_checkbox', {
-                    class: 'mr1',
-                    type: 'checkbox',
-                    value: 1,
-                    checked: config.edit_mode,
-                    onclick: function(ev) {
-                        header.set_view(ev.target.checked)
-                    }
-                })
-            ], 'Redigeringsmodus'),
-            m('label', {
-                class: 'fr mr3 mt2'
-            }, [
-                m('input', {
-                    class: 'mr1',
-                    type: 'checkbox',
-                    value: 1,
-                    checked: config.hide_empty,
-                    onclick: function(ev) {
-                        header.set_hidden(ev.target.checked)
-                    }
-                })
-            ], 'Skjul tomme felt')
         ]
     }
 }
 
-module.exports = header;
+module.exports = header
