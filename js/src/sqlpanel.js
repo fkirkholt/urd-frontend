@@ -6,8 +6,12 @@ var SQLpanel = {
         return ds.result.map(function(query, i) {
             if (query.data) {
                 return [
-                    m('p', {class: 'mb0'}, m.trust(query.string.replace(/\n/g, '<br>'))),
-                    m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
+                    ds.result.length == 1 ? null : m(Codefield, {
+                        id: 'query'+i,
+                        value: query.string,
+                        editable: false
+                    }),
+                    ds.result.length == 1 ? null : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
                     m('table', {
                         class: 'collapse ba'
                     }, [
@@ -70,18 +74,30 @@ var SQLpanel = {
     },
 
     view: function(vnode) {
+        var total_time = 0
+        if (ds.result) {
+            ds.result.map(function(query, i) {
+                total_time += query.time
+            })
+        }
+
         return [
             m(Contents),
             m('div', {
 
             }, [
                 m('div', {style: 'width: fit-content'}, [
-                    m(SQLeditor),
-                    m('div', [
+                    m(Codefield, {
+                        id: 'query',
+                        class: 'ml3 w8 ba b--light-silver mb2',
+                        editable: true
+                    }),
+                    m('div', {class: 'ml3 h2'}, [
+                        !ds.result ? null : m('span',{class: 'fl'}, total_time + 's'),
                         m('button', {
                             class: 'fr pt0 pb0 fa fa-play',
                             onclick: function() {
-                                var sql = $('#sql').val()
+                                var sql = Codefield.get_value('query')
                                 expressions = sql.split(';')
                                 expressions.reverse()
                                 ds.result = []
@@ -118,4 +134,4 @@ module.exports = SQLpanel
 
 var config = require('./config')
 var Contents = require('./contents')
-var SQLeditor = require('./sqleditor')
+var Codefield = require('./codefield')
