@@ -12,6 +12,7 @@ var tabbar = require('./tabbar.js')
 var datapanel = require('./datapanel.js')
 var diagrampanel = require('./diagrampanel.js')
 var Diagram = require('./diagram')
+var SQLpanel = require('./sqlpanel')
 var export_dialog = require('./export.js')
 var convert_dialog = require('./convert.js')
 var config = require('./config.js')
@@ -82,6 +83,14 @@ m.route($('#main')[0], '/', {
     "/:base/diagram/:table": {
         onmatch: function(args, requestedPath) {
             return diagrampanel
+        }
+    },
+    "/:base/sql": {
+        onmatch: function(args, requestedPath) {
+            var base_name = args.base
+            ds.load_database(base_name)
+            config.tab = 'sql'
+            return SQLpanel
         }
     },
     "/:base/reports/:report": report

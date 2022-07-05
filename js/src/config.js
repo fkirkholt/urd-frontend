@@ -17,6 +17,7 @@ var config = {
     edit_mode: false,
     hide_empty: false,
     tab: 'data',
+    limit: 1000,
 
     save: function() {
         var autosave = $('#preferences [name="autosave"]').prop('checked')

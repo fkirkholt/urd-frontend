@@ -79,7 +79,7 @@ var tabbar = {
                     }
                 })
             ], 'Skjul tomme felt'),
-            (!ds.user.admin) ? null : m('label', {
+            (!ds.user.admin) || config.tab == 'sql' ? null : m('label', {
                 class: 'fr mr3'
             }, [
                 'Terskel ',
