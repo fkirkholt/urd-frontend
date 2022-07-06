@@ -27,7 +27,7 @@ var SQLpanel = {
                                 Object.keys(item).map(function(cell, i) {
                                     return m('td', {
                                         class: 'pl1 pl2'
-                                    }, item[cell])
+                                    }, m.trust(item[cell].replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;')))
                                 })
                             ])
                         })
@@ -36,7 +36,12 @@ var SQLpanel = {
                 ]
             } else {
                 return [
-                    m('p', m.trust(query.string.replace("\n", '<br>'))),
+                    ds.result.length == 1 ? null : m(Codefield, {
+                        id: 'query'+i,
+                        value: query.string,
+                        editable: false
+                    }),
+                    ds.result.length == 1 ? null : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
                     m('p', {
                         class: [
                             'pa1',
@@ -82,8 +87,11 @@ var SQLpanel = {
         }
 
         return [
-            m(Contents),
+            m(Tablelist),
             m('div', {
+                onclick: function() {
+                    $('#tablelist-context').hide()
+                }
 
             }, [
                 m('div', {style: 'width: fit-content'}, [
@@ -95,6 +103,7 @@ var SQLpanel = {
                     m('div', {class: 'ml3 h2'}, [
                         !ds.result ? null : m('span',{class: 'fl'}, total_time + 's'),
                         m('button', {
+                            id: 'run_sql',
                             class: 'fr pt0 pb0 fa fa-play',
                             onclick: function() {
                                 var sql = Codefield.get_value('query')
@@ -133,5 +142,6 @@ var SQLpanel = {
 module.exports = SQLpanel
 
 var config = require('./config')
-var Contents = require('./contents')
+// var Contents = require('./contents')
+var Tablelist = require('./tablelist')
 var Codefield = require('./codefield')

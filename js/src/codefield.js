@@ -9,6 +9,12 @@ var Codefield = {
         return editors[id].state.doc.toString()
     },
 
+    set_value: function(id, value) {
+        editors[id].dispatch({
+            changes: {from: 0, to: editors[id].state.doc.length, insert: value}
+        })
+    },
+
     oncreate: function(vnode) {
         editors[vnode.attrs.id] = new cm.EditorView({
             doc: vnode.attrs.value,

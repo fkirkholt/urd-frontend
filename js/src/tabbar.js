@@ -11,7 +11,6 @@ var tabbar = {
     },
 
     view: function(vnode) {
-        console.log('tegner opp tabbar')
         return !m.route.param('base') ? '' : [
             m('ul', {
                 class: 'di w-100'
