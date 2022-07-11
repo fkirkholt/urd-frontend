@@ -1,5 +1,6 @@
 var cm = require("codemirror")
 var sql = require("@codemirror/lang-sql")
+var json = require("@codemirror/lang-json")
 
 var editors = []
 
@@ -16,9 +17,15 @@ var Codefield = {
     },
 
     oncreate: function(vnode) {
+        var lang
+        if (vnode.attrs.lang == 'sql') {
+            lang = sql.sql()
+        } else if (vnode.attrs.lang == 'json') {
+            lang = json.json()
+        }
         editors[vnode.attrs.id] = new cm.EditorView({
             doc: vnode.attrs.value,
-            extensions: [cm.basicSetup, cm.EditorView.editable.of(vnode.attrs.editable), sql.sql()],
+            extensions: [cm.basicSetup, cm.EditorView.editable.of(vnode.attrs.editable), lang],
             parent: vnode.dom,
         })
     },

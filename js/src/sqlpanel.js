@@ -9,7 +9,8 @@ var SQLpanel = {
                     ds.result.length == 1 ? null : m(Codefield, {
                         id: 'query'+i,
                         value: query.string,
-                        editable: false
+                        editable: false,
+                        lang: 'sql'
                     }),
                     ds.result.length == 1 ? null : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
                     m('table', {
@@ -39,7 +40,8 @@ var SQLpanel = {
                     ds.result.length == 1 ? null : m(Codefield, {
                         id: 'query'+i,
                         value: query.string,
-                        editable: false
+                        editable: false,
+                        lang: 'sql'
                     }),
                     ds.result.length == 1 ? null : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
                     m('p', {
@@ -98,7 +100,8 @@ var SQLpanel = {
                     m(Codefield, {
                         id: 'query',
                         class: 'ml3 w8 ba b--light-silver mb2',
-                        editable: true
+                        editable: true,
+                        lang: 'sql'
                     }),
                     m('div', {class: 'ml3 h2'}, [
                         !ds.result ? null : m('span',{class: 'fl'}, total_time + 's'),
