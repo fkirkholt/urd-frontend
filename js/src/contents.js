@@ -316,27 +316,6 @@ var Contents = {
                         var table = ds.base.tables[name]
                         return Contents.draw_node(table.label, 'tables.'+name, 3)
                     }),
-                m('div', [
-                    !((ds.type == 'contents' || config.tab == 'diagram') && config.admin)
-                        ? '' : m('ul', { target: '_blank', class: 'f6 list pa1' }, [
-                            m('li', { class: 'dib' }, [
-                                m('i', {
-                                    class: 'fa fa-edit',
-                                    title: 'Oppdater skjema fra database',
-                                    onclick: function () {
-                                        m.request({
-                                            url: 'urd/dialog_schema?version=1',
-                                            responseType: "text",
-                                        }).then(function(result) {
-                                            $('#action-dialog').append(result)
-                                        })
-                                        $('div.curtain').show()
-                                        $('#action-dialog').show()
-                                    }
-                                })
-                            ])
-                         ]),
-                ]),
             ]),
         ]), ds.table || !ds.base.description ? '' : m('div', {class: 'pl5'}, [
             m('b', 'Beskrivelse'),
