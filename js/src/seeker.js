@@ -1,3 +1,4 @@
+const KEY_CODE_TAB = 9
 const KEY_CODE_ENTER = 13
 const KEY_CODE_UP = 38
 const KEY_CODE_DOWN = 40
@@ -27,6 +28,8 @@ function Seeker(initialVnode) {
                 return
             }
             index++
+        } else if (event.keyCode == KEY_CODE_TAB) {
+            return
         } else {
             if (timer) {
                 clearTimeout(timer)
