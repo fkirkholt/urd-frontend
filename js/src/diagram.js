@@ -382,6 +382,9 @@ var Diagram = {
     },
 
     view: function() {
+        if (!Diagram.def) {
+            return
+        }
         return m('div.mermaid', {
             id: "mermaid",
             class: "flex flex-grow flex-column overflow-auto w-100"
