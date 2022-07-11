@@ -28,7 +28,9 @@ var SQLpanel = {
                                 Object.keys(item).map(function(cell, i) {
                                     return m('td', {
                                         class: 'pl1 pl2'
-                                    }, m.trust(item[cell].replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;')))
+                                    }, item[cell]
+                                             ? m.trust(item[cell].replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;'))
+                                             : null)
                                 })
                             ])
                         })
