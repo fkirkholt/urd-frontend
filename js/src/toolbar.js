@@ -221,7 +221,8 @@ var Toolbar = {
                     event.target.select()
                 },
                 onchange: function(event) {
-                    m.route.set('/' + ds.base.name + '/' + ds.table.name + '?query=' + event.target.value.replace(/=/g, '%3D'))
+                    m.route.set('/' + ds.base.name + '/data/' + ds.table.name +
+                                '?query=' + event.target.value.replace(/=/g, '%3D'))
 
                 }
             }),
