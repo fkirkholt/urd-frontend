@@ -1,5 +1,5 @@
 <script>
-var schema_dialog = {
+var cache_dialog = {
 
     track_progress: function() {
         m.request({
@@ -10,7 +10,7 @@ var schema_dialog = {
             $('#progress [name="percent"]').text(response.progress + '%')
             if (response.progress < 100) {
                 $('#progress [value="OK"]').hide()
-                setTimeout(schema_dialog.track_progress, 1000)
+                setTimeout(cache_dialog.track_progress, 1000)
             }
         })
     },
@@ -20,24 +20,24 @@ var schema_dialog = {
         return m('div', [
             m('div', [
                 m('input[type=checkbox]', {
-                    checked: ds.schema.config.urd_structure,
+                    checked: ds.cache.config.urd_structure,
                     onchange: function(event) {
-                        ds.schema.config.urd_structure = $(event.target).prop('checked')
+                        ds.cache.config.urd_structure = $(event.target).prop('checked')
                     }
                 }), ' Selv-dokumenterende database',
                 m('br'),
                 m('input[type=checkbox]', {
-                    checked: ds.schema.config.column_use,
+                    checked: ds.cache.config.column_use,
                     onchange: function(event) {
-                        ds.schema.config.column_use = $(event.target).prop('checked')
+                        ds.cache.config.column_use = $(event.target).prop('checked')
                     }
                 }), ' Kartlegg bruken av tabeller og kolonner',
                 m('br'),
                 m('div', {class: 'pl3 red'}, 'NB: Kan ta lang tid. Indekserer kolonner første gang.'),
                 m('input[type=checkbox]', {
-                    checked: ds.schema.config.norwegian_chars,
+                    checked: ds.cache.config.norwegian_chars,
                     onchange: function(event) {
-                        ds.schema.config.norwegian_chars = $(event.target).prop('checked')
+                        ds.cache.config.norwegian_chars = $(event.target).prop('checked')
                     }
                 }), " ae → æ, oe → ø, aa → å",
             ]),
@@ -47,20 +47,14 @@ var schema_dialog = {
                     class: 'fr',
                     onclick: function() {
                         var rec_idx
-                        var prim_key
-                        if (ds.base.schema == 'urd' && ds.table.name == 'database_') {
-                            rec_idx = ds.table.selection
-                            prim_key = ds.table.records[rec_idx].primary_key
-                        } else {
-                            prim_key = {name: ds.base.name}
-                        }
+                        var prim_key = {name: ds.base.name}
                         var prim_nokler_json = JSON.stringify(prim_key)
-                        var config = ds.schema.config
+                        var config = ds.cache.config
                         var config_json = JSON.stringify(config)
 
                         m.request({
                             method: "put",
-                            url: 'urd/update_schema',
+                            url: 'urd/update_cache',
                             params: {
                                 base: ds.base.name,
                                 config: config_json
@@ -107,5 +101,5 @@ var schema_dialog = {
 
 var $action = $('#action-dialog')
 
-m.mount($action[0], schema_dialog)
+m.mount($action[0], cache_dialog)
 </script>

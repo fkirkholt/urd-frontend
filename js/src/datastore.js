@@ -3,7 +3,7 @@ var login = require('./login')
 var store = {
     base: {},
     user: {},
-    schema: {
+    cache: {
         config: {
             urd_structure: false,
             replace: false,
@@ -25,7 +25,7 @@ var store = {
             store.branch = data.branch;
 
             if (data.config) {
-                $.extend(store.schema.config, data.config);
+                $.extend(store.cache.config, data.config);
             }
 
             if (typeof callback === 'function') {
@@ -45,15 +45,15 @@ var store = {
     },
 
     set_cfg_value: function(tbl, attr, value) {
-        if (ds.schema.config.tables === undefined) {
-            ds.schema.config.tables = {};
+        if (ds.cache.config.tables === undefined) {
+            ds.cache.config.tables = {};
         }
 
-        if (ds.schema.config.tables[tbl.name] === undefined) {
-            ds.schema.config.tables[tbl.name] = {};
+        if (ds.cache.config.tables[tbl.name] === undefined) {
+            ds.cache.config.tables[tbl.name] = {};
         }
 
-        ds.schema.config.tables[tbl.name][attr] = value;
+        ds.cache.config.tables[tbl.name][attr] = value;
     }
 }
 

@@ -103,10 +103,10 @@ var tabbar = {
             }),
             (!ds.user.admin) || config.tab != 'diagram' ? null : m('i', {
                 class: 'fa fa-edit fr mr3 pt1',
-                title: 'Oppdater skjema fra database',
+                title: 'Oppdater cache',
                 onclick: function () {
                     m.request({
-                        url: 'urd/dialog_schema?version=1',
+                        url: 'urd/dialog_cache?version=1',
                         responseType: "text",
                     }).then(function(result) {
                         $('#action-dialog').append(result)
