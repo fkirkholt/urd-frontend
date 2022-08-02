@@ -21,7 +21,7 @@ var Relation = {
         // Make list instead of table of relations if only one column shown
         if (count_columns == 1 && Object.keys(rel.relations).length == 0) {
             rel.relationship = 'M:M'
-            return Record.draw_relation_list(rel, record)
+            return Relation.draw_relation_list(rel, record)
         }
 
         return m('tr', [
@@ -274,3 +274,4 @@ var Row = require('./row')
 var Cell = require('./cell')
 var ds = require('./datastore')
 var config = require('./config')
+var Node = require('./node')
