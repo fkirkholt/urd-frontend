@@ -14,7 +14,8 @@ function Seeker(initialVnode) {
         if (event.keyCode == KEY_CODE_ENTER) {
             option = options[index]
             event.target.value = option.label
-            event.target.dataset.value = option.value
+            // Use JSON.stringify to set correct data type
+            event.target.dataset.value = JSON.stringify(option.value)
             attrs.onchange(event)
             options = []
 
