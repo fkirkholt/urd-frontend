@@ -42,16 +42,6 @@ var Record = {
     },
 
     get_relations_count: function(rec) {
-        // If there is a select named "type_" get it's values
-        // Used for showing relations based on the type_ value
-        types = []
-        if (rec.fields.type_) {
-            $.each(rec.fields.type_.options, function(idx, option) {
-                if (typeof option.value === "string") {
-                    types.push(option.value)
-                }
-            })
-        }
         m.request({
             method: "get",
             url: "relations",
@@ -59,7 +49,6 @@ var Record = {
                 base: rec.base_name,
                 table: rec.table_name || rec.table.name,
                 primary_key: JSON.stringify(rec.primary_key),
-                types: JSON.stringify(types),
                 count: true
             }
         }).then(function(result) {
