@@ -204,7 +204,7 @@ var Relation = {
         } else {
             base_path = rel.base_name || rel.schema_name
         }
-        var url = '#/' + base_path + '/' + rel.name + '?'
+        var url = '#/' + base_path + '/data/' + rel.name + '?'
 
         conditions = []
         if (rel.conds) {
