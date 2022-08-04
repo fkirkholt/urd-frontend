@@ -59,6 +59,7 @@ function Seeker(initialVnode) {
             var input_width = $(vnode.dom).outerWidth()
             var offset = $(vnode.dom).offset()
             $('ul.options').css('min-width', input_width)
+            $('ul.options').css('top', offset.top + $(vnode.dom).outerHeight())
             $('ul.options').css('left', offset.left)
             $('ul.options').css('overflow', 'hidden')
         },
