@@ -165,6 +165,18 @@ var Row = {
                     border: list.ismain ? true : false,
                 })
             }),
+            list.ismain ? '' : m('td', [
+                !record.open || parent.readonly ? '' : m('i', {
+                    class: [
+                        list.privilege.delete && config.edit_mode ? 'fa fa-trash-o pl1' : '',
+                        record.deletable ? 'light-blue' : 'moon-gray',
+                        record.deletable ? (config.relation_view === 'column' ? 'hover-white' : 'hover-blue') : '',
+                    ].join(' '),
+                    style: 'cursor: pointer',
+                    onclick: Record.delete.bind(this, record),
+                    title: 'Slett'
+                })
+            ]),
             !list.ismain ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
                 list.grid.actions.map(function(name, idx) {
                     var action = list.actions[name]
