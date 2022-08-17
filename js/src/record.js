@@ -329,7 +329,8 @@ var Record = {
                 base_name: ds.base.name,
                 table_name: rel.name,
                 condition: rel.conditions.join(' AND '),
-                fkey: rec.table.relations[alias].foreign_key,
+                foreign: rec.table.relations[alias].foreign,
+                primary: rec.table.relations[alias].primary,
                 records: []
             }
             $.each(rel.records, function(i, subrec) {
