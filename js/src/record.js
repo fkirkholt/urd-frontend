@@ -182,8 +182,6 @@ var Record = {
 
         Record.get_relations_count(rec)
 
-        $('form[name=record]').find('input,select,textarea').first().trigger('focus')
-
         return rec
     },
 

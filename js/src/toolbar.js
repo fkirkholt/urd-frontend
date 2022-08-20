@@ -319,6 +319,12 @@ var Toolbar = {
                         onclick: function() {
                             if (ds.table.privilege.insert != true) return
                             Record.create(ds.table)
+
+                            // Focus first input in new record
+                            setTimeout(function() {
+                                $('form[name=record] > table').find('input,select,textarea').first().trigger('focus')
+                            }, 100)
+
                             if (!config.edit_mode) {
                                 ds.table.edit = true
                                 config.edit_mode = true

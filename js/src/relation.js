@@ -24,7 +24,7 @@ var Relation = {
             return Relation.draw_relation_list(rel, record)
         }
 
-        return m('tr', [
+        return m('tr', {'data-name': rel.name}, [
             m('td', {}),
             m('td', {colspan:3}, [
                 m('table', {class: 'w-100 collapse'}, [
@@ -97,6 +97,12 @@ var Relation = {
                                     e.stopPropagation()
                                     var rec = Record.create(rel, true)
                                     if (!rec) return
+
+                                    // Focus first input field in new record
+                                    setTimeout(function() {
+                                        $('tr[data-name=' + rel.name + '] > td > table > tr')
+                                            .find('input,select,textarea').first().trigger('focus')
+                                    }, 100)
 
                                     rel.modus = 'edit'
                                 }
