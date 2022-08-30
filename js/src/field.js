@@ -232,6 +232,13 @@ var Field = {
             })
         }
 
+        var use
+        if (field.use == 1) {
+            use = 100
+        } else {
+            use = (field.use * 100).toPrecision(2)
+        }
+
         return [
             // TODO: sto i utgangspunktet list.betingelse. Finn ut hva jeg skal erstatte med.
             (!config.edit_mode && config.hide_empty && rec.fields[colname].value === null) ? '' : m('tr', [
@@ -250,9 +257,9 @@ var Field = {
                 ]),
                 m('td.label', {
                     class: [
-                        'f6 pr1 v-top',
+                        'f6 pr1 v-top w1',
                         field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
-                        'max-w5 w1 truncate',
+                        !config.admin ? 'max-w5 truncate' : '',
                     ].join(' '),
                     onclick: function() {
                         if (field.foreign_key && field.expandable && rec.fields[colname].value) {
@@ -266,6 +273,9 @@ var Field = {
                     get(field, 'attrs.title')
                         ? m('abbr', {title: field.attrs.title}, label)
                         : label,
+                    !field.use || !config.admin ? '' : m('span', {
+                        class: 'ml2 light-silver'
+                    }, '(' + use + '%)'),
                     ':'
                 ]),
                 m('td', {
