@@ -182,7 +182,8 @@ var Node = {
                     m('td.label', {
                         class: [
                             'f6 nowrap pr2',
-                            !colname.inline || colname.expandable ? 'b' : ''
+                            !colname.inline || colname.expandable ? 'b' : '',
+                            colname.inline ? 'underline' : ''
                         ].join(' '),
                         colspan: colname.inline ? 1 : 3,
                         onclick: function() {
