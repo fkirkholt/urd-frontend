@@ -9,8 +9,10 @@ var export_dialog = {
         param.filter = m.route.param('query')
 
         var fields = []
-        $('input:checkbox[name=field]:checked').each(function() {
-            fields.push($(this).val())
+        $('input[name=field][type=checkbox]').each(function() {
+            if ($(this).prop('checked')) {
+                fields.push($(this).val())
+            }
         })
         param.fields = JSON.stringify(fields)
 

@@ -10,8 +10,10 @@ var Convert_dialog = {
         param.to_format = $('#to_format').val()
 
         var fields = []
-        $('input:checkbox[name=field]:checked').each(function() {
-            fields.push($(this).val())
+        $('input[name=field][type=checkbox]').each(function() {
+            if ($(this).prop('checked')) {
+                fields.push($(this).val())
+            }
         })
         param.fields = JSON.stringify(fields)
 
