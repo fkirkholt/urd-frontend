@@ -79,7 +79,7 @@ var Contents = {
                     m('.label', {
                         class: [
                             node.class_label,
-                            'di b'
+                            'di b pointer'
                         ].join(' '),
                         onclick: function(e) {
                             node.expanded = !node.expanded
