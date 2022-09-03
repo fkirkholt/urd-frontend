@@ -239,7 +239,7 @@ var Field = {
         var use
         if (field.use == 1) {
             use = 100
-        } else {
+        } else if (field.use) {
             use = (field.use * 100).toPrecision(2)
         }
 
