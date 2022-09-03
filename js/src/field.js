@@ -203,6 +203,10 @@ var Field = {
         if (field.frequency && field.frequency > (1 - config.threshold)) {
             return
         }
+        // Don't show columns that has no values
+        if (field.use === 0) {
+            return
+        }
 
         // Show hidden fields only in edit mode
         if (rec.table.fields[colname].hidden && !config.edit_mode) return
