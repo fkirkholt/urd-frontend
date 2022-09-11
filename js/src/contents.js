@@ -152,12 +152,10 @@ var Contents = {
                     var hidden_txt = object.hidden ? 'Vis tabell' : 'Skjul tabell'
                     $('ul#context-table li.hide').html(hidden_txt)
 
-                    /*
-                    var type_txt = object.type == 'reference'
+                    var type_txt = object.type == 'list'
                         ? 'Sett til datatabell'
-                        : 'Sett til referansetabell!!!'
+                        : 'Sett til referansetabell'
                     $('ul#context-table li.type').html(type_txt)
-                    */
 
                     $('ul#context-table').css({top: event.clientY, left: event.clientX}).toggle()
                     return false
@@ -285,7 +283,7 @@ var Contents = {
 
                         ds.set_cfg_value(tbl, 'type', tbl.type)
                     }
-                }, 'Sett til referansetabell???')
+                }, 'Sett til referansetabell')
             ]),
             m('.list', {class: "flex flex-column overflow-auto min-w5"}, [
                 !ds.base.schemata || ds.base.schemata.length < 2 ? '' : m('select', {
