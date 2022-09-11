@@ -45,6 +45,15 @@ var Tablelist = {
                         $('#tablelist-context').hide()
                     }
                 }, 'Rename column'),
+                m('li', {
+                    class: 'hover-blue',
+                    onclick: function() {
+                        var sql = "select sql from sqlite_schema where name = '" +
+                            Tablelist.context_table + "'"
+                        Codefield.set_value('query', sql)
+                        $('#tablelist-context').hide()
+                    }
+                }, 'Describe table')
             ]),
             m('ul', {
                 class: 'list flex flex-column pl2 mt0'
