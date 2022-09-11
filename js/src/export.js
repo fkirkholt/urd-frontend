@@ -23,10 +23,11 @@ var export_dialog = {
 
     },
 
-    export_sql: function(dialect, include_recs) {
+    export_sql: function(dialect, include_recs, select_recs) {
         var param = {}
         param.dialect = dialect
         param.include_recs = include_recs
+        param.select_recs = select_recs
         param.base = ds.base.name
         if (ds.table) {
             param.table = ds.table.name
@@ -82,7 +83,12 @@ var export_dialog = {
                 m('br'),
                 m('label', [m('input[type=radio]', {name: 'dialect', value: 'sqlite3'})], ' SQLite'),
                 m('br'), m('br'),
-                m('label', [m('input[type=checkbox]', {name: 'records'})], ' Export records'), m('br')
+                m('label', [m('input[type=checkbox]', {name: 'records'})], ' Export records'),
+                m('br'), m('span', {class: 'dib w1'}),
+                m('label', [m('input[type=checkbox]', {
+                    name: 'select'
+                })], ' as select'),
+                m('br')
             ]),
             m('div[name=buttons]', {class: "bottom-0 max-w8 mt2"}, [
                 m('input[type=button]', {
@@ -94,7 +100,8 @@ var export_dialog = {
                         } else {
                             var dialect = $('#export-dialog input[name="dialect"]:checked').val()
                             var include_records = $('#export-dialog input[name="records"]').prop('checked')
-                            export_dialog.export_sql(dialect, include_records)
+                            var select_records = $('#export-dialog input[name="select"]').prop('checked')
+                            export_dialog.export_sql(dialect, include_records, select_records)
                         }
                         $('div.curtain').hide()
                         $('#export-dialog').hide()
