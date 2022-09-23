@@ -251,13 +251,6 @@ var Field = {
                         class: !field.expanded ? 'fa-angle-right' : field.expandable ? 'fa-angle-down' : '',
                         onclick: Field.toggle_fkey.bind(this, rec, colname)
                     }),
-                    field.element != 'textarea' ? null : m('i.fa', {
-                        class: field.expanded ? 'fa-angle-down' : 'fa-angle-right',
-                        onclick: function() {
-                            field = rec.fields[colname]
-                            field.expanded = !field.expanded
-                        }
-                    })
                 ]),
                 m('td.label', {
                     class: [
@@ -297,7 +290,13 @@ var Field = {
                         config.edit_mode ? 'nowrap' : '',
                         field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
                         rec.inherited ? 'gray' : '',
-                    ].join(' ')
+                    ].join(' '),
+                    onclick: function() {
+                        if (field.element == 'textarea') {
+                            field = rec.fields[colname]
+                            field.expanded = !field.expanded
+                        }
+                    }
                 }, [
                     rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode
                         ? Field.display_value(field)

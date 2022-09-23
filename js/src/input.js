@@ -248,7 +248,7 @@ var Input = {
                     Field.update(value, field.name, rec)
                 }
             })
-        } else if (field.element == 'textarea' && field.expanded === true) {
+        } else if (field.element == 'textarea') {
             text = field.value ? marked.parse(field.value) : ''
 
             return readOnly ? m.trust(text) : m('textarea', {
