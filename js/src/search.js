@@ -14,8 +14,8 @@ var Search = {
             method: "GET",
             url: "table",
             params: {
-                base: field.foreign_key.base,
-                table: field.foreign_key.table,
+                base: field.fkey.base,
+                table: field.fkey.table,
                 limit: 0
             }
         }).then(function(result) {
@@ -27,7 +27,7 @@ var Search = {
             if (field.expanded) {
                 field.expanded = false
                 return
-            } else if (field.foreign_key) {
+            } else if (field.fkey) {
                 field.expanded = true
             }
         })
@@ -102,7 +102,7 @@ var Search = {
             return [
                 m('tr', [
                     m('td', {class: 'tc v-top'}, [
-                        !field.foreign_key || !field.expandable || table.sublevel ? null : m('i.fa', {
+                        !field.fkey || !field.expandable || table.sublevel ? null : m('i.fa', {
                             class: !field.expanded ? 'fa-angle-right' : field.expandable ? 'fa-angle-down' : '',
                             onclick: function() {
                                 Search.toggle_relation(field)

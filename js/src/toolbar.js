@@ -39,13 +39,13 @@ var Toolbar = {
 
     run_action: function(action) {
         var rec_idx = ds.table.selection
-        var prim_key = ds.table.records[rec_idx].primary_key
+        var prim_key = ds.table.records[rec_idx].pkey
         var prim_nokler_json = JSON.stringify(prim_key)
         var address = ds.base.schema + (action.url[0] === '/' ? '' : '/') + action.url
         var kommunikasjon = action.communication
 
         var $form = $('form#action')
-        $form.find(':input[name="primary_key"]').val(prim_nokler_json)
+        $form.find(':input[name="pkey"]').val(prim_nokler_json)
 
         if (ds.table.dirty) {
             alert("Du må lagre før du kan utføre handling")
@@ -63,7 +63,7 @@ var Toolbar = {
                 data: JSON.stringify({
                     base: ds.base.name,
                     table: ds.table.name,
-                    primary_key: prim_nokler_json
+                    pkey: prim_nokler_json
                 }),
                 background: true
             }).done(function(result) {
@@ -183,7 +183,7 @@ var Toolbar = {
                 m('form#action', [
                     m('input', {type: 'hidden', name: 'base', value: ds.base.name}),
                     m('input', {type: 'hidden', name: 'table', value: ds.table.name}),
-                    m('input', {type: 'hidden', name: 'primary_key'}),
+                    m('input', {type: 'hidden', name: 'pkey'}),
                 ]),
             ]),
             ds.table.hide  ? '' : m('i', {

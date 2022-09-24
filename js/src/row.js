@@ -10,21 +10,21 @@ var Row = {
                 params: {
                     base: ds.base.name,
                     table: list.name,
-                    primary_key: JSON.stringify(rec.primary_key)
+                    pkey: JSON.stringify(rec.pkey)
                 }
             }).then(function(result) {
                 var indent = rec.indent ? rec.indent + 1 : 1
                 records = result.data.map(function(record, idx) {
                     record.indent = indent
                     record.path = rec.path ? rec.path + '.' + idx : rowidx + '.' + idx
-                    record.parent = rec.primary_key
+                    record.parent = rec.pkey
                     return record
                 })
                 list.records.splice.apply(list.records, [rowidx+1, 0].concat(records))
             })
         } else if (rec.expanded === false) {
             list.records = list.records.map(function(record) {
-                if (compare(record.parent, rec.primary_key)) record.hidden = false
+                if (compare(record.parent, rec.pkey)) record.hidden = false
 
                 return record
             })
@@ -66,7 +66,7 @@ var Row = {
             params: {
                 base: rec.base_name ? rec.base_name : ds.base.name,
                 table: tbl.name,
-                primary_key: JSON.stringify(rec.primary_key)
+                pkey: JSON.stringify(rec.pkey)
             }
         }).then(function(result) {
             var rel = $.extend(rec, result.data)
@@ -95,7 +95,7 @@ var Row = {
                         Record.select(list, idx)
                     }
                 } else {
-                    if (record.primary_key == null) return
+                    if (record.pkey == null) return
 
                     Row.toggle_record(record, list)
                 }
@@ -146,7 +146,7 @@ var Row = {
                 })
             ]),
             (   list.ismain || // only records in relations should be expanded
-                record.primary_key == null
+                record.pkey == null
             ) ? '' : m('td.fa', {
                 class: [
                     record.open ? 'fa-angle-down' : 'fa-angle-right',

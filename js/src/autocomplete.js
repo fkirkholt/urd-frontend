@@ -107,7 +107,7 @@ var Autocomplete = {
 
             // Sets value for self referencing fields
             /*
-            if (!vnode.attrs.item.foreign_key) {
+            if (!vnode.attrs.item.fkey) {
                 vnode.attrs.item.value = $(this).val()
             }
             */

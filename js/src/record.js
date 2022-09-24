@@ -12,8 +12,8 @@ var Record = {
             return
         }
 
-        pk = ('primary_key' in table.records[idx])
-            ? JSON.stringify(table.records[idx].primary_key)
+        pk = ('pkey' in table.records[idx])
+            ? JSON.stringify(table.records[idx].pkey)
             : JSON.stringify(table.records[idx].columns)
 
         m.request({
@@ -22,7 +22,7 @@ var Record = {
             params: {
                 base: m.route.param('base'),
                 table: table.name,
-                primary_key: pk
+                pkey: pk
             }
         }).then(function(result) {
             rec = $.extend(table.records[idx], result.data)
@@ -48,7 +48,7 @@ var Record = {
             params: {
                 base: rec.base_name,
                 table: rec.table_name || rec.table.name,
-                primary_key: JSON.stringify(rec.primary_key),
+                pkey: JSON.stringify(rec.pkey),
                 count: true
             }
         }).then(function(result) {
@@ -64,7 +64,7 @@ var Record = {
             params: {
                 base: rec.base_name,
                 table: rec.table.name,
-                primary_key: JSON.stringify(rec.primary_key),
+                pkey: JSON.stringify(rec.pkey),
                 count: false,
                 alias: alias
             }
@@ -103,7 +103,7 @@ var Record = {
         // Create new record with column specifications
         // after selected record
         list.records.splice(idx, 0, {
-            primary_key: {},
+            pkey: {},
             columns: columns,
             new: true
         })
@@ -118,7 +118,7 @@ var Record = {
             table: list,
             columns: list.records[idx].columns,
             fields: $.extend(true, {}, list.fields),
-            primary_key: {},
+            pkey: {},
             groups: [] // TODO: This should be removed
         }
 
@@ -222,7 +222,7 @@ var Record = {
             }
         })
 
-        clone.primary_key = {}
+        clone.pkey = {}
     },
 
     delete: function(rec) {
@@ -243,7 +243,7 @@ var Record = {
         var data = {
             base_name: rec.base_name,
             table_name: rec.table.name,
-            primary_key: changes.prim_key,
+            pkey: changes.prim_key,
             values: changes.values
         }
 
@@ -301,7 +301,7 @@ var Record = {
         traverse = traverse ? traverse : false
 
         var changes = {}
-        changes.prim_key = rec.primary_key
+        changes.prim_key = rec.pkey
         changes.relations = {}
 
         var values = {}
@@ -358,7 +358,7 @@ var Record = {
                 if (action.communication === 'download') {
                     data.base = rec.base_name;
                     data.table = rec.table_name;
-                    data.primary_key = JSON.stringify(rec.primary_key);
+                    data.pkey = JSON.stringify(rec.pkey);
 
                     params = Object.keys(data).map(function(k) {
                         return k + '=' + data[k]

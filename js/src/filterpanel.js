@@ -182,11 +182,11 @@ var Filterpanel = {
         // var options = _mapValues(ds.table.fields, function(field) {
         var options = Object.keys(ds.table.fields).filter(function(fieldname) {
             var field = ds.table.fields[fieldname]
-            return field.foreign_key ? field.foreign_key.table : null
+            return field.fkey ? field.fkey.table : null
         }).map(function(field) {
             var field = ds.table.fields[field]
             var option = {}
-            if (field.foreign_key) {
+            if (field.fkey) {
                 option.label = field.label
                 option.value = field.name
             }
@@ -212,7 +212,7 @@ var Filterpanel = {
         ]
         operators = operators.filter(function(operator) {
 
-            if (((field.element == 'select' && (field.foreign_key && field.foreign_key.table !== field.table)) ||
+            if (((field.element == 'select' && (field.fkey && field.fkey.table !== field.table)) ||
                 (field.element == 'input' && field.attr.type == 'radio')) &&
                     ['LIKE', 'NOT LIKE', 'start', 'slutt', '>', '<'].includes(operator.value)
             ) {
@@ -305,8 +305,8 @@ var Filterpanel = {
                             method: 'get',
                             url: 'table',
                             params: {
-                                base: ref_field.foreign_key.base,
-                                table: ref_field.foreign_key.table,
+                                base: ref_field.fkey.base,
+                                table: ref_field.fkey.table,
                                 limit: 0
                             }
                         }).then(function(response) {
@@ -343,7 +343,7 @@ var Filterpanel = {
                                 } else {
                                     var fieldname = e.target['value']
                                     var field = ds.table.fields[fieldname]
-                                    var ref_table = field.foreign_key ? field.foreign_key.table : null
+                                    var ref_table = field.fkey ? field.fkey.table : null
                                     if (Filterpanel.tables[ref_table]) {
                                         filter.field = ref_table + '.' + Object.keys(Filterpanel.tables[ref_table].fields)[0]
                                     } else {
@@ -351,8 +351,8 @@ var Filterpanel = {
                                             method: 'get',
                                             url: 'table',
                                             params: {
-                                                base: field.foreign_key.base,
-                                                table: field.foreign_key.table,
+                                                base: field.fkey.base,
+                                                table: field.fkey.table,
                                                 limit: 0
                                             }
                                         }).then(function(response) {
@@ -537,7 +537,7 @@ var Filterpanel = {
             })
         } else if (field.element === 'select' && ['', 'LIKE', 'start', 'slutt', '>', '<'].includes(filter.operator) == false) {
 
-            var key_json = JSON.stringify(field.foreign_key ? field.foreign_key.primary : [field.name])
+            var key_json = JSON.stringify(field.fkey ? field.fkey.primary : [field.name])
 
             return m(Autocomplete, {
                 name: filter.field,
@@ -553,11 +553,11 @@ var Filterpanel = {
                     url: 'select',
                     data: {
                         limit: 550,
-                        schema: field.foreign_key ? field.foreign_key.schema : '',
-                        base: (field.foreign_key && field.foreign_key.base)
-                            ? field.foreign_key.base
+                        schema: field.fkey ? field.fkey.schema : '',
+                        base: (field.fkey && field.fkey.base)
+                            ? field.fkey.base
                             : ds.base.name,
-                        table: field.foreign_key ? field.foreign_key.table : field.table,
+                        table: field.fkey ? field.fkey.table : field.table,
                         alias: field.name,
                         view: field.view,
                         column_view: field.column_view,

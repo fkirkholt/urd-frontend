@@ -4,7 +4,7 @@ var Cell = {
     align: function(list, colname) {
         var col = list.fields[colname];
         if ((['integer', 'float', 'decimal'].includes(col.datatype) &&
-            !col.foreign_key) && col.element !== 'input[type=checkbox]') {
+            !col.fkey) && col.element !== 'input[type=checkbox]') {
                 return 'right';
             } else {
                 return 'left';

@@ -12,8 +12,8 @@ var Input = {
         var filter
 
         var keys = []
-        Object.keys(rec.table.foreign_keys).map(function(label) {
-            key = rec.table.foreign_keys[label]
+        Object.keys(rec.table.fkeys).map(function(label) {
+            key = rec.table.fkeys[label]
 
             if (key.foreign.indexOf(field.name) > 0) {
                 last_fk_col = key.foreign.slice(-1)
@@ -45,9 +45,9 @@ var Input = {
                     if (column === field.name) return
                     var condition
                     if (rec.fields[column].value != null && column in rec.fields) {
-                        var col = field.foreign_key.primary.slice(-1)[0]
+                        var col = field.fkey.primary.slice(-1)[0]
 
-                        if (key.table == field.foreign_key.table) {
+                        if (key.table == field.fkey.table) {
                             condition = key.primary[i] + " = '" + rec.fields[column].value + "'"
                         } else {
                             condition = col + ' in (select ' + key.primary[key.foreign_idx]
@@ -181,7 +181,7 @@ var Input = {
 
             if (!field.text) field.text = field.value
 
-            key_json = JSON.stringify(field.foreign_key ? field.foreign_key.primary: [field.name])
+            key_json = JSON.stringify(field.fkey ? field.fkey.primary: [field.name])
 
             return m(Autocomplete, {
                 name: field.name,
@@ -202,11 +202,11 @@ var Input = {
                     url: "select",
                     data: {
                         limit: 1000,
-                        schema: field.foreign_key ? field.foreign_key.schema : '',
-                        base: (field.foreign_key && field.foreign_key.base)
-                            ? field.foreign_key.base
+                        schema: field.fkey ? field.fkey.schema : '',
+                        base: (field.fkey && field.fkey.base)
+                            ? field.fkey.base
                             : rec.base_name,
-                        table: field.foreign_key ? field.foreign_key.table : rec.table_name,
+                        table: field.fkey ? field.fkey.table : rec.table_name,
                         alias: field.name,
                         view: field.view,
                         column_view: field.column_view,

@@ -210,17 +210,17 @@ var Contents = {
         }
     },
 
-    draw_foreign_keys: function(node, def) {
+    draw_fkeys: function(node, def) {
         var item = node.item ? node.item : node
         var object = get(ds.base, item, ds.base.tables[item])
-        Diagram.draw_foreign_keys(object, def, ds.base.contents[module])
+        Diagram.draw_fkeys(object, def, ds.base.contents[module])
 
         if (!node.subitems) {
             return
         }
 
         Object.values(node.subitems).map(function(subnode) {
-            Contents.draw_foreign_keys(subnode, def)
+            Contents.draw_fkeys(subnode, def)
         })
     },
 

@@ -220,7 +220,7 @@ var Grid = {
 
         // Updates primary key for selected record from save response
         if (data.selected) {
-            post.primary_key = data.selected
+            post.pkey = data.selected
         }
 
         p.base = ds.base.name
@@ -234,7 +234,7 @@ var Grid = {
         p.limit = list.limit
         p.offset = list.offset
         if (!post.delete) {
-            p.prim_key = JSON.stringify(post.primary_key)
+            p.prim_key = JSON.stringify(post.pkey)
         } else {
             p.prim_key = null
         }

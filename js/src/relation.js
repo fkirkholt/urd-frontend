@@ -31,7 +31,7 @@ var Relation = {
                     // draw header cells
                     m('tr', {class: 'bb' }, [
                         m('td'),
-                        rel.primary_key.length == 0 ? '' : m('td', {class: 'w0'}),
+                        rel.pkey.length == 0 ? '' : m('td', {class: 'w0'}),
                         Object.keys(rel.grid.columns).map(function(label, idx) {
                             var field_name = rel.grid.columns[label]
 

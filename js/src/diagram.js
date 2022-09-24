@@ -52,7 +52,7 @@ var Diagram = {
         if (Diagram.type == 'module') {
             var def = ['erDiagram']
             Object.values(ds.base.contents[Diagram.root].subitems).map(function(node) {
-                Diagram.draw_foreign_keys_node(node, def)
+                Diagram.draw_fkeys_node(node, def)
             })
             Diagram.def = def.join("\n")
         } else if (Diagram.type == 'table') {
@@ -123,8 +123,8 @@ var Diagram = {
             def.push('}')
         }
 
-        Object.keys(table.foreign_keys).map(function(alias) {
-            var fk = table.foreign_keys[alias]
+        Object.keys(table.fkeys).map(function(alias) {
+            var fk = table.fkeys[alias]
             var field_name = fk.foreign[fk.foreign.length -1]
             var field = table.fields ? table.fields[field_name] : null
             var label = field && field.label ? field.label : alias
@@ -133,7 +133,7 @@ var Diagram = {
             var symbol = field && field.nullable ? ' o|' : ' ||'
             def.push(fk.table + symbol + line + ' o{' + table.name + ' : ' + field_name)
             if (fk_table === undefined) return
-            // def.push(fk.table + ' : pk(' + fk_table.primary_key.join(', ') + ')')
+            // def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
             if (fk_table.rowcount && fk.table != table.name) {
                 // def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
             }
@@ -163,8 +163,8 @@ var Diagram = {
             // Removes relations that represents grand children and down
             // Deactivated until we get config for this
             if (false) {
-                Object.keys(rel_table.foreign_keys).map(function(alias) {
-                    var rel_fk = rel_table.foreign_keys[alias]
+                Object.keys(rel_table.fkeys).map(function(alias) {
+                    var rel_fk = rel_table.fkeys[alias]
                     if (rel_tables.includes(rel_fk.table)) {
                         skip = true
                     }
@@ -215,8 +215,8 @@ var Diagram = {
             def.push(table.name + ' : ' + sign + field.datatype + '\u2000'.repeat(count) + ' ' + field.name)
         })
 
-        Object.keys(table.foreign_keys).map(function(alias) {
-            var fk = table.foreign_keys[alias]
+        Object.keys(table.fkeys).map(function(alias) {
+            var fk = table.fkeys[alias]
             var field = table.fields[alias]
             var label = field && field.label ? field.label : alias
             var fk_table = ds.base.tables[fk.table]
@@ -225,7 +225,7 @@ var Diagram = {
             if (def.includes('class ' + fk.table)) return
             if (fk_table === undefined) return
             def.push('class ' + fk.table)
-            def.push(fk.table + ' : pk(' + fk_table.primary_key.join(', ') + ')')
+            def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
             if (fk_table.rowcount && fk.table != table.name) {
                 def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
             }
@@ -249,24 +249,24 @@ var Diagram = {
         this.def = def.join("\n")
     },
 
-    draw_foreign_keys_node: function(node, def) {
+    draw_fkeys_node: function(node, def) {
         var item = node.item ? node.item : node
         var object = get(ds.base, item, ds.base.tables[item])
-        Diagram.draw_foreign_keys(object, def, ds.base.contents[module])
+        Diagram.draw_fkeys(object, def, ds.base.contents[module])
 
         if (!node.subitems) {
             return
         }
 
         Object.values(node.subitems).map(function(subnode) {
-            Diagram.draw_foreign_keys_node(subnode, def)
+            Diagram.draw_fkeys_node(subnode, def)
         })
     },
 
-    draw_foreign_keys: function(table, def, module) {
+    draw_fkeys: function(table, def, module) {
         if (table.hidden) return
-        Object.keys(table.foreign_keys).map(function(alias) {
-            var fk = table.foreign_keys[alias]
+        Object.keys(table.fkeys).map(function(alias) {
+            var fk = table.fkeys[alias]
             var field_name = fk.foreign.slice(-1)[0]
             var field = table.fields[field_name]
             if (field.hidden) return
@@ -345,9 +345,9 @@ var Diagram = {
             }
         })
 
-        Object.keys(table.foreign_keys).map(function(fk_name) {
+        Object.keys(table.fkeys).map(function(fk_name) {
             new_path = path.slice()
-            var fk = table.foreign_keys[fk_name]
+            var fk = table.fkeys[fk_name]
             var fk_field_name = fk.foreign[fk.foreign.length -1]
             var fk_field = table.fields ? table.fields[fk_field_name] : null
             var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'

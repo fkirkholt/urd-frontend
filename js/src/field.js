@@ -22,12 +22,12 @@ var Field = {
         // For each select that depends on the changed field, we must set the
         // value to empty and load new options
         $.each(rec.table.fields, function(name, other_field) {
-            if (name == field.name || !other_field.foreign_key) return
+            if (name == field.name || !other_field.fkey) return
             if (other_field.defines_relation) return
 
-            if (other_field.element == 'select' && other_field.foreign_key.foreign.length > 1) {
+            if (other_field.element == 'select' && other_field.fkey.foreign.length > 1) {
                 // If the field is part of the dropdowns foreign keys
-                if (other_field.foreign_key.foreign.includes(field.name)) {
+                if (other_field.fkey.foreign.includes(field.name)) {
                     if (rec.fields[name].value !== null) {
                         rec.fields[name].value = null
                         rec.fields[name].dirty = true
@@ -40,13 +40,13 @@ var Field = {
                         params: {
                             q: '',
                             limit: 1000,
-                            schema: other_field.foreign_key.schema,
-                            base: other_field.foreign_key.base,
-                            table: other_field.foreign_key.table,
+                            schema: other_field.fkey.schema,
+                            base: other_field.fkey.base,
+                            table: other_field.fkey.table,
                             alias: other_field.name,
                             view: other_field.view,
                             column_view: other_field.column_view,
-                            key: JSON.stringify(other_field.foreign_key.primary),
+                            key: JSON.stringify(other_field.fkey.primary),
                             condition: Input.get_condition(rec, other_field)
                         }
                     }).then(function(data) {
@@ -137,24 +137,24 @@ var Field = {
         if (field.expanded) {
             field.expanded = false
             return
-        } else if (field.foreign_key) {
+        } else if (field.fkey) {
             field.expanded = true
         }
         var filters = []
 
-        $.each(field.foreign_key.primary, function(i, ref_field) {
-            var fk_field = field.foreign_key.foreign[i]
+        $.each(field.fkey.primary, function(i, ref_field) {
+            var fk_field = field.fkey.foreign[i]
             var value = rec.fields[fk_field].value
-            filters.push(field.foreign_key.table + '.' + ref_field + " = " + value)
+            filters.push(field.fkey.table + '.' + ref_field + " = " + value)
         })
 
         m.request({
             method: "GET",
             url: "table",
             params: {
-                base: field.foreign_key.base || ds.base.name,
-                schema: field.foreign_key.schema,
-                table: field.foreign_key.table,
+                base: field.fkey.base || ds.base.name,
+                schema: field.fkey.schema,
+                table: field.fkey.table,
                 filter: filters.join(' AND ')
             }
         }).then(function(result) {
@@ -162,16 +162,16 @@ var Field = {
             if (table.count_records == 0) {
                 alert('Fant ikke posten i databasen')
             }
-            var pk = table.records[0].primary_key
+            var pk = table.records[0].pkey
             m.request({
                 method: "GET",
                 url: "record",
                 params: {
-                    base: field.foreign_key.base || ds.base.name,
-                    schema: field.foreign_key.schema,
-                    table: field.foreign_key.table,
+                    base: field.fkey.base || ds.base.name,
+                    schema: field.fkey.schema,
+                    table: field.fkey.table,
                     // betingelse: betingelse,
-                    primary_key: JSON.stringify(pk)
+                    pkey: JSON.stringify(pk)
                 }
             }).then(function(result) {
                 var record = result.data
@@ -215,24 +215,24 @@ var Field = {
         var mandatory = !field.nullable && !field.extra && field.editable && !field.source == true
         label = isNaN(parseInt(label)) ? label: field.label
 
-        if (field.foreign_key) {
+        if (field.fkey) {
             if (
                 ds.base.system == 'postgres' &&
-                field.foreign_key.schema &&
-                field.foreign_key.schema != field.foreign_key.base &&
-                field.foreign_key.schema != 'public'
+                field.fkey.schema &&
+                field.fkey.schema != field.fkey.base &&
+                field.fkey.schema != 'public'
             ) {
-                base = field.foreign_key.base + '.' + field.foreign_key.schema
+                base = field.fkey.base + '.' + field.fkey.schema
             } else if (ds.base.system == 'sqlite3') {
                 base = ds.base.name
             } else {
-                base = field.foreign_key.base || field.foreign_key.schema
+                base = field.fkey.base || field.fkey.schema
             }
-            var url = '#/' + base + '/' + field.foreign_key.table + '?'
-            $.each(field.foreign_key.primary, function(i, colname) {
-                var fk_field = field.foreign_key.foreign[i]
+            var url = '#/' + base + '/' + field.fkey.table + '?'
+            $.each(field.fkey.primary, function(i, colname) {
+                var fk_field = field.fkey.foreign[i]
                 url += colname + '=' + rec.fields[fk_field].value
-                if (i !== field.foreign_key.primary.length - 1 ) url += '&'
+                if (i !== field.fkey.primary.length - 1 ) url += '&'
             })
         }
 
@@ -247,7 +247,7 @@ var Field = {
             // TODO: sto i utgangspunktet list.betingelse. Finn ut hva jeg skal erstatte med.
             (!config.edit_mode && config.hide_empty && rec.fields[colname].value === null) ? '' : m('tr', [
                 m('td', {class: 'tc v-top'}, [
-                    !field.foreign_key || !field.expandable || rec.fields[colname].value === null ? null : m('i.fa.w1', {
+                    !field.fkey || !field.expandable || rec.fields[colname].value === null ? null : m('i.fa.w1', {
                         class: !field.expanded ? 'fa-angle-right' : field.expandable ? 'fa-angle-down' : '',
                         onclick: Field.toggle_fkey.bind(this, rec, colname)
                     }),
@@ -259,7 +259,7 @@ var Field = {
                         !config.admin ? 'max-w5 truncate' : '',
                     ].join(' '),
                     onclick: function() {
-                        if (field.foreign_key && field.expandable && rec.fields[colname].value) {
+                        if (field.fkey && field.expandable && rec.fields[colname].value) {
                             Field.toggle_fkey(rec, colname)
                         } else if (field.element == 'textarea') {
                             field = rec.fields[colname]
@@ -317,7 +317,7 @@ var Field = {
                     }, m('i', {class: 'icon-crosshairs light-blue hover-blue pointer'})),
                 ])
             ]),
-            !field.foreign_key || !field.expanded ? null : m('tr', [
+            !field.fkey || !field.expanded ? null : m('tr', [
                 m('td'),
                 m('td', {
                     colspan: 3
