@@ -241,16 +241,23 @@ var Relation = {
                     ].join(' ')
                 }),
                 m('td.label', {
-                    class: "f6 nowrap pr2 b",
+                    class: [
+                        "f6 nowrap pr2",
+                        rel.relationship == '1:M' ? 'b' : ''
+                    ].join(' '),
                     colspan: 3
                 }, [
                     label,
-                    rel.count_records !== undefined ? m('span', {class: 'ml1 pr1 normal moon-gray f7'}, rel.count_records) : '',
+                    rel.count_records !== undefined && rel.relationship == '1:M'
+                        ? m('span', {class: 'ml1 pr1 normal moon-gray f7'}, rel.count_records)
+                        : '',
                     // show target icon for relations
                     !rel.name ? '' :
                     m('a', {
                         class: [
-                            'icon-crosshairs light-blue hover-blue pointer mr1 link',
+                            rel.relationship == '1:M'
+                                ? 'icon-crosshairs light-blue hover-blue pointer mr1 link'
+                                : '',
                         ].join(' '),
                         href: url
                     }),
