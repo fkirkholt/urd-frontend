@@ -127,8 +127,8 @@ var Contents = {
             }
             if (item.indexOf('.') == -1) item = 'tables.' + item
             if (
-                ((object.hidden || object.type == 'list') &&
-                 !config.admin) || object.type == 'xref'
+                ((object.hidden || object.type == 'list') && !config.admin)
+                    || ['xref', 'link', 'ext'].includes(object.type)
             ) {
                 return
             }
