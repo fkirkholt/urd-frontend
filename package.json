@@ -4,7 +4,8 @@
   "description": "URD er et system utviklet for å kunne vise fram, registrere og søke i data fra relasjonsdatabaser.",
   "main": "test.js",
   "scripts": {
-    "start": "webpack --watch --progress"
+    "start": "webpack --watch --progress",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
