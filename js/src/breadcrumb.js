@@ -7,7 +7,7 @@ module.exports = {
 
         items.push({
             icon: "icon-crosshairs",
-            text: "URD",
+            text: "Urðr",
             addr: '',
             branch: ds.branch
         })
