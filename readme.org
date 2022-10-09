@@ -1,0 +1,17 @@
+#+title: Urðr - frontend
+
+This is the frontend for [[https://github.com/fkirkholt/urd-backend][Urðr]]
+
+* Installation
+
+Install the [[https://github.com/fkirkholt/urd-backend][backend]] first into folder 'urdr', and clone this repository into
+folder 'static':
+#+begin_src bash
+> cd urdr
+> git clone https://github.com/fkirkholt/urd-frontend static
+> cd static
+> npm install
+> npm run build
+#+end_src
+
+For development, run =npm start= instead of =npm run build=.
