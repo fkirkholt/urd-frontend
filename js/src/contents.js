@@ -146,7 +146,6 @@ var Contents = {
             return m('div', {
                 class: ds.table && ds.table.name == object.name ? 'bg-light-gray nowrap' : 'nowrap',
                 oncontextmenu: function(event) {
-                    if (!config.admin) return false
                     Contents.context_table = object
 
                     var hidden_txt = object.hidden ? 'Vis tabell' : 'Skjul tabell'
