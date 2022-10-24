@@ -32,6 +32,10 @@ var login = {
                     {
                         label: 'PostgreSQL',
                         value: 'postgres'
+                    },
+                    {
+                        label: 'SQL Server',
+                        value: 'sql server'
                     }
                 ]
             }),
