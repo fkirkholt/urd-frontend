@@ -74,6 +74,10 @@ m.route($('#main')[0], '/', {
     },
     "/:base/diagram": {
         onmatch: function(args, requestedPath) {
+            config.tab = 'diagram'
+            if (args.base != ds.base.name) {
+                ds.load_database(args.base)
+            }
             delete ds.table
             Diagram.def = ""
 
@@ -83,6 +87,7 @@ m.route($('#main')[0], '/', {
     "/:base/diagram/:table": {
         onmatch: function(args, requestedPath) {
             var base_name = args.base
+            config.tab = 'diagram'
             if (base_name != ds.base.name) {
                 ds.load_database(base_name)
             }
@@ -95,6 +100,7 @@ m.route($('#main')[0], '/', {
     "/:base/sql": {
         onmatch: function(args, requestedPath) {
             var base_name = args.base
+            config.tab = 'sql'
             ds.load_database(base_name)
             config.tab = 'sql'
             return SQLpanel
