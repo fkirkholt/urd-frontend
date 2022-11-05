@@ -83,7 +83,9 @@ m.route($('#main')[0], '/', {
     "/:base/diagram/:table": {
         onmatch: function(args, requestedPath) {
             var base_name = args.base
-            ds.load_database(base_name)
+            if (base_name != ds.base.name) {
+                ds.load_database(base_name)
+            }
             Diagram.def = ""
             config.tab = 'diagram'
 
