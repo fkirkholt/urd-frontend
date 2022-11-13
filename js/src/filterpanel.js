@@ -593,7 +593,7 @@ var Filterpanel = {
                 }
             })
         } else {
-            var width = (field.size === null || field.size > 20)
+            var width = (field.size === null || field.size == 0 || field.size > 20)
                 ? '100%'
                 : field.size + 'em'
             return m('input', {
