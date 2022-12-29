@@ -169,6 +169,10 @@ var Toolbar = {
         var rec = ds.table.records[idx]
         var deletable = rec && rec.relations ? true : false
 
+        // Table can just hold one row if last pkey column starts with 'const_'
+        var single_rec = ds.table.pkey.slice(-1)[0].substr(0,6) == 'const_'
+        var full = single_rec && ds.table.records.length
+
         if (rec && rec.relations) {
             $.each(rec.relations, function(idx, rel) {
                 var count_local = rel.count_records - rel.count_inherited
@@ -313,11 +317,13 @@ var Toolbar = {
                     m('i', {
                         class: [
                             'fa fa-file-o ml3 mr1',
-                            ds.table.privilege.insert == true ? 'dim pointer' : 'moon-gray'
+                            ds.table.privilege.insert == true && !full
+                                ? 'dim pointer'
+                                : 'moon-gray'
                         ].join(' '),
                         title: 'Ny post',
                         onclick: function() {
-                            if (ds.table.privilege.insert != true) return
+                            if (ds.table.privilege.insert != true || full) return
                             Record.create(ds.table)
 
                             // Focus first input in new record
@@ -332,9 +338,10 @@ var Toolbar = {
                         }
                     }),
                     config.button_view == 'both' ? m('span', {
-                        class: ds.table.privilege.insert == true ? 'dim pointer' : 'moon-gray',
+                        class: (ds.table.privilege.insert == true && !full)
+                            ? 'dim pointer' : 'moon-gray',
                         onclick: function() {
-                            if (ds.table.privilege.insert != true) return
+                            if (ds.table.privilege.insert != true || full) return
                             Record.create(ds.table)
                             if (!config.edit_mode) {
                                 ds.table.edit = true
@@ -345,9 +352,9 @@ var Toolbar = {
                 ]
                 : (config.button_view == 'text') ? m('input[type=button]', {
                     value: 'Ny',
-                    disabled: ds.table.privilege.insert == false,
+                    disabled: ds.table.privilege.insert || full == false,
                     onclick: function() {
-                        if (ds.table.privilege.insert != true) return
+                        if (ds.table.privilege.insert != true || full) return
                         Record.create(ds.table)
                         if (!config.edit_mode) {
                             ds.table.edit = true
@@ -361,12 +368,13 @@ var Toolbar = {
                 config.button_view != 'text' ? [
                     m('i', {
                         class: [
-                            'fa fa-copy ml2 mr1 pointer f6 dim',
-                            ds.table.privilege.insert == true ? 'dim pointer' : 'moon-gray'
+                            'fa fa-copy ml2 mr1 f6',
+                            ds.table.privilege.insert == true && !full
+                                ? 'dim pointer' : 'moon-gray'
                         ].join(' '),
                         title: 'Kopier post',
                         onclick: function() {
-                            if (ds.table.privilege.insert != true) return
+                            if (ds.table.privilege.insert != true || full) return
                             Record.copy()
                             if (!config.edit_mode) {
                                 ds.table.edit = true
@@ -375,9 +383,10 @@ var Toolbar = {
                         }
                     }),
                     config.button_view == 'both' ? m('span', {
-                        class: ds.table.privilege.insert == true ? 'dim pointer' : 'moon-gray',
+                        class: ds.table.privilege.insert == true && !full
+                            ? 'dim pointer' : 'moon-gray',
                         onclick: function() {
-                            if (ds.table.privilege.insert != true) return
+                            if (ds.table.privilege.insert != true || full) return
                             Record.copy()
                             if (!config.edit_mode) {
                                 ds.table.edit = true
@@ -389,9 +398,9 @@ var Toolbar = {
                 ]
                 : (config.button_view == 'text') ? m('input[type=button]', {
                     value: 'Kopier',
-                    disabled: ds.table.privilege.insert == false,
+                    disabled: ds.table.privilege.insert == false || full,
                     onclick: function() {
-                        if (ds.table.privilege.insert != true) return
+                        if (ds.table.privilege.insert != true || full) return
                         Record.copy()
                         if (!config.edit_mode) {
                             ds.table.edit = true
