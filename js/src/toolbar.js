@@ -313,92 +313,38 @@ var Toolbar = {
 
             ]),
             m('li', {class: 'dib'}, [
-                config.button_view != 'text' ? [
-                    m('i', {
-                        class: [
-                            'fa fa-file-o ml3 mr1',
-                            ds.table.privilege.insert == true && !full
-                                ? 'dim pointer'
-                                : 'moon-gray'
-                        ].join(' '),
-                        title: 'Ny post',
-                        onclick: function() {
-                            if (ds.table.privilege.insert != true || full) return
-                            Record.create(ds.table)
-
-                            // Focus first input in new record
-                            setTimeout(function() {
-                                $('form[name=record] > table').find('input,select,textarea').first().trigger('focus')
-                            }, 100)
-
-                            if (!config.edit_mode) {
-                                ds.table.edit = true
-                                config.edit_mode = true
-                            }
-                        }
-                    }),
-                    config.button_view == 'both' ? m('span', {
-                        class: (ds.table.privilege.insert == true && !full)
-                            ? 'dim pointer' : 'moon-gray',
-                        onclick: function() {
-                            if (ds.table.privilege.insert != true || full) return
-                            Record.create(ds.table)
-                            if (!config.edit_mode) {
-                                ds.table.edit = true
-                                config.edit_mode = true
-                            }
-                        }
-                    }, 'Ny') : ''
-                ]
-                : (config.button_view == 'text') ? m('input[type=button]', {
-                    value: 'Ny',
-                    disabled: ds.table.privilege.insert || full == false,
+                m('i', {
+                    class: [
+                        'fa fa-file-o ml3 mr1',
+                        ds.table.privilege.insert == true && !full
+                            ? 'dim pointer'
+                            : 'moon-gray'
+                    ].join(' '),
+                    title: 'Ny post',
                     onclick: function() {
                         if (ds.table.privilege.insert != true || full) return
                         Record.create(ds.table)
+
+                        // Focus first input in new record
+                        setTimeout(function() {
+                            $('form[name=record] > table').find('input,select,textarea').first().trigger('focus')
+                        }, 100)
+
                         if (!config.edit_mode) {
                             ds.table.edit = true
                             config.edit_mode = true
                         }
                     }
                 })
-                : ''
             ]),
             m('li', {class: 'dib'}, [
-                config.button_view != 'text' ? [
-                    m('i', {
-                        class: [
-                            'fa fa-copy ml2 mr1 f6',
-                            ds.table.privilege.insert == true && !full
-                                ? 'dim pointer' : 'moon-gray'
-                        ].join(' '),
-                        title: 'Kopier post',
-                        onclick: function() {
-                            if (ds.table.privilege.insert != true || full) return
-                            Record.copy()
-                            if (!config.edit_mode) {
-                                ds.table.edit = true
-                                config.edit_mode = true
-                            }
-                        }
-                    }),
-                    config.button_view == 'both' ? m('span', {
-                        class: ds.table.privilege.insert == true && !full
-                            ? 'dim pointer' : 'moon-gray',
-                        onclick: function() {
-                            if (ds.table.privilege.insert != true || full) return
-                            Record.copy()
-                            if (!config.edit_mode) {
-                                ds.table.edit = true
-                                config.edit_mode = true
-                            }
-                        }
-
-                    }, 'Kopier') : ''
-                ]
-                : (config.button_view == 'text') ? m('input[type=button]', {
-                    value: 'Kopier',
-                    disabled: ds.table.privilege.insert == false || full,
+                m('i', {
+                    class: [
+                        'fa fa-copy ml2 mr1 f6',
+                        ds.table.privilege.insert == true && !full
+                            ? 'dim pointer' : 'moon-gray'
+                    ].join(' '),
+                    title: 'Kopier post',
                     onclick: function() {
                         if (ds.table.privilege.insert != true || full) return
                         Record.copy()
@@ -408,90 +354,44 @@ var Toolbar = {
                         }
                     }
                 })
-                : ''
             ]),
             !config.edit_mode ? m('li', {class: 'dib'}, [
-                config.button_view != 'text' ? [
-                    m('i', {
-                        class: [
-                            'fa fa-edit ml2 mr1 pointer f6',
-                            ds.table.privilege.update == true ? 'dim pointer' : 'moon-gray'
-                        ].join(' '),
-                        title: 'Rediger post',
-                        onclick: function() {
-                            ds.table.edit = true
-                            config.edit_mode = true
-                        }
-                    }),
-                    config.button_view == 'both' ? m('span', {
-                        class: ds.table.privilege.update == true ? 'dim pointer' : 'moon-gray',
-                        onclick: function() {
-                            ds.table.edit = true
-                            config.edit_mode = true
-                        }
-                    }, 'Rediger') : ''
-                ]
-                : (config.button_view == 'text') ? m('input[type=button]', {
-                    value: 'Rediger',
-                    disabled: ds.table.privilege.update == false,
+                m('i', {
+                    class: [
+                        'fa fa-edit ml2 mr1 pointer f6',
+                        ds.table.privilege.update == true ? 'dim pointer' : 'moon-gray'
+                    ].join(' '),
+                    title: 'Rediger post',
                     onclick: function() {
                         ds.table.edit = true
                         config.edit_mode = true
                     }
-                }) : ''
+                })
             ]) : '',
             m('li', {class: 'dib'}, [
                 config.autosave || !config.edit_mode ? '' : [
-                    config.button_view != 'text' ? [
-                        m('i', {
-                            class: [
-                                'fa fa-save ml2 mr1',
-                                ds.table.dirty ? 'dim pointer' : 'moon-gray'
-                            ].join(' '),
-                            title: 'Lagre endringer',
-                            onclick: function() {
-                                if (!ds.table.dirty) return
-                                Grid.save()
-                            }
-                        }),
-                        config.button_view == 'both' ? m('span', {
-                            class: ds.table.dirty ? 'dim pointer' : 'moon-gray',
-                            onclick: function() {
-                                if (!ds.table.dirty) return
-                                Grid.save()
-                            }
-                        }, 'Lagre') : ''
-                    ]
-                    : (config.button_view == 'text') ? m('input[type=button]', {
-                        value: 'Lagre',
-                        disabled: ds.table.dirty == false,
+                    m('i', {
+                        class: [
+                            'fa fa-save ml2 mr1',
+                            ds.table.dirty ? 'dim pointer' : 'moon-gray'
+                        ].join(' '),
+                        title: 'Lagre endringer',
                         onclick: function() {
                             if (!ds.table.dirty) return
                             Grid.save()
                         }
-                    }) : ''
+                    })
                 ]
             ]),
             ds.table.hide ? '' : m('li', {class: 'dib'}, [
-                config.button_view != 'text' ? [
-                    m('i', {
-                        class: [
-                            'fa fa-trash-o ml2 mr1',
-                            (ds.table.privilege.delete == true && deletable) ? 'dim pointer' : 'moon-gray'
-                        ].join(' '),
-                        title: 'Slett post',
-                        onclick: Toolbar.delete_record
-                    }),
-                    config.button_view == 'both' ? m('span', {
-                        class: (ds.table.privilege.delete == true && deletable) ? 'dim pointer' : 'moon-gray',
-                        onclick: Toolbar.delete_record
-                    }, 'Slett') : ''
-                ]
-                : (config.button_view == 'text') ? m('input[type=button]', {
-                    value: 'Slett',
-                    disabled: ds.table.privilege.delete == false || !deletable,
+                m('i', {
+                    class: [
+                        'fa fa-trash-o ml2 mr1',
+                        (ds.table.privilege.delete == true && deletable) ? 'dim pointer' : 'moon-gray'
+                    ].join(' '),
+                    title: 'Slett post',
                     onclick: Toolbar.delete_record
-                }) : ''
+                })
             ]),
             m('li', {class: 'dib'}, [
                 m('i', {
