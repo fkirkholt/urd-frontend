@@ -107,7 +107,7 @@ var Field = {
         } else if (field.element == 'input[type=checkbox]') {
             var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
             value = m('i', {class: 'fa ' + icon})
-        } else if (field.datatype == 'json' && field.value) {
+        } else if ((field.datatype == 'json' || get(field, 'attrs.data-format') == 'json') && field.value) {
             value = m(JSONed, {
                 name: field.name,
                 mode: 'view',
