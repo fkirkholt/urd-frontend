@@ -24,7 +24,7 @@ var Filterpanel = {
             query.value = search_criterias.join(' AND ')
         }
 
-        m.route.set('/' + ds.base.name + '/' + ds.table.name + '?' + query.key + '=' + query.value)
+        m.route.set('/' + ds.base.name + '/data/' + ds.table.name + '?' + query.key + '=' + query.value)
     },
 
     parse_search: function() {
