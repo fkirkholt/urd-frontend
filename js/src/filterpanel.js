@@ -409,7 +409,7 @@ var Filterpanel = {
                                 filter.disabled = false
                             }
                         }),
-                        Filterpanel.draw_value_field(field, filter),
+                        Filterpanel.draw_value_field(table, field, filter),
                         m('span', m.trust('&nbsp;')),
                         m('i[name="remove"]', {
                             class: 'icon fa fa-trash-o',
@@ -496,7 +496,14 @@ var Filterpanel = {
      * @param {object} filter - The filter to apply
      *
      */
-    draw_value_field: function(field, filter) {
+    draw_value_field: function(table, field, filter) {
+        var has_idx = false
+        $.each(table.indexes, function(i, idx) {
+            if (idx.columns[0] === field.name) {
+                has_idx = true
+            }
+        })
+
         if (filter.disabled) {
             return null
         } else if (['IS NULL', 'IS NOT NULL'].includes(filter.operator)) {
@@ -535,7 +542,12 @@ var Filterpanel = {
                     filter.label = e.target['textContent']
                 }
             })
-        } else if (field.element === 'select' && ['', 'LIKE', 'start', 'slutt', '>', '<'].includes(filter.operator) == false) {
+        } else if (
+            (field.element === 'select' &&
+             ['', 'LIKE', 'start', 'slutt', '>', '<'].includes(filter.operator) == false)
+                || (field.element === 'input[type=text]' && has_idx && ['=', '!='].includes(filter.operator))
+
+        ) {
 
             var key_json = JSON.stringify(field.fkey ? field.fkey.primary : [field.name])
 
@@ -557,7 +569,7 @@ var Filterpanel = {
                         base: (field.fkey && field.fkey.base)
                             ? field.fkey.base
                             : ds.base.name,
-                        table: field.fkey ? field.fkey.table : field.table,
+                        table: field.fkey ? field.fkey.table : table.name,
                         alias: field.name,
                         view: field.view,
                         column_view: field.column_view,

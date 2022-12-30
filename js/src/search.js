@@ -134,7 +134,7 @@ var Search = {
                     // input
                     m('td', {
                         class: 'max-w7 w-100'
-                    }, Filterpanel.draw_value_field(field, filter))
+                    }, Filterpanel.draw_value_field(table, field, filter))
                 ]),
                 !field.expanded ? null : m('tr', [
                     m('td'),
