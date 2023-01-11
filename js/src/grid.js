@@ -384,7 +384,7 @@ var Grid = {
                         var col = ds.table.grid.columns[label]
                         return m('td', {
                             class: 'tr bl bt b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib'
-                        }, (col in ds.table.grid.sums) ? m.trust(ds.table.grid.sums[col]) : m.trust('&nbsp'))
+                        }, (col in ds.table.grid.sums) ? m.trust(String(ds.table.grid.sums[col])) : m.trust('&nbsp'))
                     })
                 ])
             ])
