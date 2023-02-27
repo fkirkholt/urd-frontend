@@ -222,3 +222,4 @@ module.exports = Search
 var Filterpanel = require('./filterpanel')
 var Select = require('./select')
 var config = require('./config')
+var Cookies = require('js-cookie')
