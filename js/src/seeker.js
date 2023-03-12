@@ -78,6 +78,7 @@ function Seeker(initialVnode) {
                     value: option.label,
                     placeholder: 'Search',
                     style: vnode.attrs.style,
+                    autocomplete: 'off',
                     oninput: function(event) {
                         option.label = event.target.value
                     },
