@@ -228,7 +228,7 @@ var Field = {
             } else {
                 base = field.fkey.base || field.fkey.schema
             }
-            var url = '#/' + base + '/' + field.fkey.table + '?'
+            var url = '#/' + base + '/data/' + field.fkey.table + '?'
             $.each(field.fkey.primary, function(i, colname) {
                 var fk_field = field.fkey.foreign[i]
                 url += colname + '=' + rec.fields[fk_field].value
