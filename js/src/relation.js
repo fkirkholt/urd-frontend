@@ -7,6 +7,7 @@ var Relation = {
     },
 
     draw_relation_table: function(rel, record) {
+        var columns = []
         var count_columns = 0
         var group = rel.gruppe
 
@@ -14,12 +15,12 @@ var Relation = {
         $.each(rel.grid.columns, function(idx, field_name) {
             var field = rel.fields[field_name]
             if (!(field.defines_relation)) {
-                count_columns++
+                columns.push(field)
             }
         })
 
         // Make list instead of table of relations if only one column shown
-        if (count_columns == 1 && Object.keys(rel.relations).length == 0) {
+        if (columns.length == 1 && columns[0].fkey && Object.keys(rel.relations).length == 0) {
             rel.relationship = 'M:M'
             return Relation.draw_relation_list(rel, record)
         }
@@ -136,7 +137,7 @@ var Relation = {
                         rec.table = rel
                         rec.loaded = true
 
-                        Object.keys(rel.fields).map(function (key) {
+                        rel.grid.columns.map(function(key) {
                             var field = rec.fields[key]
                             if (field.value === undefined) {
                                 field.value = rec.columns[key].value
@@ -148,13 +149,13 @@ var Relation = {
                         })
 
                         return [
-                            Object.keys(rel.form.items).map(function (label, idx) {
-                                var item = rel.form.items[label]
+                            rel.grid.columns.map(function(key) {
+                                label = rel.fields[key].label
 
-                                if (typeof item !== 'object' && item.indexOf('.') === -1 && rel.fields[item].defines_relation) {
+                                if (rel.fields[key].defines_relation) {
                                     return
                                 }
-                                return m(Node, {rec: rec, colname: item, label: label})
+                                return m(Node, {rec: rec, colname: key, label: label})
                             })
                         ]
                     }),
