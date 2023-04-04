@@ -33,7 +33,7 @@ var Diagram = {
 
             // Show diagram for table when clicking on table box
             $('body').on('click', 'svg g', function() {
-                var table_name = $(this).attr('id')
+                var table_name = $(this).children('text').text()
 
                 Diagram.type = 'table'
                 Diagram.root = table_name
@@ -70,10 +70,15 @@ var Diagram = {
                 themeCSS: 'g.classGroup text{font-family: Consolas, monaco, monospace;}'
             })
             $('#mermaid').html(this.def).removeAttr('data-processed')
-            mermaid.init(undefined, $("#mermaid"))
+            mermaid.run({
+                querySelector: '#mermaid',
+                postRenderCallback: function() {
+                    $('#mermaid svg g').addClass('pointer')
+                    $('#mermaid svg').addClass('center')
+                },
+                suppressErrors: true,
+            });
 
-            $('#mermaid svg g').addClass('pointer')
-            $('#mermaid svg').addClass('center')
         }
 
         // Title for reference tables should be in italic
