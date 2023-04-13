@@ -48,8 +48,18 @@ var Tablelist = {
                 m('li', {
                     class: 'hover-blue',
                     onclick: function() {
-                        var sql = "select sql from sqlite_schema where name = '" +
+                        var sql
+                        if (ds.base.system == 'sqlite') {
+                            sql = "select sql from sqlite_schema where name = '" +
                             Tablelist.context_table + "'"
+                        } else if (ds.base.system == 'mysql') {
+                            sql = "show columns from " + Tablelist.context_table
+                        } else {
+                            sql = "select column_name, data_type, character_maximum_length,\n"
+                            sql+= "column_default, is_nullable\n"
+                            sql+= "from INFORMATION_SCHEMA.COLUMNS\n"
+                            sql+= "where table_name = '" + Tablelist.context_table + "';"
+                        }
                         Codefield.set_value('query', sql)
                         $('#tablelist-context').hide()
                     }
