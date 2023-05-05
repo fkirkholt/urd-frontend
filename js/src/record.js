@@ -198,6 +198,7 @@ var Record = {
         clone.columns = $.extend(true, {}, active_rec.columns)
         clone.table = ds.table
         clone.new = true
+        clone.relations = []
 
         var idx = ds.table.selection + 1
         ds.table.records.splice(idx, 0, clone)
@@ -208,7 +209,9 @@ var Record = {
         $.each(ds.table.fields, function(name, field) {
             if (field.extra) {
                 clone.fields[name].value = field.default
-                clone.columns[name].text = field.default
+                if (clone.columns[name]) {
+                    clone.columns[name].text = field.default
+                }
                 clone.fields[name].dirty = true
                 if (field.options) {
                     if (field.default) {
