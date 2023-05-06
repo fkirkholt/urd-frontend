@@ -21,7 +21,8 @@ var Search = {
         }).then(function(result) {
             field.relation = result.data
             field.relation.alias = field.name
-            // mark the relation so that we don't expand more than one level deep
+            // mark the relation so that we don't expand more
+            // than one level deep
             field.relation.sublevel = true
 
             if (field.expanded) {
@@ -42,8 +43,9 @@ var Search = {
             return [
                 m('tr', [
                     m('td', {class: 'tc'}, [
-                        item.inline && item.expandable === false ? '' : m('i.fa', {
-                            class: item.expanded ? 'fa-angle-down' : 'fa-angle-right',
+                        item.inline && !item.expandable ? '' : m('i.fa', {
+                            class: item.expanded
+                                ? 'fa-angle-down' : 'fa-angle-right',
                             onclick: function() {
                                 if (item.expandable === false) return
 
@@ -77,21 +79,28 @@ var Search = {
         }
 
         // If this is a field
-        if (typeof item === 'string' && item.indexOf('relations') == -1 && item.indexOf('actions.') == -1) {
+        if (
+            typeof item === 'string' &&
+            !item.includes('relations') && 
+            !item.includes('actions.')
+        ) {
             var field = table.fields[item]
+
 
             label = isNaN(parseInt(label)) ? label: field.label
             var operators = Filterpanel.get_operators(field)
 
             if (table.alias === undefined) table.alias = table.name
-            var filtername = table.alias == ds.table.name ? field.name : (table.alias || table.name) + '.' + field.name
+            var filtername = table.alias == ds.table.name
+                ? field.name
+                : (table.alias || table.name) + '.' + field.name
 
             if (!ds.table.filters[filtername]) {
                 ds.table.filters[filtername] = {
                     field: filtername,
                     operator: field.element == 'textarea' || (
                         field.element == 'input[type=text]' &&
-                            ['integer', 'decimal', 'float'].indexOf(field.datatype) == -1
+                        !['integer','decimal','float'].includes(field.datatype)
                     ) ? 'LIKE' : '='
                 }
             }
@@ -102,8 +111,12 @@ var Search = {
             return [
                 m('tr', [
                     m('td', {class: 'tc v-top'}, [
-                        !field.fkey || !field.expandable || table.sublevel ? null : m('i.fa', {
-                            class: !field.expanded ? 'fa-angle-right' : field.expandable ? 'fa-angle-down' : '',
+                        !field.fkey || !field.expandable || table.sublevel
+                            ? null
+                        : m('i.fa', {
+                            class: !field.expanded
+                                ? 'fa-angle-right'
+                                : field.expandable ? 'fa-angle-down' : '',
                             onclick: function() {
                                 Search.toggle_relation(field)
                             }
@@ -124,7 +137,8 @@ var Search = {
                         onchange: function(e) {
                             filter.operator = e.target['value']
 
-                            // This code recreates the value field, to run oncreate again
+                            // This code recreates the value field,
+                            // to run oncreate again
                             // with attributes for the new field
                             filter.disabled = true
                             m.redraw()
@@ -177,9 +191,10 @@ var Search = {
             */
             m('input[type=button]', {
                 value: 'Nullstill skjema',
-                disabled: Object.keys(ds.table.filters).filter(function (label) {
-                    var filter = ds.table.filters[label]
-                    return filter.value || ['IS NULL', 'IS NOT NULL'].includes(filter.operator)
+                disabled: Object.keys(ds.table.filters).filter(function (key) {
+                    var filter = ds.table.filters[key]
+                    return filter.value || 
+                           ['IS NULL', 'IS NOT NULL'].includes(filter.operator)
                 }).length === 0,
                 onclick: function () {
                     ds.table.filters = {}
@@ -190,9 +205,11 @@ var Search = {
                 checked: config.edit_search,
                 onchange: function () {
                     config.edit_search = !config.edit_search
-                    Cookies.set('edit_search', config.edit_search, { expires: 14 })
+                    Cookies.set('edit_search', config.edit_search,
+                                {expires: 14})
                     if (config.edit_search) {
-                        ds.table.filters = Filterpanel.parse_query(ds.table.query)
+                        ds.table.filters =
+                            Filterpanel.parse_query(ds.table.query)
                     }
                 }
             }), ' Vis aktive søkekriterier']),
@@ -206,7 +223,11 @@ var Search = {
                 Object.keys(table.form.items).map(function(label, idx) {
                     var item = table.form.items[label]
 
-                    if (typeof item !== 'object' && item.indexOf('.') === -1 && table.fields[item].defines_relaton) {
+                    if (
+                        typeof item !== 'object' && 
+                        item.indexOf('.') === -1 &&
+                        table.fields[item].defines_relaton
+                    ) {
                         return
                     }
 

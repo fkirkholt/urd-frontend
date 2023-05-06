@@ -61,15 +61,17 @@ module.exports = {
                         ].join(' '),
                         style: item.icon !== 'table' ? 'bottom: 2px;' : ''
                     }), item.text]),
-                    !item.branch || item.branch == 'master' ? '' : m('span', {class: 'light-silver'}, [
+                    !item.branch || item.branch == 'master'
+                        ? ''
+                    : m('span', {class: 'light-silver'}, [
                         m('i', {class: 'fa fa-code-fork ml2'}),
                         ds.branch,
                     ]),
-                    idx == sti.length - 1 ? '' : m('i', {class: 'fa fa-angle-right f3 fw3 ml2 mr2'})
+                    idx == sti.length - 1 
+                        ? ''
+                    : m('i', {class: 'fa fa-angle-right f3 fw3 ml2 mr2'})
                 ]
             }),
         ])
     }
 }
-
-var config = require('./config')

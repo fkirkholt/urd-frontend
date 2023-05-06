@@ -16,7 +16,7 @@ var export_dialog = {
         })
         param.fields = JSON.stringify(fields)
 
-        params = Object.keys(param).map(function(k) {
+        var params = Object.keys(param).map(function(k) {
             return k + '=' + param[k]
         }).join('&')
         window.open('/table_csv?' + params, '_blank')
@@ -32,7 +32,7 @@ var export_dialog = {
         if (ds.table) {
             param.table = ds.table.name
         }
-        params = Object.keys(param).map(function(k) {
+        var params = Object.keys(param).map(function(k) {
             return k + '=' + param[k]
         }).join('&')
         window.open('/table_sql?' + params, '_blank')
@@ -51,14 +51,17 @@ var export_dialog = {
                     m('option', {value: 'csv'}, 'csv'),
                 ]),
             ]),
-            this.type !== 'csv' ? '' : m('div[name=valg]', {class: 'mt2 max-h5 overflow-y-auto'}, [
+            this.type !== 'csv' ? '' : m('div[name=valg]', {
+                class: 'mt2 max-h5 overflow-y-auto'
+            }, [
                 'Velg felter:',
                 m('ul', {class: 'list'}, [
                     m('li', {class: 'mb2'}, [
                         m('input[type=checkbox]', {
                             onchange: function(e) {
                                 var checked = $(this).prop('checked')
-                                $('input[type=checkbox][name=field]').prop('checked', checked)
+                                $('input[type=checkbox][name=field]')
+                                    .prop('checked', checked)
                                 e.redraw = false
                             }
                         }), ' (alle)',
@@ -75,15 +78,29 @@ var export_dialog = {
                 ])
             ]),
             this.type == 'csv' ? '' : m('div[name=valg]', {class: "mt2"}, [
-                m('label', [m('input[type=radio]', {name: 'dialect', value: 'mysql'})], ' MySQL'),
+                m('label', [m('input[type=radio]', {
+                    name: 'dialect',
+                    value: 'mysql'
+                })], ' MySQL'),
                 m('br'),
-                m('label', [m('input[type=radio]', {name: 'dialect', value: 'oracle'})], ' Oracle'),
+                m('label', [m('input[type=radio]', {
+                    name: 'dialect',
+                    value: 'oracle'
+                })], ' Oracle'),
                 m('br'),
-                m('label', [m('input[type=radio]', {name: 'dialect', value: 'postgres'})], ' PostgreSQL'),
+                m('label', [m('input[type=radio]', {
+                    name: 'dialect',
+                    value: 'postgres'
+                })], ' PostgreSQL'),
                 m('br'),
-                m('label', [m('input[type=radio]', {name: 'dialect', value: 'sqlite3'})], ' SQLite'),
+                m('label', [m('input[type=radio]', {
+                    name: 'dialect',
+                    value: 'sqlite3'
+                })], ' SQLite'),
                 m('br'), m('br'),
-                m('label', [m('input[type=checkbox]', {name: 'records'})], ' Export records'),
+                m('label', [m('input[type=checkbox]', {
+                    name: 'records'
+                })], ' Export records'),
                 m('br'), m('span', {class: 'dib w1'}),
                 m('label', [m('input[type=checkbox]', {
                     name: 'select'
@@ -98,10 +115,17 @@ var export_dialog = {
                         if (this.type === 'csv') {
                             this.export_csv()
                         } else {
-                            var dialect = $('#export-dialog input[name="dialect"]:checked').val()
-                            var include_records = $('#export-dialog input[name="records"]').prop('checked')
-                            var select_records = $('#export-dialog input[name="select"]').prop('checked')
-                            export_dialog.export_sql(dialect, include_records, select_records)
+                            var dialect = $(
+                                '#export-dialog input[name="dialect"]:checked'
+                            ).val()
+                            var include_records = $(
+                                '#export-dialog input[name="records"]'
+                            ).prop('checked')
+                            var select_records = $(
+                                '#export-dialog input[name="select"]'
+                            ).prop('checked')
+                            export_dialog.export_sql(dialect, include_records,
+                                                     select_records)
                         }
                         $('div.curtain').hide()
                         $('#export-dialog').hide()

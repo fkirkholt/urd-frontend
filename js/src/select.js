@@ -15,10 +15,14 @@ var Select = {
                 value === '' || value === null  ? 'moon-gray' : ''
             ].join(' ')
         }, [
-            vnode.attrs.required && value !== null && value !== '' ? '' : m('option', {
+            vnode.attrs.required && value !== null && value !== '' 
+                ? ''
+            : m('option', {
                 value: '',
                 class: 'moon-gray normal'
-            }, vnode.attrs.placeholder ? vnode.attrs.placeholder : m.trust('&nbsp;')),
+            }, vnode.attrs.placeholder
+                ? vnode.attrs.placeholder : m.trust('&nbsp;')
+            ),
             vnode.attrs.optgroups
                 ? vnode.attrs.optgroups.map(function(optgroup, idx) {
                     return m('optgroup', {

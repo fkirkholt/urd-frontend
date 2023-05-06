@@ -6,7 +6,8 @@ var Tablelist = {
 
         return [
             m('ul#tablelist-context', {
-                class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
+                class: 'absolute left-0 bg-white list pa1 shadow-5 dn '
+                     + 'pointer z-999'
             }, [
                 m('li', {
                     class: 'hover-blue',
@@ -50,15 +51,19 @@ var Tablelist = {
                     onclick: function() {
                         var sql
                         if (ds.base.system == 'sqlite') {
-                            sql = "select sql from sqlite_schema where name = '" +
-                            Tablelist.context_table + "'"
+                            sql = "select sql "
+                                + "from sqlite_schema "
+                                + "where name = '"
+                                + Tablelist.context_table + "'"
                         } else if (ds.base.system == 'mysql') {
                             sql = "show columns from " + Tablelist.context_table
                         } else {
-                            sql = "select column_name, data_type, character_maximum_length,\n"
+                            sql = "select column_name, data_type, " 
+                            sql+= "character_maximum_length,\n"
                             sql+= "column_default, is_nullable\n"
                             sql+= "from INFORMATION_SCHEMA.COLUMNS\n"
-                            sql+= "where table_name = '" + Tablelist.context_table + "';"
+                            sql+= "where table_name = '" 
+                                + Tablelist.context_table + "';"
                         }
                         Codefield.set_value('query', sql)
                         $('#tablelist-context').hide()
@@ -72,20 +77,23 @@ var Tablelist = {
                     return m('li', {
                         class: 'pointer',
                         onclick: function(ev) {
-                            Codefield.set_value('query', 'select * from ' + item)
+                            Codefield.set_value('query', 'select * from '+item)
                             $('#run_sql').trigger('click')
                         },
                         oncontextmenu: function(event) {
                             var top
                             $('#tablelist-context').toggle()
-                            var context_height = $('#tablelist-context').height()
+                            var height = $('#tablelist-context').height()
                             Tablelist.context_table = item
-                            if (window.innerHeight - event.clientY < context_height) {
-                                top = event.clientY - 20 - context_height
+                            if (window.innerHeight - event.clientY < height) {
+                                top = event.clientY - 20 - height
                             } else {
                                 top = event.clientY - 20
                             }
-                            $('ul#tablelist-context').css({top: top, left: event.clientX})
+                            $('ul#tablelist-context').css({
+                                top: top,
+                                left: event.clientX
+                            })
                             return false
                         }
                     }, item)

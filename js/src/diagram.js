@@ -11,7 +11,6 @@ var Diagram = {
     show_tooltip: function(evt) {
         let tooltip = document.getElementById("tooltip")
         var svg_width = $('svg').width()
-        var svg_height = $('svg').height()
         var max_width = parseInt($('svg').css('max-width'))
         var text = $(evt.target).parent().attr('id')
         if (max_width/svg_width > 2) {
@@ -41,7 +40,8 @@ var Diagram = {
                 m.redraw()
             })
 
-            $('body').on('mouseenter', '#mermaid svg g rect', Diagram.show_tooltip)
+            $('body')
+                .on('mouseenter', '#mermaid svg g rect', Diagram.show_tooltip)
                 .on('mouseout', '#mermaid svg g rect', Diagram.hide_tooltip)
         })
     },
@@ -49,16 +49,19 @@ var Diagram = {
     onbeforeupdate: function(vnode) {
         // Define diagram based on type before redraw
         // This makes the diagram respond to changes in threshold value
+
+        var def = ['erDiagram']
+        var subitems = ds.base.contents[Diagram.root].subitems
+        var root_table = ds.base.tables[Diagram.root]
         if (Diagram.type == 'module') {
-            var def = ['erDiagram']
-            Object.values(ds.base.contents[Diagram.root].subitems).map(function(node) {
+            Object.values(subitems).map(function(node) {
                 Diagram.draw_fkeys_node(node, def)
             })
             Diagram.def = def.join("\n")
         } else if (Diagram.type == 'table') {
-            Diagram.def = Diagram.get_table_def(ds.base.tables[Diagram.root])
+            Diagram.def = Diagram.get_table_def(root_table)
         } else if (Diagram.type == 'descendants') {
-            Diagram.def = Diagram.get_table_def(ds.base.tables[Diagram.root], [])
+            Diagram.def = Diagram.get_table_def(root_table, [])
         }
     },
 
@@ -67,7 +70,8 @@ var Diagram = {
             // Redraw the graph if it's changed
             mermaid.mermaidAPI.initialize({
                 securityLevel: 'loose',
-                themeCSS: 'g.classGroup text{font-family: Consolas, monaco, monospace;}'
+                themeCSS: 'g.classGroup '
+                        + 'text{font-family: Consolas, monaco, monospace;}'
             })
             $('#mermaid').html(this.def).removeAttr('data-processed')
             mermaid.run({
@@ -136,7 +140,8 @@ var Diagram = {
             var fk_table = ds.base.tables[fk.table]
             var line = field && field.hidden ? '..' : '--'
             var symbol = field && field.nullable ? ' o|' : ' ||'
-            def.push(fk.table + symbol + line + ' o{' + table.name + ' : ' + field_name)
+            def.push(fk.table + symbol + line + ' o{' + table.name + 
+                     ' : ' + field_name)
             if (fk_table === undefined) return
             // def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
             if (fk_table.rowcount && fk.table != table.name) {
@@ -193,7 +198,8 @@ var Diagram = {
             }
 
             var line  = rel.hidden ? '..' : '--'
-            def.push(table.name + symbol + line + 'o{ ' + rel.table + ' : ' + fk_field_name)
+            def.push(table.name + symbol + line + 'o{ ' + rel.table +
+                     ' : ' + fk_field_name)
 
             if (recursion && !tablenames.includes(rel.table)) {
                 def_recur = Diagram.get_table_def(rel_table, tablenames)
@@ -217,7 +223,8 @@ var Diagram = {
             var sign = field.hidden ? '# ' : field.nullable ? '- ' : '+ '
             // number of invicible spaces to align column names
             var count = 6 - field.datatype.length
-            def.push(table.name + ' : ' + sign + field.datatype + '\u2000'.repeat(count) + ' ' + field.name)
+            def.push(table.name + ' : ' + sign + field.datatype +
+                     '\u2000'.repeat(count) + ' ' + field.name)
         })
 
         Object.keys(table.fkeys).map(function(alias) {
@@ -277,22 +284,25 @@ var Diagram = {
             if (field.hidden) return
             var fk_table = ds.base.tables[fk.table]
             if (fk_table.hidden) return
-            // if (Object.values(module.subitems).indexOf('tables.' + fk.table) == -1) return
             var symbol = field.nullable ? ' o|' : ' ||'
-            def.push(fk.table + symbol + '--o{ ' + table.name + ' : ' + field.name)
+            def.push(fk.table + symbol + '--o{ ' + table.name + ' : ' + 
+                     field.name)
         })
     },
 
     add_path: function(table) {
-        var path = []
-        var level = 0
-        path = Diagram.get_path(table, path)
+        var path = Diagram.get_path(table, path)
 
         if (path) {
             path = path.filter(function(line) {
                 if (Diagram.def.indexOf(line) !== -1) return false
                 // Check reversed relation
-                if (Diagram.def.indexOf(line.replace('<--', '-->').split(" ").reverse().join(" ")) !== -1) return false
+                if (
+                    Diagram.def.indexOf(line.replace('<--', '-->')
+                        .split(" ").reverse().join(" ")) !== -1
+                ) {
+                    return false
+                }
 
                 return true
             })
@@ -304,7 +314,7 @@ var Diagram = {
 
     get_path: function(table, path) {
 
-        // TODO: Bør kanskje finne annen måte enn å hardkode dette
+        // TODO: Should maybe find another way than hardcoding this
         if (path.length > 3) {
             return false
         }
@@ -324,7 +334,10 @@ var Diagram = {
                 : null
             var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
-            if (path.includes(table.name + symbol + '--{o ' + fk.table + ' : ' + fk_field_name)) {
+            if (
+                path.includes(table.name + symbol + '--{o ' + fk.table + 
+                              ' : ' + fk_field_name)
+            ) {
                 return
             }
 
@@ -333,7 +346,8 @@ var Diagram = {
                 return
             }
 
-            new_path.push(table.name + symbol + '--o{ ' + fk.table + ' : ' + fk_field_name)
+            new_path.push(table.name + symbol + '--o{ ' + fk.table + 
+                          ' : ' + fk_field_name)
 
             if (fk.table == Diagram.root) {
                 // merge found_path and new_path and remove duplicates
@@ -357,7 +371,10 @@ var Diagram = {
             var fk_field = table.fields ? table.fields[fk_field_name] : null
             var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
-            if (path.includes(fk.table + symbol + '--o{ ' + table.name + ' : ' + fk_field_name)) {
+            if (
+                path.includes(fk.table + symbol + '--o{ ' + table.name +
+                              ' : ' + fk_field_name)
+            ) {
                 return
             }
             var fk_table = ds.base.tables[fk.table]
@@ -372,7 +389,8 @@ var Diagram = {
             } else {
                 if (fk_table.type == 'reference') return
 
-                new_path.push(fk.table + symbol + '--o{ ' + table.name + ' : ' + fk_field_name)
+                new_path.push(fk.table + symbol + '--o{ ' + table.name + 
+                              ' : ' + fk_field_name)
 
                 new_path = Diagram.get_path(fk_table, new_path)
                 if (new_path) {

@@ -21,7 +21,8 @@ var header = {
                     }
                 }),
                 m('ul', {
-                    class: 'fixed right-0 list dn pa1 shadow-5 pointer bg-white black mt0',
+                    class: 'fixed right-0 list dn pa1 shadow-5 pointer '
+                         + 'bg-white black mt0',
                     onclick: function() {
                         $('div#menu ul').hide()
                     }
@@ -29,19 +30,25 @@ var header = {
                     m('li', {
                         onclick: function() {
                             $('#preferences').show()
-                            $('#preferences [name=autosave]').prop('checked', config.autosave)
+                            $('#preferences [name=autosave]')
+                                .prop('checked', config.autosave)
                             $('div.curtain').show()
                         }
                     }, 'Innstillinger'),
                     m('li', {
                         class: 'dn',
                         onclick: function() {
-                            if ($('#keyboard-shortcuts').css('visibility') == 'visible') {
-                                $('#keyboard-shortcuts').css('visibility', 'hidden')
+                            if (
+                                $('#keyboard-shortcuts')
+                                    .css('visibility') == 'visible'
+                            ) {
+                                $('#keyboard-shortcuts')
+                                    .css('visibility', 'hidden')
                                 $(this).html('Vis hurtigtaster')
                             }
                             else {
-                                $('#keyboard-shortcuts').css('visibility', 'visible')
+                                $('#keyboard-shortcuts')
+                                    .css('visibility', 'visible')
                                 $(this).html('Skjul hurtigtaster')
                             }
                         }
@@ -53,7 +60,8 @@ var header = {
                                 $('div.print-view').hide()
                                 $('#header').show()
                                 $('#page-container').show()
-                                $('#meny option[value="utskrift"]').html('Utskriftsvisning')
+                                $('#meny option[value="utskrift"]')
+                                    .html('Utskriftsvisning')
                             }
                             else {
                                 m.request({
@@ -66,7 +74,8 @@ var header = {
                                 $('#header').hide()
                                 $('#page-container').hide()
                                 $('#print-view').show()
-                                $('#meny option[value="utskrift"]').html('Lukk utskriftsvisning')
+                                $('#meny option[value="utskrift"]')
+                                    .html('Lukk utskriftsvisning')
                             }
                         }
                     }, 'Utskrift'),

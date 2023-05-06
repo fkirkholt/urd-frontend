@@ -24,8 +24,12 @@ var Pagination = {
         var data = {
             base: ds.base.name,
             table: list.name,
-            filter: m.route.param('query') ? decodeURI(m.route.param('query')) : null,
-            condition: m.route.param('where') ? decodeURI(m.route.param('where')) : null,
+            filter: m.route.param('query')
+                ? decodeURI(m.route.param('query'))
+                : null,
+            condition: m.route.param('where')
+                ? decodeURI(m.route.param('where'))
+                : null,
             sort: JSON.stringify(sort),
             limit: config.limit,
             offset: offset
@@ -47,7 +51,8 @@ var Pagination = {
 
     to: function() {
         var til_post
-        if (ds.table.count_records < (parseInt(ds.table.offset) + parseInt(ds.table.limit))) {
+        var count = ds.table.count_records
+        if (count < (parseInt(ds.table.offset) + parseInt(ds.table.limit))) {
             til_post = ds.table.count_records
         } else {
             til_post = parseInt(ds.table.offset) + parseInt(ds.table.limit)
@@ -56,10 +61,13 @@ var Pagination = {
     },
 
     disabled: function(name, table) {
+        var count_records = parseInt(table.count_records)
+        var offset = parseInt(table.offset)
+        var limit = parseInt(table.limit)
         if (name == 'first' || name == 'previous') {
             return table.offset == 0 ? true : false
         } else {
-            return (parseInt(table.count_records) - parseInt(table.offset) <= parseInt(table.limit))
+            return (count_records - offset <= limit)
                 ? true
                 : false
         }
@@ -67,7 +75,6 @@ var Pagination = {
 
     view: function(vnode) {
         var table = ds.table
-        var param = m.route.param()
         var count = ds.table.count_records
         var from = Number(ds.table.offset) + 1
         var to = Pagination.to()
@@ -83,28 +90,33 @@ var Pagination = {
             }, [
                 m('button[name="first"]', {
                     class: [
-                        'icon fa fa-angle-double-left ba b--light-silver br0 bg-white',
+                        'icon fa fa-angle-double-left ba b--light-silver',
+                        'br0 bg-white',
                         Pagination.disabled('first', table) ? 'moon-gray' : ''
                     ].join(' '),
                     disabled: Pagination.disabled('first', table)
                 }),
                 m('button[name=previous]', {
                     class: [
-                        'icon fa fa-angle-left bt br bl-0 bb b--light-silver br0 bg-white',
-                        Pagination.disabled('previous', table) ? 'moon-gray' : '',
+                        'icon fa fa-angle-left bt br bl-0 bb b--light-silver',
+                        'br0 bg-white',
+                        Pagination.disabled('previous', table)
+                            ? 'moon-gray' : '',
                     ].join(' '),
                     disabled: Pagination.disabled('previous', table)
                 }),
                 m('button[name=next]', {
                     class: [
-                        'icon fa fa-angle-right bt br bb bl-0 b--light-silver br0 bg-white',
+                        'icon fa fa-angle-right bt br bb bl-0 b--light-silver',
+                        'br0 bg-white',
                         Pagination.disabled('next', table) ? 'moon-gray' : '',
                     ].join(' '),
                     disabled: Pagination.disabled('next', table)
                 }),
                 m('button[name=last]', {
                     class: [
-                        'icon fa fa-angle-double-right bt br bb bl-0 b--light-silver br0 bg-white',
+                        'icon fa fa-angle-double-right bt br bb bl-0',
+                        'b--light-silver br0 bg-white',
                         Pagination.disabled('last', table) ? 'moon-gray' : '',
                     ].join(' '),
                     disabled: Pagination.disabled('last', table)

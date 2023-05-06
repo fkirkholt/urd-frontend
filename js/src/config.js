@@ -4,7 +4,8 @@ var config = {
 
     limit: Cookies.get('limit') ? Cookies.get('limit') : 20,
     autosave: Cookies.get('autosave') === 'true' ? 1 : 0,
-    std_search: Cookies.get('std_search') ? Cookies.get('std_search') : 'simple',
+    std_search: Cookies.get('std_search')
+        ? Cookies.get('std_search') : 'simple',
     edit_search: Cookies.get('edit_search') === 'true' ? 1 : 0,
     select: Cookies.get('select') ? Cookies.get('select') : 'native',
     theme: Cookies.get('theme') ? Cookies.get('theme') : 'standard',
@@ -26,7 +27,8 @@ var config = {
         var search = $('#preferences [name="std_search"]').val()
         var select = $('#preferences [name="select"]').val()
         var theme = $('#preferences [name="theme"]').val()
-        var expand_headings = $('#preferences [name="expand_headings"]').prop('checked')
+        var expand_headings = $('#preferences [name="expand_headings"]')
+            .prop('checked')
         var threshold = $('#preferences [name="threshold"]').val()/100
         if (
             limit != config.limit
@@ -80,7 +82,9 @@ var config = {
                 ]),
                 m('tr', [
                     m('td', 'Standardsøk'),
-                    m('td', m('select[name=std_search]', {value: config.std_search}, [
+                    m('td', m('select[name=std_search]', {
+                        value: config.std_search
+                    }, [
                         m('option', {value: 'simple'}, 'Enkelt'),
                         m('option', {value: 'advanced'}, 'Avansert'),
                     ]))

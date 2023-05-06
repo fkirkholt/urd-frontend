@@ -16,11 +16,14 @@ var Row = {
                 var indent = rec.indent ? rec.indent + 1 : 1
                 records = result.data.map(function(record, idx) {
                     record.indent = indent
-                    record.path = rec.path ? rec.path + '.' + idx : rowidx + '.' + idx
+                    record.path = rec.path 
+                        ? rec.path + '.' + idx 
+                        : rowidx + '.' + idx
                     record.parent = rec.pkey
                     return record
                 })
-                list.records.splice.apply(list.records, [rowidx+1, 0].concat(records))
+                list.records.splice.apply(list.records, 
+                                          [rowidx+1, 0].concat(records))
             })
         } else if (rec.expanded === false) {
             list.records = list.records.map(function(record) {
@@ -34,7 +37,11 @@ var Row = {
             list.records = list.records.map(function(record) {
 
                 // Check if record.path starts with path
-                if(record.path && record.path.lastIndexOf(path, 0) === 0 && record.path !== path) {
+                if (
+                    record.path && 
+                    record.path.lastIndexOf(path, 0) === 0 &&
+                    record.path !== path
+                ) {
                     record.hidden = true
                     if (record.expanded) record.expanded = false
                 }
@@ -111,7 +118,8 @@ var Row = {
                 } else if (e.keyCode == 13) { // enter
                     e.redraw = false
                     $(this).trigger('click')
-                    $('form[name=record]').find('input,textarea,select').first().trigger('focus')
+                    $('form[name=record]').find('input,textarea,select')
+                                          .first().trigger('focus')
                 } else if (e.keyCode == 32) { // space
                     $(this).trigger('click')
                     e.preventDefault()
@@ -155,7 +163,8 @@ var Row = {
             }),
             Object.keys(list.grid.columns).map(function(label, colidx) {
                 var colname = list.grid.columns[label]
-                var defines_relation = get(list.fields, colname + '.defines_relation')
+                var defines_relation = get(list.fields, colname 
+                                     + '.defines_relation')
 
                 return defines_relation ? '' : m(Cell, {
                     list: list,
@@ -168,16 +177,22 @@ var Row = {
             list.ismain ? '' : m('td', [
                 !record.open || parent.readonly ? '' : m('i', {
                     class: [
-                        list.privilege.delete && config.edit_mode ? 'fa fa-trash-o pl1' : '',
+                        list.privilege.delete && config.edit_mode 
+                            ? 'fa fa-trash-o pl1' : '',
                         record.deletable ? 'light-blue' : 'moon-gray',
-                        record.deletable ? (config.relation_view === 'column' ? 'hover-white' : 'hover-blue') : '',
+                        record.deletable ? (
+                            config.relation_view === 'column' 
+                            ? 'hover-white' : 'hover-blue'
+                        ) : '',
                     ].join(' '),
                     style: 'cursor: pointer',
                     onclick: Record.delete.bind(this, record),
                     title: 'Slett'
                 })
             ]),
-            !list.ismain ? '' : m('td', {class: ' br b--moon-gray bb--light-gray pa0 f6 tr'}, [
+            !list.ismain ? '' : m('td', {
+                class: ' br b--moon-gray bb--light-gray pa0 f6 tr'
+            }, [
                 list.grid.actions.map(function(name, idx) {
                     var action = list.actions[name]
                     action.name = name

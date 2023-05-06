@@ -58,7 +58,10 @@ var Convert_dialog = {
                 m('ul', {class: 'list'}, [
                     Object.keys(ds.table.fields).map(function(fieldname, idx) {
                         var field = ds.table.fields[fieldname]
-                        if (field.datatype != 'string' || (field.size != 0 && field.size < 256)) {
+                        if (
+                            field.datatype != 'string' ||
+                            (field.size != 0 && field.size < 256)
+                        ) {
                             return
                         }
                         return m('li', {}, [

@@ -25,7 +25,10 @@ var Field = {
             if (name == field.name || !other_field.fkey) return
             if (other_field.defines_relation) return
 
-            if (other_field.element == 'select' && other_field.fkey.foreign.length > 1) {
+            if (
+                other_field.element == 'select' &&
+                other_field.fkey.foreign.length > 1
+            ) {
                 // If the field is part of the dropdowns foreign keys
                 if (other_field.fkey.foreign.includes(field.name)) {
                     if (rec.fields[name].value !== null) {
@@ -63,7 +66,7 @@ var Field = {
                 if (!relation.betingelse) {
                     return
                 }
-                $.each(relation.betingelse, function(relation_field, relation_value) {
+                $.each(relation.betingelse, function(relation_field) {
                     if (relation_field == field.name) {
                         $.each(relation.records, function(i, post) {
                             post.fields[relation_field] = value
@@ -84,7 +87,13 @@ var Field = {
         rec.dirty = false
         ds.table.dirty = false
         $.each(rec.fields, function(name, field) {
-            if (field.invalid || (field.nullable === false && field.value === null && field.extra !== 'auto_increment')) {
+            if (
+                field.invalid || (
+                    field.nullable === false && 
+                    field.value === null && 
+                    field.extra !== 'auto_increment'
+                )
+            ) {
                 rec.invalid = true
             }
             if (field.dirty) {
@@ -107,7 +116,10 @@ var Field = {
         } else if (field.element == 'input[type=checkbox]') {
             var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
             value = m('i', {class: 'fa ' + icon})
-        } else if ((field.datatype == 'json' || get(field, 'attrs.data-format') == 'json') && field.value) {
+        } else if (field.value && (
+            field.datatype == 'json' || 
+            get(field, 'attrs.data-format') == 'json'
+        )) {
             value = m(JSONed, {
                 name: field.name,
                 mode: 'view',
@@ -116,7 +128,10 @@ var Field = {
                 style: "width: 330px; height: 400px;",
                 value: JSON.parse(field.value)
             })
-        } else if (get(field, 'attrs.data-format') == 'markdown' && field.expanded) {
+        } else if (
+            get(field, 'attrs.data-format') == 'markdown' &&
+            field.expanded
+        ) {
             value = m.trust(marked.parse(field.value))
         } else if (field.expanded) {
             value = m.trust(value.replace("\n", '<br>'))
@@ -132,8 +147,6 @@ var Field = {
      */
     toggle_fkey: function(rec, fieldname) {
         var field = rec.fields[fieldname]
-        var list = rec.table
-        var idx = list.selection
         if (field.expanded) {
             field.expanded = false
             return
@@ -212,7 +225,9 @@ var Field = {
         if (rec.table.fields[colname].hidden && !config.edit_mode) return
 
         // TODO: Hva gjør jeg med rights her?
-        var mandatory = !field.nullable && !field.extra && field.editable && !field.source == true
+        console.log('field', field)
+        var mandatory = !field.nullable && !field.extra && field.editable 
+                        && !field.source == true
         label = isNaN(parseInt(label)) ? label: field.label
 
         if (field.fkey) {
@@ -244,11 +259,18 @@ var Field = {
         }
 
         return [
-            // TODO: sto i utgangspunktet list.betingelse. Finn ut hva jeg skal erstatte med.
-            (!config.edit_mode && config.hide_empty && rec.fields[colname].value === null) ? '' : m('tr', [
+            // TODO: sto i utgangspunktet list.betingelse. 
+            // Finn ut hva jeg skal erstatte med.
+            (
+                !config.edit_mode && config.hide_empty 
+                && field.value === null
+            ) ? '' : m('tr', [
                 m('td', {class: 'tc v-top'}, [
-                    !field.fkey || !field.expandable || rec.fields[colname].value === null ? null : m('i.fa.w1', {
-                        class: !field.expanded ? 'fa-angle-right' : field.expandable ? 'fa-angle-down' : '',
+                    !field.fkey || !field.expandable || 
+                    field.value === null ? null : m('i.fa.w1', {
+                        class: !field.expanded 
+                            ? 'fa-angle-right' : field.expandable 
+                            ? 'fa-angle-down' : '',
                         onclick: Field.toggle_fkey.bind(this, rec, colname)
                     }),
                 ]),
@@ -259,10 +281,9 @@ var Field = {
                         !config.admin ? 'max-w5 truncate' : '',
                     ].join(' '),
                     onclick: function() {
-                        if (field.fkey && field.expandable && rec.fields[colname].value) {
+                        if (field.fkey && field.expandable && field.value) {
                             Field.toggle_fkey(rec, colname)
                         } else if (field.element == 'textarea') {
-                            field = rec.fields[colname]
                             field.expanded = !field.expanded
                         }
                     }
@@ -278,15 +299,26 @@ var Field = {
                 m('td', {
                     class: 'v-top'
                 }, [
-                    field.invalid && field.value == null ? m('i', {class: 'fa fa-asterisk red'}) :
-                    field.invalid ? m('i', {class: 'fa fa-warning ml1 red', title: field.errormsg}) :
-                    field.dirty ? m('i', {class: 'fa fa-pencil ml1 light-gray'}) :
-                    mandatory && config.edit_mode ? m('i', {class: 'fa fa-asterisk f7 light-gray'}) : ''
+                    field.invalid && field.value == null 
+                        ? m('i', {class: 'fa fa-asterisk red'})
+                    : field.invalid 
+                        ? m('i', {
+                            class: 'fa fa-warning ml1 red',
+                            title: field.errormsg
+                        })
+                    : field.dirty 
+                        ? m('i', {class: 'fa fa-pencil ml1 light-gray'})
+                    : mandatory && config.edit_mode
+                        ? m('i', {class: 'fa fa-asterisk f7 light-gray'})
+                    : ''
                 ]),
                 m('td', {
                     class: [
                         'max-w7 w-100',
-                        field.element == 'textarea' && !field.expanded && !config.edit_mode ? 'nowrap truncate' : '',
+                        (
+                            field.element == 'textarea' && 
+                            !field.expanded && !config.edit_mode
+                        ) ? 'nowrap truncate' : '',
                         config.edit_mode ? 'nowrap' : '',
                         field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
                         rec.inherited ? 'gray' : '',
@@ -298,23 +330,34 @@ var Field = {
                         }
                     }
                 }, [
-                    rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode
+                    (
+                        rec.table.privilege.update == 0 || 
+                        rec.readonly || !config.edit_mode
+                    )
                         ? Field.display_value(field)
                         : m(Input, {rec: rec, fieldname: colname}),
-                    !field.expandable || field.value === null ? '' : m('a', {
-                        class: 'icon-crosshairs light-blue hover-blue pointer link',
+                    !field.expandable || field.value === null 
+                        ? ''
+                    : m('a', {
+                        class: 'icon-crosshairs light-blue hover-blue ' 
+                             + 'pointer link',
                         href: url
                     }),
 
                     // Show trash bin for field from cross reference table
-                    rec.table.relationship != 'M:M' || !config.edit_mode ? '' : m('i', {
-                        class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
+                    rec.table.relationship != 'M:M' || !config.edit_mode 
+                        ? ''
+                    : m('i', {
+                        class: 'fa fa-trash-o light-blue pl1 hover-blue '
+                             + 'pointer',
                         onclick: Record.delete.bind(this, rec)
                     }),
 
-                    !field.attr || !field.attr.href ? '' : m('a', {
-                        href: sprintf(field.attr.href, field.value)
-                    }, m('i', {class: 'icon-crosshairs light-blue hover-blue pointer'})),
+                    !field.attrs || !field.attrs.href ? '' : m('a', {
+                        href: sprintf(field.attrs.href, field.value)
+                    }, m('i', {
+                        class: 'icon-crosshairs light-blue hover-blue pointer'
+                    })),
                 ])
             ]),
             !field.fkey || !field.expanded ? null : m('tr', [

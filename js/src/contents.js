@@ -2,7 +2,6 @@ var Stream = require('mithril/stream')
 var get = require('just-safe-get')
 var config = require('./config')
 var Diagram = require('./diagram')
-var Grid = require('./grid')
 
 var Contents = {
 
@@ -67,7 +66,9 @@ var Contents = {
                 m('span.nowrap', [
                     m('i', {
                         class: [
-                            node.expanded ? 'fa fa-angle-down': 'fa fa-angle-right',
+                            node.expanded 
+                                ? 'fa fa-angle-down'
+                                : 'fa fa-angle-right',
                             node.class_label,
                             'w1 tc',
                             'light-silver'
@@ -86,7 +87,9 @@ var Contents = {
                         },
                         oncontextmenu: function(event) {
                             Contents.context_module = label
-                            $('ul#context-module').css({top: event.clientY, left: event.clientX}).toggle()
+                            $('ul#context-module')
+                                .css({top: event.clientY, left: event.clientX})
+                                .toggle()
                             return false
                         }
                     }, label),
@@ -135,20 +138,24 @@ var Contents = {
             var icon = object.type && (object.type == 'list') ? 'fa-list'
                 : 'fa-table'
             var icon_color = object.hidden ? 'moon-gray' : 'silver'
-            var title = object.type && (object.type.indexOf('reference') !== -1)
+            var title = object.type && (object.type.includes('reference'))
                 ? 'Referansetabell'
                 : null
-            var display = object.type && (object.type.indexOf('reference') !== -1) &&
+            var display = object.type && (object.type.includes('reference')) &&
                           !config.admin && !grid_defined
                 ? 'none'
                 : 'inline'
 
             return m('div', {
-                class: ds.table && ds.table.name == object.name ? 'bg-light-gray nowrap' : 'nowrap',
+                class: ds.table && ds.table.name == object.name 
+                    ? 'bg-light-gray nowrap' 
+                    : 'nowrap',
                 oncontextmenu: function(event) {
                     Contents.context_table = object
 
-                    var hidden_txt = object.hidden ? 'Vis tabell' : 'Skjul tabell'
+                    var hidden_txt = object.hidden 
+                        ? 'Vis tabell' 
+                        : 'Skjul tabell'
                     $('ul#context-table li.hide').html(hidden_txt)
 
                     var type_txt = object.type == 'list'
@@ -156,17 +163,21 @@ var Contents = {
                         : 'Sett til referansetabell'
                     $('ul#context-table li.type').html(type_txt)
 
-                    $('ul#context-table').css({top: event.clientY, left: event.clientX}).toggle()
+                    $('ul#context-table')
+                        .css({top: event.clientY, left: event.clientX})
+                        .toggle()
+
                     return false
                 }
             }, [
                 typeof node != 'object' ? '' : m('i', {
                     class: [
-                        node.expanded ? 'fa fa-angle-down' : 'fa fa-angle-right',
-                        'w1 tc',
-                        'light-silver'
+                        'w1 tc light-silver fa',
+                        node.expanded ? 'fa-angle-down' : 'fa-angle-right',
                     ].join(' '),
-                    style: (display == 'none' || display_chevron == 'none') ? 'display: none' : '',
+                    style: (display == 'none' || display_chevron == 'none') 
+                        ? 'display: none' 
+                        : '',
                     onclick: function (e) {
                         node.expanded = !node.expanded
                     }
@@ -174,7 +185,9 @@ var Contents = {
                 m('i', {
                     class: [
                         icon_color + ' mr1 fa ' + icon,
-                        (typeof node == 'object' && display_chevron == 'block') ? '' : 'ml3'
+                        (typeof node == 'object' && display_chevron == 'block')
+                            ? '' 
+                            : 'ml3'
                     ].join(' '),
                     style: 'display:' + display,
                     title: title
@@ -187,7 +200,8 @@ var Contents = {
                     ].join(' '),
                     title: object.description ? object.description : '',
                     style: 'display:' + display,
-                    href: '#/' + ds.base.name + '/' + (config.tab || 'data')  + '/' + object.name,
+                    href: '#/' + ds.base.name + '/' + (config.tab || 'data')  +
+                          '/' + object.name,
                     onclick: function() {
                         Diagram.type = 'table'
                         Diagram.root = object.name
@@ -230,7 +244,8 @@ var Contents = {
 
         return [m('.contents', {class: "flex"}, [
             m('ul#context-module', {
-                class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
+                class: 'absolute left-0 bg-white list pa1 shadow-5 dn ' +
+                       'pointer z-999'
             }, [
                 m('li', {
                     class: 'hover-blue',
@@ -242,7 +257,8 @@ var Contents = {
                 }, 'Vis diagram')
             ]),
             m('ul#context-table', {
-                class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
+                class: 'absolute left-0 bg-white list pa1 shadow-5 dn ' +
+                       'pointer z-999'
             }, [
                 config.tab == 'data' ? '' : m('li', {
                     class: 'hover-blue',
@@ -285,7 +301,8 @@ var Contents = {
                 }, 'Sett til referansetabell')
             ]),
             m('.list', {class: "flex flex-column overflow-auto min-w5"}, [
-                !ds.base.schemata || ds.base.schemata.length < 2 ? '' : m('select', {
+                !ds.base.schemata || ds.base.schemata.length < 2
+                ? '' : m('select', {
                     class: 'mb2',
                     onchange: function() {
                         var schema = $(this).val()
@@ -311,7 +328,8 @@ var Contents = {
                     })
                     : Object.keys(ds.base.tables).map(function(name) {
                         var table = ds.base.tables[name]
-                        return Contents.draw_node(table.label, 'tables.'+name, 3)
+                        return Contents.draw_node(table.label,
+                                                  'tables.' + name, 3)
                     }),
             ]),
         ]), ds.table || !ds.base.description ? '' : m('div', {class: 'pl5'}, [

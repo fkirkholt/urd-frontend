@@ -41,7 +41,8 @@ var Toolbar = {
         var rec_idx = ds.table.selection
         var prim_key = ds.table.records[rec_idx].pkey
         var prim_nokler_json = JSON.stringify(prim_key)
-        var address = ds.base.schema + (action.url[0] === '/' ? '' : '/') + action.url
+        var address = ds.base.schema + 
+                      (action.url[0] === '/' ? '' : '/') + action.url
         var kommunikasjon = action.communication
 
         var $form = $('form#action')
@@ -68,19 +69,23 @@ var Toolbar = {
                 background: true
             }).done(function(result) {
                 if (action.update_field) {
-                    var field = ds.table.records[rec_idx].fields[action.update_field]
-                    Field.update(result.value, field.name, ds.table.records[rec_idx])
+                    var field = ds.table.records[rec_idx]
+                        .fields[action.update_field]
+                    Field.update(result.value, field.name,
+                                 ds.table.records[rec_idx])
                     m.redraw()
                 }
                 if (result.msg) {
-                    $('#progress').show().children('[name=message]').text(result.msg)
+                    $('#progress').show().children('[name=message]')
+                        .text(result.msg)
                     $btn = $('#progress [value="OK"]')
                     $btn.show("fast", function() {
                         $btn[0].trigger('focus')
                     })
                 }
                 if (result.warn && result.warn.length) {
-                    txt = $('#progress').show().children('[name=message]').text()
+                    txt = $('#progress').show().children('[name=message]')
+                        .text()
                     txt += '<br><br><b>Advarsler:</b><ul class="tl"><li>'
                     txt += result.warn.join('</li><li>')
                     txt += '</li></ul>'
@@ -110,10 +115,15 @@ var Toolbar = {
 
     button: {
         disabled: function(name) {
+            var selection = ds.table.selection
+            var count_records = ds.table.count_records
+            var offset = ds.table.offset
             if (name == 'first' || name == 'previous') {
-                return ds.table.offset == 0 && ds.table.selection == 0 ? true : false
+                return offset == 0 && selection == 0
+                    ? true : false
             } else {
-                return ds.table.count_records - ds.table.offset <= ds.table.limit && ds.table.selection == ds.table.count_records - ds.table.offset - 1
+                return (count_records - offset <= ds.table.limit && 
+                        selection == count_records - ds.table.offset - 1)
                     ? true
                     : false
             }
@@ -185,13 +195,22 @@ var Toolbar = {
         return m('ul', {target: '_blank', class: 'f6 list pl1 mt1 mb1'}, [
             m('li', [
                 m('form#action', [
-                    m('input', {type: 'hidden', name: 'base', value: ds.base.name}),
-                    m('input', {type: 'hidden', name: 'table', value: ds.table.name}),
+                    m('input', {
+                        type: 'hidden',
+                        name: 'base',
+                        value: ds.base.name
+                    }),
+                    m('input', {
+                        type: 'hidden',
+                        name: 'table',
+                        value: ds.table.name
+                    }),
                     m('input', {type: 'hidden', name: 'pkey'}),
                 ]),
             ]),
             ds.table.hide  ? '' : m('i', {
-                class: 'ml1 mr2 fa pointer ' + (config.compressed ? 'fa-expand' : 'fa-compress'),
+                class: 'ml1 mr2 fa pointer ' 
+                    + (config.compressed ? 'fa-expand' : 'fa-compress'),
                 title: config.compressed ? 'Ekspander' : 'Komprimer',
                 onclick: function() {
                     config.compressed = !config.compressed
@@ -202,8 +221,9 @@ var Toolbar = {
                     class: 'fa fa-filter ml1 mr2 pointer dim',
                     title: 'Filtrer tabell',
                     onclick: function() {
+                        var query = ds.table.query
                         config.filter = true
-                        ds.table.filters = Filterpanel.parse_query(ds.table.query)
+                        ds.table.filters = Filterpanel.parse_query(query)
                         Filterpanel.expanded = !Filterpanel.expanded
                     }
                 }),
@@ -217,16 +237,18 @@ var Toolbar = {
                     ds.table.search = !ds.table.search
                 }
             }),
-            ds.table.hide ? '' : m('input[type=text]', {
+            ds.table.hide ? '' : m('input[type=search]', {
                 placeholder: "Søk i alle tekstfelter",
                 value: search,
-                style: 'width: 10em',
+                // style: 'width: 100%',
+                style: 'flex: 1',
                 onfocus: function(event) {
                     event.target.select()
                 },
                 onchange: function(event) {
+                    var value = event.target.value
                     m.route.set('/' + ds.base.name + '/data/' + ds.table.name +
-                                '?query=' + event.target.value.replace(/=/g, '%3D'))
+                                '?query=' + value.replace(/=/g, '%3D'))
 
                 }
             }),
@@ -240,19 +262,26 @@ var Toolbar = {
                         $(vnode.dom).find('option[value="custom"]').hide()
                         $(vnode.dom).find('option[value="save_search"]').hide()
                         if ($(vnode.dom).val() == 'alle') {
-                            $(vnode.dom).find('option[value="separator_save"]').hide()
+                            $(vnode.dom).find('option[value="separator_save"]')
+                                .hide()
                         }
                     } else {
                         $(vnode.dom).find('option[value="custom"]').show()
                     }
 
-                    if ($(vnode.dom).val() == 'alle' || $(vnode.dom).val() == 'custom' || $(vnode.dom).val() == 'delete_search') {
+                    if (
+                        $(vnode.dom).val() == 'alle' || 
+                        $(vnode.dom).val() == 'custom' || 
+                        $(vnode.dom).val() == 'delete_search'
+                    ) {
                         if ($(vnode.dom).val() == 'delete_search') {
                             $(vnode.dom).val('custom')
                         }
-                        $(vnode.dom).find('option[value="delete_search"]').hide()
+                        $(vnode.dom).find('option[value="delete_search"]')
+                            .hide()
                     } else {
-                        $(vnode.dom).find('option[value="delete_search"]').show()
+                        $(vnode.dom).find('option[value="delete_search"]')
+                            .show()
                     }
                 },
                 onchange: function(vnode) {
@@ -262,6 +291,7 @@ var Toolbar = {
                         return row.id == id
                     })
                     var query
+                    var expr = filter.expression
 
                     if (id == 'save_search') {
                         Filterpanel.save_filter(ds.table)
@@ -278,21 +308,28 @@ var Toolbar = {
                     if (id == 'alle') {
                         query = 'query='
                     } else if (filter.advanced == 0) {
-                        query = 'query=' + filter.expression.replace(/=/g, '%3D')
+                        query = 'query=' + expr.replace(/=/g, '%3D')
                     } else {
-                        query = 'where=' + filter.expression.replace(/=/g, '%3D')
+                        query = 'where=' + expr.replace(/=/g, '%3D')
                     }
-                    m.route.set('/' + ds.base.name + '/tables/' + ds.table.name + '?' + query)
+                    m.route.set('/' + ds.base.name + '/tables/' + 
+                                ds.table.name + '?' + query)
                 }
             }, [
                 m('option', {value: 'alle'}, 'Alle'),
                 m('option', {disabled: true}, '—————'),
 
                 (param.query || param.where) ? [
-                    m('option', {value: 'custom', selected: true}, 'Søkeresultat'),
+                    m('option', {
+                        value: 'custom',
+                        selected: true
+                    }, 'Søkeresultat'),
                     m('option', {value: 'save_search'}, 'Lagre søk …'),
                     m('option', {value: 'delete_search'}, 'Slett søk …'),
-                    m('option', {value: 'separator_save', disabled: true}, '—————'),
+                    m('option', {
+                        value: 'separator_save',
+                        disabled: true
+                    }, '—————'),
                 ] : '',
 
                 ds.table.saved_filters.map(function(filter, idx) {
@@ -327,7 +364,10 @@ var Toolbar = {
 
                         // Focus first input in new record
                         setTimeout(function() {
-                            $('form[name=record] > table').find('input,select,textarea').first().trigger('focus')
+                            $('form[name=record] > table')
+                                .find('input,select,textarea')
+                                .first()
+                                .trigger('focus')
                         }, 100)
 
                         if (!config.edit_mode) {
@@ -359,7 +399,8 @@ var Toolbar = {
                 m('i', {
                     class: [
                         'fa fa-edit ml2 mr1 pointer f6',
-                        ds.table.privilege.update == true ? 'dim pointer' : 'moon-gray'
+                        ds.table.privilege.update == true
+                            ? 'dim pointer' : 'moon-gray'
                     ].join(' '),
                     title: 'Rediger post',
                     onclick: function() {
@@ -387,7 +428,8 @@ var Toolbar = {
                 m('i', {
                     class: [
                         'fa fa-trash-o ml2 mr1',
-                        (ds.table.privilege.delete == true && deletable) ? 'dim pointer' : 'moon-gray'
+                        (ds.table.privilege.delete == true && deletable)
+                            ? 'dim pointer' : 'moon-gray'
                     ].join(' '),
                     title: 'Slett post',
                     onclick: Toolbar.delete_record
@@ -461,7 +503,8 @@ var Toolbar = {
             }, [
                 m('button[name="first"]', {
                     class: [
-                        'icon fa fa-angle-double-left ba b--light-silver br0 bg-white',
+                        'icon fa fa-angle-double-left ba b--light-silver',
+                        'br0 bg-white',
                         Toolbar.button.disabled('first') ? 'moon-gray' : '',
                     ].join(' '),
                     disabled: Toolbar.button.disabled('first'),
@@ -475,7 +518,8 @@ var Toolbar = {
                 }),
                 m('button[name=previous]', {
                     class: [
-                        'icon fa fa-angle-left bt br bl-0 bb b--light-silver br0 bg-white',
+                        'icon fa fa-angle-left bt br bl-0 bb b--light-silver',
+                        'br0 bg-white',
                         Toolbar.button.disabled('previous') ? 'moon-gray' : ''
                     ].join(' '),
                     disabled: Toolbar.button.disabled('previous'),
@@ -491,7 +535,8 @@ var Toolbar = {
                 }),
                 m('button[name=next]', {
                     class: [
-                        'icon fa fa-angle-right bt br bb bl-0 b--light-silver br0 bg-white',
+                        'icon fa fa-angle-right bt br bb bl-0 b--light-silver',
+                        'br0 bg-white',
                         Toolbar.button.disabled('next') ? 'moon-gray' : '',
                     ].join(' '),
                     disabled: Toolbar.button.disabled('next'),
@@ -507,7 +552,8 @@ var Toolbar = {
                 }),
                 m('button[name=last]', {
                     class: [
-                        'icon fa fa-angle-double-right bt br bb bl-0 b--light-silver br0 bg-white',
+                        'icon fa fa-angle-double-right bt br bb bl-0',
+                        'b--light-silver br0 bg-white',
                         Toolbar.button.disabled('last') ? 'moon-gray' : '',
                     ].join(' '),
                     disabled: Toolbar.button.disabled('last'),
@@ -535,7 +581,9 @@ var Toolbar = {
                 value: decodeURI(m.route.param('query')),
                 onkeypress: function(e) {
                     if (e.which == 13) {
-                        m.route.set('/' + ds.table.base.name + '/' + ds.table.name + '?query=' + encodeURI($(this).val()))
+                        m.route.set('/' + ds.table.base.name + '/' + 
+                                    ds.table.name + '?query=' +
+                                    encodeURI($(this).val()))
                     }
                 }
             })
@@ -554,5 +602,3 @@ var Grid = require('./grid')
 var Filterpanel = require('./filterpanel')
 var Record = require('./record')
 var Pagination = require('./pagination')
-var Cookies = require('js-cookie')
-var Diagram = require('./diagram')

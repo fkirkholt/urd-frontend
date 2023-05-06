@@ -9,7 +9,6 @@ var Relation = {
     draw_relation_table: function(rel, record) {
         var columns = []
         var count_columns = 0
-        var group = rel.gruppe
 
         // count columns that should be shown
         $.each(rel.grid.columns, function(idx, field_name) {
@@ -20,7 +19,10 @@ var Relation = {
         })
 
         // Make list instead of table of relations if only one column shown
-        if (columns.length == 1 && columns[0].fkey && Object.keys(rel.relations).length == 0) {
+        if (
+            columns.length == 1 && columns[0].fkey &&
+            Object.keys(rel.relations).length == 0
+        ) {
             rel.relationship = 'M:M'
             return Relation.draw_relation_list(rel, record)
         }
@@ -46,9 +48,9 @@ var Relation = {
                             if (!(field.defines_relation)) {
                                 count_columns++
                             }
-                            var label = label && !$.isArray(rel.grid.columns) ? label
-                                : field.label_column ? field.label_column
-                                : field.label
+                            var label = label && !$.isArray(rel.grid.columns)
+                                ? label : field.label_column
+                                ? field.label_column : field.label
                             return field.defines_relation
                                 ? ''
                                 : m('td', {
@@ -63,8 +65,8 @@ var Relation = {
                         rec.table_name = rel.name
                         rec.rowidx = rowidx
 
-                        // Make editable only relations attached directly to record
-                        // and not to parent records
+                        // Make editable only relations attached directly to
+                        // record and not to parent records
                         var ismatch = Object.keys(rel.conds).every(function(k) {
                             return rel.conds[k] == rec.columns[k].value
                         })
@@ -74,8 +76,9 @@ var Relation = {
 
                         if (rec.relations) {
                             $.each(rec.relations, function(idx, rel) {
-                                var count_local = rel.count_records - rel.count_inherited
-                                if (count_local && rel.delete_rule != "cascade") {
+                                var count = rel.count_records 
+                                          - rel.count_inherited
+                                if (count && rel.delete_rule != "cascade") {
                                     rec.deletable = false
                                 }
                             })
@@ -101,13 +104,18 @@ var Relation = {
 
                                     // Focus first input field in new record
                                     setTimeout(function() {
-                                        $('tr[data-name=' + rel.name + '] > td > table > tr')
-                                            .find('input,select,textarea').first().trigger('focus')
+                                        $('tr[data-name=' + rel.name + 
+                                          '] > td > table > tr')
+                                            .find('input,select,textarea')
+                                            .first().trigger('focus')
                                     }, 100)
 
                                     rel.modus = 'edit'
                                 }
-                            }, m('i', {class: 'fa fa-plus light-blue hover-blue pointer ml1'}))
+                            }, m('i', {
+                                class: 'fa fa-plus light-blue hover-blue '
+                                     + 'pointer ml1'
+                            }))
                         ])
                     ]),
                 ])
@@ -122,8 +130,8 @@ var Relation = {
                 m('table', {class: 'w-100 collapse'}, [
                     rel.records.map(function(rec, rowidx) {
                         rec.rowidx = rowidx
-                        // Make editable only relations attached directly to record
-                        // and not to parent records
+                        // Make editable only relations attached directly to
+                        // record and not to parent records
                         var ismatch = Object.keys(rel.conds).every(function(k) {
                             return rel.conds[k] == rec.columns[k].value
                         })
@@ -155,11 +163,17 @@ var Relation = {
                                 if (rel.fields[key].defines_relation) {
                                     return
                                 }
-                                return m(Node, {rec: rec, colname: key, label: label})
+                                return m(Node, {
+                                    rec: rec, colname: key, label: label
+                                })
                             })
                         ]
                     }),
-                    record.readonly || !config.edit_mode || rel.relationship == "1:1" ? '' : m('tr', [
+                    (
+                        record.readonly || 
+                        !config.edit_mode || 
+                        rel.relationship == "1:1"
+                    ) ? '' : m('tr', [
                         m('td'),
                         m('td'),
                         m('td', [
@@ -171,7 +185,10 @@ var Relation = {
 
                                     rel.modus = 'edit'
                                 }
-                            }, m('i', {class: 'fa fa-plus light-blue hover-blue pointer ml1'}))
+                            }, m('i', {
+                                class: 'fa fa-plus light-blue hover-blue '
+                                     + 'pointer ml1'
+                            }))
                         ])
                     ]),
                 ])
@@ -237,8 +254,11 @@ var Relation = {
             }, [
                 m('td.fa.tc.w1', {
                     class: [
-                        rel.expanded === true ? 'fa-angle-down' : 'fa-angle-right',
-                        rel.invalid ? 'invalid' : rel.dirty ? 'dirty' : ''
+                        rel.expanded === true 
+                            ? 'fa-angle-down' : 'fa-angle-right',
+                        rel.invalid 
+                            ? 'invalid' : rel.dirty
+                            ? 'dirty' : ''
                     ].join(' ')
                 }),
                 m('td.label', {
@@ -250,19 +270,23 @@ var Relation = {
                 }, [
                     label,
                     rel.count_records !== undefined && rel.relationship == '1:M'
-                        ? m('span', {class: 'ml1 pr1 normal moon-gray f7'}, rel.count_records)
+                        ? m('span', {class: 'ml1 pr1 normal moon-gray f7'},
+                            rel.count_records)
                         : '',
                     // show target icon for relations
                     !rel.name ? '' :
                     m('a', {
                         class: [
                             rel.relationship == '1:M'
-                                ? 'icon-crosshairs light-blue hover-blue pointer mr1 link'
+                                ? 'icon-crosshairs light-blue hover-blue '
+                                  + 'pointer mr1 link'
                                 : '',
                         ].join(' '),
                         href: url
                     }),
-                    rel.dirty ? m('i', {class: 'fa fa-pencil ml1 light-gray'}) : '',
+                    rel.dirty
+                        ? m('i', {class: 'fa fa-pencil ml1 light-gray'})
+                        : '',
                 ]),
             ]),
             rel.expanded && rel.records
@@ -282,10 +306,8 @@ var Relation = {
 
 module.exports = Relation
 
-var get = require('just-safe-get')
 var Record = require('./record')
 var Row = require('./row')
-var Cell = require('./cell')
 var ds = require('./datastore')
 var config = require('./config')
 var Node = require('./node')

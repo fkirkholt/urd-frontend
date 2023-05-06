@@ -18,9 +18,11 @@ var tabbar = {
                 m('li', {
                     class: [
                         'list di pl1 pr1 bl bt br b--gray pointer br1 br--top',
-                        (!config.tab || config.tab == 'data') ? 'bg-white' : 'bg-near-white'
+                        (!config.tab || config.tab == 'data')
+                            ? 'bg-white' : 'bg-near-white'
                     ].join(' '),
-                    style: (!config.tab || config.tab == 'data') ? 'padding-bottom: 1px' : '',
+                    style: (!config.tab || config.tab == 'data')
+                        ? 'padding-bottom: 1px' : '',
                     onclick: function() {
                         config.tab = 'data'
                         m.route.set('/' + ds.base.name + '/data')
@@ -29,7 +31,8 @@ var tabbar = {
                 m('li', {
                     title: 'Entity Relationship Diagram',
                     class: [
-                        'list ml2 pl2 pt0 pr2 di bl bt br b--gray pointer br1 br--top',
+                        'list ml2 pl2 pt0 pr2 di bl bt br b--gray pointer',
+                        'br1 br--top',
                         config.tab == 'diagram' ? 'bg-white' : 'bg-near-white'
                     ].join(' '),
                     style: config.tab == 'diagram' ? 'padding-bottom: 1px' : '',
@@ -42,7 +45,8 @@ var tabbar = {
                 ]),
                 m('li', {
                     class: [
-                        'list ml2 pl1 pr1 di bl bt br b--gray pointer br1 br--top',
+                        'list ml2 pl1 pr1 di bl bt br b--gray pointer',
+                        'br1 br--top',
                         config.tab == 'sql' ? 'bg-white' : 'bg-near-white'
                     ].join(' '),
                     style: config.tab == 'sql' ? 'padding-bottom: 1px' : '',

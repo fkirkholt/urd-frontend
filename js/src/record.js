@@ -145,7 +145,10 @@ var Record = {
                             field_name = parts[0]
                         }
 
-                        if (table_name === rec.table_name && field_name === field.name && filter.operator === '=') {
+                        if (
+                            table_name === rec.table_name && 
+                            field_name === field.name && filter.operator === '='
+                        ) {
                             conditions.push(filter)
                         }
                     })
@@ -159,7 +162,8 @@ var Record = {
                 }
             }
 
-            field.editable = field.editable === false ? field.editable : list.privilege.update
+            field.editable = field.editable === false
+                ? field.editable : list.privilege.update
             rec.fields[name] = field
 
             if (field.value) {
@@ -348,7 +352,8 @@ var Record = {
     action_button: function(rec, action) {
 
         // If disabled status for the action is based on an expression
-        // then we get the status from a column with same name as alias of action
+        // then we get the status from a column with same name as 
+        // alias of action
         if (action.name && rec.columns[action.name] !== undefined) {
             action.disabled = rec.columns[action.name].text;
         }
@@ -366,7 +371,9 @@ var Record = {
                     params = Object.keys(data).map(function(k) {
                         return k + '=' + data[k]
                     }).join('&')
-                    var address = (action.url[0] === '/') ? action.url : ds.base.schema + '/' + action.url;
+                    var address = (action.url[0] === '/')
+                        ? action.url
+                        : ds.base.schema + '/' + action.url;
                     window.open(address + '?' + params, '_blank')
                 }
                 e.stopPropagation();
@@ -406,7 +413,8 @@ var Record = {
                         onclick: function() {
                             var saved = true
                             if (ds.table.dirty) {
-                                vnode.attrs.record = merge(vnode.attrs.record, rec)
+                                vnode.attrs.record = merge(vnode.attrs.record,
+                                                           rec)
                                 delete ds.rec
                                 saved = Grid.save()
                             }
@@ -461,9 +469,7 @@ module.exports = Record
 
 var config = require('./config')
 var merge = require('just-merge')
-var get = require('just-safe-get')
 var Grid = require('./grid')
 var Toolbar = require('./toolbar')
-var Input = require('./input')
 var Node = require('./node')
 var Field = require('./field')

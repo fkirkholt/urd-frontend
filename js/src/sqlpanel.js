@@ -12,7 +12,9 @@ var SQLpanel = {
                         editable: false,
                         lang: 'sql'
                     }),
-                    ds.result.length == 1 ? null : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
+                    ds.result.length == 1
+                        ? null 
+                        : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
                     m('table', {
                         class: 'collapse ba'
                     }, [
@@ -29,7 +31,9 @@ var SQLpanel = {
                                     return m('td', {
                                         class: 'pl1 pl2'
                                     }, typeof(item[cell]) == 'string'
-                                        ? m.trust(item[cell].replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;'))
+                                        ? m.trust(item[cell]
+                                            .replace(/\n/g, '<br>')
+                                            .replace(/\s/g, '&nbsp;'))
                                         : item[cell])
                                 })
                             ])
@@ -45,7 +49,9 @@ var SQLpanel = {
                         editable: false,
                         lang: 'sql'
                     }),
-                    ds.result.length == 1 ? null : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
+                    ds.result.length == 1
+                        ? null
+                        : m('p', {class: 'mt0 gray'}, '(' + query.time + 's)'),
                     m('p', {
                         class: [
                             'pa1',
@@ -106,7 +112,9 @@ var SQLpanel = {
                         lang: 'sql'
                     }),
                     m('div', {class: 'ml3 h2'}, [
-                        !ds.result ? null : m('span',{class: 'fl'}, total_time + 's'),
+                        !ds.result
+                            ? null
+                            : m('span',{class: 'fl'}, total_time + 's'),
                         m('button', {
                             id: 'run_sql',
                             class: 'fr pt0 pb0 fa fa-play',

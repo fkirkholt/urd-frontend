@@ -3,7 +3,7 @@ const KEY_CODE_ENTER = 13
 const KEY_CODE_UP = 38
 const KEY_CODE_DOWN = 40
 
-function Seeker(initialVnode) {
+function Seeker() {
 
     var options = []
     var option = {}

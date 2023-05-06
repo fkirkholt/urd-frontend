@@ -28,7 +28,6 @@ var Cell = {
 
         value = Field.display_value(field, value)
         var expansion = colname === list.expansion_column && list.ismain
-        var is_checkbox = field.element == 'input[type=checkbox]'
 
         var icon = m('i', {
             class: [
@@ -58,7 +57,7 @@ var Cell = {
             title: compressed && value.length > 30 ? value : ''
         }, [
 
-            !(value.length > 30 && compressed)
+            !(value && value.length > 30 && compressed)
                 ? [m('div', [expansion ? icon : '', value])]
                 : m('table', {
                     class: 'w-100',

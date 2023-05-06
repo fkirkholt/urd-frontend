@@ -26,7 +26,9 @@ var Codefield = {
             }
             editors[vnode.attrs.id] = new cm.EditorView({
                 doc: vnode.attrs.value,
-                extensions: [cm.basicSetup, cm.EditorView.editable.of(vnode.attrs.editable), lang],
+                extensions: [cm.basicSetup,
+                             cm.EditorView.editable.of(vnode.attrs.editable), 
+                             lang],
                 parent: vnode.dom,
             })
         })

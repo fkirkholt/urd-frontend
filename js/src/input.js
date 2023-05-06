@@ -13,11 +13,14 @@ var Input = {
 
         var keys = []
         Object.keys(rec.table.fkeys).map(function(label) {
-            key = rec.table.fkeys[label]
+            var key = rec.table.fkeys[label]
 
             if (key.foreign.indexOf(field.name) > 0) {
                 last_fk_col = key.foreign.slice(-1)
-                if (last_fk_col != field.name && rec.fields[last_fk_col].nullable == true) {
+                if (
+                    last_fk_col != field.name && 
+                    rec.fields[last_fk_col].nullable == true
+                ) {
                     return
                 }
                 key.foreign_idx = key.foreign.indexOf(field.name)
@@ -30,7 +33,8 @@ var Input = {
             if (key.filter) {
                 filter = key.filter
                 $.each(rec.fields, function(name, field2) {
-                    var re = new RegExp('\\b'+field2.table+'\\.'+field2.name+'\\b', 'g')
+                    var re = new RegExp('\\b'+field2.table+'\\.'+field2.name+
+                                        '\\b', 'g')
                     filter = filter.replace(re, "'"+field2.value+"'")
                     re = new RegExp('\!= null\\b', 'g')
                     filter = filter.replace(re, 'is not null')
@@ -42,19 +46,22 @@ var Input = {
 
             if (key.foreign && key.foreign.length > 1) {
                 $.each(key.foreign, function(i, column) {
+                    var col = rec.fields[column]
                     if (column === field.name) return
-                    var condition
-                    if (rec.fields[column].value != null && column in rec.fields) {
-                        var col = field.fkey.primary.slice(-1)[0]
+                    var cond
+                    if (col.value != null && column in rec.fields) {
+                        var pkcol = field.fkey.primary.slice(-1)[0]
 
                         if (key.table == field.fkey.table) {
-                            condition = key.primary[i] + " = '" + rec.fields[column].value + "'"
+                            cond = key.primary[i] + " = '" + col.value + "'"
                         } else {
-                            condition = col + ' in (select ' + key.primary[key.foreign_idx]
-                            condition += ' from ' + key.table + ' where ' + key.foreign[i]
-                            condition += " = '" + rec.fields[column].value + "')"
+                            cond = pkcol + ' in (select ' 
+                                 + key.primary[key.foreign_idx]
+                            cond += ' from ' + key.table + ' where ' 
+                                  + key.foreign[i]
+                            cond += " = '" + col.value + "')"
                         }
-                        kandidatbetingelser.push(condition)
+                        kandidatbetingelser.push(cond)
                     }
                 })
             }
@@ -70,7 +77,10 @@ var Input = {
         if (field.editable == false) return
         if ((field.nullable || field.extra) && (value == '' || value == null)) {
             field.invalid = false
-        } else if (!field.nullable && (value === '' || value === null) && !field.source) {
+        } else if (
+            !field.nullable && (value === '' || value === null) && 
+            !field.source
+        ) {
             field.errormsg = 'Feltet kan ikke stå tomt'
             field.invalid = true
         } else if (field.datatype == 'integer' && field.format === 'byte') {
@@ -118,10 +128,14 @@ var Input = {
 
         if (field.element == 'select' && (field.options || field.optgroups)) {
             var filtered_optgroups
+            var optgroup_field = rec.fields[field.optgroup_field]
 
-            if (field.optgroups && field.optgroup_field && rec.fields[field.optgroup_field].value) {
+            if (
+                field.optgroups && field.optgroup_field && 
+                optgroup_field.value
+            ) {
                 filtered_optgroups = field.optgroups.filter(function(optgroup) {
-                    return optgroup.label == rec.fields[field.optgroup_field].value
+                    return optgroup.label == optgroup_field.value
                 })
             } else {
                 filtered_optgroups = field.optgroups
@@ -131,11 +145,12 @@ var Input = {
                 return opt.value == field.value
             })
 
-            maxlength = field.options && field.options.length ? field.options.map(function(el) {
-                return el.label ? el.label.length : 0
-            }).reduce(function(max, cur) {
-                return Math.max(max, cur)
-            }) : 0
+            maxlength = field.options && field.options.length 
+                ? field.options.map(function(el) {
+                    return el.label ? el.label.length : 0
+                }).reduce(function(max, cur) {
+                    return Math.max(max, cur)
+                }) : 0
 
 
             return readOnly
@@ -144,7 +159,8 @@ var Input = {
                 })
                 : m(Select, {
                     name: field.name,
-                    // style: field.expandable ? 'width: calc(100% - 30px)' : '',
+                    // style: field.expandable 
+                    //     ? 'width: calc(100% - 30px)' : '',
                     class: [
                         'max-w7',
                         maxlength >= 30 ? 'w-100' : '',
@@ -162,16 +178,18 @@ var Input = {
                     placeholder: placeholder,
                     disabled: readOnly,
                     onchange: function(event) {
+                        var idx = event.target.selectedIndex
                         if (field.optgroup_field) {
-                            var optgroup = $(':selected', event.target).closest('optgroup').data('value')
+                            var optgroup = $(':selected', event.target)
+                                .closest('optgroup').data('value')
                             rec.fields[field.optgroup_field].value = optgroup
                         }
                         if (event.target.value == field.value) {
                             return
                         }
                         Input.validate(event.target.value, field)
-                        var text = event.target.options[event.target.selectedIndex].text
-                        var coltext = event.target.options[event.target.selectedIndex].dataset.coltext
+                        var text = event.target.options[idx].text
+                        var coltext = event.target.options[idx].dataset.coltext
                         field.text = text
                         field.coltext = coltext
                         Field.update(event.target.value, field.name, rec)
@@ -181,11 +199,13 @@ var Input = {
 
             if (!field.text) field.text = field.value
 
-            key_json = JSON.stringify(field.fkey ? field.fkey.primary: [field.name])
+            var key = field.fkey ? field.fkey.primary: [field.name]
+            key_json = JSON.stringify(key)
 
             return m(Autocomplete, {
                 name: field.name,
-                style: field.expandable ? 'width: calc(100% - 30px)' : 'width: 100%',
+                style: field.expandable 
+                    ? 'width: calc(100% - 30px)' : 'width: 100%',
                 required: !field.nullable,
                 class: [
                     'max-w7 border-box',
@@ -354,7 +374,6 @@ var Input = {
 
 module.exports = Input
 
-var Record = require('./record')
 var Select = require('./select')
 var Autocomplete = require('./seeker')
 var JSONed = require('./jsoned')

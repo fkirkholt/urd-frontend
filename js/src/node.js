@@ -9,7 +9,8 @@ var Node = {
         return m('td.nowrap', [
             Object.keys(fieldset.items).map(function(label, idx) {
                 var fieldname = fieldset.items[label]
-                var type = fieldname.indexOf('actions.') > -1 ? 'action' : 'field'
+                var type = fieldname.indexOf('actions.') > -1
+                    ? 'action' : 'field'
 
                 switch (type) {
                 case 'field':
@@ -152,7 +153,10 @@ var Node = {
                 var col = colname.items[label];
                 if (rec.fields[col] && rec.fields[col].value !== null) {
                     count_field_values++;
-                } else if (typeof col === 'string' && col.indexOf('relations') > -1) {
+                } else if (
+                    typeof col === 'string' && 
+                    col.includes('relations')
+                ) {
                     var key = col.replace('relations.', '');
                     var rel = rec.relations && rec.relations[key]
                         ? rec.relations[key]
@@ -167,10 +171,12 @@ var Node = {
             return [
                 m('tr', [
                     m('td', {class: 'tc'}, [
-                        colname.inline && colname.expandable === false ? '' : m('i.fa', {
+                        colname.inline && !colname.expandable ? '' : m('i.fa', {
                             class: [
-                                colname.expanded ? 'fa-angle-down' : 'fa-angle-right',
-                                colname.invalid ? 'invalid' : colname.dirty ? 'dirty' : ''
+                                'fa-angle-' + colname.expanded 
+                                    ? 'down' : 'right',
+                                colname.invalid 
+                                    ? 'invalid' : colname.dirty ? 'dirty' : ''
                             ].join(' '),
                             onclick: function() {
                                 if (colname.expandable === false) return;
@@ -190,22 +196,30 @@ var Node = {
                         }
                     }, [
                         label,
-                        colname.inline ? '' : m('span', {class: 'normal ml1 moon-gray f7'}, count_field_values + '/' + count_fields),
+                        colname.inline ? '' : m('span', {
+                            class: 'normal ml1 moon-gray f7'
+                        }, count_field_values + '/' + count_fields),
                     ]),
                     m('td', [
                         colname.expanded ? '' :
-                        colname.invalid ? m('i', {class: 'fa fa-warning ml1 red'})     :
-                        colname.dirty ? m('i', {class: 'fa fa-pencil ml1 light-gray'}) : '',
+                        colname.invalid 
+                            ? m('i', {class: 'fa fa-warning ml1 red'})     
+                        : colname.dirty ? m('i', {
+                            class: 'fa fa-pencil ml1 light-gray'
+                        }) : '',
                     ]),
-                    !colname.expanded ? Node.draw_inline_fieldset(rec, colname) : null
+                    !colname.expanded 
+                        ? Node.draw_inline_fieldset(rec, colname) : null
                 ]),
                 !colname.expanded ? null : m('tr', [
                     m('td'),
                     m('td', {colspan: 3}, [
                         m('table', [
-                            Object.keys(colname.items).map(function(label, idx) {
+                            Object.keys(colname.items).map(function(label) {
                                 var col = colname.items[label];
-                                return m(Node, {rec: rec, colname: col, label: label});
+                                return m(Node, {
+                                    rec: rec, colname: col, label: label
+                                });
                             })
                         ])
                     ])
@@ -217,7 +231,7 @@ var Node = {
 
         if (typeof colname === "string" && colname.indexOf('relations') > -1) {
             return m(Relation, {rec: rec, colname: colname, label: label})
-        } else if (typeof colname === "string" && colname.indexOf('actions.') > -1) {
+        } else if (typeof colname === "string" && colname.includes('actions')) {
             // TODO
         } else {
             return m(Field, {rec: rec, colname: colname, label: label})

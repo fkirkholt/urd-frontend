@@ -5,7 +5,8 @@ var login = {
     view: function() {
         return m('form', [
             m('div', {class: 'f4 mb2'}, 'Logg inn'),
-            !login.error ? '' : m('div', {class: 'red'}, login.msg || 'Logg inn'),
+            !login.error 
+                ? '' : m('div', {class: 'red'}, login.msg || 'Logg inn'),
             m(select, {
                 class: 'w-100 mb1',
                 id: 'system',
@@ -42,7 +43,8 @@ var login = {
             m('input[type=text]', {
                 id: 'server',
                 name: 'server',
-                placeholder: $('#system').val() == 'sqlite3' ? 'Sti til mappe' : 'localhost',
+                placeholder: $('#system').val() == 'sqlite3'
+                    ? 'Sti til mappe' : 'localhost',
                 value: ds.base.server,
                 class: 'db w-100 mb1'
             }),

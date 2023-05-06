@@ -4,9 +4,7 @@ window.ds = require('./datastore.js')
 
 var contents = require('./contents.js')
 var header = require('./header.js')
-var breadcrumb = require('./breadcrumb.js')
 var filterpanel = require('./filterpanel.js')
-var toolbar = require('./toolbar.js')
 var home = require('./home.js')
 var tabbar = require('./tabbar.js')
 var datapanel = require('./datapanel.js')
@@ -20,7 +18,6 @@ var login = require('./login.js')
 var report = require('./report.js')
 var grid = require('./grid.js')
 
-var adresse_tilbakestilling = false
 
 m.route.prefix = "#"
 m.route($('#main')[0], '/', {
