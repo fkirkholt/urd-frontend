@@ -4,6 +4,11 @@ var SQLpanel = {
         if (!ds.result) return
 
         return ds.result.map(function(query, i) {
+            var table = ds.base.tables[query.table]
+            if (table) {
+                var pk_length = table.pkey.columns.length
+                var pk_col = table.pkey.columns[pk_length -1]
+            }
             if (query.data) {
                 return [
                     ds.result.length == 1 ? null : m(Codefield, {
@@ -26,15 +31,42 @@ var SQLpanel = {
                             })
                         ]),
                         query.data.map(function(item, i) {
+                            var pk_values = []
+                            if (table) {
+                                $.each(table.pkey.columns, function(i, col) {
+                                    if (item[col] !== undefined) {
+                                        pk_values.push(col + '=' + item[col])
+                                    } 
+                                })
+                            }
+
                             return m('tr.striped--light-gray', [
                                 Object.keys(item).map(function(cell, i) {
-                                    return m('td', {
-                                        class: 'pl1 pl2'
-                                    }, typeof(item[cell]) == 'string'
+                                    var is_link = false
+                                    var link
+                                    var value = typeof(item[cell]) == 'string'
                                         ? m.trust(item[cell]
                                             .replace(/\n/g, '<br>')
                                             .replace(/\s/g, '&nbsp;'))
-                                        : item[cell])
+                                        : item[cell]
+                                        
+
+                                    if (
+                                        table &&
+                                        pk_values.length == pk_length  &&
+                                        cell == pk_col
+                                    ) {
+                                        is_link = true
+                                        link = m('a', {
+                                            href: "#" + ds.base.name + '/data/'
+                                                + table.name + '?'
+                                                + pk_values.join('&')
+                                        }, item[cell])
+                                    }
+
+                                    return m('td', {
+                                        class: 'pl1 pl2'
+                                    }, is_link ? link : value)
                                 })
                             ])
                         })
