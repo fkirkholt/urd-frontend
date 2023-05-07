@@ -192,7 +192,7 @@ var Toolbar = {
             })
         }
 
-        return m('ul', {target: '_blank', class: 'f6 list pl1 mt1 mb1'}, [
+        return m('ul', {target: '_blank', class: 'flex f6 list pl1 mt1 mb1'}, [
             m('li', [
                 m('form#action', [
                     m('input', {
@@ -240,7 +240,6 @@ var Toolbar = {
             ds.table.hide ? '' : m('input[type=search]', {
                 placeholder: "Søk i alle tekstfelter",
                 value: search,
-                // style: 'width: 100%',
                 style: 'flex: 1',
                 onfocus: function(event) {
                     event.target.select()
