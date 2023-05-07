@@ -225,7 +225,6 @@ var Field = {
         if (rec.table.fields[colname].hidden && !config.edit_mode) return
 
         // TODO: Hva gjør jeg med rights her?
-        console.log('field', field)
         var mandatory = !field.nullable && !field.extra && field.editable 
                         && !field.source == true
         label = isNaN(parseInt(label)) ? label: field.label
