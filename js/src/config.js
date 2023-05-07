@@ -4,8 +4,6 @@ var config = {
 
     limit: Cookies.get('limit') ? Cookies.get('limit') : 20,
     autosave: Cookies.get('autosave') === 'true' ? 1 : 0,
-    std_search: Cookies.get('std_search')
-        ? Cookies.get('std_search') : 'simple',
     edit_search: Cookies.get('edit_search') === 'true' ? 1 : 0,
     select: Cookies.get('select') ? Cookies.get('select') : 'native',
     theme: Cookies.get('theme') ? Cookies.get('theme') : 'standard',
@@ -24,7 +22,6 @@ var config = {
             Grid.save()
         }
         var limit = $('#limit').val()
-        var search = $('#preferences [name="std_search"]').val()
         var select = $('#preferences [name="select"]').val()
         var theme = $('#preferences [name="theme"]').val()
         var expand_headings = $('#preferences [name="expand_headings"]')
@@ -34,7 +31,6 @@ var config = {
             limit != config.limit
             || select != config.select
             || autosave != config.autosave
-            || search != config.std_search
             || theme != config.theme
             || expand_headings != config.expand_headings
             || threshold != config.threshold
@@ -42,7 +38,6 @@ var config = {
             config.limit = limit ? limit : config.limit
             config.select = select
             config.autosave = autosave
-            config.std_search = search
             config.theme = theme
             config.expand_headings = expand_headings
             config.threshold = threshold
@@ -53,7 +48,6 @@ var config = {
         Cookies.set('limit', parseInt(limit), {expires:14})
         Cookies.set('select', select, {expires:14})
         Cookies.set('autosave', autosave, {expires:14})
-        Cookies.set('std_search', search, {expires:14})
         Cookies.set('theme', theme, {expires:14})
         Cookies.set('expand_headings', expand_headings, {expires:14})
         Cookies.set('threshold', threshold, {expires:14})
@@ -79,15 +73,6 @@ var config = {
                             value: config.limit
                         })
                     ])
-                ]),
-                m('tr', [
-                    m('td', 'Standardsøk'),
-                    m('td', m('select[name=std_search]', {
-                        value: config.std_search
-                    }, [
-                        m('option', {value: 'simple'}, 'Enkelt'),
-                        m('option', {value: 'advanced'}, 'Avansert'),
-                    ]))
                 ]),
                 m('tr', [
                     m('td', 'Ekspander overskrifter'),

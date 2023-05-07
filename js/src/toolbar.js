@@ -10,7 +10,7 @@ var Toolbar = {
             return false
         })
         mousetrap(document.body).bind('mod+f', function(e) {
-            Filterpanel.expanded = !Filterpanel.expanded
+            ds.table.search = true
             m.redraw()
             return false
         })
@@ -216,24 +216,12 @@ var Toolbar = {
                     config.compressed = !config.compressed
                 }
             }),
-            config.std_search == 'simple' ? '' : m('li', {class: 'dib'}, [
-                m('i', {
-                    class: 'fa fa-filter ml1 mr2 pointer dim',
-                    title: 'Filtrer tabell',
-                    onclick: function() {
-                        var query = ds.table.query
-                        config.filter = true
-                        ds.table.filters = Filterpanel.parse_query(query)
-                        Filterpanel.expanded = !Filterpanel.expanded
-                    }
-                }),
-            ]),
-            config.std_search == 'advanced' ? '' : m('i', {
+            m('i', {
                 class: 'fa fa-search ml1 mr2 pointer dim',
                 title: 'Søk',
                 onclick: function() {
                     config.filter = false
-                    ds.table.filters = Filterpanel.parse_query(ds.table.query)
+                    ds.table.filters = Search.parse_query(ds.table.query)
                     ds.table.search = !ds.table.search
                 }
             }),
@@ -252,103 +240,6 @@ var Toolbar = {
 
                 }
             }),
-            ds.table.hide ? '' : m('select', {
-                class: 'ml1 mr2 dn',
-                name: 'btn_saved_searches',
-                title: 'Lagrede søk',
-
-                onupdate: function(vnode) {
-                    if ($(vnode.dom).val() != 'custom') {
-                        $(vnode.dom).find('option[value="custom"]').hide()
-                        $(vnode.dom).find('option[value="save_search"]').hide()
-                        if ($(vnode.dom).val() == 'alle') {
-                            $(vnode.dom).find('option[value="separator_save"]')
-                                .hide()
-                        }
-                    } else {
-                        $(vnode.dom).find('option[value="custom"]').show()
-                    }
-
-                    if (
-                        $(vnode.dom).val() == 'alle' || 
-                        $(vnode.dom).val() == 'custom' || 
-                        $(vnode.dom).val() == 'delete_search'
-                    ) {
-                        if ($(vnode.dom).val() == 'delete_search') {
-                            $(vnode.dom).val('custom')
-                        }
-                        $(vnode.dom).find('option[value="delete_search"]')
-                            .hide()
-                    } else {
-                        $(vnode.dom).find('option[value="delete_search"]')
-                            .show()
-                    }
-                },
-                onchange: function(vnode) {
-                    var id = $(this).val()
-
-                    var filter = ds.table.saved_filters.find(function(row) {
-                        return row.id == id
-                    })
-                    var query
-                    var expr = filter.expression
-
-                    if (id == 'save_search') {
-                        Filterpanel.save_filter(ds.table)
-                        return
-                    }
-
-                    if (id == 'delete_search') {
-                        $(vnode.dom).find('option[value="custom"]').show()
-                        $(vnode.dom).val('custom')
-                        Filterpanel.delete_filter()
-                        return
-                    }
-
-                    if (id == 'alle') {
-                        query = 'query='
-                    } else if (filter.advanced == 0) {
-                        query = 'query=' + expr.replace(/=/g, '%3D')
-                    } else {
-                        query = 'where=' + expr.replace(/=/g, '%3D')
-                    }
-                    m.route.set('/' + ds.base.name + '/tables/' + 
-                                ds.table.name + '?' + query)
-                }
-            }, [
-                m('option', {value: 'alle'}, 'Alle'),
-                m('option', {disabled: true}, '—————'),
-
-                (param.query || param.where) ? [
-                    m('option', {
-                        value: 'custom',
-                        selected: true
-                    }, 'Søkeresultat'),
-                    m('option', {value: 'save_search'}, 'Lagre søk …'),
-                    m('option', {value: 'delete_search'}, 'Slett søk …'),
-                    m('option', {
-                        value: 'separator_save',
-                        disabled: true
-                    }, '—————'),
-                ] : '',
-
-                ds.table.saved_filters.map(function(filter, idx) {
-                    var selected = (
-                        param.query && param.query === filter.expression ||
-                            m.route.param('where') == filter.expression
-                    )
-                    if (selected) {
-                        ds.table.delete_search = true
-                    }
-
-                    return m('option', {
-                        value: filter.id,
-                        selected: selected
-                    }, filter.label)
-                }),
-
-
-            ]),
             m('li', {class: 'dib'}, [
                 m('i', {
                     class: [
@@ -599,6 +490,6 @@ module.exports = Toolbar
 var mousetrap = require('mousetrap')
 var config = require('./config')
 var Grid = require('./grid')
-var Filterpanel = require('./filterpanel')
+var Search = require('./search')
 var Record = require('./record')
 var Pagination = require('./pagination')

@@ -167,16 +167,9 @@ var Grid = {
 
             ds.table.query = data.filter
 
-            ds.table.filters = Filterpanel.parse_query(data.filter)
+            ds.table.filters = Search.parse_query(data.filter)
 
             if (ds.table.selection === null) ds.table.selection = 0
-
-            // Remount filterpanel to recreate value fields
-            var $filterpanel = $('#filterpanel')
-            m.mount($filterpanel[0], null)
-            m.mount($filterpanel[0], Filterpanel)
-
-            m.redraw()
 
             // Show first record
             if (ds.table.type != 'view') {
@@ -314,18 +307,15 @@ var Grid = {
         var base_name = params['base'] ? params['base'] : ds.urd_base
         var table_name = params['table'] ? params['table'] : 'database_'
         var search = params['query'] ? params['query'] : null
-        var condition = params['where'] ? params['where'] : null
         if (!search) {
             search = Grid.get_filter()
         }
-
-        Filterpanel.advanced = condition ? true : false
 
         if (ds.base.name != base_name) {
             ds.load_database(base_name)
         }
         Grid.get({ base: base_name, table: table_name, filter: search,
-                   condition: condition, limit: config.limit })
+                   limit: config.limit })
 
 
         $('div[name="vis"]').removeClass('inactive')
@@ -424,7 +414,7 @@ var Grid = {
 module.exports = Grid
 
 // Place here modules which requires grid (circular reference)
-var Filterpanel = require('./filterpanel')
+var Search = require('./search')
 var Record = require('./record')
 var Row = require('./row')
 var config = require('./config')

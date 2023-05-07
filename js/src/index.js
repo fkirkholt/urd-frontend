@@ -4,7 +4,6 @@ window.ds = require('./datastore.js')
 
 var contents = require('./contents.js')
 var header = require('./header.js')
-var filterpanel = require('./filterpanel.js')
 var home = require('./home.js')
 var tabbar = require('./tabbar.js')
 var datapanel = require('./datapanel.js')
@@ -115,9 +114,6 @@ window.onbeforeunload = function(event) {
 
 var $header = $('#header')
 m.mount($header[0], header)
-
-var $filterpanel = $('#filterpanel')
-m.mount($filterpanel[0], filterpanel)
 
 var $export = $('#export-dialog')
 m.mount($export[0], export_dialog)
