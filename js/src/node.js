@@ -171,15 +171,15 @@ var Node = {
             return [
                 m('tr', [
                     m('td', {class: 'tc'}, [
-                        colname.inline && !colname.expandable ? '' : m('i.fa', {
+                        colname.inline && colname.noexpand ? '' : m('i.fa', {
                             class: [
-                                'fa-angle-' + colname.expanded 
-                                    ? 'down' : 'right',
+                                colname.expanded 
+                                    ? 'fa-angle-down' : 'fa-angle-right',
                                 colname.invalid 
                                     ? 'invalid' : colname.dirty ? 'dirty' : ''
                             ].join(' '),
                             onclick: function() {
-                                if (colname.expandable === false) return;
+                                if (colname.noexpand) return;
 
                                 colname.expanded = !colname.expanded;
                             }
@@ -188,7 +188,7 @@ var Node = {
                     m('td.label', {
                         class: [
                             'f6 nowrap pr2',
-                            !colname.inline || colname.expandable ? 'b' : '',
+                            colname.inline ? '' : 'b',
                         ].join(' '),
                         colspan: colname.inline ? 1 : 3,
                         onclick: function() {
