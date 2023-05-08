@@ -220,7 +220,6 @@ var Toolbar = {
                 class: 'fa fa-search ml1 mr2 pointer dim',
                 title: 'Søk',
                 onclick: function() {
-                    config.filter = false
                     ds.table.filters = Search.parse_query(ds.table.query)
                     ds.table.search = !ds.table.search
                 }

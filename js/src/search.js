@@ -2,7 +2,6 @@ var Search = {
 
     oninit: function(vnode) {
         var table = vnode.attrs.table ? vnode.attrs.table : ds.table
-        config.filter = false
         if (!config.edit_search) {
             table.filters = {}
         }
@@ -84,7 +83,7 @@ var Search = {
      */
     parse_query: function(expr) {
         var conditions = expr !== null ? expr.split(' AND ') : []
-        var search = config.filter ? [] : {}
+        var search = {}
         $.each(conditions, function(i, cond) {
             var parts = cond.split(/\s*([=<>]|!=|IN|LIKE|NOT LIKE|IS NULL|IS NOT NULL)\s*/)
             if (parts.length > 1) {
@@ -117,7 +116,7 @@ var Search = {
                     value: val
                 }
 
-                config.filter ? search.push(item) : search[field] = item
+                search[field] = item
             }
         })
 
@@ -375,7 +374,7 @@ var Search = {
             return m('input', {
                 name: filter.field,
                 value: filter.value !== undefined ? filter.value : '',
-                style: config.filter ? 'flex:2;' : 'width: ' + width,
+                style: 'width: ' + width,
                 disabled: filter.operator === '' ? true : false,
                 onchange: function(e) {
                     filter.value = e.target['value']
