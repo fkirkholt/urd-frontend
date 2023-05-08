@@ -122,7 +122,11 @@ var Input = {
 
         placeholder = placeholder || field.placeholder
 
-        if (!placeholder && field.extra == 'auto_increment') {
+        if (
+            !placeholder && 
+            field.extra == 'auto_increment' && 
+            field.element != 'select'
+        ) {
             placeholder = 'autoincr.'
         }
 
