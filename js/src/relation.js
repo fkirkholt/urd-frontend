@@ -6,6 +6,21 @@ var Relation = {
             : object.expanded = true
     },
 
+    add: function(e, rel) {
+        e.stopPropagation()
+        var rec = Record.create(rel, true)
+        if (!rec) return
+
+        // Focus first input field in new record
+        setTimeout(function() {
+            $('tr[data-name=' + rel.name + '] > td > table > tr')
+                .find('input,select,textarea')
+                .first().trigger('focus')
+        }, 100)
+
+        rel.modus = 'edit'
+    },
+
     draw_relation_table: function(rel, record) {
         var columns = []
         var count_columns = 0
@@ -97,21 +112,7 @@ var Relation = {
                         m('td'),
                         m('td', [
                             !rel.privilege.insert ? '' : m('a', {
-                                onclick: function(e) {
-                                    e.stopPropagation()
-                                    var rec = Record.create(rel, true)
-                                    if (!rec) return
-
-                                    // Focus first input field in new record
-                                    setTimeout(function() {
-                                        $('tr[data-name=' + rel.name + 
-                                          '] > td > table > tr')
-                                            .find('input,select,textarea')
-                                            .first().trigger('focus')
-                                    }, 100)
-
-                                    rel.modus = 'edit'
-                                }
+                                onclick: function(e) {Relation.add(e, rel)}
                             }, m('i', {
                                 class: 'fa fa-plus light-blue hover-blue '
                                      + 'pointer ml1'
@@ -178,13 +179,7 @@ var Relation = {
                         m('td'),
                         m('td', [
                             !rel.privilege.insert ? '' : m('a', {
-                                onclick: function(e) {
-                                    e.stopPropagation()
-                                    var rec = Record.create(rel, true)
-                                    if (!rec) return
-
-                                    rel.modus = 'edit'
-                                }
+                                onclick: function(e) {Relation.add(e, rel)}
                             }, m('i', {
                                 class: 'fa fa-plus light-blue hover-blue '
                                      + 'pointer ml1'
