@@ -145,6 +145,7 @@ var Relation = {
                         }
                         rec.table = rel
                         rec.loaded = true
+                        rec.relations = {}
 
                         rel.grid.columns.map(function(key) {
                             var field = rec.fields[key]
