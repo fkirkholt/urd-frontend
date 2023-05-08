@@ -51,9 +51,9 @@ var Diagram = {
         // This makes the diagram respond to changes in threshold value
 
         var def = ['erDiagram']
-        var subitems = ds.base.contents[Diagram.root].subitems
         var root_table = ds.base.tables[Diagram.root]
         if (Diagram.type == 'module') {
+            var subitems = ds.base.contents[Diagram.root].subitems
             Object.values(subitems).map(function(node) {
                 Diagram.draw_fkeys_node(node, def)
             })
@@ -290,8 +290,9 @@ var Diagram = {
         })
     },
 
+    // Add path to specific table in existing diagram
     add_path: function(table) {
-        var path = Diagram.get_path(table, path)
+        var path = Diagram.get_path(table, [])
 
         if (path) {
             path = path.filter(function(line) {
