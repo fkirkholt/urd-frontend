@@ -132,6 +132,14 @@ var Diagram = {
             def.push('}')
         }
 
+        var fk_tables = []
+        Object.keys(table.fkeys).map(function(name) {
+            var fkey = table.fkeys[name]
+            if (fkey.table != table.name) {
+                fk_tables.push(fkey.table)
+            }
+        })
+
         Object.keys(table.fkeys).map(function(alias) {
             var fk = table.fkeys[alias]
             var field_name = fk.foreign[fk.foreign.length -1]
@@ -140,6 +148,23 @@ var Diagram = {
             var fk_table = ds.base.tables[fk.table]
             var line = field && field.hidden ? '..' : '--'
             var symbol = field && field.nullable ? ' o|' : ' ||'
+            var skip = false
+
+            // Removes relations that represents grand parents and up
+            // Deactivated until we get config for this
+            if (config.simplified_hierarchy) {
+                Object.keys(fk_table.relations).map(function(name) {
+                    var rel_fk = fk_table.relations[name]
+                    if (fk_tables.includes(rel_fk.table)) {
+                        skip = true
+                    }
+                })
+            }
+
+            if (skip) {
+                return
+            }
+
             def.push(fk.table + symbol + line + ' o{' + table.name + 
                      ' : ' + field_name)
             if (fk_table === undefined) return
@@ -172,9 +197,9 @@ var Diagram = {
 
             // Removes relations that represents grand children and down
             // Deactivated until we get config for this
-            if (false) {
-                Object.keys(rel_table.fkeys).map(function(alias) {
-                    var rel_fk = rel_table.fkeys[alias]
+            if (config.simplified_hierarchy) {
+                Object.keys(rel_table.fkeys).map(function(name) {
+                    var rel_fk = rel_table.fkeys[name]
                     if (rel_tables.includes(rel_fk.table)) {
                         skip = true
                     }

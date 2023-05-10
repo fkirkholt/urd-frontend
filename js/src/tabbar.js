@@ -122,7 +122,21 @@ var tabbar = {
                     $('div.curtain').show()
                     $('#action-dialog').show()
                 }
-            })
+            }),
+            (config.tab != 'diagram' ? null : m('label', {
+                class: 'fr mr3',
+                title: "Fjerner koblinger som går direkte til forfedre"
+            }, [
+                m('input', {
+                    class: 'mr1',
+                    type: 'checkbox',
+                    value: 1,
+                    checked: config.simplified_hierarchy,
+                    onclick: function(ev) {
+                        config.simplified_hierarchy = ev.target.checked
+                    }
+                })
+            ], 'Forenklet hierarki'))
         ]
     }
 }
