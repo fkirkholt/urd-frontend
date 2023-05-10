@@ -263,14 +263,6 @@ var Contents = {
                 config.tab == 'data' ? '' : m('li', {
                     class: 'hover-blue',
                     onclick: function() {
-                        Diagram.type = 'descendants'
-                        Diagram.root = Contents.context_table.name
-                        $('ul#context-table').hide()
-                    }
-                }, 'Vis relasjoner'),
-                config.tab == 'data' ? '' : m('li', {
-                    class: 'hover-blue',
-                    onclick: function() {
                         Diagram.type = 'custom'
                         Diagram.add_path(Contents.context_table)
                         $('ul#context-table').hide()

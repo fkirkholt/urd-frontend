@@ -136,7 +136,26 @@ var tabbar = {
                         config.simplified_hierarchy = ev.target.checked
                     }
                 })
-            ], 'Forenklet hierarki'))
+            ], 'Forenklet hierarki')),
+            (config.tab != 'diagram' ? null : m('label', {
+                class: 'fr mr3',
+                title: "Velg hvilke relasjoner som skal vises"
+            }, [
+                'Vis relasjoner:',
+                Object.entries({
+                    nearest: "nærmeste",
+                    subordinate: "underordnede",
+                    all: "alle"
+                }).map(([key, value]) =>
+                    m('label', m('input[type=radio]', {
+                        class: 'ml2 mr1',
+                        name: 'show_relations',
+                        value: key,
+                        checked: config.show_relations === key,
+                        onchange: () => config.show_relations = key
+                    }), value)
+                ),
+            ]))
         ]
     }
 }

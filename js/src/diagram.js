@@ -59,8 +59,6 @@ var Diagram = {
             })
             Diagram.def = def.join("\n")
         } else if (Diagram.type == 'table') {
-            Diagram.def = Diagram.get_table_def(root_table)
-        } else if (Diagram.type == 'descendants') {
             Diagram.def = Diagram.get_table_def(root_table, [])
         }
     },
@@ -94,25 +92,18 @@ var Diagram = {
         })
     },
 
-    /**
-     * Define ER-diagram for table with relations
-     *
-     * @param {object} table - the table that should be drawn
-     * @param {array} tablenames - used for recursion
-     */
+    // Define ER-diagram for table with relations. `tablenames` are used for
+    // recursion to show not only the direct relations to the table, but all
+    // relations connected to this table via other tables as well.
     get_table_def: function(table, tablenames) {
-        var recursion = false
-        if (typeof tablenames == 'object') {
-            recursion = true
-            tablenames.push(table.name)
-        }
+        tablenames.push(table.name)
         // array with definition strings
         var def = []
         // array with definition strings used with recursion
         var def_recur
 
         // definition for main table
-        if (!recursion || tablenames.length == 1) {
+        if (tablenames.length == 1) {
             def.push("erDiagram")
             def.push(table.name + ' {')
             if (table.fields) {
@@ -179,7 +170,12 @@ var Diagram = {
             if (fk_table.rowcount && fk.table != table.name) {
                 // def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
             }
-            if (false && recursion && !tablenames.includes(fk.table)) {
+
+
+            if (
+                config.show_relations == 'all' &&
+                !tablenames.includes(fk.table)
+            ) {
                 def_recur = Diagram.get_table_def(fk_table, tablenames)
                 def = def.concat(def_recur)
             }
@@ -232,7 +228,10 @@ var Diagram = {
             def.push(table.name + symbol + line + 'o{ ' + rel.table +
                      ' : ' + fk_field_name)
 
-            if (recursion && !tablenames.includes(rel.table)) {
+            if (
+                config.show_relations != 'nearest' && 
+                !tablenames.includes(rel.table)
+            ) {
                 def_recur = Diagram.get_table_def(rel_table, tablenames)
                 def = def.concat(def_recur)
             }

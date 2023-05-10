@@ -15,6 +15,7 @@ var config = {
     edit_mode: false,
     hide_empty: false,
     tab: 'data',
+    show_relations: 'nearest',
 
     save: function() {
         var autosave = $('#preferences [name="autosave"]').prop('checked')
