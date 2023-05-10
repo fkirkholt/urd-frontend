@@ -150,8 +150,15 @@ var Diagram = {
             var symbol = field && field.nullable ? ' o|' : ' ||'
             var skip = false
 
+            if (fk_table.hidden) {
+                skip = true
+            }
+
+            if (field_name[0] == '_') {
+                skip = true
+            }
+
             // Removes relations that represents grand parents and up
-            // Deactivated until we get config for this
             if (config.simplified_hierarchy) {
                 Object.keys(fk_table.relations).map(function(name) {
                     var rel_fk = fk_table.relations[name]
@@ -196,7 +203,6 @@ var Diagram = {
             }
 
             // Removes relations that represents grand children and down
-            // Deactivated until we get config for this
             if (config.simplified_hierarchy) {
                 Object.keys(rel_table.fkeys).map(function(name) {
                     var rel_fk = rel_table.fkeys[name]
