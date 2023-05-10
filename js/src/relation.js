@@ -197,10 +197,41 @@ var Relation = {
         var colname = vnode.attrs.colname
         var label = vnode.attrs.label
         var key = colname.replace('relations.', '')
-        var rel = rec.relations && rec.relations[key] ? rec.relations[key] : {}
+        var rel = rec.relations && rec.relations[key] 
+            ? rec.relations[key] : null
+        if (rel === null) {
+            return
+        }
+
+        var table = ds.base.tables[rec.table_name]
+        var rel_table = ds.base.tables[rel.name]
         var usage = rec.table.relations[key].use
+        var skip = false
+
 
         if (usage && usage < config.threshold) {
+            return
+        }
+
+        var rel_tables = []
+
+        Object.values(table.relations).map(function(relation) {
+            if (relation.table != table.name) {
+                rel_tables.push(relation.table)
+            }
+        })
+
+        // Removes relations that represents grand children and down
+        if (config.simplified_hierarchy) {
+            Object.keys(rel_table.fkeys).map(function(name) {
+                var rel_fk = rel_table.fkeys[name]
+                if (rel_tables.includes(rel_fk.table)) {
+                    skip = true
+                }
+            })
+        }
+
+        if (skip) {
             return
         }
 

@@ -123,7 +123,7 @@ var tabbar = {
                     $('#action-dialog').show()
                 }
             }),
-            (config.tab != 'diagram' ? null : m('label', {
+            (config.tab === 'sql' ? null : m('label', {
                 class: 'fr mr3',
                 title: "Fjerner koblinger som går direkte til forfedre"
             }, [
