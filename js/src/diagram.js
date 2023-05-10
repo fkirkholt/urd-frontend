@@ -49,7 +49,6 @@ var Diagram = {
     onbeforeupdate: function(vnode) {
         // Define diagram based on type before redraw
         // This makes the diagram respond to changes in threshold value
-
         var def = ['erDiagram']
         var root_table = ds.base.tables[Diagram.root]
         if (Diagram.type == 'module') {
@@ -131,11 +130,11 @@ var Diagram = {
             }
         })
 
+        // Draw belongs-to relations from foreign keys
         Object.keys(table.fkeys).map(function(alias) {
             var fk = table.fkeys[alias]
             var field_name = fk.foreign[fk.foreign.length -1]
             var field = table.fields ? table.fields[field_name] : null
-            var label = field && field.label ? field.label : alias
             var fk_table = ds.base.tables[fk.table]
             var line = field && field.hidden ? '..' : '--'
             var symbol = field && field.nullable ? ' o|' : ' ||'
@@ -172,6 +171,7 @@ var Diagram = {
             }
 
 
+            // Draw relations recursively
             if (
                 config.show_relations == 'all' &&
                 !tablenames.includes(fk.table)
@@ -189,6 +189,7 @@ var Diagram = {
             }
         })
 
+        // Draw has-many relations
         Object.keys(table.relations).map(function(alias) {
             var rel = table.relations[alias]
             var rel_table = ds.base.tables[rel.table]
@@ -208,13 +209,16 @@ var Diagram = {
                 })
             }
 
-            // Remove relations
+            // Remove relations which are not used much
             if (rel.use && rel.use < config.threshold) {
                 skip = true
             }
+
+            
             if (skip) {
                 return
             }
+
             var fk_field_name = rel.foreign[rel.foreign.length -1]
             var fk_field = ds.base.tables[rel.table].fields
                 ? ds.base.tables[rel.table].fields[fk_field_name]
@@ -228,6 +232,7 @@ var Diagram = {
             def.push(table.name + symbol + line + 'o{ ' + rel.table +
                      ' : ' + fk_field_name)
 
+            // Draw relations recursively
             if (
                 config.show_relations != 'nearest' && 
                 !tablenames.includes(rel.table)
@@ -240,61 +245,11 @@ var Diagram = {
         return def.join("\n")
     },
 
-    draw_class: function(table) {
-        var def = ["classDiagram"]
-        def.push("class " + table.name)
-
-        if (table.rowcount) {
-            def.push(table.name + ' : ' + 'count(' + table.rowcount+ ')')
-        }
-
-        Object.keys(table.fields).map(function(alias) {
-            var field = table.fields[alias]
-            var sign = field.hidden ? '# ' : field.nullable ? '- ' : '+ '
-            // number of invicible spaces to align column names
-            var count = 6 - field.datatype.length
-            def.push(table.name + ' : ' + sign + field.datatype +
-                     '\u2000'.repeat(count) + ' ' + field.name)
-        })
-
-        Object.keys(table.fkeys).map(function(alias) {
-            var fk = table.fkeys[alias]
-            var field = table.fields[alias]
-            var label = field && field.label ? field.label : alias
-            var fk_table = ds.base.tables[fk.table]
-            var line = field && field.hidden ? '..' : '--'
-            def.push(fk.table + ' <' + line + ' ' + table.name + ' : ' + label)
-            if (def.includes('class ' + fk.table)) return
-            if (fk_table === undefined) return
-            def.push('class ' + fk.table)
-            def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
-            if (fk_table.rowcount && fk.table != table.name) {
-                def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
-            }
-        })
-
-        Object.keys(table.relations).map(function(alias) {
-            var rel = table.relations[alias]
-            if (rel.table == table.name) return
-
-            var line  = rel.hidden ? '..' : '--'
-            def.push(table.name + ' <' + line + ' ' + rel.table)
-
-            var rel_table = ds.base.tables[rel.table]
-            if (def.includes('class ' + rel.table)) return
-            def.push('class ' + rel.table)
-            if (rel_table.rowcount) {
-                def.push(rel.table + ' : count(' + rel_table.rowcount + ')')
-            }
-        })
-
-        this.def = def.join("\n")
-    },
-
+    // Draw foreign key relations for content node
     draw_fkeys_node: function(node, def) {
         var item = node.item ? node.item : node
         var object = get(ds.base, item, ds.base.tables[item])
-        Diagram.draw_fkeys(object, def, ds.base.contents[module])
+        Diagram.draw_fkeys(object, def)
 
         if (!node.subitems) {
             return
@@ -305,7 +260,8 @@ var Diagram = {
         })
     },
 
-    draw_fkeys: function(table, def, module) {
+    // Draw foreign key relatons
+    draw_fkeys: function(table, def) {
         if (table.hidden) return
         Object.keys(table.fkeys).map(function(alias) {
             var fk = table.fkeys[alias]
@@ -343,6 +299,8 @@ var Diagram = {
     },
 
 
+    // Get path from Diagram.root to table.
+    // Self referencing function, with `path` accumulating
     get_path: function(table, path) {
 
         // TODO: Should maybe find another way than hardcoding this
@@ -350,47 +308,48 @@ var Diagram = {
             return false
         }
 
-        var new_path
-        var found_path = []
-
+        var new_path  // TODO: hva er dette?
+        var found_path = [] // TODO: hva er dette
+ 
         Object.keys(table.relations).map(function(fk_name) {
 
-            // make a copy of path
+            // make a copy of path TODO: why
             new_path = path.slice()
 
             var fk = table.relations[fk_name]
-            var fk_field_name = fk.foreign[fk.foreign.length -1]
+            // name of last column in foreign key
+            var fk_last_col = fk.foreign[fk.foreign.length -1]
             var fk_field = ds.base.tables[fk.table].fields
-                ? ds.base.tables[fk.table].fields[fk_field_name]
+                ? ds.base.tables[fk.table].fields[fk_last_col]
                 : null
             var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
+            // continue if path already includes this relation
             if (
                 path.includes(table.name + symbol + '--{o ' + fk.table + 
-                              ' : ' + fk_field_name)
+                              ' : ' + fk_last_col)
             ) {
                 return
             }
 
             var fk_table = ds.base.tables[fk.table]
+            // Don't make paths that goes through hidden tables or
+            // reference tables
             if (fk_table.hidden || fk_table.type == 'list') {
                 return
             }
 
             new_path.push(table.name + symbol + '--o{ ' + fk.table + 
-                          ' : ' + fk_field_name)
+                          ' : ' + fk_last_col)
 
             if (fk.table == Diagram.root) {
                 // merge found_path and new_path and remove duplicates
                 found_path = Array.from(new Set(found_path.concat(new_path)))
-
-                return
             } else {
+                // goes further in the path in search for Diagram.root
                 new_path = Diagram.get_path(fk_table, new_path)
                 if (new_path) {
                     found_path = Array.from(new Set(found_path.concat(new_path)))
-
-                    return new_path
                 }
             }
         })
@@ -416,7 +375,6 @@ var Diagram = {
 
             if (fk.table == Diagram.root) {
                 found_path = found_path.concat(new_path)
-                return new_path
             } else {
                 if (fk_table.type == 'reference') return
 
@@ -426,8 +384,6 @@ var Diagram = {
                 new_path = Diagram.get_path(fk_table, new_path)
                 if (new_path) {
                     found_path = Array.from(new Set(found_path.concat(new_path)))
-
-                    return new_path
                 }
             }
         })
