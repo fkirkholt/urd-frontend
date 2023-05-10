@@ -7,12 +7,12 @@ var Diagram = {
     root: "",
     type: "",
 
-    /** Show tooltip for boxes on mouseover when text is too small to read */
+    // Show tooltip for boxes on mouseover when text is too small to read
     show_tooltip: function(evt) {
         let tooltip = document.getElementById("tooltip")
         var svg_width = $('svg').width()
         var max_width = parseInt($('svg').css('max-width'))
-        var text = $(evt.target).parent().attr('id')
+        var text = $(evt.target).next('text').text()
         if (max_width/svg_width > 2) {
             tooltip.innerHTML = text
             tooltip.style.display = "block"
