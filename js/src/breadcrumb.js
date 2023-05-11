@@ -26,17 +26,6 @@ module.exports = {
                 text: ds.table.label,
                 addr: ds.base.name + '/data/' + ds.table.name
             })
-        } else if (param.report) {
-            // TODO: ds.base.reports sometimes undefined - unknown why
-            if (ds.base.reports) {
-                var report_name = m.route.param('report')
-                var label = ds.base.reports[report_name].label
-                items.push({
-                    icon: "fa-file-text-o",
-                    text: label,
-                    addr: ds.base.name + '/reports/' + ds.report.name
-                })
-            }
         }
 
         return items

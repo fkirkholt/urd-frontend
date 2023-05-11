@@ -14,7 +14,6 @@ var export_dialog = require('./export.js')
 var convert_dialog = require('./convert.js')
 var config = require('./config.js')
 var login = require('./login.js')
-var report = require('./report.js')
 var grid = require('./grid.js')
 
 
@@ -102,8 +101,7 @@ m.route($('#main')[0], '/', {
             config.tab = 'sql'
             return SQLpanel
         }
-    },
-    "/:base/reports/:report": report
+    }
 })
 
 window.onbeforeunload = function(event) {
