@@ -265,10 +265,11 @@ var Field = {
                 && field.value === null
             ) ? '' : m('tr', [
                 m('td', {class: 'tc v-top'}, [
-                    !field.fkey || field.noexpand || 
+                    !field.fkey || !field.expandable || 
                     field.value === null ? null : m('i.fa.w1', {
                         class: !field.expanded 
-                            ? 'fa-angle-right' : 'fa-angle-down',
+                            ? 'fa-angle-right' : field.expandable 
+                            ? 'fa-angle-down' : '',
                         onclick: Field.toggle_fkey.bind(this, rec, colname)
                     }),
                 ]),
@@ -279,7 +280,7 @@ var Field = {
                         !config.admin ? 'max-w5 truncate' : '',
                     ].join(' '),
                     onclick: function() {
-                        if (field.fkey && !field.noexpand && field.value) {
+                        if (field.fkey && field.expandable && field.value) {
                             Field.toggle_fkey(rec, colname)
                         } else if (field.element == 'textarea') {
                             field.expanded = !field.expanded
@@ -334,7 +335,7 @@ var Field = {
                     )
                         ? Field.display_value(field)
                         : m(Input, {rec: rec, fieldname: colname}),
-                    field.noexpand || field.value === null 
+                    !field.expandable || field.value === null 
                         ? ''
                     : m('a', {
                         class: 'icon-crosshairs light-blue hover-blue ' 

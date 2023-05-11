@@ -132,18 +132,21 @@ var Search = {
             return [
                 m('tr', [
                     m('td', {class: 'tc'}, [
-                        item.inline && item.noexpand ? '' : m('i.fa', {
+                        item.inline && !item.expandable ? '' : m('i.fa', {
                             class: item.expanded
                                 ? 'fa-angle-down' : 'fa-angle-right',
                             onclick: function() {
-                                if (item.noexpand) return
+                                if (item.expandable === false) return
 
                                 item.expanded = !item.expanded
                             }
                         })
                     ]),
                     m('td.label', {
-                        class: 'f6 nowrap pr2',
+                        class: [
+                            'f6 nowrap pr2',
+                            !item.inline || item.expandable ? 'b' : ''
+                        ].join(' '),
                         colspan: item.inline ? 1 : 3,
                         onclick: function() {
                             item.expanded = !item.expanded
@@ -197,12 +200,12 @@ var Search = {
             return [
                 m('tr', [
                     m('td', {class: 'tc v-top'}, [
-                        !field.fkey || field.noexpand || table.sublevel
+                        !field.fkey || !field.expandable || table.sublevel
                             ? null
                         : m('i.fa', {
                             class: !field.expanded
                                 ? 'fa-angle-right'
-                                : 'fa-angle-down',
+                                : field.expandable ? 'fa-angle-down' : '',
                             onclick: function() {
                                 Search.toggle_relation(field)
                             }

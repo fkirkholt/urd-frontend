@@ -163,7 +163,7 @@ var Input = {
                 })
                 : m(Select, {
                     name: field.name,
-                    // style: !field.noexpand 
+                    // style: field.expandable 
                     //     ? 'width: calc(100% - 30px)' : '',
                     class: [
                         'max-w7',
@@ -208,8 +208,8 @@ var Input = {
 
             return m(Autocomplete, {
                 name: field.name,
-                style: field.noexpand 
-                    ? 'width: 100%' : 'width: calc(100% - 30px)',
+                style: field.expandable 
+                    ? 'width: calc(100% - 30px)' : 'width: 100%',
                 required: !field.nullable,
                 class: [
                     'max-w7 border-box',
