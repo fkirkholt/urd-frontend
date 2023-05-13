@@ -4,8 +4,6 @@ var datapanel = {
 
         if (!ds.table) return
 
-        ds.type = 'table'
-
         var selected_idx = ds.table.selection !== null ? ds.table.selection : 0
 
         return !ds.table.records ? m('div', 'laster ...') : [

@@ -29,7 +29,6 @@ var home = {
     },
 
     oninit: function() {
-        ds.type = 'dblist';
         ds.table = null;
 
         if (!ds.table) {
@@ -41,8 +40,6 @@ var home = {
         if (!ds.table) return;
 
         if (config.admin) return m(datapanel);
-
-        ds.type = 'dblist';
 
         return m('div', [
             m('h2', 'Databaser'),

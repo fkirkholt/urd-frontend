@@ -19,7 +19,12 @@ var Grid = require('./grid.js')
 
 m.route.prefix = "#"
 m.route($('#main')[0], '/', {
-    "/": home,
+    "/": {
+        onmatch: function(args, requestedPath) {
+            ds.type = 'dblist'
+            return home
+        }
+    },
     "/:base": {
         onmatch: function(args, requestedPath) {
             var base_name = args.base
@@ -56,6 +61,7 @@ m.route($('#main')[0], '/', {
     "/:base/data/:table": {
         onmatch: function(args, requestedPath) {
             config.tab = 'data'
+            ds.type = 'table'
 
             if (
                 ds.table && ds.table.dirty && Grid.url !== requestedPath &&

@@ -163,8 +163,6 @@ var Grid = {
             })
             ds.table.sort_fields = sort_fields
 
-            ds.type = 'table'
-
             ds.table.query = data.filter
 
             ds.table.filters = Search.parse_query(data.filter)

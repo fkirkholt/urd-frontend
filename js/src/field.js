@@ -1,8 +1,8 @@
 var Field = {
 
-    update: function(value, fieldalias, rec) {
+    update: function(value, field_name, rec) {
 
-        var field = rec.fields[fieldalias]
+        var field = rec.fields[field_name]
 
         field.dirty = true
         rec.dirty = true
@@ -17,7 +17,7 @@ var Field = {
             rec.columns[field.name].value = value
         }
 
-        rec.fields[field.name].value = value
+        field.value = value
 
         // For each select that depends on the changed field, we must set the
         // value to empty and load new options
