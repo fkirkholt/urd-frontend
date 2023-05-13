@@ -188,10 +188,9 @@ var Grid = {
         })
     },
 
-    get_filter: function() {
-        var param = Object.assign({}, m.route.param())
+    get_filter: function(params) {
+        var param = Object.assign({}, params)
         var filter = ''
-
         if (!('query' in param) && !('where' in param)) {
             delete param.base
             delete param.table
@@ -302,19 +301,13 @@ var Grid = {
         else return true
     },
 
-    load: function() {
-        var params = Object.assign({}, m.route.param())
-        var base_name = params['base'] ? params['base'] : ds.urd_base
-        var table_name = params['table'] ? params['table'] : 'database_'
-        var search = params['query'] ? params['query'] : null
-        if (!search) {
-            search = Grid.get_filter()
-        }
+    load: function(params) {
+        var query = params.query ? params.query : Grid.get_filter(params)
 
-        if (ds.base.name != base_name) {
-            ds.load_database(base_name)
+        if (ds.base.name != params.base) {
+            ds.load_database(params.base)
         }
-        Grid.get({ base: base_name, table: table_name, filter: search,
+        Grid.get({ base: params.base, table: params.table, filter: query,
                    limit: config.limit })
 
 

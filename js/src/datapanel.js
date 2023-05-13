@@ -1,11 +1,6 @@
 
 var datapanel = {
     view: function(vnode) {
-        // load table if route changes
-        if (m.route.get() != Grid.url) {
-            Grid.load()
-            Grid.url = m.route.get()
-        }
 
         if (!ds.table) return
 

@@ -14,7 +14,7 @@ var export_dialog = require('./export.js')
 var convert_dialog = require('./convert.js')
 var config = require('./config.js')
 var login = require('./login.js')
-var grid = require('./grid.js')
+var Grid = require('./grid.js')
 
 
 m.route.prefix = "#"
@@ -25,7 +25,7 @@ m.route($('#main')[0], '/', {
             var base_name = args.base
             if (ds.table && ds.table.dirty) {
                 if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-                    m.route.set(grid.url)
+                    m.route.set(Grid.url)
                 }
             }
 
@@ -41,11 +41,10 @@ m.route($('#main')[0], '/', {
             var base_name = args.base
             if (ds.table && ds.table.dirty) {
                 if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-                    m.route.set(grid.url)
+                    m.route.set(Grid.url)
                 }
             }
 
-            console.log('setter config.tab = data')
             config.tab = 'data'
             ds.type = 'contents'
             delete ds.table
@@ -57,13 +56,18 @@ m.route($('#main')[0], '/', {
     "/:base/data/:table": {
         onmatch: function(args, requestedPath) {
             config.tab = 'data'
-            if (ds.table && ds.table.dirty && grid.url !== requestedPath) {
-                if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-                    m.route.set(grid.url)
-                } else {
-                    return datapanel
-                }
+
+            if (
+                ds.table && ds.table.dirty && Grid.url !== requestedPath &&
+                !confirm('Du har ulagrede data. Vil du fortsette?')
+            ) {
+                m.route.set(Grid.url)
             } else {
+                if (Grid.url != requestedPath) {
+                    Grid.load(args)
+                    Grid.url = requestedPath
+                }
+
                 return datapanel
             }
         }
