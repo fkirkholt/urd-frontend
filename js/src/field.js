@@ -34,6 +34,7 @@ var Field = {
                     if (rec.fields[name].value !== null) {
                         rec.fields[name].value = null
                         rec.fields[name].dirty = true
+                        rec.columns[name].value = null
                         rec.columns[name].text = null
                     }
                     // Get new options for select
