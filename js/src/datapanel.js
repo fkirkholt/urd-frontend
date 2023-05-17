@@ -26,7 +26,6 @@ var datapanel = {
             !ds.table.records ? '' : ds.table.search ? m(Search) : m(Record, {
                 record: ds.table.records[selected_idx]
             }),
-            m('div', {style: 'flex: 1'}),
         ]
     }
 }

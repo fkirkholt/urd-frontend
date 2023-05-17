@@ -4,11 +4,13 @@ var Field = {
 
         var field = rec.fields[field_name]
 
+        field.value = value
+
         field.dirty = true
         rec.dirty = true
         ds.table.dirty = true
 
-        // Update value in grid cell
+        // Update grid cell
         if (rec.columns && field.name in rec.columns) {
             rec.columns[field.name].text =
                 field.coltext ? field.coltext :
@@ -16,8 +18,6 @@ var Field = {
                 typeof value == "string" ? value.substring(0, 256) : value
             rec.columns[field.name].value = value
         }
-
-        field.value = value
 
         // For each select that depends on the changed field, we must set the
         // value to empty and load new options
@@ -79,11 +79,11 @@ var Field = {
             })
         }
 
-
         if (config.autosave == false) {
             return
         }
 
+        // Autosaves 
         rec.invalid = false
         rec.dirty = false
         ds.table.dirty = false

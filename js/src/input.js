@@ -1,19 +1,16 @@
 var Input = {
 
-    /**
-     * Get conditions to collect data from a foreign key field
-     *
-     * param {Object} rec - record
-     * param {Object} field - foreign key field
-     */
+    // Get condition to collect options for a foreign key field.
     get_condition: function(rec, field) {
 
-        var kandidatbetingelser = []
-        var filter
+        var conditions = []
 
+        // Find the foreign keys (usually only one) that is set on
+        // this column. This requires the column to be the last
+        // column in the foreign key.
         var keys = []
-        Object.keys(rec.table.fkeys).map(function(label) {
-            var key = rec.table.fkeys[label]
+        Object.keys(rec.table.fkeys).map(function(fk_name) {
+            var key = rec.table.fkeys[fk_name]
 
             if (key.foreign.indexOf(field.name) > 0) {
                 last_fk_col = key.foreign.slice(-1)
@@ -29,45 +26,28 @@ var Input = {
         })
 
         $.each(keys, function(idx, key) {
+            $.each(key.foreign, function(i, column) {
+                if (column === field.name) return
+                var col = rec.fields[column]
+                var cond
+                if (col.value != null && column in rec.fields) {
+                    var pkcol = field.fkey.primary.slice(-1)[0]
 
-            if (key.filter) {
-                filter = key.filter
-                $.each(rec.fields, function(name, field2) {
-                    var re = new RegExp('\\b'+field2.table+'\\.'+field2.name+
-                                        '\\b', 'g')
-                    filter = filter.replace(re, "'"+field2.value+"'")
-                    re = new RegExp('\!= null\\b', 'g')
-                    filter = filter.replace(re, 'is not null')
-                    re = new RegExp('\= null\\b', 'g')
-                    filter = filter.replace(re, 'is null')
-                })
-                kandidatbetingelser.push(filter)
-            }
-
-            if (key.foreign && key.foreign.length > 1) {
-                $.each(key.foreign, function(i, column) {
-                    var col = rec.fields[column]
-                    if (column === field.name) return
-                    var cond
-                    if (col.value != null && column in rec.fields) {
-                        var pkcol = field.fkey.primary.slice(-1)[0]
-
-                        if (key.table == field.fkey.table) {
-                            cond = key.primary[i] + " = '" + col.value + "'"
-                        } else {
-                            cond = pkcol + ' in (select ' 
-                                 + key.primary[key.foreign_idx]
-                            cond += ' from ' + key.table + ' where ' 
-                                  + key.foreign[i]
-                            cond += " = '" + col.value + "')"
-                        }
-                        kandidatbetingelser.push(cond)
+                    if (key.table == field.fkey.table) {
+                        cond = key.primary[i] + " = '" + col.value + "'"
+                    } else {
+                        cond = pkcol + ' in (select ' 
+                             + key.primary[key.foreign_idx]
+                        cond += ' from ' + key.table + ' where ' 
+                              + key.foreign[i]
+                        cond += " = '" + col.value + "')"
                     }
-                })
-            }
+                    conditions.push(cond)
+                }
+            })
         })
 
-        return kandidatbetingelser.join(' AND ')
+        return conditions.join(' AND ')
     },
 
     // Validate field and check if it's mandatory
