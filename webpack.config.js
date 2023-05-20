@@ -8,5 +8,6 @@ module.exports = {
         publicPath: "/static/js/dist/",
         filename: "bundle.js"
     },
+    devtool: 'eval-cheap-source-map',
     watch: true,
 };
