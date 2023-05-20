@@ -308,9 +308,9 @@ var Diagram = {
             return false
         }
 
-        var new_path  // TODO: hva er dette?
-        var found_path = [] // TODO: hva er dette
- 
+        var new_path
+        var found_paths = []
+
         Object.keys(table.relations).map(function(fk_name) {
 
             // make a copy of path TODO: why
@@ -343,13 +343,12 @@ var Diagram = {
                           ' : ' + fk_last_col)
 
             if (fk.table == Diagram.root) {
-                // merge found_path and new_path and remove duplicates
-                found_path = Array.from(new Set(found_path.concat(new_path)))
+                found_paths.push(new_path)
             } else {
                 // goes further in the path in search for Diagram.root
                 new_path = Diagram.get_path(fk_table, new_path)
                 if (new_path) {
-                    found_path = Array.from(new Set(found_path.concat(new_path)))
+                    found_paths.push(new_path)
                 }
             }
         })
@@ -374,7 +373,7 @@ var Diagram = {
             }
 
             if (fk.table == Diagram.root) {
-                found_path = found_path.concat(new_path)
+                found_paths.push(new_path)
             } else {
                 if (fk_table.type == 'reference') return
 
@@ -383,12 +382,23 @@ var Diagram = {
 
                 new_path = Diagram.get_path(fk_table, new_path)
                 if (new_path) {
-                    found_path = Array.from(new Set(found_path.concat(new_path)))
+                    found_paths.push(new_path)
                 }
             }
         })
 
-        return (found_path.length) ? found_path : false
+        if (found_paths.length == 0) {
+            return false
+        }
+
+        shortest_path = found_paths[0]
+        $.each(found_paths, function(i, p) {
+            if (p.length < shortest_path.length) {
+                shortest_path = p
+            }
+        })
+
+        return path.concat(shortest_path)
     },
 
     view: function() {
