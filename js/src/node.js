@@ -58,12 +58,6 @@ var Node = {
 
         if (typeof colname === 'object') {
             label = colname.label ? colname.label : label;
-            if (
-                !colname.inline && colname.expanded === undefined &&
-                config.expand_headings
-            ) {
-                colname.expanded = true;
-            }
 
             // Find number of registered fields under the heading
             var count_fields = 0;

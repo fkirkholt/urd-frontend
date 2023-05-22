@@ -8,7 +8,6 @@ var config = {
     select: Cookies.get('select') ? Cookies.get('select') : 'native',
     theme: Cookies.get('theme') ? Cookies.get('theme') : 'standard',
     compressed: Cookies.get('compressed') ? Cookies.get('compressed') : false,
-    expand_headings: Cookies.get('expand_headings') === 'true' ? 1 : 0,
     threshold: Cookies.get('threshold') ? Cookies.get('threshold') : 0,
 
     admin: false,
@@ -25,22 +24,18 @@ var config = {
         var limit = $('#limit').val()
         var select = $('#preferences [name="select"]').val()
         var theme = $('#preferences [name="theme"]').val()
-        var expand_headings = $('#preferences [name="expand_headings"]')
-            .prop('checked')
         var threshold = $('#preferences [name="threshold"]').val()/100
         if (
             limit != config.limit
             || select != config.select
             || autosave != config.autosave
             || theme != config.theme
-            || expand_headings != config.expand_headings
             || threshold != config.threshold
         ) {
             config.limit = limit ? limit : config.limit
             config.select = select
             config.autosave = autosave
             config.theme = theme
-            config.expand_headings = expand_headings
             config.threshold = threshold
             // TODO: Update grid
         }
@@ -50,7 +45,6 @@ var config = {
         Cookies.set('select', select, {expires:14})
         Cookies.set('autosave', autosave, {expires:14})
         Cookies.set('theme', theme, {expires:14})
-        Cookies.set('expand_headings', expand_headings, {expires:14})
         Cookies.set('threshold', threshold, {expires:14})
         m.redraw()
     },
@@ -72,15 +66,6 @@ var config = {
                     m('td', [
                         m('input#limit', {
                             value: config.limit
-                        })
-                    ])
-                ]),
-                m('tr', [
-                    m('td', 'Ekspander overskrifter'),
-                    m('td', [
-                        m('input[type=checkbox]', {
-                            name: 'expand_headings',
-                            checked: config.expand_headings
                         })
                     ])
                 ]),
