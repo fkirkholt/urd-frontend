@@ -11,27 +11,13 @@ var Grid = {
         var colWidth, colWidthHead, colWidthBody, colWidthFoot
 
 
-        // Remove existing width attributes
-        $headCells.each(function(i, v) {
-            $(v).css('width', '')
-        })
-        $bodyCells.each(function(i, v) {
-            $(v).children('div').css('width', '')
-        })
-        $footCells.each(function(i, v) {
-            $(v).css('width', '')
-        })
-
         // Get column widths
-
         colWidthHead = $headCells.map(function() {
             return $(this).width() + 1
         })
-
         colWidthBody = $bodyCells.map(function() {
             return $(this).width()
         }).get()
-
         colWidthFoot = $footCells.map(function() {
             return $(this).width()
         }).get()
@@ -313,7 +299,7 @@ var Grid = {
         $('div[name="sok"]').addClass('inactive')
     },
 
-    onremove: function(vnode) {
+    onremove: function() {
         // Make table load again after navigation
         // grid.url is used in datapanel.view to check if table should be loaded
         if (m.route.get() !== Grid.url) {
@@ -321,7 +307,7 @@ var Grid = {
         }
     },
 
-    view: function(vnode) {
+    view: function() {
 
         if (ds.table.search) return
 
@@ -388,7 +374,7 @@ var Grid = {
                     m('td', {
                         class: 'tc bt b--moon-gray pb0 bg-light-gray'
                     }, m.trust('Σ')),
-                    Object.keys(ds.table.grid.columns).map(function(label, idx) {                        var col = ds.table.grid.columns[label]
+                    Object.keys(ds.table.grid.columns).map(function(label) {                        var col = ds.table.grid.columns[label]
                         return m('td', {
                             class: 'tr bl bt b--moon-gray bg-light-gray f6 pa1' 
                                 +  'pb0 nowrap dib'
