@@ -51,90 +51,11 @@ var Node = {
         ])
     },
 
-    /**
-     * Validate field or heading in form
-     *
-     * @param {object} rec record
-     * @param {object|string} item what we shall validate
-     * @param {boolean} revalidate
-     */
-    validate: function(rec, item, revalidate) {
-        item.dirty = false
-        item.invalid = false
-        var parts
-        var type = typeof item === 'object'        ? 'heading'
-                 : item.indexOf('relations.') > -1 ? 'relation'
-                 : item.indexOf('actions.') > -1   ? 'action'
-                 : 'field'
-
-        switch (type) {
-        case 'heading':
-            // For headings we validate each subitem
-            Object.keys(item.items).map(function(label, idx) {
-                var subitem = item.items[label]
-
-                var status = Node.validate(rec, subitem)
-
-                if (status.dirty) item.dirty = true
-                if (status.invalid) item.invalid = true
-
-            })
-
-            return {dirty: item.dirty, invalid: item.invalid}
-        case 'relation':
-            // If relations isn't loaded yet
-            if (!rec.relations) return {dirty: false, invalid: false}
-
-            parts = item.split('.')
-            var rel_key = parts[1]
-            var rel = rec.relations[rel_key]
-            if (!rel) return {dirty: false, invalid: false}
-            if (rel.records) {
-                $.each(rel.records, function(i, rec) {
-                    if (!rec.loaded) return
-                    Record.validate(rec)
-                    if (rec.invalid) {
-                        rel.invalid = true
-                    }
-                    if (rec.dirty) {
-                        rel.dirty = true
-                    }
-                })
-            }
-            if (rel.invalid) rec.invalid = false
-            if (rel.dirty) rec.dirty = true
-
-            return {dirty: rel.dirty, invalid: rel.invalid}
-        case 'field':
-            // If record of relation isn't loaded from server yet
-            if (!rec.fields) return {dirty: false, invalid: false}
-
-            parts = item.split('.')
-            var field_name = parts.pop()
-
-            var field = rec.fields[field_name]
-
-            if (revalidate) {
-                Input.validate(field.value, field)
-            }
-            var status = {
-                dirty: field.dirty,
-                invalid: field.invalid
-            }
-
-            if (field.dirty) rec.dirty = true
-            if (field.invalid) rec.invalid = true
-
-            return status
-        case 'action':
-            return {}
-        }
-    },
-
     view: function(vnode) {
         var rec = vnode.attrs.rec
         var colname = vnode.attrs.colname
         var label = vnode.attrs.label
+
         if (typeof colname === 'object') {
             label = colname.label ? colname.label : label;
             if (
@@ -148,7 +69,7 @@ var Node = {
             var count_fields = 0;
             var count_field_values = 0;
             var count_empty_relations = 0;
-            Object.keys(colname.items).map(function(label, idx) {
+            Object.keys(colname.items).map(function(label) {
                 count_fields++;
                 var col = colname.items[label];
                 if (rec.fields[col] && rec.fields[col].value !== null) {
@@ -244,5 +165,4 @@ module.exports = Node
 var config = require('./config')
 var Field = require('./field')
 var Relation = require('./relation')
-var Record = require('./record')
 var Input = require('./input')

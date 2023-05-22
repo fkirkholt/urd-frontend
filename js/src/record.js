@@ -90,12 +90,13 @@ var Record = {
 
         // all columns and values defaults to null
         var columns = {}
-        $.each(list.grid.columns, function(i, col) {
+        for (let idx in list.grid.columns) {
+            col = list.grid.columns[idx]
             columns[col] = {
                 text: null,
                 value: null
             }
-        })
+        }
 
         // Adds record to end of table
         var idx = list.records.length
@@ -133,7 +134,8 @@ var Record = {
             } else {
                 // Sets the value to filtered value if such filter exists
                 if (!relation) {
-                    $.each(list.filters, function(idx, filter) {
+                    for (let idx in list.filters) {
+                        filter = list.filters[idx]
                         var parts = filter.field.split('.')
                         var table_name
                         var field_name
@@ -151,7 +153,7 @@ var Record = {
                         ) {
                             conditions.push(filter)
                         }
-                    })
+                    }
                 }
 
                 if (conditions.length === 1) {
@@ -194,11 +196,12 @@ var Record = {
         var active_rec = ds.table.records[selected]
         var clone = {}
         clone.fields = $.extend(true, {}, active_rec.fields)
-        $.each(clone.fields, function(name, field) {
+        for (let name in clone.fields) {
+            field = clone.fields[name]
             if (field.value) {
                 field.dirty = true
             }
-        })
+        }
         clone.columns = $.extend(true, {}, active_rec.columns)
         clone.table = ds.table
         clone.new = true
@@ -259,9 +262,9 @@ var Record = {
             params: data,
             url: 'record'
         }).then(function(data) {
-            $.each(changes.values, function(fieldname, value) {
+            for (let fieldname in changes.values) {
                 rec.fields[fieldname].dirty = false
-            })
+            }
             rec.new = false
             $.each(data.values, function(fieldname, value) {
                 rec.fields[fieldname].value = value
@@ -280,27 +283,32 @@ var Record = {
         })
     },
 
-    /**
-     * Validates record
-     *
-     * @param {object} rec record
-     * @param {boolean} revalidate
-     */
-    validate: function(rec, revalidate) {
-        rec.invalid = false
-        rec.dirty = rec.delete ? true : false
+    validate: function(record) {
+        var rel
+        var rec
+        
+        record.invalid = false
+        record.dirty = record.delete ? true : false
+        
+        for (let fieldname in record.fields) {
+            field = record.fields[fieldname]
+            Input.validate(field.value, field)
+            if (field.dirty) record.dirty = true
+            if (field.invalid) record.invalid = true
+        }
 
-        var items = rec.table.form.items || []
-
-        $.each(items, function(i, item) {
-            var status = Node.validate(rec, item, revalidate)
-
-            if (status.dirty || status.invalid) {
-                item.dirty = status.dirty
-                item.invalid = status.invalid
+        for (let relname in record.relations) {
+            rel = record.relations[relname]
+            for (let idx in rel.records) {
+                rec = rel.records[idx]
+                Record.validate(rec)
+                if (rec.dirty) rel.dirty = true
+                if (rec.invalid) rel.invalid = true
             }
 
-        })
+            if (rel.dirty) record.dirty = true
+            if (rel.invalid) record.invalid = true
+        }
     },
 
     get_changes: function(rec, traverse) {
@@ -338,11 +346,12 @@ var Record = {
                 primary: rec.table.relations[alias].primary,
                 records: []
             }
-            $.each(rel.records, function(i, subrec) {
+            for (let idx in rel.records) {
+                subrec = rel.records[idx]
                 if (!subrec.dirty) return
                 subrec_changes = Record.get_changes(subrec, true)
                 changed_rel.records.push(subrec_changes)
-            })
+            }
             changes.relations[alias] = changed_rel
         })
 
@@ -447,7 +456,7 @@ var Record = {
                 style: '-ms-overflow-style:-ms-autohiding-scrollbar'
             }, [
                 m('tbody', [
-                    Object.keys(rec.table.form.items).map(function(label, idx) {
+                    Object.keys(rec.table.form.items).map(function(label) {
                         var item = rec.table.form.items[label]
 
                         if (
@@ -473,3 +482,4 @@ var Grid = require('./grid')
 var Toolbar = require('./toolbar')
 var Node = require('./node')
 var Field = require('./field')
+var Input = require('./input')

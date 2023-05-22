@@ -238,7 +238,7 @@ var Grid = {
         $.each(ds.table.records, function(idx, rec) {
             if (!rec.dirty && !rec.new) return
 
-            Record.validate(rec, true)
+            Record.validate(rec)
 
             if (rec.invalid) {
                 invalid = true
