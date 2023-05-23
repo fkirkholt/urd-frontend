@@ -466,7 +466,24 @@ var Record = {
                         ) {
                             return
                         }
-                        return m(Node, {rec: rec, colname: item, label: label})
+
+                        if (typeof item == 'object') {
+                            return m(Fieldset, {
+                                rec: rec, 
+                                fieldset: item, 
+                                label: label
+                            })
+                        } else if (
+                            typeof item == "string" && 
+                            item.includes('relations')
+                        ) {
+                            return m(Relation, {rec: rec, ref: item, label: label})
+                        } else if (typeof item == "string" && item.includes('actions')) {
+                            // TODO
+                        } else {
+                            return m(Field, {rec: rec, colname: item, label: label})
+                        }
+
                     })
                 ])
             ])
@@ -480,6 +497,7 @@ var config = require('./config')
 var merge = require('just-merge')
 var Grid = require('./grid')
 var Toolbar = require('./toolbar')
-var Node = require('./node')
+var Fieldset = require('./node')
 var Field = require('./field')
 var Input = require('./input')
+var Relation = require('./relation')

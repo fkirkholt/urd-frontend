@@ -165,7 +165,7 @@ var Relation = {
                                 if (rel.fields[key].defines_relation) {
                                     return
                                 }
-                                return m(Node, {
+                                return m(Field, {
                                     rec: rec, colname: key, label: label
                                 })
                             })
@@ -194,9 +194,9 @@ var Relation = {
 
     view: function(vnode) {
         var rec = vnode.attrs.rec
-        var colname = vnode.attrs.colname
+        var ref = vnode.attrs.ref
         var label = vnode.attrs.label
-        var key = colname.replace('relations.', '')
+        var key = ref.replace('relations.', '')
         var rel = rec.relations && rec.relations[key] 
             ? rec.relations[key] : null
         if (rel === null) {
@@ -337,4 +337,4 @@ var Record = require('./record')
 var Row = require('./row')
 var ds = require('./datastore')
 var config = require('./config')
-var Node = require('./node')
+var Field = require('./field')

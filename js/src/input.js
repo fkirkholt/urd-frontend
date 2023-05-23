@@ -25,7 +25,9 @@ var Input = {
             }
         })
 
-        $.each(keys, function(idx, key) {
+        // Sets conditions based on values of the other
+        // columns in the foreign key
+        keys.forEach(function(key) {
             $.each(key.foreign, function(i, column) {
                 if (column === field.name) return
                 var col = rec.fields[column]
