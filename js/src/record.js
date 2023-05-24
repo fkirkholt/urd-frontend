@@ -286,6 +286,7 @@ var Record = {
     validate: function(record) {
         var rel
         var rec
+        var field
         
         record.invalid = false
         record.dirty = record.delete ? true : false
@@ -293,21 +294,35 @@ var Record = {
         for (let fieldname in record.fields) {
             field = record.fields[fieldname]
             Input.validate(field.value, field)
-            if (field.dirty) record.dirty = true
-            if (field.invalid) record.invalid = true
+            if (field.dirty) {
+                record.dirty = true
+            }
+            if (field.invalid) {
+                record.invalid = true
+            }
         }
 
         for (let relname in record.relations) {
             rel = record.relations[relname]
+            rel.invalid = false
+            rel.dirty = false
             for (let idx in rel.records) {
                 rec = rel.records[idx]
                 Record.validate(rec)
-                if (rec.dirty) rel.dirty = true
-                if (rec.invalid) rel.invalid = true
+                if (rec.dirty) {
+                    rel.dirty = true
+                }
+                if (rec.invalid) {
+                    rel.invalid = true
+                }
             }
 
-            if (rel.dirty) record.dirty = true
-            if (rel.invalid) record.invalid = true
+            if (rel.dirty) {
+                record.dirty = true
+            }
+            if (rel.invalid) {
+                record.invalid = true
+            }
         }
     },
 
