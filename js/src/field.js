@@ -198,6 +198,53 @@ var Field = {
         })
     },
 
+    // Get url to foreign key field
+    get_url: function(field) {
+        var url
+        if (field.fkey) {
+            if (
+                ds.base.system == 'postgres' &&
+                field.fkey.schema &&
+                field.fkey.schema != field.fkey.base &&
+                field.fkey.schema != 'public'
+            ) {
+                base = field.fkey.base + '.' + field.fkey.schema
+            } else if (ds.base.system == 'sqlite3') {
+                base = ds.base.name
+            } else {
+                base = field.fkey.base || field.fkey.schema
+            }
+            url = '#/' + base + '/data/' + field.fkey.table + '?'
+            $.each(field.fkey.primary, function(i, colname) {
+                var fk_field = field.fkey.foreign[i]
+                url += colname + '=' + rec.fields[fk_field].value
+                if (i !== field.fkey.primary.length - 1 ) url += '&'
+            })
+        }
+
+        return url
+    },
+
+    is_mandatory: function(field) {
+        // TODO: Hva gjør jeg med rights her?
+        var mandatory = !field.nullable && !field.extra && field.editable 
+                        && !field.source == true
+
+        return mandatory
+    },
+
+    // Get percentage with precision 2 from number
+    get_percentage: function(number) {
+        var percentage
+        if (number == 1) {
+            percentage = 100
+        } else if (number) {
+            percentage = (number * 100).toPrecision(2)
+        }
+
+        return percentage
+    },
+
     view: function(vnode) {
         var rec = vnode.attrs.rec
         var colname = vnode.attrs.colname
@@ -205,6 +252,7 @@ var Field = {
         // var field = $.extend({}, rec.fields[colname])
         var field = rec.fields[colname]
 
+        // Can have virtual columns from a view to be shown in grid
         if (field.virtual) {
             field.text = rec.columns[colname].text
         }
@@ -225,39 +273,6 @@ var Field = {
         // Show hidden fields only in edit mode
         if (rec.table.fields[colname].hidden && !config.edit_mode) return
 
-        // TODO: Hva gjør jeg med rights her?
-        var mandatory = !field.nullable && !field.extra && field.editable 
-                        && !field.source == true
-        label = isNaN(parseInt(label)) ? label: field.label
-
-        if (field.fkey) {
-            if (
-                ds.base.system == 'postgres' &&
-                field.fkey.schema &&
-                field.fkey.schema != field.fkey.base &&
-                field.fkey.schema != 'public'
-            ) {
-                base = field.fkey.base + '.' + field.fkey.schema
-            } else if (ds.base.system == 'sqlite3') {
-                base = ds.base.name
-            } else {
-                base = field.fkey.base || field.fkey.schema
-            }
-            var url = '#/' + base + '/data/' + field.fkey.table + '?'
-            $.each(field.fkey.primary, function(i, colname) {
-                var fk_field = field.fkey.foreign[i]
-                url += colname + '=' + rec.fields[fk_field].value
-                if (i !== field.fkey.primary.length - 1 ) url += '&'
-            })
-        }
-
-        var use
-        if (field.use == 1) {
-            use = 100
-        } else if (field.use) {
-            use = (field.use * 100).toPrecision(2)
-        }
-
         return [
             // TODO: sto i utgangspunktet list.betingelse. 
             // Finn ut hva jeg skal erstatte med.
@@ -265,6 +280,7 @@ var Field = {
                 !config.edit_mode && config.hide_empty 
                 && field.value === null
             ) ? '' : m('tr', [
+                // Show expansion icon
                 m('td', {class: 'tc v-top'}, [
                     !field.fkey || !field.expandable || 
                     field.value === null ? null : m('i.fa.w1', {
@@ -274,6 +290,7 @@ var Field = {
                         onclick: Field.toggle_fkey.bind(this, rec, colname)
                     }),
                 ]),
+                // Show label
                 m('td.label', {
                     class: [
                         'f6 pr1 v-top w1',
@@ -293,9 +310,10 @@ var Field = {
                         : label,
                     !field.use || !config.admin ? '' : m('span', {
                         class: 'ml2 light-silver'
-                    }, '(' + use + '%)'),
+                    }, '(' + Field.get_percentage(field.use) + '%)'),
                     ':'
                 ]),
+                // Show icons signifying mandatory, modified, or illegal value
                 m('td', {
                     class: 'v-top'
                 }, [
@@ -308,10 +326,11 @@ var Field = {
                         })
                     : field.dirty 
                         ? m('i', {class: 'fa fa-pencil ml1 light-gray'})
-                    : mandatory && config.edit_mode
+                    : Field.is_mandatory(field) && config.edit_mode
                         ? m('i', {class: 'fa fa-asterisk f7 light-gray'})
                     : ''
                 ]),
+                // Show field value
                 m('td', {
                     class: [
                         'max-w7 w-100',
@@ -341,7 +360,7 @@ var Field = {
                     : m('a', {
                         class: 'icon-crosshairs light-blue hover-blue ' 
                              + 'pointer link',
-                        href: url
+                        href: Field.get_url(field)
                     }),
 
                     // Show trash bin for field from cross reference table
@@ -360,6 +379,7 @@ var Field = {
                     })),
                 ])
             ]),
+            // Expanded record
             !field.fkey || !field.expanded ? null : m('tr', [
                 m('td'),
                 m('td', {
