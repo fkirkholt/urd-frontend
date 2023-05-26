@@ -1,10 +1,10 @@
 var diagrampanel = {
-    view: function(vnode) {
-        return [
-            m(Contents),
-            m(Diagram)
-        ]
-    }
+  view: function(vnode) {
+    return [
+      m(Contents),
+      m(Diagram)
+    ]
+  }
 }
 
 module.exports = diagrampanel

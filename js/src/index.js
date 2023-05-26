@@ -19,105 +19,105 @@ var Grid = require('./grid.js')
 
 m.route.prefix = "#"
 m.route($('#main')[0], '/', {
-    "/": {
-        onmatch: function(args, requestedPath) {
-            ds.type = 'dblist'
-            return home
-        }
-    },
-    "/:base": {
-        onmatch: function(args, requestedPath) {
-            var base_name = args.base
-            if (ds.table && ds.table.dirty) {
-                if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-                    m.route.set(Grid.url)
-                }
-            }
-
-            ds.type = 'contents'
-            delete ds.table
-            ds.load_database(base_name)
-
-            return contents
-        }
-    },
-    "/:base/data": {
-        onmatch: function(args, requestedPath) {
-            var base_name = args.base
-            if (ds.table && ds.table.dirty) {
-                if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-                    m.route.set(Grid.url)
-                }
-            }
-
-            config.tab = 'data'
-            ds.type = 'contents'
-            delete ds.table
-            ds.load_database(base_name)
-
-            return contents
-        }
-    },
-    "/:base/data/:table": {
-        onmatch: function(args, requestedPath) {
-            config.tab = 'data'
-            ds.type = 'table'
-
-            if (
-                ds.table && ds.table.dirty && Grid.url !== requestedPath &&
-                !confirm('Du har ulagrede data. Vil du fortsette?')
-            ) {
-                m.route.set(Grid.url)
-            } else {
-                if (Grid.url != requestedPath) {
-                    Grid.load(args)
-                    Grid.url = requestedPath
-                }
-
-                return datapanel
-            }
-        }
-    },
-    "/:base/diagram": {
-        onmatch: function(args, requestedPath) {
-            config.tab = 'diagram'
-            if (args.base != ds.base.name) {
-                ds.load_database(args.base)
-            }
-            delete ds.table
-            Diagram.def = ""
-
-            return diagrampanel
-        }
-    },
-    "/:base/diagram/:table": {
-        onmatch: function(args, requestedPath) {
-            var base_name = args.base
-            config.tab = 'diagram'
-            if (base_name != ds.base.name) {
-                ds.load_database(base_name)
-            }
-            Diagram.def = ""
-            config.tab = 'diagram'
-
-            return diagrampanel
-        }
-    },
-    "/:base/sql": {
-        onmatch: function(args, requestedPath) {
-            var base_name = args.base
-            config.tab = 'sql'
-            ds.load_database(base_name)
-            config.tab = 'sql'
-            return SQLpanel
-        }
+  "/": {
+    onmatch: function(args, requestedPath) {
+      ds.type = 'dblist'
+      return home
     }
+  },
+  "/:base": {
+    onmatch: function(args, requestedPath) {
+      var base_name = args.base
+      if (ds.table && ds.table.dirty) {
+        if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
+          m.route.set(Grid.url)
+        }
+      }
+
+      ds.type = 'contents'
+      delete ds.table
+      ds.load_database(base_name)
+
+      return contents
+    }
+  },
+  "/:base/data": {
+    onmatch: function(args, requestedPath) {
+      var base_name = args.base
+      if (ds.table && ds.table.dirty) {
+        if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
+          m.route.set(Grid.url)
+        }
+      }
+
+      config.tab = 'data'
+      ds.type = 'contents'
+      delete ds.table
+      ds.load_database(base_name)
+
+      return contents
+    }
+  },
+  "/:base/data/:table": {
+    onmatch: function(args, requestedPath) {
+      config.tab = 'data'
+      ds.type = 'table'
+
+      if (
+        ds.table && ds.table.dirty && Grid.url !== requestedPath &&
+        !confirm('Du har ulagrede data. Vil du fortsette?')
+      ) {
+        m.route.set(Grid.url)
+      } else {
+        if (Grid.url != requestedPath) {
+          Grid.load(args)
+          Grid.url = requestedPath
+        }
+
+        return datapanel
+      }
+    }
+  },
+  "/:base/diagram": {
+    onmatch: function(args, requestedPath) {
+      config.tab = 'diagram'
+      if (args.base != ds.base.name) {
+        ds.load_database(args.base)
+      }
+      delete ds.table
+      Diagram.def = ""
+
+      return diagrampanel
+    }
+  },
+  "/:base/diagram/:table": {
+    onmatch: function(args, requestedPath) {
+      var base_name = args.base
+      config.tab = 'diagram'
+      if (base_name != ds.base.name) {
+        ds.load_database(base_name)
+      }
+      Diagram.def = ""
+      config.tab = 'diagram'
+
+      return diagrampanel
+    }
+  },
+  "/:base/sql": {
+    onmatch: function(args, requestedPath) {
+      var base_name = args.base
+      config.tab = 'sql'
+      ds.load_database(base_name)
+      config.tab = 'sql'
+      return SQLpanel
+    }
+  }
 })
 
 window.onbeforeunload = function(event) {
-    if (ds.table && ds.table.dirty) {
-        event.returnValue = "Du har ulagrede endringer i listen din"
-    }
+  if (ds.table && ds.table.dirty) {
+    event.returnValue = "Du har ulagrede endringer i listen din"
+  }
 }
 
 var $header = $('#header')

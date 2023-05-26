@@ -1,33 +1,33 @@
 
 var datapanel = {
-    view: function(vnode) {
+  view: function(vnode) {
 
-        if (!ds.table) return
+    if (!ds.table) return
 
-        var selected_idx = ds.table.selection !== null ? ds.table.selection : 0
+    var selected_idx = ds.table.selection !== null ? ds.table.selection : 0
 
-        return !ds.table.records ? m('div', 'laster ...') : [
-            m(Contents),
-            ds.table.search || ds.table.edit
-                ? ''
-                : m('div#gridpanel', {
-                    class: 'flex flex-column ml2',
-                    style: [
-                        'background: #f9f9f9',
-                        'border: 1px solid lightgray',
-                        ds.table.hide ? 'display: none' : ''
-                    ].join(';')
-                }, [
-                    m(Toolbar),
-                    m(Grid),
-                    m(Pagination)
-                ]),
+    return !ds.table.records ? m('div', 'laster ...') : [
+      m(Contents),
+      ds.table.search || ds.table.edit
+        ? ''
+        : m('div#gridpanel', {
+          class: 'flex flex-column ml2',
+          style: [
+            'background: #f9f9f9',
+            'border: 1px solid lightgray',
+            ds.table.hide ? 'display: none' : ''
+          ].join(';')
+        }, [
+          m(Toolbar),
+          m(Grid),
+          m(Pagination)
+        ]),
 
-            !ds.table.records ? '' : ds.table.search ? m(Search) : m(Record, {
-                record: ds.table.records[selected_idx]
-            }),
-        ]
-    }
+      !ds.table.records ? '' : ds.table.search ? m(Search) : m(Record, {
+        record: ds.table.records[selected_idx]
+      }),
+    ]
+  }
 }
 
 module.exports = datapanel
