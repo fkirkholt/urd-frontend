@@ -1,20 +1,20 @@
 var Toolbar = {
 
     oninit: function() {
-        mousetrap(document.body).bind('mod+s', function(e) {
+        mousetrap(document.body).bind('mod+s', function() {
             Grid.save()
             return false
         })
-        mousetrap(document.body).bind('mod+n', function(e) {
+        mousetrap(document.body).bind('mod+n', function() {
             Record.create(ds.table)
             return false
         })
-        mousetrap(document.body).bind('mod+f', function(e) {
+        mousetrap(document.body).bind('mod+f', function() {
             ds.table.search = true
             m.redraw()
             return false
         })
-        mousetrap(document.body).bind('esc', function(e) {
+        mousetrap(document.body).bind('esc', function() {
             $('#urdgrid tr.focus').trigger('focus')
         })
     },
@@ -160,11 +160,9 @@ var Toolbar = {
         }
     },
 
-    view: function(vnode) {
+    // Get search parameters to be shown in the search field
+    get_search: function() {
         var search_params
-
-        if (!ds.table || !ds.table.records || ds.type === 'dblist') return
-
         var param = m.route.param()
         var search = param['query'] ? param['query'].replace('%3D', '=') : null
         if (!('query' in param) && !('where' in param)) {
@@ -175,24 +173,23 @@ var Toolbar = {
             })
             search = search_params.join(' AND ')
         }
+
+        return search
+    },
+
+    view: function(vnode) {
+
+        if (!ds.table || !ds.table.records || ds.type === 'dblist') return
+
         var idx = ds.table.selection
         var rec = ds.table.records[idx]
-        var deletable = rec && rec.relations ? true : false
 
         // Table can just hold one row if last pkey column starts with 'const_'
         var single_rec = ds.table.pkey.slice(-1)[0].substr(0,6) == 'const_'
         var full = single_rec && ds.table.records.length
 
-        if (rec && rec.relations) {
-            $.each(rec.relations, function(idx, rel) {
-                var count_local = rel.count_records - rel.count_inherited
-                if (count_local && rel.delete_rule != "cascade") {
-                    deletable = false
-                }
-            })
-        }
-
         return m('ul', {target: '_blank', class: 'flex f6 list pl1 mt1 mb1'}, [
+            // Make form to use with submit action
             m('li', [
                 m('form#action', [
                     m('input', {
@@ -208,6 +205,8 @@ var Toolbar = {
                     m('input', {type: 'hidden', name: 'pkey'}),
                 ]),
             ]),
+            // Button for expanding or compressing grid.
+            // A compressed grid has no word wrap and shortens text
             ds.table.hide  ? '' : m('i', {
                 class: 'ml1 mr2 fa pointer ' 
                     + (config.compressed ? 'fa-expand' : 'fa-compress'),
@@ -216,6 +215,7 @@ var Toolbar = {
                     config.compressed = !config.compressed
                 }
             }),
+            // Button for opening search
             m('i', {
                 class: 'fa fa-search ml1 mr2 pointer dim',
                 title: 'Søk',
@@ -224,9 +224,10 @@ var Toolbar = {
                     ds.table.search = !ds.table.search
                 }
             }),
+            // Search field
             ds.table.hide ? '' : m('input[type=search]', {
                 placeholder: "Søk i alle tekstfelter",
-                value: search,
+                value: Toolbar.get_search(),
                 style: 'flex: 1',
                 onfocus: function(event) {
                     event.target.select()
@@ -239,6 +240,7 @@ var Toolbar = {
 
                 }
             }),
+            // Button for creating new record
             m('li', {class: 'dib'}, [
                 m('i', {
                     class: [
@@ -267,6 +269,7 @@ var Toolbar = {
                     }
                 })
             ]),
+            // Button for copying selected record
             m('li', {class: 'dib'}, [
                 m('i', {
                     class: [
@@ -285,6 +288,7 @@ var Toolbar = {
                     }
                 })
             ]),
+            // Button for editing selected record
             !config.edit_mode ? m('li', {class: 'dib'}, [
                 m('i', {
                     class: [
@@ -299,6 +303,7 @@ var Toolbar = {
                     }
                 })
             ]) : '',
+            // Button for saving all changes
             m('li', {class: 'dib'}, [
                 config.autosave || !config.edit_mode ? '' : [
                     m('i', {
@@ -314,17 +319,20 @@ var Toolbar = {
                     })
                 ]
             ]),
+            // Button for deleting selected record
             ds.table.hide ? '' : m('li', {class: 'dib'}, [
                 m('i', {
                     class: [
                         'fa fa-trash-o ml2 mr1',
-                        (ds.table.privilege.delete == true && deletable)
+                        (ds.table.privilege.delete == true && 
+                            rec && Record.is_deletable(rec))
                             ? 'dim pointer' : 'moon-gray'
                     ].join(' '),
                     title: 'Slett post',
                     onclick: Toolbar.delete_record
                 })
             ]),
+            // Button for printing page
             m('li', {class: 'dib'}, [
                 m('i', {
                     class: 'fa fa-print ml1 mr2 pointer dim',
@@ -333,6 +341,7 @@ var Toolbar = {
                     }
                 })
             ]),
+            // Button for more actions
             m('li', {class: 'dib relative'}, [
                 m('i', {
                     class: 'fa fa-cog ml2 mr1 pointer dim',
@@ -378,12 +387,6 @@ var Toolbar = {
                     })
                 ])
             ]),
-            m('li.dib', m('i.reload', {
-                hidden: true,
-                onclick: function() {
-                    Grid.update(ds.table, {})
-                }
-            })),
             // When single record is shown.
             // NOTE: show_record is never set, so this never shows
             !config.show_record ? '' : m('li.dib', {

@@ -405,6 +405,20 @@ var Record = {
         });
     },
 
+    is_deletable: function(rec) {
+        var deletable = rec.relations ? true : false
+        
+        for (let idx in rec.relations) {
+            rel = rec.relations[idx]
+            var count_local = rel.count_records - rel.count_inherited
+            if (count_local && rel.delete_rule != "cascade") {
+                deletable = false
+            }
+        }
+
+        return deletable
+    },
+
     view: function(vnode) {
         var rec = vnode.attrs.record
 
