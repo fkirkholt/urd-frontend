@@ -296,9 +296,11 @@ var Relation = {
           colspan: 3
         }, [
           label,
-          rel.count_records !== undefined && rel.relationship == '1:M'
-            ? m('span', { class: 'ml1 pr1 normal moon-gray f7' },
-              rel.count_records)
+          rel.count_records !== undefined
+            ? m('span', { class: 'ml1 pr1 normal moon-gray f7' }, [
+                rel.count_records,
+                rel.relationship == '1:1' ? ':1' : ''
+              ])
             : '',
           // show target icon for relations
           !rel.name ? '' :
