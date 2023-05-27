@@ -10,6 +10,16 @@ var Grid = {
     var $footCells = $table.find('tfoot tr').children()
     var colWidth, colWidthHead, colWidthBody, colWidthFoot
 
+    // Remove existing width attributes
+    $headCells.each(function(i, v) {
+      $(v).css('width', '')
+    })
+    $bodyCells.each(function(i, v) {
+      $(v).children('div').css('width', '')
+    })
+    $footCells.each(function(i, v) {
+      $(v).css('width', '')
+    })
 
     // Get column widths
     colWidthHead = $headCells.map(function() {
@@ -332,14 +342,15 @@ var Grid = {
               return m('th', '')
             }
 
+<<<<<<< HEAD
             if (field.hidden) return
 
             var label = isNaN(parseInt(label))
               ? label : ds.table.fields[col].label
                 ? ds.table.fields[col].label : col
             return m('th', {
-              class: 'tl br b--moon-gray bg-light-gray f6 pa1 pb0' 
-                   + 'nowrap truncate dib',
+              class: 'tl br b--moon-gray bg-light-gray f6 pa1 pb0'
+                + 'nowrap truncate dib',
               onclick: Grid.sort.bind(Grid, col)
             }, m('div', { class: 'flex' }, [
               m('span', {
@@ -389,6 +400,95 @@ var Grid = {
       ])
     ])]
   }
+=======
+    onremove: function(vnode) {
+        // Make table load again after navigation
+        // grid.url is used in datapanel.view to check if table should be loaded
+        if (m.route.get() !== Grid.url) {
+            Grid.url = ''
+        }
+    },
+
+    view: function(vnode) {
+
+        if (ds.table.search) return
+
+        return [m('table#urdgrid.tbl', {
+            class: 'max-w10 bt b--moon-gray flex flex-column overflow-auto '
+                 + 'collapse',
+            style: 'background: #f9f9f9',
+        }, [
+            m('thead', {class: 'db'}, [
+                m('tr', {class: 'cursor-default bb b-moon-gray'}, [
+                    m('th', {class: 'tl br b--moon-gray bg-light-gray normal f6'
+                                  + 'pa0 w1'}, ''),
+                    Object.keys(ds.table.grid.columns).map(function(label) {
+                        var col = ds.table.grid.columns[label]
+
+                        var field = ds.table.fields[col]
+
+                        // If this is for instance an action
+                        if (field === undefined) {
+                            return m('th', '')
+                        }
+
+                        if (field.hidden) return
+
+                        var label = isNaN(parseInt(label))
+                            ? label : ds.table.fields[col].label
+                            ? ds.table.fields[col].label : col
+                        return m('th', {
+                            class: 'tl br b--moon-gray bg-light-gray f6 pa1 pb0'                                  + 'nowrap truncate dib',
+                            onclick: Grid.sort.bind(Grid, col)
+                        }, m('div', {class: 'flex'}, [
+                            m('span', {
+                                class: "flex-auto truncate",
+                                title: label
+                            }, label), [
+                                !Grid.column_order(col) ? '' : m('i', {
+                                    class: 'pl1 di fa fa-angle-'
+                                        + (Grid.column_order(col) === 'asc'
+                                                ? 'down' : 'up')
+                                })
+                            ]
+                        ]))
+                    }),
+                    !ds.table.grid.actions.length
+                        ? ''
+                        : m('th', {
+                            class: 'br bb b--moon-gray bg-light-gray f6 pa0'
+                        })
+                ])
+            ]),
+            m('tbody', {class: 'db overflow-y-auto overflow-x-hidden'}, [
+                ds.table.records.map(function(record, idx) {
+                    record.base_name = ds.base.name
+                    record.table_name = ds.table.name
+                    if (record.dirty) Record.validate(record)
+
+                    return record.hidden
+                            ? ''
+                            : m(Row, {list: ds.table, record: record, idx: idx})
+                })
+            ]),
+            (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
+                m('tr', {class: 'bg--light-gray'}, [
+                    m('td', {
+                        class: 'tc bt b--moon-gray pb0 bg-light-gray'
+                    }, m.trust('Σ')),
+                    Object.keys(ds.table.grid.columns).map(function(label, idx) {                        var col = ds.table.grid.columns[label]
+                        return m('td', {
+                            class: 'tr bl bt b--moon-gray bg-light-gray f6 pa1'
+                                +  'pb0 nowrap dib'
+                        }, (col in ds.table.grid.sums)
+                                ? m.trust(String(ds.table.grid.sums[col]))
+                                : m.trust('&nbsp'))
+                    })
+                ])
+            ])
+        ])]
+    }
+>>>>>>> parent of 85a087b... Remove unnecessary code for th alignment
 }
 
 module.exports = Grid
