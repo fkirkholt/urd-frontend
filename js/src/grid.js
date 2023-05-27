@@ -23,8 +23,8 @@ var Grid = {
 
     // Get column widths
     colWidthHead = $headCells.map(function() {
-      return $(this).width() + 1
-    })
+      return $(this).width()
+    }).get()
     colWidthBody = $bodyCells.map(function() {
       return $(this).width()
     }).get()
@@ -63,7 +63,10 @@ var Grid = {
 
     // Set the width of thead columns
     $table.find('thead tr').children().each(function(i, v) {
-      $(v).width(colWidth[i])
+      // Add 0,8 to th width because of margin width
+      if (colWidth[i] > (colWidthHead[i] + 0.8)) {
+        $(v).width(colWidth[i])
+      }
     })
 
 
@@ -348,8 +351,10 @@ var Grid = {
               ? label : ds.table.fields[col].label
                 ? ds.table.fields[col].label : col
             return m('th', {
-              class: 'tl br b--moon-gray bg-light-gray f6 pa1 pb0'
-                + 'nowrap truncate dib',
+              class: [
+                'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
+                config.compressed ? 'truncate' : '',
+              ].join(' '),
               onclick: Grid.sort.bind(Grid, col)
             }, m('div', { class: 'flex' }, [
               m('span', {
