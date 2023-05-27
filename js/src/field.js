@@ -202,7 +202,7 @@ var Field = {
   },
 
   // Get url to foreign key field
-  get_url: function(field) {
+  get_url: function(field, rec) {
     var url
     if (field.fkey) {
       if (
@@ -358,7 +358,7 @@ var Field = {
             ? ''
             : m('a', {
               class: 'icon-crosshairs light-blue hover-blue pointer link',
-              href: Field.get_url(field)
+              href: Field.get_url(field, rec)
             }),
 
           // Show trash bin for field from cross reference table
