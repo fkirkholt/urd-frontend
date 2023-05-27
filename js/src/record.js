@@ -289,16 +289,14 @@ var Record = {
     var field
 
     record.invalid = false
-    record.dirty = record.delete ? true : false
 
-    for (let fieldname in record.fields) {
-      field = record.fields[fieldname]
-      Input.validate(field.value, field)
-      if (field.dirty) {
-        record.dirty = true
-      }
-      if (field.invalid) {
-        record.invalid = true
+    if (record.dirty) {
+      for (let fieldname in record.fields) {
+        field = record.fields[fieldname]
+        Input.validate(field.value, field)
+        if (field.invalid) {
+          record.invalid = true
+        }
       }
     }
 
