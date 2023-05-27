@@ -291,7 +291,6 @@ var Relation = {
         m('td.label', {
           class: [
             "f6 nowrap pr2",
-            rel.relationship == '1:M' ? 'b' : ''
           ].join(' '),
           colspan: 3
         }, [
