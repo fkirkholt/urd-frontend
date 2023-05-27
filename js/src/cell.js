@@ -52,7 +52,8 @@ var Cell = {
           ? 'nowrap' : '',
         compressed && value.length > 30 ? 'pt0 pb0' : '',
         vnode.attrs.border ? 'br b--light-gray' : '',
-        ds.table.sort_fields[colname] ? 'min-w3' : 'min-w2 f6 pl1 pr1',
+        ds.table.sort_fields[colname] ? 'min-w3' : 'min-w2',
+        'f6 pl1 pr1',
         get(field, 'attrs.class') ? field.attrs.class : ''
       ].join(' '),
       title: compressed && value.length > 30 ? value : ''
