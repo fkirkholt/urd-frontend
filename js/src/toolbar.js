@@ -162,7 +162,7 @@ var Toolbar = {
   get_search: function() {
     var search_params
     var param = m.route.param()
-    var search = param['query'] ? param['query'].replace('%3D', '=') : null
+    var search = param['query'] ? param['query'].replace(/%3D/g, '=') : null
     if (!('query' in param) && !('where' in param)) {
       search_params = []
       $.each(param, function(key, value) {
@@ -233,9 +233,7 @@ var Toolbar = {
         onchange: function(event) {
           var value = event.target.value
           m.route.set('/' + ds.base.name + '/data/' + ds.table.name +
-            '?query=' +
-            encodeURI(value.replace(/=/g, '%3D')))
-
+            '?query=' + encodeURI(value.replace(/=/g, '%3D')))
         }
       }),
       // Button for creating new record
