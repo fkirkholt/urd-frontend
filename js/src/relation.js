@@ -191,27 +191,10 @@ var Relation = {
     ])
   },
 
-  view: function(vnode) {
-    var rec = vnode.attrs.rec
-    var ref = vnode.attrs.ref
-    var label = vnode.attrs.label
-    var key = ref.replace('relations.', '')
-    var rel = rec.relations && rec.relations[key]
-      ? rec.relations[key] : null
-    if (rel === null) {
-      return
-    }
-
-    var table = ds.base.tables[rec.table_name]
+  // Decide if the relation represents a direct descendant
+  is_direct: function(rel, table) {
+    var result = true
     var rel_table = ds.base.tables[rel.name]
-    var usage = rec.table.relations[key].use
-    var skip = false
-
-
-    if (usage && usage < config.threshold) {
-      return
-    }
-
     var rel_tables = []
 
     Object.values(table.relations).map(function(relation) {
@@ -221,31 +204,20 @@ var Relation = {
     })
 
     // Removes relations that represents grand children and down
-    if (config.simplified_hierarchy) {
-      Object.keys(rel_table.fkeys).map(function(name) {
-        var rel_fk = rel_table.fkeys[name]
-        if (rel_tables.includes(rel_fk.table)) {
-          skip = true
-        }
-      })
-    }
+    Object.keys(rel_table.fkeys).map(function(name) {
+      var rel_fk = rel_table.fkeys[name]
+      if (rel_tables.includes(rel_fk.table)) {
+        result = false
+      }
+    })
 
-    if (skip) {
-      return
-    }
+    return result
+  },
 
-    if (rel.show_if) {
-      hidden = false
-      Object.keys(rel.show_if).map(function(key) {
-        value = rel.show_if[key]
-        if (rec.fields[key].value != value) {
-          hidden = true
-        }
-      })
-      if (hidden) return ''
-    }
-
+  get_url: function(rel) {
+    var url
     var base_path
+    var conditions
     if (
       ds.base.system == 'postgres' &&
       rel.schema_name &&
@@ -255,7 +227,7 @@ var Relation = {
     } else {
       base_path = rel.base_name || rel.schema_name
     }
-    var url = '#/' + base_path + '/data/' + rel.name + '?'
+    url = '#/' + base_path + '/data/' + rel.name + '?'
 
     conditions = []
     if (rel.conds) {
@@ -268,6 +240,57 @@ var Relation = {
 
     if (conditions) {
       url += conditions.join('&')
+    }
+
+    return url
+  },
+
+  is_hidden: function(rel, rec) {
+    var hidden = false
+
+    // Check if the relation is dependent on a special value
+    // being set on field in the record the foreign key links to.
+    // This is the case if a column in the foreign key is a constant,
+    // defined by field name starting with `_` or `const_` and has a
+    // default value.
+    if (rel.show_if) {
+      hidden = false
+      Object.keys(rel.show_if).map(function(key) {
+        value = rel.show_if[key]
+        if (rec.fields[key].value != value) {
+          hidden = true
+        }
+      })
+    }
+
+    return hidden
+  },
+
+  view: function(vnode) {
+    var rec = vnode.attrs.rec
+    var ref = vnode.attrs.ref
+    var label = vnode.attrs.label
+    var key = ref.replace('relations.', '')
+    var rel = rec.relations && rec.relations[key]
+      ? rec.relations[key] : null
+    if (rel === null) {
+      return
+    }
+
+    var table = ds.base.tables[rec.table_name]
+    var usage = rec.table.relations[key].use
+    var url = Relation.get_url(rel)
+
+    if (usage && usage < config.threshold) {
+      return
+    }
+
+    if (config.simplified_hierarchy && !Relation.is_direct(rel, table)) {
+      return
+    }
+
+    if (Relation.is_hidden(rel, rec)) {
+      return
     }
 
     return [
