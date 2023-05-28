@@ -5,74 +5,69 @@ var Grid = {
 
   align_thead: function() {
     var $table = $('#urdgrid')
-    var $headCells = $table.find('thead tr').children()
-    var $bodyCells = $table.find('tbody tr').first().children()
-    var $footCells = $table.find('tfoot tr').children()
-    var colWidth, colWidthHead, colWidthBody, colWidthFoot
+    var $head_cells = $table.find('thead tr').children()
+    var $body_cells = $table.find('tbody tr').first().children()
+    var $foot_cells = $table.find('tfoot tr').children()
+    var col_widths, head_col_widths, body_col_widths, foot_col_widths
 
     // Remove existing width attributes
-    $headCells.each(function(i, v) {
+    $head_cells.each(function(i, v) {
       $(v).css('width', '')
     })
-    $bodyCells.each(function(i, v) {
+    $body_cells.each(function(i, v) {
       $(v).children('div').css('width', '')
     })
-    $footCells.each(function(i, v) {
+    $foot_cells.each(function(i, v) {
       $(v).css('width', '')
     })
 
     // Get column widths
-    colWidthHead = $headCells.map(function() {
+    head_col_widths = $head_cells.map(function() {
       return $(this).width()
     }).get()
-    colWidthBody = $bodyCells.map(function() {
+    body_col_widths = $body_cells.map(function() {
       return $(this).width()
     }).get()
-    colWidthFoot = $footCells.map(function() {
+    foot_col_widths = $foot_cells.map(function() {
       return $(this).width()
     }).get()
 
-    if (colWidthFoot.length > 0 && colWidthBody.length > 0) {
-      $.each(colWidthFoot, function(idx, width) {
-        if (width > colWidthBody[idx]) {
-          $table.find('tbody tr').first()
-            .find('td:nth-child(' + (idx + 1) + ')').width(width)
-        }
+    var col_widths = []
+    // for (let idx in head_col_widths) {
+    if (!config.compressed || body_col_widths.length == 0) {
+      head_col_widths.forEach(function (value, idx) {
+        col_widths[idx] = Math.max(...[
+          value, 
+          body_col_widths[idx] || 0,
+          foot_col_widths[idx] || 0
+        ])
       })
-    }
-
-    if (!config.compressed) {
-      $.each(colWidthHead, function(idx, width) {
-        if (width > colWidthBody[idx]) {
-          $col = $table.find('tbody tr').first()
-            .find('td:nth-child(' + (idx + 1) + ') div')
-          $col.width(width)
-        }
-      })
-    }
-
-    colWidthBody = $bodyCells.map(function() {
-      return $(this).width()
-    })
-
-    if (colWidthBody.length === 0) {
-      colWidth = colWidthHead
     } else {
-      colWidth = colWidthBody
+      col_widths = body_col_widths
+    }
+
+    // Set width of tbody columns
+    if (!config.compressed) {
+      $.each(col_widths, function(idx, width) {
+        if (width > body_col_widths[idx]) {
+          $col = $table.find('tbody tr').first()
+            .find('td:nth-child(' + (idx + 1) + ') div').width(width)
+        }
+      })
     }
 
     // Set the width of thead columns
     $table.find('thead tr').children().each(function(i, v) {
       // Add 0,8 to th width because of margin width
-      if (colWidth[i] > (colWidthHead[i] + 0.8)) {
-        $(v).width(colWidth[i])
+      if (col_widths[i] != head_col_widths[i]) {
+        $(v).width(col_widths[i] + 0.8)
       }
     })
 
-
     // Set the width of tfoot columns
     $table.find('tfoot tr').children().each(function(i, v) {
-      $(v).width(colWidth[i])
+      if (col_widths[i] != foot_col_widths[i])
+      $(v).width(col_widths[i] + 0.8)
     })
   },
 
@@ -331,9 +326,9 @@ var Grid = {
       style: 'background: #f9f9f9',
     }, [
       m('thead', { class: 'db' }, [
-        m('tr', { class: 'cursor-default bb b-moon-gray' }, [
+        m('tr', { class: 'cursor-default bb b-moon-gray flex' }, [
           m('th', {
-            class: 'tl br b--moon-gray bg-light-gray normal f6 pa0 w1'
+            class: 'tl br b--moon-gray bg-light-gray normal f6 pa0'
           }, ''),
           Object.keys(ds.table.grid.columns).map(function(label) {
             var col = ds.table.grid.columns[label]

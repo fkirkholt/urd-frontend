@@ -138,7 +138,7 @@ var Row = {
     }, [
       m('td', {
         align: 'right',
-        class: !list.ismain ? '' : 'linjenr pa0 w1 br b--light-gray',
+        class: !list.ismain ? '' : 'pa0 br b--light-gray',
       }, [
         config.autosave ? m.trust('&nbsp;') : m('i', {
           class: [
