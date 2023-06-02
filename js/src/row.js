@@ -142,6 +142,7 @@ var Row = {
           : 'bb b--moon-gray',
       ].join(' ')
     }, [
+      // Draw icons indicating if record is dirty, illegal, new etc.
       m('td', {
         align: 'right',
         class: !list.ismain ? '' : 'pa0 br b--light-gray',
@@ -152,9 +153,11 @@ var Row = {
               record.invalid ? 'fa fa-warning red' :
                 record.new ? 'fa fa-plus-circle' :
                   record.dirty ? 'fa fa-pencil light-gray' : ''
-          ]
+          ],
+          title: !record.messages ? null : record.messages.join(' ') 
         })
       ]),
+      // Draw expansion icon
       (list.ismain || // only records in relations should be expanded
         record.pkey == null
       ) ? '' : m('td.fa', {

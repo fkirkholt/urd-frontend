@@ -289,6 +289,7 @@ var Record = {
     var field
 
     record.invalid = false
+    record.messages = []
 
     if (record.dirty) {
       for (let fieldname in record.fields) {
@@ -296,6 +297,7 @@ var Record = {
         Input.validate(field.value, field)
         if (field.invalid) {
           record.invalid = true
+          record.messages.push('Invalid field ' + field.name + '.')
         }
       }
     }
