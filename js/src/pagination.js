@@ -1,52 +1,28 @@
 var Pagination = {
 
-  navigate: function(name) {
+  navigate: function(name, set_index) {
     var list = ds.table
     var offset = parseInt(list.limit) + parseInt(list.offset)
     var sort = list.grid.sort_columns
-    var selection = 0
+    var selection = set_index == false ? null : 0
     switch (name) {
       case 'next':
         offset = parseInt(list.offset) + parseInt(list.limit)
         break
       case 'previous':
         offset = parseInt(list.offset) - list.limit
-        selection = config.limit - 1
+        selection = set_index ? config.limit - 1 : null
         break
       case 'last':
         offset = Math.floor((list.count_records - 1) / list.limit) * list.limit
-        selection = list.count_records - offset - 1
+        selection = set_index ? list.count_records - offset - 1 : null
         break
       case 'first':
         offset = 0
         break
     }
-    var data = {
-      base: ds.base.name,
-      table: list.name,
-      filter: m.route.param('query')
-        ? decodeURI(m.route.param('query'))
-        : null,
-      condition: m.route.param('where')
-        ? decodeURI(m.route.param('where'))
-        : null,
-      sort: JSON.stringify(sort),
-      limit: config.limit,
-      offset: offset
-    }
 
-    m.request({
-      method: "get",
-      url: "table",
-      params: data
-    }).then(function(result) {
-      ds.table.records = result.data.records
-      ds.table.offset = result.data.offset
-      m.redraw(true)
-      ds.table.selection = selection
-      Record.select(ds.table, 0, true)
-    })
-
+    Toolbar.set_url(selection, offset)
   },
 
   to: function() {
@@ -85,7 +61,7 @@ var Pagination = {
       m('div[name="navigation"]', {
         class: 'fr ml2 mb1 mt1 mr1',
         onclick: function(e) {
-          Pagination.navigate(e.target.name)
+          Pagination.navigate(e.target.name, false)
         }
       }, [
         m('button[name="first"]', {
@@ -129,3 +105,4 @@ module.exports = Pagination
 
 var config = require('./config')
 var Record = require('./record')
+var Toolbar = require('./toolbar')

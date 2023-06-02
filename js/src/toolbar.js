@@ -166,13 +166,29 @@ var Toolbar = {
     if (!('query' in param) && !('where' in param)) {
       search_params = []
       $.each(param, function(key, value) {
-        if (['base', 'table'].indexOf(key) >= 0) return
+        if (['base', 'table', 'index', 'offset'].indexOf(key) >= 0) return
         search_params.push(key + ' = ' + value)
       })
       search = search_params.join(' AND ')
     }
 
     return search
+  },
+
+  set_url: function(index, offset) {
+    // Set index in url
+    offset = offset == undefined ? ds.table.offset : offset
+    var query_params = {}
+    path = m.route.get()
+    if (path.includes('?')) {
+      query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+      delete query_params.index
+    }
+    if (index !== null) {
+      query_params.index = index
+    }
+    query_params.offset = offset
+    m.route.set('/' + ds.base.name + '/data/' + ds.table.name + '?' + m.buildQueryString(query_params))
   },
 
   view: function(vnode) {
@@ -184,7 +200,17 @@ var Toolbar = {
 
     // Table can just hold one row if last pkey column starts with 'const_'
     var single_rec = ds.table.pkey.slice(-1)[0].substr(0, 6) == 'const_'
+    var params = m.route.param()
     var full = single_rec && ds.table.records.length
+    is_pkey = true
+    for (idx in ds.table.pkey) {
+      key = ds.table.pkey[idx]
+      if (params[key] === undefined) {
+        is_pkey = false
+      }
+    }
+    ds.table.hidden = config.recordview &&
+      (params.index !== undefined || is_pkey)
 
     return m('ul', { target: '_blank', class: 'flex f6 list pl1 mt1 mb1' }, [
       // Make form to use with submit action
@@ -205,7 +231,7 @@ var Toolbar = {
       ]),
       // Button for expanding or compressing grid.
       // A compressed grid has no word wrap and shortens text
-      ds.table.hide ? '' : m('i', {
+      ds.table.hidden ? '' : m('i', {
         class: 'ml1 mr2 fa pointer '
           + (config.compressed ? 'fa-expand' : 'fa-compress'),
         title: config.compressed ? 'Ekspander' : 'Komprimer',
@@ -214,7 +240,7 @@ var Toolbar = {
         }
       }),
       // Button for opening search
-      m('i', {
+      ds.table.hidden ? '' : m('i', {
         class: 'fa fa-search ml1 mr2 pointer dim',
         title: 'Søk',
         onclick: function() {
@@ -223,7 +249,7 @@ var Toolbar = {
         }
       }),
       // Search field
-      ds.table.hide ? '' : m('input[type=search]', {
+      ds.table.hidden ? '' : m('input[type=search]', {
         placeholder: "Søk i alle tekstfelter",
         value: Toolbar.get_search(),
         style: 'flex: 1',
@@ -249,6 +275,8 @@ var Toolbar = {
           onclick: function() {
             if (ds.table.privilege.insert != true || full) return
             Record.create(ds.table)
+            
+            Toolbar.set_url(ds.table.selection)
 
             // Focus first input in new record
             setTimeout(function() {
@@ -384,8 +412,7 @@ var Toolbar = {
         ])
       ]),
       // When single record is shown.
-      // NOTE: show_record is never set, so this never shows
-      !config.show_record ? '' : m('li.dib', {
+      !config.recordview || !ds.table.hidden ? '' : m('li.dib', {
         onclick: function(e) {
           // Toolbar.navigate(e.target.name)
         }
@@ -398,9 +425,9 @@ var Toolbar = {
           disabled: Toolbar.button.disabled('first'),
           onclick: function() {
             if (ds.table.offset == 0) {
-              Record.select(ds.table, 0, true)
+              Toolbar.set_url(0, 0)
             } else {
-              Pagination.navigate('first')
+              Pagination.navigate('first', true)
             }
           }
         }),
@@ -412,11 +439,11 @@ var Toolbar = {
           disabled: Toolbar.button.disabled('previous'),
           onclick: function() {
             var idx = ds.table.selection
-            var prev = idx - 1
+            var prev = parseInt(idx) - 1
             if (prev == -1) {
-              Pagination.navigate('previous')
+              Pagination.navigate('previous', true)
             } else {
-              Record.select(ds.table, prev, true)
+              Toolbar.set_url(prev)
             }
           }
         }),
@@ -428,11 +455,11 @@ var Toolbar = {
           disabled: Toolbar.button.disabled('next'),
           onclick: function() {
             var idx = ds.table.selection
-            var next = idx + 1
+            var next = parseInt(idx) + 1
             if (next == ds.table.records.length) {
-              Pagination.navigate('next')
+              Pagination.navigate('next', true)
             } else {
-              Record.select(ds.table, next, true)
+              Toolbar.set_url(next)
             }
           }
         }),
@@ -444,7 +471,7 @@ var Toolbar = {
           ].join(' '),
           disabled: Toolbar.button.disabled('last'),
           onclick: function() {
-            Pagination.navigate('last')
+            Pagination.navigate('last', true)
           }
         }),
       ]),

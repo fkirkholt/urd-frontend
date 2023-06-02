@@ -245,6 +245,7 @@ var Relation = {
     return url
   },
 
+  // Check if relation is hidden
   is_hidden: function(rel, rec) {
     var hidden = false
 

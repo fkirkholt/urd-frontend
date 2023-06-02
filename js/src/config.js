@@ -9,6 +9,7 @@ var config = {
   theme: Cookies.get('theme') ? Cookies.get('theme') : 'standard',
   compressed: Cookies.get('compressed') ? Cookies.get('compressed') : false,
   threshold: Cookies.get('threshold') ? Cookies.get('threshold') : 0,
+  recordview: Cookies.get('recordview') === 'true' ? true : false,
 
   admin: false,
   edit_mode: false,
@@ -18,6 +19,7 @@ var config = {
 
   save: function() {
     var autosave = $('#preferences [name="autosave"]').prop('checked')
+    var recordview = $('#preferences [name="recordview"]').prop('checked')
     if (autosave) {
       Grid.save()
     }
@@ -31,12 +33,14 @@ var config = {
       || autosave != config.autosave
       || theme != config.theme
       || threshold != config.threshold
+      || recordview != config.recordview
     ) {
       config.limit = limit ? limit : config.limit
       config.select = select
       config.autosave = autosave
       config.theme = theme
       config.threshold = threshold
+      config.recordview = recordview
       // TODO: Update grid
     }
     $('#preferences').hide()
@@ -46,6 +50,7 @@ var config = {
     Cookies.set('autosave', autosave, { expires: 14 })
     Cookies.set('theme', theme, { expires: 14 })
     Cookies.set('threshold', threshold, { expires: 14 })
+    Cookies.set('recordview', recordview, { expires: 14 })
     m.redraw()
   },
 
@@ -58,6 +63,15 @@ var config = {
             m('input[type=checkbox]', {
               name: 'autosave',
               checked: config.autosave
+            })
+          ])
+        ]),
+        m('tr', [
+          m('td', 'Vis post på egen side'),
+          m('td', [
+            m('input[type=checkbox]', {
+              name: 'recordview',
+              checked: config.recordview
             })
           ])
         ]),

@@ -15,6 +15,7 @@ var convert_dialog = require('./convert.js')
 var config = require('./config.js')
 var login = require('./login.js')
 var Grid = require('./grid.js')
+var Record = require('./record')
 
 
 m.route.prefix = "#"
@@ -59,19 +60,37 @@ m.route($('#main')[0], '/', {
     }
   },
   "/:base/data/:table": {
-    onmatch: function(args, requestedPath) {
+    onmatch: function(args, path) {
       config.tab = 'data'
       ds.type = 'table'
 
+      var grid_path = path
+
+      if (path.includes('?')) {
+        var query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+        if ('index' in query_params) {
+          delete query_params.index
+          grid_path = '/' + args.base + '/data/' + args.table 
+          if (Object.keys(query_params).length) {
+            grid_path += '?' + m.buildQueryString(query_params)
+          }
+        }
+      }
+
       if (
-        ds.table && ds.table.dirty && Grid.url !== requestedPath &&
+        ds.table && ds.table.dirty && Grid.url !== grid_path &&
         !confirm('Du har ulagrede data. Vil du fortsette?')
       ) {
         m.route.set(Grid.url)
       } else {
-        if (Grid.url != requestedPath) {
+        if (Grid.url != grid_path) {
           Grid.load(args)
-          Grid.url = requestedPath
+          Grid.url = grid_path
+        } else {
+          if ('index' in args) {
+            Record.select(ds.table, args.index)
+            ds.table.selection = args.index
+          }
         }
 
         return datapanel

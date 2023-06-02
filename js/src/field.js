@@ -358,7 +358,11 @@ var Field = {
             ? ''
             : m('a', {
               class: 'icon-crosshairs light-blue hover-blue pointer link',
-              href: Field.get_url(field, rec)
+              href: Field.get_url(field, rec),
+              onclick: function(e) {
+                // Delete active table to avoid flicker
+                delete ds.table
+              }
             }),
 
           // Show trash bin for field from cross reference table

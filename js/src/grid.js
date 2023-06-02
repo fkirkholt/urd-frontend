@@ -161,7 +161,7 @@ var Grid = {
 
       ds.table.filters = Search.parse_query(data.filter)
 
-      if (ds.table.selection === null) ds.table.selection = 0
+      ds.table.selection = data.index
 
       // Show first record
       if (ds.table.type != 'view') {
@@ -186,6 +186,9 @@ var Grid = {
     if (!('query' in param) && !('where' in param)) {
       delete param.base
       delete param.table
+      delete param.index
+      delete param.offset
+      delete param.limit
       var search_params = []
       $.each(param, function(key, value) {
         search_params.push(key + ' = ' + value)
@@ -294,27 +297,25 @@ var Grid = {
   },
 
   load: function(params) {
+    var index = 0
     var query = params.query ? params.query : Grid.get_filter(params)
 
     if (ds.base.name != params.base) {
       ds.load_database(params.base)
     }
+
+    if ('index' in params) {
+      index = params.index
+    }
+    
     Grid.get({
-      base: params.base, table: params.table, filter: query,
-      limit: config.limit
+      base: params.base, table: params.table, filter: query, index: index,
+      limit: config.limit, offset: params.offset || 0
     })
 
 
     $('div[name="vis"]').removeClass('inactive')
     $('div[name="sok"]').addClass('inactive')
-  },
-
-  onremove: function() {
-    // Make table load again after navigation
-    // grid.url is used in datapanel.view to check if table should be loaded
-    if (m.route.get() !== Grid.url) {
-      Grid.url = ''
-    }
   },
 
   view: function() {

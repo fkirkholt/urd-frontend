@@ -103,19 +103,24 @@ var Row = {
           Row.toggle_record(record, list)
         }
       },
+      // Key bindings for grid
       onkeydown: function(e) {
         e.redraw = false
-        if (e.keyCode == 38) { // arrow up
+        if (e.keyCode == 38 || e.keyCode == 75) { // arrow up or k
           $(this).prev('tr').trigger('focus')
           e.preventDefault()
-        } else if (e.keyCode == 40) { // arrow down
+        } else if (e.keyCode == 40 || e.keyCode == 74) { // arrow down or j
           $(this).next('tr').trigger('focus')
           e.preventDefault()
         } else if (e.keyCode == 13) { // enter
           e.redraw = false
           $(this).trigger('click')
-          $('form[name=record]').find('input,textarea,select')
-            .first().trigger('focus')
+          if (config.recordview) {
+            $(this).find('td.icon-crosshairs').trigger('click')
+          } else {
+            $('form[name=record]').find('input,textarea,select')
+              .first().trigger('focus')
+          }
         } else if (e.keyCode == 32) { // space
           $(this).trigger('click')
           e.preventDefault()
@@ -125,6 +130,7 @@ var Row = {
           $(this).next('tr').trigger('click')
         }
       },
+      // classes for row
       class: [
         (list.selection == idx && list.type != 'view')
           ? 'bg-light-blue focus'
@@ -157,6 +163,7 @@ var Row = {
           record.invalid ? 'invalid' : record.dirty ? 'dirty' : '',
         ].join(' ')
       }),
+      // Draw each column in the row
       Object.keys(list.grid.columns).map(function(label, colidx) {
         var colname = list.grid.columns[label]
         var defines_relation = get(list.fields, colname + '.defines_relation')
@@ -169,6 +176,7 @@ var Row = {
           border: list.ismain ? true : false,
         })
       }),
+      // Draw trash bin icon for deleting row in relations
       list.ismain ? '' : m('td', [
         !record.open || parent.readonly ? '' : m('i', {
           class: [
@@ -185,16 +193,40 @@ var Row = {
           title: 'Slett'
         })
       ]),
-      !list.ismain ? '' : m('td', {
-        class: ' br b--moon-gray bb--light-gray pa0 f6 tr'
+      // Draw icons for actions in main grid
+      !list.ismain || list.grid.actions.length == 0 ? '' : m('td', {
+        class: [
+          'br b--moon-gray bb--light-gray f6 tr',
+          list.grid.actions.length ? 'pr2 pl2' : 'pa0'
+        ].join(' ')
       }, [
-        list.grid.actions.map(function(name, idx) {
+        list.grid.actions.map(function(name) {
           var action = list.actions[name]
           action.name = name
 
           return Record.action_button(record, action)
         })
-      ])
+      ]),
+      // Draw crosshairs symbol for navigate to record view
+      // Only shows when record is not shown right of table
+      !list.ismain || !config.recordview ? '' : m('td', {
+        class: [
+          'icon-crosshairs light-blue hover-blue pointer',
+          'br b--moon-gray bb--light-gray'
+        ].join(' '),
+        onclick: function() {
+          var query_params
+          path = m.route.get()
+          if (path.includes('?')) {
+            query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+          }
+
+          query_params = query_params ? query_params.index = idx : {index: idx}
+
+          // m.route.set(Grid.url + '?' + m.buildQueryString(query_params))
+          Toolbar.set_url(idx, ds.table.offset)
+        }
+      })
     ]),
     !record.open ? null : m('tr', [
       m('td'),
@@ -217,3 +249,4 @@ var ds = require('./datastore')
 var config = require('./config')
 var Cell = require('./cell')
 var Record = require('./record')
+var Toolbar = require('./toolbar')

@@ -444,7 +444,7 @@ var Record = {
       !ds.table.edit && !ds.table.hide
         ? ''
         : m('div', [
-          m('input[type=button]', {
+          config.recordview ? '' : m('input[type=button]', {
             value: 'Lagre og lukk',
             onclick: function() {
               var saved = true
@@ -459,7 +459,7 @@ var Record = {
               }
             }
           }),
-          m('input[type=button]', {
+          config.recordview ? '' : m('input[type=button]', {
             value: 'Avbryt',
             onclick: function() {
               ds.table.edit = false
