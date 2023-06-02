@@ -399,6 +399,8 @@ var Record = {
             ? action.url
             : ds.base.schema + '/' + action.url;
           window.open(address + '?' + params, '_blank')
+        } else {
+          Toolbar.run_action(action)
         }
         e.stopPropagation();
       }

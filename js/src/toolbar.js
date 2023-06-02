@@ -41,22 +41,26 @@ var Toolbar = {
     var rec_idx = ds.table.selection
     var prim_key = ds.table.records[rec_idx].pkey
     var prim_nokler_json = JSON.stringify(prim_key)
-    var address = ds.base.schema +
+    var address = ds.base.name +
       (action.url[0] === '/' ? '' : '/') + action.url
-    var kommunikasjon = action.communication
+    var communication = action.communication
 
     var $form = $('form#action')
-    $form.find(':input[name="pkey"]').val(prim_nokler_json)
+    $form.find('input[name="pkey"]').val(prim_nokler_json)
 
     if (ds.table.dirty) {
       alert("Du må lagre før du kan utføre handling")
       return
     }
 
-    if (kommunikasjon == 'submit') {
+    if (communication == 'route') {
+      address += '?' + m.buildQueryString(prim_key)
+      Grid.url = address
+      m.route.set(address)      
+    } else if (communication == 'submit') {
       $form.attr('action', address).attr('method', 'post').submit()
-    } else if (kommunikasjon == 'ajax') {
-      $.ajax({
+    } else if (communication == 'ajax') {
+      m.request({
         url: address,
         method: action.method ? action.method : 'get',
         dataType: 'json',
@@ -67,7 +71,7 @@ var Toolbar = {
           pkey: prim_nokler_json
         }),
         background: true
-      }).done(function(result) {
+      }).then(function(result) {
         if (action.update_field) {
           var field = ds.table.records[rec_idx]
             .fields[action.update_field]
@@ -89,8 +93,8 @@ var Toolbar = {
           txt += '</li></ul>'
           $('#progress').show().children('[name=message]').html(txt)
         }
-      }).fail(function(jqXHR, textStatus, error) {
-        alert(jqXHR.responseText)
+      }).catch(function(e) {
+        alert(e.response.detail)
       })
 
       // show progress bar
@@ -99,7 +103,7 @@ var Toolbar = {
         $('#progress').show().children('[name="percent"]').text('0%')
         this.track_progress()
       }
-    } else if (kommunikasjon == 'dialog') {
+    } else if (communication == 'dialog') {
       m.request({
         url: address + '?version=1',
         responseType: "text",
