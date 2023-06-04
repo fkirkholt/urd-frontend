@@ -22,8 +22,8 @@ var Convert_dialog = {
       params: param,
       url: '/convert'
     }).then(function(data) {
-      Grid.update(ds.table, {})
-    })
+        Grid.update(ds.table, {})
+      })
   },
 
   view: function() {
@@ -38,9 +38,10 @@ var Convert_dialog = {
           this.from = event.target.value
         }.bind(this)
       }, [
-        m('option', { value: 'markdown' }, 'Markdown'),
-        m('option', { value: 'rtf' }, 'RTF'),
-      ]),
+          m('option', { value: 'markdown' }, 'Markdown'),
+          m('option', { value: 'rtf' }, 'RTF'),
+        ]
+      ),
       m('label', {
         class: 'ml2 mr2'
       }, 'Til:'),
@@ -50,9 +51,10 @@ var Convert_dialog = {
           this.to = event.target.value
         }.bind(this)
       }, [
-        m('option', { value: 'markdown' }, 'Markdown'),
-        m('option', { value: 'rtf' }, 'RTF'),
-      ]),
+          m('option', { value: 'markdown' }, 'Markdown'),
+          m('option', { value: 'rtf' }, 'RTF'),
+        ]
+      ),
       m('div[name=valg]', { class: 'mt2 max-h5 overflow-y-auto' }, [
         'Velg felter:',
         m('ul', { class: 'list' }, [
@@ -60,7 +62,7 @@ var Convert_dialog = {
             var field = ds.table.fields[fieldname]
             if (
               field.datatype != 'string' ||
-              (field.size != 0 && field.size < 256)
+                (field.size != 0 && field.size < 256)
             ) {
               return
             }

@@ -326,79 +326,79 @@ var Grid = {
       class: 'max-w10 bt b--moon-gray flex flex-column overflow-auto collapse',
       style: 'background: #f9f9f9',
     }, [
-      m('thead', { class: 'db' }, [
-        m('tr', { class: 'cursor-default bb b-moon-gray flex' }, [
-          m('th', {
-            class: 'tl br b--moon-gray bg-light-gray normal f6 pa0'
-          }, ''),
-          Object.keys(ds.table.grid.columns).map(function(label) {
-            var col = ds.table.grid.columns[label]
+        m('thead', { class: 'db' }, [
+          m('tr', { class: 'cursor-default bb b-moon-gray flex' }, [
+            m('th', {
+              class: 'tl br b--moon-gray bg-light-gray normal f6 pa0'
+            }, ''),
+            Object.keys(ds.table.grid.columns).map(function(label) {
+              var col = ds.table.grid.columns[label]
 
-            var field = ds.table.fields[col]
+              var field = ds.table.fields[col]
 
-            // If this is for instance an action
-            if (field === undefined) {
-              return m('th', '')
-            }
+              // If this is for instance an action
+              if (field === undefined) {
+                return m('th', '')
+              }
 
-            if (field.hidden) return
+              if (field.hidden) return
 
-            var label = isNaN(parseInt(label))
-              ? label : ds.table.fields[col].label
-                ? ds.table.fields[col].label : col
-            return m('th', {
-              class: [
-                'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
-                config.compressed ? 'truncate' : '',
-              ].join(' '),
-              onclick: Grid.sort.bind(Grid, col)
-            }, m('div', { class: 'flex' }, [
-              m('span', {
-                class: "flex-auto truncate",
-                title: label
-              }, label), [
-                !Grid.column_order(col) ? '' : m('i', {
-                  class: 'pl1 di fa fa-angle-'
-                    + (Grid.column_order(col) === 'asc'
-                      ? 'down' : 'up')
-                })
-              ]
-            ]))
-          }),
-          !ds.table.grid.actions.length
-            ? ''
-            : m('th', {
-              class: 'br bb b--moon-gray bg-light-gray f6 pa0'
-            })
-        ])
-      ]),
-      m('tbody', { class: 'db overflow-y-auto overflow-x-hidden' }, [
-        ds.table.records.map(function(record, idx) {
-          record.base_name = ds.base.name
-          record.table_name = ds.table.name
-          if (record.dirty) Record.validate(record)
+              var label = isNaN(parseInt(label))
+                ? label : ds.table.fields[col].label
+                  ? ds.table.fields[col].label : col
+              return m('th', {
+                class: [
+                  'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
+                  config.compressed ? 'truncate' : '',
+                ].join(' '),
+                onclick: Grid.sort.bind(Grid, col)
+              }, m('div', { class: 'flex' }, [
+                  m('span', {
+                    class: "flex-auto truncate",
+                    title: label
+                  }, label), [
+                    !Grid.column_order(col) ? '' : m('i', {
+                      class: 'pl1 di fa fa-angle-'
+                        + (Grid.column_order(col) === 'asc'
+                          ? 'down' : 'up')
+                    })
+                  ]
+                ]))
+            }),
+            !ds.table.grid.actions.length
+              ? ''
+              : m('th', {
+                class: 'br bb b--moon-gray bg-light-gray f6 pa0'
+              })
+          ])
+        ]),
+        m('tbody', { class: 'db overflow-y-auto overflow-x-hidden' }, [
+          ds.table.records.map(function(record, idx) {
+            record.base_name = ds.base.name
+            record.table_name = ds.table.name
+            if (record.dirty) Record.validate(record)
 
-          return record.hidden
-            ? ''
-            : m(Row, { list: ds.table, record: record, idx: idx })
-        })
-      ]),
-      (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
-        m('tr', { class: 'bg--light-gray' }, [
-          m('td', {
-            class: 'tc bt b--moon-gray pb0 bg-light-gray'
-          }, m.trust('Σ')),
-          Object.keys(ds.table.grid.columns).map(function(label) {
-            var col = ds.table.grid.columns[label]
-            return m('td', {
-              class: 'tr bl bt b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib'
-            }, (col in ds.table.grid.sums)
-              ? m.trust(String(ds.table.grid.sums[col]))
-              : m.trust('&nbsp'))
+            return record.hidden
+              ? ''
+              : m(Row, { list: ds.table, record: record, idx: idx })
           })
+        ]),
+        (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
+          m('tr', { class: 'bg--light-gray' }, [
+            m('td', {
+              class: 'tc bt b--moon-gray pb0 bg-light-gray'
+            }, m.trust('Σ')),
+            Object.keys(ds.table.grid.columns).map(function(label) {
+              var col = ds.table.grid.columns[label]
+              return m('td', {
+                class: 'tr bl bt b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib'
+              }, (col in ds.table.grid.sums)
+                  ? m.trust(String(ds.table.grid.sums[col]))
+                  : m.trust('&nbsp'))
+            })
+          ])
         ])
-      ])
-    ])]
+      ])]
   }
 }
 

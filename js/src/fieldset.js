@@ -87,11 +87,11 @@ var Fieldset = {
             set.expanded = !set.expanded
           }
         }, [
-          label,
-          set.inline ? '' : m('span', {
-            class: 'normal ml1 moon-gray f7'
-          }, count_field_values + '/' + count_fields),
-        ]),
+            label,
+            set.inline ? '' : m('span', {
+              class: 'normal ml1 moon-gray f7'
+            }, count_field_values + '/' + count_fields),
+          ]),
         // Draw icons showing invalid or modified fields
         m('td', [
           set.expanded ? '' :

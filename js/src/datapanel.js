@@ -33,10 +33,10 @@ var datapanel = {
             ds.table.hide ? 'display: none' : ''
           ].join(';')
         }, [
-          m(Toolbar),
-          m(Grid),
-          m(Pagination)
-        ]),
+            m(Toolbar),
+            m(Grid),
+            m(Pagination)
+          ]),
 
       !ds.table.records || (config.recordview && !hide_grid)
         ? '' : ds.table.search

@@ -142,105 +142,105 @@ var Row = {
           : 'bb b--moon-gray',
       ].join(' ')
     }, [
-      // Draw icons indicating if record is dirty, illegal, new etc.
-      m('td', {
-        align: 'right',
-        class: !list.ismain ? '' : 'pa0 br b--light-gray',
-      }, [
-        config.autosave ? m.trust('&nbsp;') : m('i', {
-          class: [
-            record.delete ? 'fa fa-trash' :
-              record.invalid ? 'fa fa-warning red' :
-                record.new ? 'fa fa-plus-circle' :
-                  record.dirty ? 'fa fa-pencil light-gray' : ''
-          ],
-          title: !record.messages ? null : record.messages.join(' ') 
-        })
-      ]),
-      // Draw expansion icon
-      (list.ismain || // only records in relations should be expanded
-        record.pkey == null
-      ) ? '' : m('td.fa', {
-        class: [
-          record.open ? 'fa-angle-down' : 'fa-angle-right',
-          record.invalid ? 'invalid' : record.dirty ? 'dirty' : '',
-        ].join(' ')
-      }),
-      // Draw each column in the row
-      Object.keys(list.grid.columns).map(function(label, colidx) {
-        var colname = list.grid.columns[label]
-        var defines_relation = get(list.fields, colname + '.defines_relation')
+        // Draw icons indicating if record is dirty, illegal, new etc.
+        m('td', {
+          align: 'right',
+          class: !list.ismain ? '' : 'pa0 br b--light-gray',
+        }, [
+            config.autosave ? m.trust('&nbsp;') : m('i', {
+              class: [
+                record.delete ? 'fa fa-trash' :
+                  record.invalid ? 'fa fa-warning red' :
+                    record.new ? 'fa fa-plus-circle' :
+                      record.dirty ? 'fa fa-pencil light-gray' : ''
+              ],
+              title: !record.messages ? null : record.messages.join(' ') 
+            })
+          ]),
+        // Draw expansion icon
+        (list.ismain || // only records in relations should be expanded
+          record.pkey == null
+        ) ? '' : m('td.fa', {
+            class: [
+              record.open ? 'fa-angle-down' : 'fa-angle-right',
+              record.invalid ? 'invalid' : record.dirty ? 'dirty' : '',
+            ].join(' ')
+          }),
+        // Draw each column in the row
+        Object.keys(list.grid.columns).map(function(label, colidx) {
+          var colname = list.grid.columns[label]
+          var defines_relation = get(list.fields, colname + '.defines_relation')
 
-        return defines_relation ? '' : m(Cell, {
-          list: list,
-          rowidx: idx,
-          colname: colname,
-          compressed: config.compressed,
-          border: list.ismain ? true : false,
-        })
-      }),
-      // Draw trash bin icon for deleting row in relations
-      list.ismain ? '' : m('td', [
-        !record.open || parent.readonly ? '' : m('i', {
+          return defines_relation ? '' : m(Cell, {
+            list: list,
+            rowidx: idx,
+            colname: colname,
+            compressed: config.compressed,
+            border: list.ismain ? true : false,
+          })
+        }),
+        // Draw trash bin icon for deleting row in relations
+        list.ismain ? '' : m('td', [
+          !record.open || parent.readonly ? '' : m('i', {
+            class: [
+              list.privilege.delete && config.edit_mode
+                ? 'fa fa-trash-o pl1' : '',
+              record.deletable ? 'light-blue' : 'moon-gray',
+              record.deletable ? (
+                config.relation_view === 'column'
+                  ? 'hover-white' : 'hover-blue'
+              ) : '',
+            ].join(' '),
+            style: 'cursor: pointer',
+            onclick: Record.delete.bind(this, record),
+            title: 'Slett'
+          })
+        ]),
+        // Draw icons for actions in main grid
+        !list.ismain || list.grid.actions.length == 0 ? '' : m('td', {
           class: [
-            list.privilege.delete && config.edit_mode
-              ? 'fa fa-trash-o pl1' : '',
-            record.deletable ? 'light-blue' : 'moon-gray',
-            record.deletable ? (
-              config.relation_view === 'column'
-                ? 'hover-white' : 'hover-blue'
-            ) : '',
+            'br b--moon-gray bb--light-gray f6 tr',
+            list.grid.actions.length ? 'pr2 pl2' : 'pa0'
+          ].join(' ')
+        }, [
+            list.grid.actions.map(function(name) {
+              var action = list.actions[name]
+              action.name = name
+
+              return Record.action_button(record, action)
+            })
+          ]),
+        // Draw crosshairs symbol for navigate to record view
+        // Only shows when record is not shown right of table
+        !list.ismain || !config.recordview ? '' : m('td', {
+          class: [
+            'icon-crosshairs light-blue hover-blue pointer',
+            'br b--moon-gray bb--light-gray'
           ].join(' '),
-          style: 'cursor: pointer',
-          onclick: Record.delete.bind(this, record),
-          title: 'Slett'
-        })
-      ]),
-      // Draw icons for actions in main grid
-      !list.ismain || list.grid.actions.length == 0 ? '' : m('td', {
-        class: [
-          'br b--moon-gray bb--light-gray f6 tr',
-          list.grid.actions.length ? 'pr2 pl2' : 'pa0'
-        ].join(' ')
-      }, [
-        list.grid.actions.map(function(name) {
-          var action = list.actions[name]
-          action.name = name
+          onclick: function() {
+            var query_params
+            path = m.route.get()
+            if (path.includes('?')) {
+              query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+            }
 
-          return Record.action_button(record, action)
-        })
-      ]),
-      // Draw crosshairs symbol for navigate to record view
-      // Only shows when record is not shown right of table
-      !list.ismain || !config.recordview ? '' : m('td', {
-        class: [
-          'icon-crosshairs light-blue hover-blue pointer',
-          'br b--moon-gray bb--light-gray'
-        ].join(' '),
-        onclick: function() {
-          var query_params
-          path = m.route.get()
-          if (path.includes('?')) {
-            query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+            query_params = query_params ? query_params.index = idx : {index: idx}
+
+            // m.route.set(Grid.url + '?' + m.buildQueryString(query_params))
+            Toolbar.set_url(idx, ds.table.offset)
           }
-
-          query_params = query_params ? query_params.index = idx : {index: idx}
-
-          // m.route.set(Grid.url + '?' + m.buildQueryString(query_params))
-          Toolbar.set_url(idx, ds.table.offset)
-        }
-      })
-    ]),
-    !record.open ? null : m('tr', [
-      m('td'),
-      m('td'),
-      m('td', {
-        colspan: vnode.attrs.colspan,
-        class: 'bl b--moon-gray'
-      }, [
-        m(Record, { record: record })
-      ])
-    ])]
+        })
+      ]),
+      !record.open ? null : m('tr', [
+        m('td'),
+        m('td'),
+        m('td', {
+          colspan: vnode.attrs.colspan,
+          class: 'bl b--moon-gray'
+        }, [
+            m(Record, { record: record })
+          ])
+      ])]
   }
 }
 

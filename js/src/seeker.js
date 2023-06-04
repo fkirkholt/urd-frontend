@@ -92,15 +92,15 @@ function Seeker() {
         !options.length ? '' : m('ul.options', {
           class: 'absolute list bg-white ma0 pa0 ba b--gray'
         }, [
-          options.map(function(row, i) {
-            return m('li', {
-              class: [
-                'pl1 pr1',
-                i == index ? 'bg-light-blue' : 'bg-white'
-              ].join(' ')
-            }, row.label)
-          })
-        ])
+            options.map(function(row, i) {
+              return m('li', {
+                class: [
+                  'pl1 pr1',
+                  i == index ? 'bg-light-blue' : 'bg-white'
+                ].join(' ')
+              }, row.label)
+            })
+          ])
       ]
     }
   }

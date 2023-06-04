@@ -52,8 +52,8 @@ var Cell = {
         Cell.align(list, colname) === 'right' ? 'tr' : 'tl',
         compressed || value.length < 30 || (
           field.datatype !== 'string' &&
-          field.datatype !== 'binary' &&
-          field.element != 'select'
+            field.datatype !== 'binary' &&
+            field.element != 'select'
         )
           ? 'nowrap' : '',
         compressed && value.length > 30 ? 'pt0 pb0' : '',
@@ -64,18 +64,19 @@ var Cell = {
       ].join(' '),
       title: compressed && value.length > 30 ? value : ''
     }, [
-
-      !(value && value.length > 30 && compressed)
-        ? [m('div', [expansion ? icon : '', value])]
-        : m('table', {
-          class: 'w-100',
-          style: 'table-layout:fixed;'
-        }, [
-          m('tr', m('td.pa0', {
-            class: compressed ? 'truncate' : 'overflow-wrap'
-          }, [expansion ? icon : '', value]))
-        ]),
-    ])
+        !(value && value.length > 30 && compressed)
+          ? [m('div', [expansion ? icon : '', value])]
+          : m('table', {
+            class: 'w-100',
+            style: 'table-layout:fixed;'
+          }, [
+              m('tr', m('td.pa0', {
+                class: compressed ? 'truncate' : 'overflow-wrap'
+              }, [expansion ? icon : '', value]))
+            ]
+          ),
+      ]
+    )
   }
 }
 

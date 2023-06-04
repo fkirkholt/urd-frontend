@@ -63,55 +63,55 @@ var Contents = {
         class: node.class_module,
         style: 'display:' + display_header
       }, [
-        m('span.nowrap', [
-          m('i', {
-            class: [
-              node.expanded
-                ? 'fa fa-angle-down'
-                : 'fa fa-angle-right',
-              node.class_label,
-              'w1 tc',
-              'light-silver'
-            ].join(' '),
-            onclick: function(e) {
-              node.expanded = !node.expanded
-            }
-          }),
-          m('.label', {
-            class: [
-              node.class_label,
-              'di b pointer'
-            ].join(' '),
-            onclick: function(e) {
-              node.expanded = !node.expanded
-            },
-            oncontextmenu: function(event) {
-              Contents.context_module = label
-              $('ul#context-module')
-                .css({ top: event.clientY, left: event.clientX })
-                .toggle()
-              return false
-            }
-          }, label),
-          !node.count || !config.admin ? '' : m('span', {
-            class: 'ml2 light-silver'
-          }, '(' + node.count + ')'),
-        ]),
-        m('.content', {
-          class: node.class_content,
-          style: 'display: ' + display
-        }, [
-          Object.keys(node.subitems).map(function(label) {
-            var subitem = node.subitems[label]
-            if (Array.isArray(node.subitems)) {
-              var obj = get(ds.base, subitem)
-              if (obj === undefined) return
-              label = obj.label
-            }
-            return Contents.draw_node(label, subitem, level + 1)
-          })
+          m('span.nowrap', [
+            m('i', {
+              class: [
+                node.expanded
+                  ? 'fa fa-angle-down'
+                  : 'fa fa-angle-right',
+                node.class_label,
+                'w1 tc',
+                'light-silver'
+              ].join(' '),
+              onclick: function(e) {
+                node.expanded = !node.expanded
+              }
+            }),
+            m('.label', {
+              class: [
+                node.class_label,
+                'di b pointer'
+              ].join(' '),
+              onclick: function(e) {
+                node.expanded = !node.expanded
+              },
+              oncontextmenu: function(event) {
+                Contents.context_module = label
+                $('ul#context-module')
+                  .css({ top: event.clientY, left: event.clientX })
+                  .toggle()
+                return false
+              }
+            }, label),
+            !node.count || !config.admin ? '' : m('span', {
+              class: 'ml2 light-silver'
+            }, '(' + node.count + ')'),
+          ]),
+          m('.content', {
+            class: node.class_content,
+            style: 'display: ' + display
+          }, [
+              Object.keys(node.subitems).map(function(label) {
+                var subitem = node.subitems[label]
+                if (Array.isArray(node.subitems)) {
+                  var obj = get(ds.base, subitem)
+                  if (obj === undefined) return
+                  label = obj.label
+                }
+                return Contents.draw_node(label, subitem, level + 1)
+              })
+            ])
         ])
-      ])
     } else {
       var subitems
       if (typeof node == 'object') {
@@ -131,7 +131,7 @@ var Contents = {
       if (item.indexOf('.') == -1) item = 'tables.' + item
       if (
         ((object.hidden || object.type == 'list') && !config.admin)
-        || ['xref', 'link', 'ext'].includes(object.type)
+          || ['xref', 'link', 'ext'].includes(object.type)
       ) {
         return
       }
@@ -171,56 +171,56 @@ var Contents = {
           return false
         }
       }, [
-        typeof node != 'object' ? '' : m('i', {
-          class: [
-            'w1 tc light-silver fa',
-            node.expanded ? 'fa-angle-down' : 'fa-angle-right',
-          ].join(' '),
-          style: (display == 'none' || display_chevron == 'none')
-            ? 'display: none'
-            : '',
-          onclick: function(e) {
-            node.expanded = !node.expanded
-          }
-        }),
-        m('i', {
-          class: [
-            icon_color + ' mr1 fa ' + icon,
-            (typeof node == 'object' && display_chevron == 'block')
-              ? ''
-              : 'ml3'
-          ].join(' '),
-          style: 'display:' + display,
-          title: title
-        }),
-        m('a', {
-          class: [
-            'black underline-hover nowrap',
-            object.description ? 'dot' : 'link',
-            object.type == 'view' ? 'i' : ''
-          ].join(' '),
-          title: object.description ? object.description : '',
-          style: 'display:' + display,
-          href: '#/' + ds.base.name + '/' + (config.tab || 'data') +
-            '/' + object.name,
-          onclick: function() {
-            Diagram.type = 'table'
-            Diagram.root = object.name
-          }
-        }, label),
-        !object.rowcount || !config.admin ? '' : m('span', {
-          class: 'ml2 light-silver',
-          style: 'display:' + display
-        }, '(' + object.rowcount + ')'),
-        !subitems || !node.expanded ? '' : m('.content', {
-          style: 'margin-left:' + 18 + 'px',
-        }, [
-          Object.keys(subitems).map(function(label) {
-            var subitem = subitems[label]
-            return Contents.draw_node(label, subitem, level + 1)
-          })
+          typeof node != 'object' ? '' : m('i', {
+            class: [
+              'w1 tc light-silver fa',
+              node.expanded ? 'fa-angle-down' : 'fa-angle-right',
+            ].join(' '),
+            style: (display == 'none' || display_chevron == 'none')
+              ? 'display: none'
+              : '',
+            onclick: function(e) {
+              node.expanded = !node.expanded
+            }
+          }),
+          m('i', {
+            class: [
+              icon_color + ' mr1 fa ' + icon,
+              (typeof node == 'object' && display_chevron == 'block')
+                ? ''
+                : 'ml3'
+            ].join(' '),
+            style: 'display:' + display,
+            title: title
+          }),
+          m('a', {
+            class: [
+              'black underline-hover nowrap',
+              object.description ? 'dot' : 'link',
+              object.type == 'view' ? 'i' : ''
+            ].join(' '),
+            title: object.description ? object.description : '',
+            style: 'display:' + display,
+            href: '#/' + ds.base.name + '/' + (config.tab || 'data') +
+              '/' + object.name,
+            onclick: function() {
+              Diagram.type = 'table'
+              Diagram.root = object.name
+            }
+          }, label),
+          !object.rowcount || !config.admin ? '' : m('span', {
+            class: 'ml2 light-silver',
+            style: 'display:' + display
+          }, '(' + object.rowcount + ')'),
+          !subitems || !node.expanded ? '' : m('.content', {
+            style: 'margin-left:' + 18 + 'px',
+          }, [
+              Object.keys(subitems).map(function(label) {
+                var subitem = subitems[label]
+                return Contents.draw_node(label, subitem, level + 1)
+              })
+            ])
         ])
-      ])
     }
   },
 
@@ -247,50 +247,50 @@ var Contents = {
       m('ul#context-module', {
         class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
       }, [
-        m('li', {
-          class: 'hover-blue',
-          onclick: function() {
-            Diagram.type = 'module'
-            Diagram.root = Contents.context_module
-            $('ul#context-module').hide()
-          }
-        }, 'Vis diagram')
-      ]),
+          m('li', {
+            class: 'hover-blue',
+            onclick: function() {
+              Diagram.type = 'module'
+              Diagram.root = Contents.context_module
+              $('ul#context-module').hide()
+            }
+          }, 'Vis diagram')
+        ]),
       m('ul#context-table', {
         class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
       }, [
-        config.tab == 'data' ? '' : m('li', {
-          class: 'hover-blue',
-          onclick: function() {
-            Diagram.type = 'custom'
-            Diagram.add_path(Contents.context_table)
-            $('ul#context-table').hide()
-          }
-        }, 'Vis koblinger til denne tabellen'),
-        m('li.hide', {
-          class: 'hover-blue',
-          onclick: function() {
-            var tbl = Contents.context_table
-            tbl.hidden = !tbl.hidden
-            $('ul#context-table').hide()
+          config.tab == 'data' ? '' : m('li', {
+            class: 'hover-blue',
+            onclick: function() {
+              Diagram.type = 'custom'
+              Diagram.add_path(Contents.context_table)
+              $('ul#context-table').hide()
+            }
+          }, 'Vis koblinger til denne tabellen'),
+          m('li.hide', {
+            class: 'hover-blue',
+            onclick: function() {
+              var tbl = Contents.context_table
+              tbl.hidden = !tbl.hidden
+              $('ul#context-table').hide()
 
-            ds.set_cfg_value(tbl, 'hidden', tbl.hidden)
-          }
-        }, 'Skjul tabell'),
-        m('li.type', {
-          class: 'hover-blue',
-          onclick: function() {
-            console.log('valgte contextmenyitem')
-            var tbl = Contents.context_table
-            tbl.type = tbl.type == 'table'
-              ? 'list'
-              : 'table'
-            $('ul#context-table').hide()
+              ds.set_cfg_value(tbl, 'hidden', tbl.hidden)
+            }
+          }, 'Skjul tabell'),
+          m('li.type', {
+            class: 'hover-blue',
+            onclick: function() {
+              console.log('valgte contextmenyitem')
+              var tbl = Contents.context_table
+              tbl.type = tbl.type == 'table'
+                ? 'list'
+                : 'table'
+              $('ul#context-table').hide()
 
-            ds.set_cfg_value(tbl, 'type', tbl.type)
-          }
-        }, 'Sett til referansetabell')
-      ]),
+              ds.set_cfg_value(tbl, 'type', tbl.type)
+            }
+          }, 'Sett til referansetabell')
+        ]),
       m('.list', { class: "flex flex-column overflow-auto min-w5" }, [
         !ds.base.schemata || ds.base.schemata.length < 2
           ? '' : m('select', {
@@ -301,14 +301,14 @@ var Contents = {
               m.route.set('/' + db_name + '.' + schema)
             }
           }, [
-            ds.base.schemata.map(function(schema, idx) {
-              var selected = (schema == ds.base.schema)
-              return m('option', {
-                value: schema,
-                selected: selected
-              }, schema)
-            })
-          ]),
+              ds.base.schemata.map(function(schema, idx) {
+                var selected = (schema == ds.base.schema)
+                return m('option', {
+                  value: schema,
+                  selected: selected
+                }, schema)
+              })
+            ]),
         ds.base.contents && Object.keys(ds.base.contents).length
           ? Object.keys(ds.base.contents).sort().map(function(label) {
             var item = ds.base.contents[label]
@@ -323,10 +323,10 @@ var Contents = {
           }),
       ]),
     ]), ds.table || !ds.base.description ? '' : m('div', { class: 'pl5' }, [
-      m('b', 'Beskrivelse'),
-      m('br'),
-      m('p', ds.base.description)
-    ])]
+        m('b', 'Beskrivelse'),
+        m('br'),
+        m('p', ds.base.description)
+      ])]
 
   }
 }

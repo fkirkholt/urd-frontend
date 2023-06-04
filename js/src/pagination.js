@@ -64,37 +64,37 @@ var Pagination = {
           Pagination.navigate(e.target.name, false)
         }
       }, [
-        m('button[name="first"]', {
-          class: [
-            'icon fa fa-angle-double-left ba b--light-silver br0 bg-white',
-            Pagination.disabled('first', table) ? 'moon-gray' : ''
-          ].join(' '),
-          disabled: Pagination.disabled('first', table)
-        }),
-        m('button[name=previous]', {
-          class: [
-            'icon fa fa-angle-left bt br bl-0 bb b--light-silver br0 bg-white',
-            Pagination.disabled('previous', table)
-              ? 'moon-gray' : '',
-          ].join(' '),
-          disabled: Pagination.disabled('previous', table)
-        }),
-        m('button[name=next]', {
-          class: [
-            'icon fa fa-angle-right bt br bb bl-0 b--light-silver br0 bg-white',
-            Pagination.disabled('next', table) ? 'moon-gray' : '',
-          ].join(' '),
-          disabled: Pagination.disabled('next', table)
-        }),
-        m('button[name=last]', {
-          class: [
-            'icon fa fa-angle-double-right bt br bb bl-0',
-            'b--light-silver br0 bg-white',
-            Pagination.disabled('last', table) ? 'moon-gray' : '',
-          ].join(' '),
-          disabled: Pagination.disabled('last', table)
-        })
-      ]),
+          m('button[name="first"]', {
+            class: [
+              'icon fa fa-angle-double-left ba b--light-silver br0 bg-white',
+              Pagination.disabled('first', table) ? 'moon-gray' : ''
+            ].join(' '),
+            disabled: Pagination.disabled('first', table)
+          }),
+          m('button[name=previous]', {
+            class: [
+              'icon fa fa-angle-left bt br bl-0 bb b--light-silver br0 bg-white',
+              Pagination.disabled('previous', table)
+                ? 'moon-gray' : '',
+            ].join(' '),
+            disabled: Pagination.disabled('previous', table)
+          }),
+          m('button[name=next]', {
+            class: [
+              'icon fa fa-angle-right bt br bb bl-0 b--light-silver br0 bg-white',
+              Pagination.disabled('next', table) ? 'moon-gray' : '',
+            ].join(' '),
+            disabled: Pagination.disabled('next', table)
+          }),
+          m('button[name=last]', {
+            class: [
+              'icon fa fa-angle-double-right bt br bb bl-0',
+              'b--light-silver br0 bg-white',
+              Pagination.disabled('last', table) ? 'moon-gray' : '',
+            ].join(' '),
+            disabled: Pagination.disabled('last', table)
+          })
+        ]),
     ])
   }
 

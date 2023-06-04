@@ -275,113 +275,113 @@ var Field = {
       // Finn ut hva jeg skal erstatte med.
       (
         !config.edit_mode && config.hide_empty
-        && field.value === null
+          && field.value === null
       ) ? '' : m('tr', [
-        // Show expansion icon
-        m('td', { class: 'tc v-top' }, [
-          !field.fkey || !field.expandable ||
-            field.value === null ? null : m('i.fa.w1', {
-              class: !field.expanded
-                ? 'fa-angle-right' : field.expandable
-                  ? 'fa-angle-down' : '',
-              onclick: Field.toggle_fkey.bind(this, rec, colname)
-            }),
-        ]),
-        // Show label
-        m('td.label', {
-          class: [
-            'f6 pr1 v-top w1',
-            field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
-            !config.admin ? 'max-w5 truncate' : '',
-          ].join(' '),
-          onclick: function() {
-            if (field.fkey && field.expandable && field.value) {
-              Field.toggle_fkey(rec, colname)
-            } else if (field.element == 'textarea') {
-              field.expanded = !field.expanded
-            }
-          }
-        }, [
-          get(field, 'attrs.title')
-            ? m('abbr', { title: field.attrs.title }, label)
-            : label,
-          !field.use || !config.admin ? '' : m('span', {
-            class: 'ml2 light-silver'
-          }, '(' + Field.get_percentage(field.use) + '%)'),
-          ':'
-        ]),
-        // Show icons signifying mandatory, modified, or illegal value
-        m('td', {
-          class: 'v-top'
-        }, [
-          field.invalid && field.value == null
-            ? m('i', { class: 'fa fa-asterisk red' })
-            : field.invalid
-              ? m('i', {
-                class: 'fa fa-warning ml1 red',
-                title: field.errormsg
-              })
-              : field.dirty
-                ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
-                : Field.is_mandatory(field) && config.edit_mode
-                  ? m('i', { class: 'fa fa-asterisk f7 light-gray' })
-                  : ''
-        ]),
-        // Show field value
-        m('td', {
-          class: [
-            'max-w7 w-100',
-            (field.element == 'textarea' &&
-              !field.expanded && !config.edit_mode
-            ) ? 'nowrap truncate' : '',
-            config.edit_mode ? 'nowrap' : '',
-            field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
-            rec.inherited ? 'gray' : '',
-          ].join(' '),
-          onclick: function() {
-            if (field.element == 'textarea') {
-              field = rec.fields[colname]
-              field.expanded = !field.expanded
-            }
-          }
-        }, [
-          (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode)
-            ? Field.display_value(field)
-            : m(Input, { rec: rec, fieldname: colname }),
-          !field.expandable || field.value === null
-            ? ''
-            : m('a', {
-              class: 'icon-crosshairs light-blue hover-blue pointer link',
-              href: Field.get_url(field, rec),
-              onclick: function(e) {
-                // Delete active table to avoid flicker
-                delete ds.table
+          // Show expansion icon
+          m('td', { class: 'tc v-top' }, [
+            !field.fkey || !field.expandable ||
+              field.value === null ? null : m('i.fa.w1', {
+                class: !field.expanded
+                  ? 'fa-angle-right' : field.expandable
+                    ? 'fa-angle-down' : '',
+                onclick: Field.toggle_fkey.bind(this, rec, colname)
+              }),
+          ]),
+          // Show label
+          m('td.label', {
+            class: [
+              'f6 pr1 v-top w1',
+              field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
+              !config.admin ? 'max-w5 truncate' : '',
+            ].join(' '),
+            onclick: function() {
+              if (field.fkey && field.expandable && field.value) {
+                Field.toggle_fkey(rec, colname)
+              } else if (field.element == 'textarea') {
+                field.expanded = !field.expanded
               }
-            }),
+            }
+          }, [
+              get(field, 'attrs.title')
+                ? m('abbr', { title: field.attrs.title }, label)
+                : label,
+              !field.use || !config.admin ? '' : m('span', {
+                class: 'ml2 light-silver'
+              }, '(' + Field.get_percentage(field.use) + '%)'),
+              ':'
+            ]),
+          // Show icons signifying mandatory, modified, or illegal value
+          m('td', {
+            class: 'v-top'
+          }, [
+              field.invalid && field.value == null
+                ? m('i', { class: 'fa fa-asterisk red' })
+                : field.invalid
+                  ? m('i', {
+                    class: 'fa fa-warning ml1 red',
+                    title: field.errormsg
+                  })
+                  : field.dirty
+                    ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
+                    : Field.is_mandatory(field) && config.edit_mode
+                      ? m('i', { class: 'fa fa-asterisk f7 light-gray' })
+                      : ''
+            ]),
+          // Show field value
+          m('td', {
+            class: [
+              'max-w7 w-100',
+              (field.element == 'textarea' &&
+                !field.expanded && !config.edit_mode
+              ) ? 'nowrap truncate' : '',
+              config.edit_mode ? 'nowrap' : '',
+              field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
+              rec.inherited ? 'gray' : '',
+            ].join(' '),
+            onclick: function() {
+              if (field.element == 'textarea') {
+                field = rec.fields[colname]
+                field.expanded = !field.expanded
+              }
+            }
+          }, [
+              (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode)
+                ? Field.display_value(field)
+                : m(Input, { rec: rec, fieldname: colname }),
+              !field.expandable || field.value === null
+                ? ''
+                : m('a', {
+                  class: 'icon-crosshairs light-blue hover-blue pointer link',
+                  href: Field.get_url(field, rec),
+                  onclick: function(e) {
+                    // Delete active table to avoid flicker
+                    delete ds.table
+                  }
+                }),
 
-          // Show trash bin for field from cross reference table
-          rec.table.relationship != 'M:M' || !config.edit_mode
-            ? ''
-            : m('i', {
-              class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
-              onclick: Record.delete.bind(this, rec)
-            }),
+              // Show trash bin for field from cross reference table
+              rec.table.relationship != 'M:M' || !config.edit_mode
+                ? ''
+                : m('i', {
+                  class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
+                  onclick: Record.delete.bind(this, rec)
+                }),
 
-          !field.attrs || !field.attrs.href ? '' : m('a', {
-            href: sprintf(field.attrs.href, field.value)
-          }, m('i', {
-            class: 'icon-crosshairs light-blue hover-blue pointer'
-          })),
-        ])
-      ]),
+              !field.attrs || !field.attrs.href ? '' : m('a', {
+                href: sprintf(field.attrs.href, field.value)
+              }, m('i', {
+                  class: 'icon-crosshairs light-blue hover-blue pointer'
+                })),
+            ])
+        ]),
       // Expanded record
       !field.fkey || !field.expanded ? null : m('tr', [
         m('td'),
         m('td', {
           colspan: 3
         }, [
-          m(Record, { record: field.relation })
-        ])
+            m(Record, { record: field.relation })
+          ])
       ])
     ]
   }

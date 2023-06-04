@@ -295,51 +295,57 @@ var Relation = {
     }
 
     return [
-      m('tr.heading', {
-        onclick: function() {
-          Relation.toggle_heading(rel)
-          if (!rel.records) {
-            Record.get_relations(rec, key)
+      m('tr.heading', 
+        {
+          onclick: function() {
+            Relation.toggle_heading(rel)
+            if (!rel.records) {
+              Record.get_relations(rec, key)
+            }
           }
-        }
-      }, [
-        m('td.fa.tc.w1', {
-          class: [
-            rel.expanded === true
-              ? 'fa-angle-down' : 'fa-angle-right',
-            rel.invalid
-              ? 'invalid' : rel.dirty
-                ? 'dirty' : ''
-          ].join(' ')
-        }),
-        m('td.label', {
-          class: [
-            "f6 nowrap pr2",
-          ].join(' '),
-          colspan: 3
-        }, [
-          label,
-          rel.count_records !== undefined
-            ? m('span', { class: 'ml1 pr1 normal moon-gray f7' }, [
-                rel.count_records,
-                rel.relationship == '1:1' ? ':1' : ''
-              ])
-            : '',
-          // show target icon for relations
-          !rel.name ? '' :
-            m('a', {
+        }, 
+        [
+          m('td.fa.tc.w1', {
+            class: [
+              rel.expanded === true
+                ? 'fa-angle-down' : 'fa-angle-right',
+              rel.invalid
+                ? 'invalid' : rel.dirty
+                  ? 'dirty' : ''
+            ].join(' ')
+          }),
+          m('td.label', 
+            {
               class: [
-                rel.relationship == '1:M'
-                  ? 'icon-crosshairs light-blue hover-blue pointer mr1 link'
-                  : '',
+                "f6 nowrap pr2",
               ].join(' '),
-              href: url
-            }),
-          rel.dirty
-            ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
-            : '',
-        ]),
-      ]),
+              colspan: 3
+            }, 
+            [
+              label,
+              rel.count_records !== undefined
+                ? m('span', { class: 'ml1 pr1 normal moon-gray f7' }, [
+                  rel.count_records,
+                  rel.relationship == '1:1' ? ':1' : ''
+                ])
+                : '',
+              // show target icon for relations
+              !rel.name ? '' :
+                m('a', {
+                  class: [
+                    rel.relationship == '1:M'
+                      ? 'icon-crosshairs light-blue hover-blue pointer mr1 link'
+                      : '',
+                  ].join(' '),
+                  href: url
+                }),
+              rel.dirty
+                ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
+                : '',
+            ]
+          ),
+        ]
+      ),
       rel.expanded && rel.records
         ? ['1:M', 'M:M'].includes(rel.relationship)
           ? Relation.draw_relation_table(rel, rec)

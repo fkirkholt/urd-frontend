@@ -452,79 +452,79 @@ var Record = {
     return m('form[name="record"]', {
       class: 'flex flex-column',
     }, [
-      !ds.table.edit && !ds.table.hide
-        ? ''
-        : m('div', [
-          config.recordview ? '' : m('input[type=button]', {
-            value: 'Lagre og lukk',
-            onclick: function() {
-              var saved = true
-              if (ds.table.dirty) {
-                vnode.attrs.record = merge(vnode.attrs.record, rec)
-                delete ds.rec
-                saved = Grid.save()
+        !ds.table.edit && !ds.table.hide
+          ? ''
+          : m('div', [
+            config.recordview ? '' : m('input[type=button]', {
+              value: 'Lagre og lukk',
+              onclick: function() {
+                var saved = true
+                if (ds.table.dirty) {
+                  vnode.attrs.record = merge(vnode.attrs.record, rec)
+                  delete ds.rec
+                  saved = Grid.save()
+                }
+                if (saved) {
+                  ds.table.edit = false
+                  config.edit_mode = false
+                }
               }
-              if (saved) {
+            }),
+            config.recordview ? '' : m('input[type=button]', {
+              value: 'Avbryt',
+              onclick: function() {
                 ds.table.edit = false
                 config.edit_mode = false
+                delete ds.rec
+                if (rec.new) {
+                  var idx = ds.table.selection
+                  ds.table.records.splice(idx, 1)
+                  Record.select(ds.table, 0, true)
+                }
               }
-            }
-          }),
-          config.recordview ? '' : m('input[type=button]', {
-            value: 'Avbryt',
-            onclick: function() {
-              ds.table.edit = false
-              config.edit_mode = false
-              delete ds.rec
-              if (rec.new) {
-                var idx = ds.table.selection
-                ds.table.records.splice(idx, 1)
-                Record.select(ds.table, 0, true)
-              }
-            }
-          })
-        ]),
-      m('table[name=view]', {
-        class: [
-          'pt1 pl1 pr2 flex flex-column',
-          config.theme === 'material' ? 'md' : '',
-          'overflow-auto',
-        ].join(' '),
-        style: '-ms-overflow-style:-ms-autohiding-scrollbar'
-      }, [
-        m('tbody', [
-          Object.keys(rec.table.form.items).map(function(label) {
-            var item = rec.table.form.items[label]
+            })
+          ]),
+        m('table[name=view]', {
+          class: [
+            'pt1 pl1 pr2 flex flex-column',
+            config.theme === 'material' ? 'md' : '',
+            'overflow-auto',
+          ].join(' '),
+          style: '-ms-overflow-style:-ms-autohiding-scrollbar'
+        }, [
+            m('tbody', [
+              Object.keys(rec.table.form.items).map(function(label) {
+                var item = rec.table.form.items[label]
 
-            if (
-              typeof item !== 'object' &&
-              item.indexOf('.') === -1 &&
-              rec.table.fields[item].defines_relation
-            ) {
-              return
-            }
+                if (
+                  typeof item !== 'object' &&
+                    item.indexOf('.') === -1 &&
+                    rec.table.fields[item].defines_relation
+                ) {
+                  return
+                }
 
-            if (typeof item == 'object') {
-              return m(Fieldset, {
-                rec: rec,
-                fieldset: item,
-                label: label
+                if (typeof item == 'object') {
+                  return m(Fieldset, {
+                    rec: rec,
+                    fieldset: item,
+                    label: label
+                  })
+                } else if (
+                  typeof item == "string" &&
+                    item.includes('relations')
+                ) {
+                  return m(Relation, { rec: rec, ref: item, label: label })
+                } else if (typeof item == "string" && item.includes('actions')) {
+                  // TODO
+                } else {
+                  return m(Field, { rec: rec, colname: item, label: label })
+                }
+
               })
-            } else if (
-              typeof item == "string" &&
-              item.includes('relations')
-            ) {
-              return m(Relation, { rec: rec, ref: item, label: label })
-            } else if (typeof item == "string" && item.includes('actions')) {
-              // TODO
-            } else {
-              return m(Field, { rec: rec, colname: item, label: label })
-            }
-
-          })
-        ])
+            ])
+          ])
       ])
-    ])
   }
 }
 
