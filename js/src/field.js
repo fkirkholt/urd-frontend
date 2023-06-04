@@ -115,7 +115,7 @@ var Field = {
     value = field.value || value
 
 
-    if (field.text) {
+    if (field.text !== null && field.text !== undefined) {
       value = field.text
     } else if (field.element == 'input[type=checkbox]') {
       var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
@@ -252,13 +252,7 @@ var Field = {
     var rec = vnode.attrs.rec
     var colname = vnode.attrs.colname
     var label = vnode.attrs.label
-    // var field = $.extend({}, rec.fields[colname])
     var field = rec.fields[colname]
-
-    // Can have virtual columns from a view to be shown in grid
-    if (field.virtual) {
-      field.text = rec.columns[colname].text
-    }
 
     // Don't show fields used below threshold value
     if (field.use && field.use < config.threshold) {

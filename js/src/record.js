@@ -28,7 +28,14 @@ var Record = {
       rec = $.extend(table.records[idx], result.data)
       rec.table = table
       rec.root = root
-      rec.fields = $.extend({}, table.fields, rec.fields)
+
+      // Get virtual columns from table.fields.
+      $.extend(true, rec.fields, table.fields)
+      for (fieldname in table.fields) {
+        if (table.fields[fieldname].virtual) {
+          rec.fields[fieldname].text = rec.columns[fieldname].text
+        }
+      }
 
       rec.columns = table.records[idx].columns
       Record.get_relations_count(rec)

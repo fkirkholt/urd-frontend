@@ -12,7 +12,7 @@ var Fieldset = {
           case 'field':
             var field = rec.fields[fieldname]
             var separator
-            if (idx > 0 && field.value) {
+            if (idx > 0 && (field.value !== null || field.text !== null)) {
               separator = field.separator ? field.separator : ', '
             } else {
               separator = null

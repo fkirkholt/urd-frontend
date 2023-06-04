@@ -19,14 +19,20 @@ var Cell = {
     var compressed = vnode.attrs.compressed
     var rec = list.records[rowidx]
     var field = list.fields[colname]
+    var col = rec.columns[colname]
     if (field.hidden) return
-    var value = rec.columns[colname].value == null ? ''
+    
+    var value = col.value == null && col.text == null ? ''
       // Show value if the table is displayed in compressed mode
-      : compressed ? rec.columns[colname].value
+      : compressed ? col.value
         // else show the display text (that also shows in a select box)
-        : rec.columns[colname].text
+        : col.text
 
-    value = Field.display_value(field, value)
+    if (field.element == 'input[type=checkbox]') {
+      var icon = value == 0 ? 'fa-square-o' : 'fa-check-square-o'
+      value = m('i', { class: 'fa ' + icon })
+    }
+    
     var expansion = colname === list.expansion_column && list.ismain
 
     var icon = m('i', {
