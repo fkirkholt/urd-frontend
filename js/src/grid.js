@@ -161,11 +161,13 @@ var Grid = {
 
       ds.table.filters = Search.parse_query(data.filter)
 
-      ds.table.selection = data.index
+      if (data.index) {
+        ds.table.selection = data.index
+      }
 
       // Show first record
       if (ds.table.type != 'view') {
-        Record.select(ds.table, ds.table.selection, true)
+        Record.select(ds.table, ds.table.selection || 0, true)
       }
       $('#urdgrid tr.focus').trigger('focus')
     }).catch(function(e) {

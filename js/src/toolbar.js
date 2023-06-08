@@ -181,7 +181,6 @@ var Toolbar = {
 
   set_url: function(index, offset) {
     // Set index in url
-    offset = offset == undefined ? ds.table.offset : offset
     var query_params = {}
     path = m.route.get()
     if (path.includes('?')) {
@@ -191,7 +190,9 @@ var Toolbar = {
     if (index !== null) {
       query_params.index = index
     }
-    query_params.offset = offset
+    if (offset !== undefined) {
+      query_params.offset = offset
+    }
     m.route.set('/' + ds.base.name + '/data/' + ds.table.name + '?' + m.buildQueryString(query_params))
   },
 
@@ -280,7 +281,7 @@ var Toolbar = {
             if (ds.table.privilege.insert != true || full) return
             Record.create(ds.table)
 
-            Toolbar.set_url(ds.table.selection)
+            Record.select(ds.table, ds.table.selection)
 
             // Focus first input in new record
             setTimeout(function() {

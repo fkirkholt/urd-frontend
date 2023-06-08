@@ -217,7 +217,7 @@ var Row = {
             'icon-crosshairs light-blue hover-blue pointer',
             'br b--moon-gray bb--light-gray'
           ].join(' '),
-          onclick: function() {
+          onclick: function(e) {
             var query_params
             path = m.route.get()
             if (path.includes('?')) {
@@ -227,7 +227,8 @@ var Row = {
             query_params = query_params ? query_params.index = idx : {index: idx}
 
             // m.route.set(Grid.url + '?' + m.buildQueryString(query_params))
-            Toolbar.set_url(idx, ds.table.offset)
+            Toolbar.set_url(idx, query_params.offset)
+            e.stopPropagation()
           }
         })
       ]),
