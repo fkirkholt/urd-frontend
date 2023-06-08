@@ -36,39 +36,37 @@ var Contents = {
     return display
   },
 
-  draw_node: function(label, node) {
-    // If the node is just a heading
-    if (typeof node == 'object' && !node.item) {
-      var display = node.expanded ? 'block' : 'none'
+  draw_heading: function(label, heading) {
+      var display = heading.expanded ? 'block' : 'none'
       // Decides if the header should be shown or not
-      var display_header = Contents.display_header(node)
+      var display_header = Contents.display_header(heading)
       return m('.module', {
-        class: node.class_module,
+        class: heading.class_module,
         style: 'display:' + display_header
       }, [
           m('span.nowrap', [
             // Draw expansion icons
             m('i', {
               class: [
-                node.expanded
+                heading.expanded
                   ? 'fa fa-angle-down'
                   : 'fa fa-angle-right',
-                node.class_label,
+                heading.class_label,
                 'w1 tc',
                 'light-silver'
               ].join(' '),
               onclick: function() {
-                node.expanded = !node.expanded
+                heading.expanded = !heading.expanded
               }
             }),
             // Draw label
             m('.label', {
               class: [
-                node.class_label,
+                heading.class_label,
                 'di b pointer'
               ].join(' '),
               onclick: function() {
-                node.expanded = !node.expanded
+                heading.expanded = !heading.expanded
               },
               oncontextmenu: function(event) {
                 Contents.context_module = label
@@ -79,126 +77,131 @@ var Contents = {
               }
             }, label),
             // Draw table count if in admin mode
-            !node.count || !config.admin ? '' : m('span', {
+            !heading.count || !config.admin ? '' : m('span', {
               class: 'ml2 light-silver'
-            }, '(' + node.count + ')'),
+            }, '(' + heading.count + ')'),
           ]),
           // Draw tables in group if group is expanded
           m('.content', {
-            class: node.class_content,
+            class: heading.class_content,
             style: 'display: ' + display
           }, [
-              Object.keys(node.subitems).map(function(label) {
-                var subitem = node.subitems[label]
-                if (Array.isArray(node.subitems)) {
+              Object.keys(heading.subitems).map(function(label) {
+                var subitem = heading.subitems[label]
+                if (Array.isArray(heading.subitems)) {
                   var obj = get(ds.base, subitem)
                   if (obj === undefined) return
                   label = obj.label
                 }
-                return Contents.draw_node(label, subitem)
+                return Contents.draw_table_node(label, subitem)
               })
             ])
         ])
+  },
+
+  // draw_node: function(label, node) {
+  //   // If the node is just a heading
+  //   if (typeof node == 'object' && !node.item) {
+  //   } else {
+  draw_table_node: function(label, node) {
+    var subitems
+    // If this is a table with subordinate tables
+    if (typeof node == 'object') {
+      subitems = node.subitems
+      item = node.item
+      var display_chevron = Contents.display_header(node)
     } else {
-      var subitems
-      // If this is a table with subordinate tables
-      if (typeof node == 'object') {
-        subitems = node.subitems
-        item = node.item
-        var display_chevron = Contents.display_header(node)
-      } else {
-        subitems = false
-        item = node
-      }
-      // For now only tables are accepted in contents
-      var table = get(ds.base, item, ds.base.tables[item])
-      if (item.indexOf('.') == -1) item = 'tables.' + item
-      if (
-        ((table.hidden || table.type == 'list') && !config.admin)
-          || ['xref', 'link', 'ext'].includes(table.type)
-      ) {
-        return
-      }
-      var icon = table.type && (table.type == 'list') 
-        ? 'fa-list'
-        : 'fa-table'
-      var icon_color = table.hidden ? 'moon-gray' : 'silver'
-
-      return m('div', {
-        class: ds.table && ds.table.name == table.name
-          ? 'bg-light-gray nowrap'
-          : 'nowrap',
-      }, [
-          // Draw expansion icon for tables having subordinate tables
-          typeof node != 'object' ? '' : m('i', {
-            class: [
-              'w1 tc light-silver fa',
-              node.expanded ? 'fa-angle-down' : 'fa-angle-right',
-            ].join(' '),
-            style: display_chevron == 'none' ? 'display: none' : '',
-            onclick: function() {
-              node.expanded = !node.expanded
-            }
-          }),
-          // Draw icon indicating table type
-          m('i', {
-            class: [
-              icon_color + ' mr1 fa ' + icon,
-              // Indent icon correctly when there is no expansjon icon
-              (typeof node == 'object' && display_chevron == 'block')
-                ? ''
-                : 'ml3'
-            ].join(' '),
-          }),
-          // Draw table name as link
-          m('a', {
-            class: [
-              'black underline-hover nowrap',
-              table.description ? 'dot' : 'link',
-              table.type == 'view' ? 'i' : ''
-            ].join(' '),
-            title: table.description ? table.description : '',
-            href: '#/' + ds.base.name + '/' + (config.tab || 'data') +
-              '/' + table.name,
-            onclick: function() {
-              Diagram.type = 'table'
-              Diagram.root = table.name
-            },
-            oncontextmenu: function(event) {
-              Contents.context_table = table
-
-              var hidden_txt = table.hidden
-                ? 'Vis tabell'
-                : 'Skjul tabell'
-              $('ul#context-table li.hide').html(hidden_txt)
-
-              var type_txt = table.type == 'list'
-                ? 'Sett til datatabell'
-                : 'Sett til referansetabell'
-              $('ul#context-table li.type').html(type_txt)
-
-              $('ul#context-table')
-                .css({ top: event.clientY, left: event.clientX })
-                .toggle()
-
-              return false
-            }
-          }, label),
-          // Draw rowcount if in admin mode
-          !table.rowcount || !config.admin ? '' : m('span', {
-            class: 'ml2 light-silver',
-          }, '(' + table.rowcount + ')'),
-          // Draw subordinate tables for expanded main table
-          !subitems || !node.expanded ? '' : m('.content', {
-            style: 'margin-left:' + 18 + 'px',
-          }, [
-              Object.keys(subitems).map(function(label) {
-                var subitem = subitems[label]
-                return Contents.draw_node(label, subitem)
-              })
-            ])
-        ])
+      subitems = false
+      item = node
     }
+    // For now only tables are accepted in contents
+    var table = get(ds.base, item, ds.base.tables[item])
+    if (item.indexOf('.') == -1) item = 'tables.' + item
+    if (
+      ((table.hidden || table.type == 'list') && !config.admin)
+        || ['xref', 'link', 'ext'].includes(table.type)
+    ) {
+      return
+    }
+    var icon = table.type && (table.type == 'list') 
+      ? 'fa-list'
+      : 'fa-table'
+    var icon_color = table.hidden ? 'moon-gray' : 'silver'
+
+    return m('div', {
+      class: ds.table && ds.table.name == table.name
+        ? 'bg-light-gray nowrap'
+        : 'nowrap',
+    }, [
+        // Draw expansion icon for tables having subordinate tables
+        typeof node != 'object' ? '' : m('i', {
+          class: [
+            'w1 tc light-silver fa',
+            node.expanded ? 'fa-angle-down' : 'fa-angle-right',
+          ].join(' '),
+          style: display_chevron == 'none' ? 'display: none' : '',
+          onclick: function() {
+            node.expanded = !node.expanded
+          }
+        }),
+        // Draw icon indicating table type
+        m('i', {
+          class: [
+            icon_color + ' mr1 fa ' + icon,
+            // Indent icon correctly when there is no expansjon icon
+            (typeof node == 'object' && display_chevron == 'block')
+              ? ''
+              : 'ml3'
+          ].join(' '),
+        }),
+        // Draw table name as link
+        m('a', {
+          class: [
+            'black underline-hover nowrap',
+            table.description ? 'dot' : 'link',
+            table.type == 'view' ? 'i' : ''
+          ].join(' '),
+          title: table.description ? table.description : '',
+          href: '#/' + ds.base.name + '/' + (config.tab || 'data') +
+            '/' + table.name,
+          onclick: function() {
+            Diagram.type = 'table'
+            Diagram.root = table.name
+          },
+          oncontextmenu: function(event) {
+            Contents.context_table = table
+
+            var hidden_txt = table.hidden
+              ? 'Vis tabell'
+              : 'Skjul tabell'
+            $('ul#context-table li.hide').html(hidden_txt)
+
+            var type_txt = table.type == 'list'
+              ? 'Sett til datatabell'
+              : 'Sett til referansetabell'
+            $('ul#context-table li.type').html(type_txt)
+
+            $('ul#context-table')
+              .css({ top: event.clientY, left: event.clientX })
+              .toggle()
+
+            return false
+          }
+        }, label),
+        // Draw rowcount if in admin mode
+        !table.rowcount || !config.admin ? '' : m('span', {
+          class: 'ml2 light-silver',
+        }, '(' + table.rowcount + ')'),
+        // Draw subordinate tables for expanded main table
+        !subitems || !node.expanded ? '' : m('.content', {
+          style: 'margin-left:' + 18 + 'px',
+        }, [
+            Object.keys(subitems).map(function(label) {
+              var subitem = subitems[label]
+              return Contents.draw_table_node(label, subitem)
+            })
+          ])
+      ])
   },
 
   view: function() {
@@ -283,7 +286,11 @@ var Contents = {
             // Draw contents from ds.base.contents
             ? Object.keys(ds.base.contents).sort().map(function(label) {
               var item = ds.base.contents[label]
-              var retur = Contents.draw_node(label, item, 3)
+              if (typeof item == 'object' && !item.item) {
+                var retur = Contents.draw_heading(label, item, 3)
+              } else {
+                var retur = Contents.draw_table_node(label, item)
+              }
               return retur
             })
             // Draw contents from ds.base.tables
