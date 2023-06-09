@@ -247,6 +247,8 @@ var Grid = {
     }
 
     var invalid = false
+    var messages = []
+    var msg
 
     $.each(ds.table.records, function(idx, rec) {
       if (!rec.dirty && !rec.new) return
@@ -255,6 +257,7 @@ var Grid = {
 
       if (rec.invalid) {
         invalid = true
+        messages.push(rec.messages.join("\n"))
         return
       }
 
@@ -264,7 +267,8 @@ var Grid = {
     })
 
     if (invalid) {
-      alert('Rett feil før lagring')
+      msg = messages.join("\n- ")
+      alert('Rett feil før lagring:\n- ' + msg)
       return
     }
 
