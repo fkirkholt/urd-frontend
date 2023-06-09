@@ -433,7 +433,9 @@ var Record = {
 
     // Clone record so the registration can be cancelled easily
     if (ds.table.edit && !ds.rec) {
-      rec = structuredClone(rec)
+      if (!config.recordview) {
+        rec = structuredClone(rec)
+      }
       ds.rec = rec
     } else if (ds.table.edit) {
       rec = ds.rec

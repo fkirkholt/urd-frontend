@@ -281,7 +281,11 @@ var Toolbar = {
             if (ds.table.privilege.insert != true || full) return
             Record.create(ds.table)
 
-            Record.select(ds.table, ds.table.selection)
+            if (config.recordview) {
+              Toolbar.set_url(ds.table.selection)
+            } else {
+              Record.select(ds.table, ds.table.selection)
+            }
 
             // Focus first input in new record
             setTimeout(function() {
