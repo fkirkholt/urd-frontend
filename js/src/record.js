@@ -30,7 +30,13 @@ var Record = {
         rec.root = root
 
         // Get virtual columns from table.fields.
-        $.extend(true, rec.fields, table.fields)
+        for (field_name in table.fields) {
+          field = table.fields[field_name]
+          if (rec.fields[field.name] === undefined) {
+            rec.fields[field.name] = field
+          }
+        }
+
         for (fieldname in table.fields) {
           if (table.fields[fieldname].virtual) {
             rec.fields[fieldname].text = rec.columns[fieldname].text
