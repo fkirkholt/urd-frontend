@@ -25,27 +25,27 @@ var Record = {
         pkey: pk
       }
     }).then(function(result) {
-      rec = $.extend(table.records[idx], result.data)
-      rec.table = table
-      rec.root = root
+        rec = $.extend(table.records[idx], result.data)
+        rec.table = table
+        rec.root = root
 
-      // Get virtual columns from table.fields.
-      $.extend(true, rec.fields, table.fields)
-      for (fieldname in table.fields) {
-        if (table.fields[fieldname].virtual) {
-          rec.fields[fieldname].text = rec.columns[fieldname].text
+        // Get virtual columns from table.fields.
+        $.extend(true, rec.fields, table.fields)
+        for (fieldname in table.fields) {
+          if (table.fields[fieldname].virtual) {
+            rec.fields[fieldname].text = rec.columns[fieldname].text
+          }
         }
-      }
 
-      rec.columns = table.records[idx].columns
-      Record.get_relations_count(rec)
-    }).catch(function(e) {
-      if (e.code === 401) {
-        $('div.curtain').show()
-        $('#login').show()
-        $('#brukernavn').trigger('focus')
-      }
-    })
+        rec.columns = table.records[idx].columns
+        Record.get_relations_count(rec)
+      }).catch(function(e) {
+        if (e.code === 401) {
+          $('div.curtain').show()
+          $('#login').show()
+          $('#brukernavn').trigger('focus')
+        }
+      })
   },
 
   get_relations_count: function(rec) {
@@ -59,8 +59,8 @@ var Record = {
         count: true
       }
     }).then(function(result) {
-      rec.relations = result.data
-    })
+        rec.relations = result.data
+      })
   },
 
   get_relations: function(rec, alias) {
@@ -76,14 +76,14 @@ var Record = {
         alias: alias
       }
     }).then(function(result) {
-      if (result.data[alias].relationship == '1:1') {
-        record = result.data[alias].records[0]
-        record.table = result.data[alias]
-        Record.get_relations_count(record)
-      }
-      $('.icon-crosshairs').removeClass('fast-spin')
-      Object.assign(rec.relations[alias], result.data[alias])
-    })
+        if (result.data[alias].relationship == '1:1') {
+          record = result.data[alias].records[0]
+          record.table = result.data[alias]
+          Record.get_relations_count(record)
+        }
+        $('.icon-crosshairs').removeClass('fast-spin')
+        Object.assign(rec.relations[alias], result.data[alias])
+      })
   },
 
   create: function(list, relation) {
@@ -156,7 +156,7 @@ var Record = {
 
             if (
               table_name === rec.table_name &&
-              field_name === field.name && filter.operator === '='
+                field_name === field.name && filter.operator === '='
             ) {
               conditions.push(filter)
             }
@@ -236,7 +236,7 @@ var Record = {
             clone.text = null
           }
         }
-      }
+        }
     })
 
     clone.pkey = {}
@@ -269,25 +269,25 @@ var Record = {
       params: data,
       url: 'record'
     }).then(function(data) {
-      for (let fieldname in changes.values) {
-        rec.fields[fieldname].dirty = false
-      }
-      rec.new = false
-      $.each(data.values, function(fieldname, value) {
-        rec.fields[fieldname].value = value
-
-        // Update value in grid cell
-        if (rec.columns && fieldname in rec.columns) {
-          rec.columns[fieldname].value = value
+        for (let fieldname in changes.values) {
+          rec.fields[fieldname].dirty = false
         }
+        rec.new = false
+        $.each(data.values, function(fieldname, value) {
+          rec.fields[fieldname].value = value
 
+          // Update value in grid cell
+          if (rec.columns && fieldname in rec.columns) {
+            rec.columns[fieldname].value = value
+          }
+
+        })
+        if (rec.delete) {
+          var idx = rec.table.selection
+          rec.table.records.splice(idx, 1)
+          rec.table.selection = 0
+        }
       })
-      if (rec.delete) {
-        var idx = rec.table.selection
-        rec.table.records.splice(idx, 1)
-        rec.table.selection = 0
-      }
-    })
   },
 
   validate: function(record) {
