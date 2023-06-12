@@ -192,6 +192,14 @@ var Field = {
         }
       }).then(function(result) {
         var record = result.data
+        var field
+        // Get virtual columns from table.fields
+        for (field_name in table.fields) {
+          field = table.fields[field_name]
+          if (record.fields[field.name] === undefined) {
+            record.fields[field.name] = field
+          }
+        }
         record.readonly = true
         record.table = table
         table.records[0] = Object.assign(table.records[0], record)
