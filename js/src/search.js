@@ -270,9 +270,6 @@ var Search = {
           field.attr.type == 'checkbox')) &&
       filter.operator !== ''
     ) {
-      // TODO: field.relation tror jeg ikke finnes mer
-      key = field.relation
-
       return m(Select, {
         name: filter.field,
         options: field.options,
@@ -280,21 +277,6 @@ var Search = {
         value: filter.value,
         label: filter.label,
         style: 'flex: 2;',
-        ajax: field.options ? null : {
-          type: 'GET',
-          url: 'select',
-          dataType: 'json',
-          data: {
-            limit: 500,
-            schema: key.ref_schema,
-            base: key.ref_base,
-            table: key.ref_table,
-            alias: key.alias,
-            view: field.view,
-            key: key.ref_key,
-            condition: null
-          }
-        },
         onchange: function(e) {
           filter.value = e.target['value']
           filter.label = e.target['textContent']
@@ -307,9 +289,7 @@ var Search = {
         has_idx &&
         ['=', '!='].includes(filter.operator))
     ) {
-
       key = field.fkey ? field.fkey.primary : [field.name]
-      var key_json = JSON.stringify(key)
 
       return m(Autocomplete, {
         name: filter.field,
@@ -322,18 +302,12 @@ var Search = {
         class: 'w-100',
         style: 'flex: 2;',
         ajax: field.options ? null : {
-          url: 'select',
+          url: 'options',
           data: {
-            limit: 550,
-            schema: field.fkey ? field.fkey.schema : '',
-            base: (field.fkey && field.fkey.base)
-              ? field.fkey.base
-              : ds.base.name,
-            table: field.fkey ? field.fkey.table : table.name,
-            alias: field.name,
-            view: field.view,
-            column_view: field.column_view,
-            key: key_json,
+            schema: ds.base.schema,
+            base: ds.base.name,
+            table: table.name,
+            column: field.name,
             condition: null
           }
         },

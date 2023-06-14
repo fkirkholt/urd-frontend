@@ -203,18 +203,12 @@ var Input = {
         placeholder: 'Velg',
         disabled: readOnly,
         ajax: {
-          url: "select",
+          url: 'options',
           data: {
-            limit: 1000,
-            schema: field.fkey ? field.fkey.schema : '',
-            base: (field.fkey && field.fkey.base)
-              ? field.fkey.base
-              : rec.base_name,
-            table: field.fkey ? field.fkey.table : rec.table_name,
-            alias: field.name,
-            view: field.view,
-            column_view: field.column_view,
-            key: key_json,
+            schema: ds.base.schema,
+            base: ds.base.name,
+            table: rec.table.name,
+            column: field.name,
             condition: Input.get_condition(rec, field)
           }
         },

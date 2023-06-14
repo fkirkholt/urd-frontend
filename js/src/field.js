@@ -40,20 +40,16 @@ var Field = {
             rec.columns[name].value = null
             rec.columns[name].text = null
           }
-          // Get new options for select
           m.request({
             method: 'GET',
-            url: 'select',
+            url: 'options',
             params: {
               q: '',
               limit: 1000,
-              schema: other_field.fkey.schema,
-              base: other_field.fkey.base,
-              table: other_field.fkey.table,
-              alias: other_field.name,
-              view: other_field.view,
-              column_view: other_field.column_view,
-              key: JSON.stringify(other_field.fkey.primary),
+              schema: ds.base.schema,
+              base: ds.base.name,
+              table: ds.table.name,
+              column: other_field.name,
               condition: Input.get_condition(rec, other_field)
             }
           }).then(function(data) {
