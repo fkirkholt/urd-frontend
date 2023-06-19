@@ -16,24 +16,29 @@ var Codefield = {
     Promise.all([
       import(/* webpackChunkName: "codemirror" */ 'codemirror'),
       import(/* webpackChunkName: "cm-lang-sql" */ '@codemirror/lang-sql'),
-      import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json')
-    ]).then(([cm, sql, json]) => {
-      var lang
-      if (vnode.attrs.lang == 'sql') {
-        lang = sql.sql()
-      } else if (vnode.attrs.lang == 'json') {
-        lang = json.json()
-      }
-      editors[vnode.attrs.id] = new cm.EditorView({
-        doc: vnode.attrs.value,
-        extensions: [
-          cm.basicSetup,
-          cm.EditorView.editable.of(vnode.attrs.editable),
-          lang
-        ],
-        parent: vnode.dom,
+      import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
+      import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
+      import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
+    ]).then(([cm, sql, json, language, yaml]) => {
+        var lang
+        if (vnode.attrs.lang == 'sql') {
+          lang = sql.sql()
+        } else if (vnode.attrs.lang == 'json') {
+          lang = json.json()
+        } else if (vnode.attrs.lang == 'yml') {
+          // Use legacy mode for yaml
+          lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
+        }
+        editors[vnode.attrs.id] = new cm.EditorView({
+          doc: vnode.attrs.value,
+          extensions: [
+            cm.basicSetup,
+            cm.EditorView.editable.of(vnode.attrs.editable),
+            lang
+          ],
+          parent: vnode.dom,
+        })
       })
-    })
   },
 
   view: function(vnode) {

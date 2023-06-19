@@ -129,6 +129,16 @@ var Field = {
         value: JSON.parse(field.value)
       })
     } else if (
+      (field.datatype == 'json' || get(field, 'attrs.data-type') == 'json') &&
+        get(field, 'attrs.data-format') == 'yaml'
+    ) {
+      value = m(Codefield, {
+        id: 'yaml',
+        editable: true,
+        lang: 'yml',
+        value: yaml.dump(JSON.parse(field.value))
+      })
+    } else if (
       get(field, 'attrs.data-format') == 'markdown' &&
       field.expanded
     ) {
@@ -396,7 +406,9 @@ module.exports = Field
 var config = require('./config')
 var marked = require('marked')
 var sprintf = require("sprintf-js").sprintf
+var yaml = require('js-yaml')
 var Input = require('./input')
 var Record = require('./record')
 var get = require('just-safe-get')
 var JSONed = require('./jsoned')
+var Codefield = require('./codefield')
