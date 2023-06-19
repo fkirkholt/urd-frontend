@@ -301,7 +301,7 @@ var Contents = {
             }),
         ]),
       ]),
-      // Show table description to the right of the contents
+      // Show database description to the right of the contents
       ds.table || !ds.base.description ? '' : m('div', { class: 'pl5' }, [
         m('b', 'Beskrivelse'),
         m('br'),

@@ -110,7 +110,6 @@ var Field = {
     // field.value is not set for cells in grid
     value = field.value || value
 
-
     if (field.text !== null && field.text !== undefined) {
       value = field.text
     } else if (field.element == 'input[type=checkbox]') {
@@ -144,7 +143,9 @@ var Field = {
     ) {
       value = m.trust(marked.parse(field.value))
     } else if (field.expanded) {
-      value = m.trust(value.replace("\n", '<br>'))
+      if (typeof(value) == 'string') {
+        value = m.trust(value.replace("\n", '<br>'))
+      }
     }
 
     return value
