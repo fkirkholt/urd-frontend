@@ -235,7 +235,8 @@ var Input = {
         }
 
       })
-    } else if (field.datatype == 'json') {
+    } else if (field.datatype == 'json' || get(field, 'attrs.data-format') == 'json') {
+      
       return m(JSONed, {
         name: field.name,
         field: field,

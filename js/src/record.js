@@ -172,6 +172,13 @@ var Record = {
         if (conditions.length === 1) {
           field.value = conditions[0].value
           field.dirty = true
+        } else if (
+          field.attrs &&
+          field.attrs['data-format'] && 
+          field.attrs['data-format'] == 'json' &&
+          field.nullable == false
+        ) {
+          field.value = '{}'
         } else {
           field.value = null
         }
