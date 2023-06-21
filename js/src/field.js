@@ -5,6 +5,8 @@ var Field = {
     var field = rec.fields[field_name]
 
     field.value = value
+    field.invalid = false
+    field.errormsg = ''
 
     field.dirty = true
     rec.dirty = true

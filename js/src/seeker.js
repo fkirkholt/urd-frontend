@@ -49,6 +49,7 @@ function Seeker() {
       params: attrs.ajax.data
     }).then(function(result) {
       options = result
+      event.target.dataset.options = JSON.stringify(options)
     })
 
   }
@@ -85,11 +86,15 @@ function Seeker() {
           onkeydown: function(event) {
             keydown(event, vnode.attrs)
           },
-          onblur: function() {
-            options = []
+          onblur: function(event) {
+            if (vnode.attrs.hide_options) {
+              vnode.attrs.onchange(event)
+            } else {
+              options = []
+            }
           },
         }),
-        !options.length ? '' : m('ul.options', {
+        !options.length || vnode.attrs.hide_options ? '' : m('ul.options', {
           class: 'absolute list bg-white ma0 pa0 ba b--gray'
         }, [
             options.map(function(row, i) {

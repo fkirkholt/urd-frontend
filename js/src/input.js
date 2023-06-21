@@ -52,8 +52,8 @@ var Input = {
 
   // Validate field and check if it's mandatory
   validate: function(value, field) {
-    field.invalid = false
-    field.errormsg = ''
+    field.invalid = field.invalid || false
+    field.errormsg = field.errormsg || ''
     if (field.editable == false) return
     if ((field.nullable || field.extra) && (value == '' || value == null)) {
       field.invalid = false
@@ -113,6 +113,12 @@ var Input = {
       placeholder = 'autoincr.'
     }
 
+    $.each(rec.table.indexes, function(i, idx) {
+      if (idx.columns[0] === field.name && idx.unique) {
+        field.unique = true
+      }
+    })
+
     if (field.element == 'select' && (field.options || field.optgroups)) {
       var filtered_optgroups
       var optgroup_field = rec.fields[field.optgroup_field]
@@ -171,15 +177,15 @@ var Input = {
             if (event.target.value == field.value) {
               return
             }
-            Input.validate(event.target.value, field)
             var text = event.target.options[idx].text
             var coltext = event.target.options[idx].dataset.coltext
             field.text = text
             field.coltext = coltext
             Field.update(event.target.value, field.name, rec)
+            Input.validate(event.target.value, field)
           }
         })
-    } else if (field.element === 'select') {
+    } else if (field.element === 'select' || field.unique) {
 
       if (!field.text) field.text = field.value
 
@@ -202,6 +208,7 @@ var Input = {
         text: field.text,
         placeholder: 'Velg',
         disabled: readOnly,
+        hide_options: field.unique,
         ajax: {
           url: 'options',
           data: {
@@ -214,6 +221,7 @@ var Input = {
         },
         onchange: function(event) {
           var value = $(event.target).data('value')
+          var options
 
           // handle self referencing fields
           if (value === undefined) value = event.target.value
@@ -225,8 +233,18 @@ var Input = {
             return
           }
 
-          Input.validate(value, field)
           Field.update(value, field.name, rec)
+
+          if (field.unique) {
+            options = JSON.parse(event.target.dataset.options)
+            for (idx in options) {
+              if (value == options[idx].value) {
+                field.invalid = true
+                field.errormsg = 'Ikke unik verdi'
+              }
+            }
+          }
+          Input.validate(value, field)
         },
         onclick: function(event) {
           if (event.target.value === '') {
@@ -263,8 +281,8 @@ var Input = {
         value: field.value,
         disabled: readOnly,
         onchange: function(event) {
-          Input.validate(event.target.value, field)
           Field.update(event.target.value, field.name, rec)
+          Input.validate(event.target.value, field)
         }
       })
 
@@ -278,8 +296,8 @@ var Input = {
         style: field.attrs ? field.attrs.style : '',
         onchange: function(event) {
           var value = event.target.checked ? 1 : 0
-          Input.validate(value, field)
           Field.update(value, field.name, rec)
+          Input.validate(value, field)
         },
         checked: +field.value
       })
@@ -307,8 +325,8 @@ var Input = {
             event.redraw = false
             return
           }
-          Input.validate(value, field)
           Field.update(value, field.name, rec)
+          Input.validate(value, field)
         }
       })
     } else {
@@ -343,8 +361,8 @@ var Input = {
         pattern: get(field, 'attrs.pattern'),
         onchange: function(event) {
           value = event.target.value.replace(/\u21a9/g, "\n")
-          Input.validate(value, field)
           Field.update(value, field.name, rec)
+          Input.validate(value, field)
         }
       })
     }
