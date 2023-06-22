@@ -18,6 +18,11 @@ var Fieldset = {
               separator = null
             }
 
+            field.attrs = field.attrs || {}
+            field.attrs.rec = rec
+            field.attrs.name = fieldname
+            field.attrs.placeholder = field.attrs.placeholder || field.label
+
             // determine if field should be displayd or edited
             var display = rec.table.privilege.update == 0 ||
               rec.readonly || !config.edit_mode
@@ -25,11 +30,7 @@ var Fieldset = {
             return m('span', { class: display ? '' : 'mr2' },
               display
                 ? [separator, Field.display_value(field)].join('')
-                : m(Input, {
-                  rec: rec,
-                  fieldname: fieldname,
-                  placeholder: field.label
-                })
+                : m(Input, field.attrs)
             )
           case 'action':
             var action = ds.table.actions[fieldname]

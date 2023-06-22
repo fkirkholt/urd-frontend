@@ -271,6 +271,10 @@ var Field = {
     var label = vnode.attrs.label
     var field = rec.fields[colname]
 
+    field.attrs = field.attrs || {}
+    field.attrs.rec = rec
+    field.attrs.name = colname
+
     // Don't show fields used below threshold value
     if (field.use && field.use < config.threshold) {
       return
@@ -364,7 +368,7 @@ var Field = {
           }, [
               (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode)
                 ? Field.display_value(field)
-                : m(Input, { rec: rec, fieldname: colname }),
+                : m(Input, $.extend({}, field.attrs)),
               !field.expandable || field.value === null
                 ? ''
                 : m('a', {

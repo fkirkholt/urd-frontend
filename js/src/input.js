@@ -79,7 +79,7 @@ var Input = {
       }
     } else if (
       field.datatype == 'string' && 
-      field.placeholder == 'yyyy(-mm(-dd))'
+      field.attrs.placeholder == 'yyyy(-mm(-dd))'
     ) {
       if (
         dayjs(value, 'YYYY-MM-DD', true).isValid() == false &&
@@ -97,21 +97,26 @@ var Input = {
 
   view: function(vnode) {
     var rec = vnode.attrs.rec
-    var fieldname = vnode.attrs.fieldname
-    var placeholder = vnode.attrs.placeholder
+    delete vnode.attrs.rec
+    var fieldname = vnode.attrs.name
     var field = rec.fields[fieldname]
-    var value
-    var readOnly = !field.editable
-
-    placeholder = placeholder || field.placeholder
 
     if (
-      !placeholder &&
+      !vnode.attrs.placeholder &&
       field.extra == 'auto_increment' &&
       field.element != 'select'
     ) {
-      placeholder = 'autoincr.'
+      vnode.attrs.placeholder = 'autoincr.'
     }
+
+    vnode.attrs.required = !field.nullable
+    vnode.attrs.value = field.value
+    vnode.attrs.disabled = !field.editable
+    vnode.attrs.class = [
+      'max-w7 border-box',
+      vnode.attrs.class ? vnode.attrs.class : ''
+    ].join(' ')
+    vnode.attrs.style = vnode.attrs.style || {}
 
     $.each(rec.table.indexes, function(i, idx) {
       if (idx.columns[0] === field.name && idx.unique) {
@@ -135,236 +140,158 @@ var Input = {
         return opt.value == field.value
       })
 
-      maxlength = field.options && field.options.length
-        ? field.options.map(function(el) {
-          return el.label ? el.label.length : 0
-        }).reduce(function(max, cur) {
-          return Math.max(max, cur)
-        }) : 0
+      vnode.attrs.options = field.options
+      vnode.attrs.optgroups = filtered_optgroups
+      vnode.attrs.text = field.text
+      vnode.attrs.label = field.label
+      vnode.attrs.clear = true
+      vnode.attrs.onchange = function(event) {
+        var idx = event.target.selectedIndex
+        if (field.optgroup_field) {
+          var optgroup = $(':selected', event.target)
+            .closest('optgroup').data('value')
+          rec.fields[field.optgroup_field].value = optgroup
+        }
+        if (event.target.value == field.value) {
+          return
+        }
+        var text = event.target.options[idx].text
+        var coltext = event.target.options[idx].dataset.coltext
+        field.text = text
+        field.coltext = coltext
+        Field.update(event.target.value, field.name, rec)
+        Input.validate(event.target.value, field)
+      }
 
-
-      return readOnly
+      return vnode.attrs.disabled
         ? m('input', {
           disabled: true, value: option ? option.label : field.value
         })
-        : m(Select, {
-          name: field.name,
-          // style: field.expandable 
-          //     ? 'width: calc(100% - 30px)' : '',
-          class: [
-            'max-w7',
-            maxlength >= 30 ? 'w-100' : '',
-            field.attrs ? field.attrs.class : ''
-          ].join(' '),
-          style: field.attrs ? field.attrs.style : '',
-          title: field.attrs ? field.attrs.title : '',
-          options: field.options,
-          optgroups: filtered_optgroups,
-          required: !field.nullable,
-          value: field.value,
-          text: field.text,
-          label: field.label,
-          clear: true,
-          placeholder: placeholder,
-          disabled: readOnly,
-          onchange: function(event) {
-            var idx = event.target.selectedIndex
-            if (field.optgroup_field) {
-              var optgroup = $(':selected', event.target)
-                .closest('optgroup').data('value')
-              rec.fields[field.optgroup_field].value = optgroup
-            }
-            if (event.target.value == field.value) {
-              return
-            }
-            var text = event.target.options[idx].text
-            var coltext = event.target.options[idx].dataset.coltext
-            field.text = text
-            field.coltext = coltext
-            Field.update(event.target.value, field.name, rec)
-            Input.validate(event.target.value, field)
-          }
-        })
+        : m(Select, vnode.attrs)
     } else if (field.element === 'select' || field.unique) {
 
       if (!field.text) field.text = field.value
 
-      var key = field.fkey ? field.fkey.primary : [field.name]
-      key_json = JSON.stringify(key)
+      vnode.attrs.item = field
+      vnode.attrs.text = field.text
+      vnode.attrs.placeholder = vnode.attrs.placeholder || 'Velg'
+      vnode.attrs.hide_options = field.unique
+      vnode.attrs.ajax = {
+        url: 'options',
+        data: {
+          schema: ds.base.schema,
+          base: ds.base.name,
+          table: rec.table.name,
+          column: field.name,
+          condition: Input.get_condition(rec, field)
+        }
+      }
+      vnode.attrs.onchange = function(event) {
+        var value = $(event.target).data('value')
+        var options
 
-      return m(Autocomplete, {
-        name: field.name,
-        style: field.expandable
-          ? 'width: calc(100% - 30px)' : 'width: 100%',
-        required: !field.nullable,
-        class: [
-          'max-w7 border-box',
-          field.attrs ? field.attrs.class : ''
-        ].join(' '),
-        style: field.attrs ? field.attrs.style : '',
-        title: field.attrs ? field.attrs.title : '',
-        item: field,
-        value: field.value,
-        text: field.text,
-        placeholder: 'Velg',
-        disabled: readOnly,
-        hide_options: field.unique,
-        ajax: {
-          url: 'options',
-          data: {
-            schema: ds.base.schema,
-            base: ds.base.name,
-            table: rec.table.name,
-            column: field.name,
-            condition: Input.get_condition(rec, field)
-          }
-        },
-        onchange: function(event) {
-          var value = $(event.target).data('value')
-          var options
+        // handle self referencing fields
+        if (value === undefined) value = event.target.value
 
-          // handle self referencing fields
-          if (value === undefined) value = event.target.value
+        field.text = event.target.value
+        field.coltext = $(event.target).data('coltext')
 
-          field.text = event.target.value
-          field.coltext = $(event.target).data('coltext')
+        if (field.value === value) {
+          return
+        }
 
-          if (field.value === value) {
-            return
-          }
+        Field.update(value, field.name, rec)
 
-          Field.update(value, field.name, rec)
-
-          if (field.unique) {
-            options = JSON.parse(event.target.dataset.options)
-            for (idx in options) {
-              if (value == options[idx].value) {
-                field.invalid = true
-                field.errormsg = 'Ikke unik verdi'
-              }
+        if (field.unique) {
+          options = JSON.parse(event.target.dataset.options)
+          for (idx in options) {
+            if (value == options[idx].value) {
+              field.invalid = true
+              field.errormsg = 'Ikke unik verdi'
             }
           }
-          Input.validate(value, field)
-        },
-        onclick: function(event) {
-          if (event.target.value === '') {
-            $(event.target).autocomplete('search', '')
-          }
         }
+        Input.validate(value, field)
+      }
+      vnode.attrs.onclick = function(event) {
+        if (event.target.value === '') {
+          $(event.target).autocomplete('search', '')
+        }
+      }
 
-      })
+      return m(Autocomplete, vnode.attrs)
     } else if (field.datatype == 'json' || get(field, 'attrs.data-format') == 'json') {
-      
-      return m(JSONed, {
-        name: field.name,
-        field: field,
-        rec: rec,
-        style: "width: 330px; height: 400px;",
-        value: JSON.parse(field.value),
-        onchange: function(value) {
-          Field.update(value, field.name, rec)
-        }
-      })
+
+      vnode.attrs.field = field
+      vnode.attrs.rec = rec
+      vnode.attrs.value = JSON.parse(field.value)
+      vnode.attrs.onchange = function(value) {
+        Field.update(value, field.name, rec)
+      }
+
+      return m(JSONed, vnode.attrs)
     } else if (field.element == 'textarea') {
       text = field.value ? marked.parse(field.value) : ''
 
-      return readOnly ? m.trust(text) : m('textarea', {
-        name: field.name,
-        class: [
-          'ba b--light-grey w-100 max-w7',
-          field.format == 'markdown' ? 'code' : '',
-          field.attrs ? field.attrs.class : '',
-        ].join(' '),
-        style: field.attrs ? field.attrs.style : '',
-        title: field.attrs ? field.attrs.title : '',
-        required: !field.nullable,
-        value: field.value,
-        disabled: readOnly,
-        onchange: function(event) {
-          Field.update(event.target.value, field.name, rec)
-          Input.validate(event.target.value, field)
-        }
-      })
+      vnode.attrs.class = [
+        'ba b--light-grey w-100 max-w7',
+        field.format == 'markdown' ? 'code' : '',
+        vnode.attrs.class ? vnode.attrs.class : '',
+      ].join(' ')
+      vnode.attrs.onchange = function(event) {
+        Field.update(event.target.value, field.name, rec)
+        Input.validate(event.target.value, field)
+      }
 
+      return vnode.attrs.disabled ? m.trust(text) : m('textarea', vnode.attrs)
     } else if (
       (field.element == 'input' && field.attr.type == 'checkbox') ||
       field.element == 'input[type=checkbox]'
     ) {
-      return m('input[type=checkbox][name=' + field.name + ']', {
-        disabled: readOnly,
-        class: field.attrs ? field.attrs.class : '',
-        style: field.attrs ? field.attrs.style : '',
-        onchange: function(event) {
-          var value = event.target.checked ? 1 : 0
-          Field.update(value, field.name, rec)
-          Input.validate(value, field)
-        },
-        checked: +field.value
-      })
+      vnode.attrs.checked = +field.value
+      vnode.attrs.onchange = function(event) {
+        var value = event.target.checked ? 1 : 0
+        Field.update(value, field.name, rec)
+        Input.validate(value, field)
+      }
+
+      return m('input[type=checkbox][name=' + field.name + ']', vnode.attrs)
     } else if (field.element == 'input[type=date]') {
-      var value = typeof field.value === 'object' && field.value !== null
+      vnode.attrs.value = typeof field.value === 'object' && field.value !== null
         ? field.value.date
         : field.value
-      return m('input[type=date]', {
-        name: field.name,
-        class: [
-          'w5',
-          field.attrs ? field.attrs.class : '',
-        ].join(' '),
-        style: field.attrs ? field.attrs.style : '',
-        title: field.attrs ? field.attrs.title : '',
-        // required: !field.nullable,
-        disabled: readOnly,
-        dateFormat: 'yy-mm-dd',
-        value: typeof field.value === 'object' && field.value !== null
-          ? field.value.date
-          : field.value,
-        onchange: function(event) {
-          var value = event.target.value
-          if (field.value && value === field.value.substr(0, 10)) {
-            event.redraw = false
-            return
-          }
-          Field.update(value, field.name, rec)
-          Input.validate(value, field)
+      vnode.attrs.dateFormat = 'yy-mm-dd'
+      vnode.attrs.onchange = function(event) {
+        var value = event.target.value
+        if (field.value && value === field.value.substr(0, 10)) {
+          event.redraw = false
+          return
         }
-      })
+        Field.update(value, field.name, rec)
+        Input.validate(value, field)
+      }
+
+      return m('input[type=date]', vnode.attrs)
     } else {
       var size = field.datatype == 'float' || field.datatype == 'decimal'
         ? field.size + 1
         : field.size
       var width = size ? Math.round(size * 0.6) + 'em' : ''
 
-      value = typeof field.value === 'string'
+      vnode.attrs.value = typeof field.value === 'string'
         ? field.value.replace(/\n/g, '\u21a9')
         : field.value
 
-      return m('input', {
-        name: field.name,
-        maxlength: size ? size : '',
-        title: field.attrs ? field.attrs.title : '',
-        // required: !field.nullable && field.extra !== 'auto_increment',
-        class: [
-          !field.nullable && field.value === '' ? 'invalid' : '',
-          field.size >= 30 ? 'w-100' : '',
-          'min-w3 max-w7 border-box',
-          field.attrs ? field.attrs.class : ''
-        ].join(' '),
-        style: [
-          'width: ' + width,
-          'text-overflow: ellipsis',
-          field.attrs ? field.attrs.style : ''
-        ].join(';'),
-        disabled: readOnly,
-        value: value,
-        placeholder: get(field, 'attrs.placeholder') || placeholder,
-        pattern: get(field, 'attrs.pattern'),
-        onchange: function(event) {
-          value = event.target.value.replace(/\u21a9/g, "\n")
-          Field.update(value, field.name, rec)
-          Input.validate(value, field)
-        }
-      })
+      vnode.attrs.maxlength = size ? size : ''
+      vnode.attrs.style.width = width
+      vnode.attrs.style['text-overflow'] = 'ellipsis'
+      vnode.attrs.onchange = function(event) {
+        var value = event.target.value.replace(/\u21a9/g, "\n")
+        Field.update(value, field.name, rec)
+        Input.validate(value, field)
+      }
+
+      return m('input', vnode.attrs)
     }
   }
 }
