@@ -21,6 +21,10 @@ var JSONed = {
       vnode.state.jsoned = new jsoneditor(vnode.dom, options)
       vnode.state.jsoned.set(vnode.attrs.value)
     })
+  },
+
+  onupdate: function(vnode) {
+    vnode.state.jsoned.set(vnode.attrs.value)
   }
 }
 
