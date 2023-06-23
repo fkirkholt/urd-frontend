@@ -241,6 +241,7 @@ var Input = {
       vnode.attrs.onchange = function(event) {
         Field.update(event.target.value, field.name, rec)
         Input.validate(event.target.value, field)
+        event.stopPropagation()
       }
 
       return vnode.attrs.disabled ? m.trust(text) : m('textarea', vnode.attrs)
