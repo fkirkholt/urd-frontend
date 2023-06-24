@@ -29,7 +29,7 @@ var Fieldset = {
 
             return m('span', { class: display ? '' : 'mr2' },
               display
-                ? [separator, Field.display_value(field)].join('')
+                ? [separator, Field.display_value(field, rec)].join('')
                 : m(Input, field.attrs)
             )
           case 'action':

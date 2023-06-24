@@ -12,7 +12,6 @@ var Tablelist = {
           m('li', {
             class: 'hover-blue',
             onclick: function() {
-              console.log('rename')
               var sql = 'alter table ' + Tablelist.context_table +
                 ' rename to new_table_name'
               Codefield.set_value('query', sql)

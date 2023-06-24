@@ -28,10 +28,6 @@ var JSONed = {
       vnode.state.jsoned && 
       JSON.stringify(vnode.state.jsoned.get()) != JSON.stringify(vnode.attrs.value)
     ) {
-      console.log('setter ny verdi')
-      // console.log(vnode.state.jsoned)
-      console.log('get', vnode.state.jsoned.get())
-      console.log('value', vnode.attrs.value)
       vnode.state.jsoned.set(vnode.attrs.value)
     }
   }

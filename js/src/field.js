@@ -108,9 +108,9 @@ var Field = {
     Record.save(rec)
   },
 
-  display_value: function(field, value) {
+  display_value: function(field, rec) {
     // field.value is not set for cells in grid
-    value = field.value || value
+    value = field.value
 
     if (field.text !== null && field.text !== undefined) {
       value = field.text
@@ -135,8 +135,10 @@ var Field = {
     ) {
       value = m(Codefield, {
         id: 'yaml',
-        editable: true,
-        lang: 'yml',
+        class: field.attrs.class || '',
+        'data-pkey': rec.pkey,
+        editable: false,
+        lang: 'yaml',
         value: yaml.dump(JSON.parse(field.value))
       })
     } else if (
@@ -367,7 +369,7 @@ var Field = {
             }
           }, [
               (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode)
-                ? Field.display_value(field)
+                ? Field.display_value(field, rec)
                 : m(Input, $.extend({}, field.attrs)),
               !field.expandable || field.value === null
                 ? ''

@@ -118,3 +118,8 @@ input:focus {
 input:focus-visible {
   border: black solid 2px;
 }
+
+.cm-editor {max-height: 400px}
+.cm-wrap { height: 100% }
+.cm-scroller { overflow: auto }
+

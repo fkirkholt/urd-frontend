@@ -220,6 +220,23 @@ var Input = {
       }
 
       return m(Autocomplete, vnode.attrs)
+    } else if (
+      (field.datatype == 'json' || get(field, 'attrs.data-type') == 'json') &&
+        get(field, 'attrs.data-format') == 'yaml'
+    ) {
+      vnode.attrs.id = field.name
+      vnode.attrs['data-pkey'] = rec.pkey
+      vnode.attrs.class = vnode.attrs.class + ' ba b--light-silver'
+      vnode.attrs.editable = true
+      vnode.attrs.lang = 'yaml'
+      vnode.attrs.value = yaml.dump(JSON.parse(field.value))
+      vnode.attrs.onchange = function(value) {
+        value = JSON.stringify(yaml.load(value))
+        Field.update(value, field.name, rec)
+      }
+
+      return m(Codefield, vnode.attrs)
+
     } else if (field.datatype == 'json' || get(field, 'attrs.data-format') == 'json') {
 
       vnode.attrs.field = field
@@ -308,3 +325,5 @@ var marked = require('marked')
 var dayjs = require('dayjs')
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
+var Codefield = require('./codefield')
+var yaml = require('js-yaml')
