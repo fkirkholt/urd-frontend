@@ -12,6 +12,43 @@ var Codefield = {
     })
   },
 
+  foldmethod: function(state, from, to) {
+    // https://discuss.codemirror.net/t/add-folding-on-indent-levels-for-plain-text-and-yaml-language/5925
+    const line = state.doc.lineAt(from) // First line
+    const lines = state.doc.lines // Number of lines in the document
+    const indent = line.text.search(/\S|$/) // Indent level of the first line
+    let foldStart = from // Start of the fold
+    let foldEnd = to // End of the fold
+
+    // Check the next line if it is on a deeper indent level
+    // If it is, check the next line and so on
+    // If it is not, go on with the foldEnd
+    let nextLine = line
+    while (nextLine.number < lines) {
+        nextLine = state.doc.line(nextLine.number + 1) // Next line
+        const nextIndent = nextLine.text.search(/\S|$/) // Indent level of the next line
+
+        // If the next line is on a deeper indent level, add it to the fold
+        if (nextIndent > indent) {
+            foldEnd = nextLine.to // Set the fold end to the end of the next line
+        } else {
+            break // If the next line is not on a deeper indent level, stop
+        }
+    }
+
+    // If the fold is only one line, don't fold it
+    if (state.doc.lineAt(foldStart).number === state.doc.lineAt(foldEnd).number) {
+        return null
+    }
+
+    // Set the fold start to the end of the first line
+    // With this, the fold will not include the first line
+    foldStart = line.to
+
+    // Return a fold that covers the entire indent level
+    return { from: foldStart, to: foldEnd }
+  },
+
   oncreate: function(vnode) {
     Promise.all([
       import(/* webpackChunkName: "codemirror" */ 'codemirror'),
@@ -33,10 +70,14 @@ var Codefield = {
         if (vnode.attrs['data-pkey']) {
           editors[vnode.attrs.id].pkey = vnode.attrs['data-pkey']
         }
+
+        const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
+
         editors[vnode.attrs.id].view = new cm.EditorView({
           doc: vnode.attrs.value,
           extensions: [
-            cm.minimalSetup,
+            cm.basicSetup,
+            foldingOnIndent,
             cm.EditorView.editable.of(vnode.attrs.editable),
             lang,
             cm.EditorView.updateListener.of(function(view) {
@@ -71,12 +112,15 @@ var Codefield = {
         }
         id = vnode.attrs.id
 
+        const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
+
         if (vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != editors[id].pkey) {
           editors[id].pkey = vnode.attrs['data-pkey']
           editors[id].view.setState(state.EditorState.create({
             doc: vnode.attrs.value,
             extensions: [
-              cm.minimalSetup,
+              cm.basicSetup,
+              foldingOnIndent,
               cm.EditorView.editable.of(vnode.attrs.editable),
               lang,
               cm.EditorView.updateListener.of(function(view) {
