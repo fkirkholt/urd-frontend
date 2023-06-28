@@ -167,7 +167,7 @@ var Input = {
         ? m('input', {
           disabled: true, value: option ? option.label : field.value
         })
-        : m(Select, vnode.attrs)
+        : m(Select, {...vnode.attrs})
     } else if (field.element === 'select' || field.unique) {
 
       if (!field.text) field.text = field.value
@@ -219,7 +219,7 @@ var Input = {
         }
       }
 
-      return m(Autocomplete, vnode.attrs)
+      return m(Autocomplete, {...vnode.attrs})
     } else if (
       (field.datatype == 'json' || get(field, 'attrs.data-type') == 'json') &&
         get(field, 'attrs.data-format') == 'yaml'
@@ -235,7 +235,7 @@ var Input = {
         Field.update(value, field.name, rec)
       }
 
-      return m(Codefield, vnode.attrs)
+      return m(Codefield, {...vnode.attrs})
 
     } else if (field.datatype == 'json' || get(field, 'attrs.data-format') == 'json') {
 
@@ -246,7 +246,7 @@ var Input = {
         Field.update(value, field.name, rec)
       }
 
-      return m(JSONed, vnode.attrs)
+      return m(JSONed, {...vnode.attrs})
     } else if (field.element == 'textarea') {
       text = field.value ? marked.parse(field.value) : ''
 
@@ -261,7 +261,7 @@ var Input = {
         event.stopPropagation()
       }
 
-      return vnode.attrs.disabled ? m.trust(text) : m('textarea', vnode.attrs)
+      return vnode.attrs.disabled ? m.trust(text) : m('textarea', {...vnode.attrs})
     } else if (
       (field.element == 'input' && field.attr.type == 'checkbox') ||
       field.element == 'input[type=checkbox]'
@@ -273,7 +273,7 @@ var Input = {
         Input.validate(value, field)
       }
 
-      return m('input[type=checkbox][name=' + field.name + ']', vnode.attrs)
+      return m('input[type=checkbox][name=' + field.name + ']', {...vnode.attrs})
     } else if (field.element == 'input[type=date]') {
       vnode.attrs.value = typeof field.value === 'object' && field.value !== null
         ? field.value.date
@@ -289,7 +289,7 @@ var Input = {
         Input.validate(value, field)
       }
 
-      return m('input[type=date]', vnode.attrs)
+      return m('input[type=date]', {...vnode.attrs})
     } else {
       var size = field.datatype == 'float' || field.datatype == 'decimal'
         ? field.size + 1
@@ -309,7 +309,7 @@ var Input = {
         Input.validate(value, field)
       }
 
-      return m('input', vnode.attrs)
+      return m('input', {...vnode.attrs})
     }
   }
 }
