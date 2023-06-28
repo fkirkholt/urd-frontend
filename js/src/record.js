@@ -131,7 +131,7 @@ var Record = {
       table_name: list.name,
       table: list,
       columns: list.records[idx].columns,
-      fields: $.extend(true, {}, list.fields),
+      fields: $.extend({}, list.fields),
       pkey: {},
       groups: [] // TODO: This should be removed
     }
@@ -139,6 +139,7 @@ var Record = {
     // set standard value of field, and sets editable from list
     $.each(rec.fields, function(name, field) {
       field.name = name
+      field.attrs = {}
       var conditions = []
 
       if (field.default) {
