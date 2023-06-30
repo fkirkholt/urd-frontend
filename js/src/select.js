@@ -34,7 +34,6 @@ var Select = {
                   return m('option', {
                     value: option.value,
                     class: 'black',
-                    "data-coltext": option.coltext,
                     selected: option.value === value
                   }, option.label)
                 })
@@ -44,7 +43,6 @@ var Select = {
             return m('option', {
               value: option.value,
               class: 'black',
-              "data-coltext": option.coltext,
               selected: option.value == value
             }, option.label)
           })

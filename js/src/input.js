@@ -156,9 +156,7 @@ var Input = {
           return
         }
         var text = event.target.options[idx].text
-        var coltext = event.target.options[idx].dataset.coltext
         field.text = text
-        field.coltext = coltext
         Field.update(event.target.value, field.name, rec)
         Input.validate(event.target.value, field)
       }
@@ -194,7 +192,6 @@ var Input = {
         if (value === undefined) value = event.target.value
 
         field.text = event.target.value
-        field.coltext = $(event.target).data('coltext')
 
         if (field.value === value) {
           return

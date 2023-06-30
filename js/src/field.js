@@ -14,13 +14,11 @@ var Field = {
 
     // Update grid cell
     if (rec.columns && field.name in rec.columns) {
-      rec.columns[field.name].text = field.coltext
-        ? field.coltext
-        : field.text
-          ? field.text
-          : typeof value == "string"
-            ? value.substring(0, 256)
-            : value
+      rec.columns[field.name].text = field.text
+        ? field.text
+        : typeof value == "string"
+          ? value.substring(0, 256)
+          : value
       rec.columns[field.name].value = value
     }
 

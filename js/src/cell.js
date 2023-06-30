@@ -21,7 +21,7 @@ var Cell = {
     var field = list.fields[colname]
     var col = rec.columns[colname]
     if (field.hidden) return
-    
+
     var value = col.value == null && col.text == null ? ''
       // Show value if the table is displayed in compressed mode
       : compressed ? col.value
