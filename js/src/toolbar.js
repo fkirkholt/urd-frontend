@@ -217,7 +217,7 @@ var Toolbar = {
     ds.table.hidden = config.recordview &&
       (params.index !== undefined || is_pkey)
 
-    return m('ul', { target: '_blank', class: 'flex f6 list pl1 mt1 mb1' }, [
+    return m('ul', { id: 'toolbar', target: '_blank', class: 'flex f6 list pl1 mt1 mb1' }, [
       // Make form to use with submit action
       m('li', [
         m('form#action', [

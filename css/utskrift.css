@@ -6,6 +6,18 @@
     display: none;
 }
 
+#tabbar {
+    display: none;
+}
+
+div .contents {
+    display: none;
+}
+
+#toolbar {
+    display: none;
+}
+
 #meny {
     display: none;
 }
