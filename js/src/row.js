@@ -94,7 +94,7 @@ var Row = {
       onclick: function(e) {
         if (list.ismain) { // if in main grid
           e.redraw = false
-          if (list.type != 'view') {
+          if (list.pkey) {
             Record.select(list, idx)
           }
         } else {
@@ -132,7 +132,7 @@ var Row = {
       },
       // classes for row
       class: [
-        (list.selection == idx && list.type != 'view')
+        (list.selection == idx && list.pkey)
           ? 'bg-light-blue focus'
           : '',
         'lh-copy cursor-default bg-white',

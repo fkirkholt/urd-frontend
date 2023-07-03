@@ -166,7 +166,7 @@ var Grid = {
       }
 
       // Show first record
-      if (ds.table.type != 'view') {
+      if (ds.table.pkey) {
         Record.select(ds.table, ds.table.selection || 0, true)
       }
       $('#urdgrid tr.focus').trigger('focus')
