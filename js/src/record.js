@@ -139,7 +139,7 @@ var Record = {
     // set standard value of field, and sets editable from list
     $.each(rec.fields, function(name, field) {
       field.name = name
-      field.attrs = {}
+      field.attrs = field.attrs || {}
       var conditions = []
 
       if (field.default) {
