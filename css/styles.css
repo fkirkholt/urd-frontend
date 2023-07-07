@@ -12,6 +12,23 @@ tr.bg-light-blue:focus {
     background-color: #96CCFF
 }
 
+fieldset {
+    border: none;
+}
+
+div.field {
+    padding-left: 0.75em;
+    margin-left: 2px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+legend {
+    font-weight: bold;
+}
+
 .sans-serif {
     font-family: 'Open Sans', sans-serif;
 }

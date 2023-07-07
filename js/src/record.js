@@ -500,46 +500,34 @@ var Record = {
               }
             })
           ]),
-        m('table[name=view]', {
-          class: [
-            'pt1 pl1 pr2 flex flex-column',
-            config.theme === 'material' ? 'md' : '',
-            'overflow-auto',
-          ].join(' '),
-          style: '-ms-overflow-style:-ms-autohiding-scrollbar'
-        }, [
-            m('tbody', [
-              Object.keys(rec.table.form.items).map(function(label) {
-                var item = rec.table.form.items[label]
+          Object.keys(rec.table.form.items).map(function(label) {
+            var item = rec.table.form.items[label]
 
-                if (
-                  typeof item !== 'object' &&
-                    item.indexOf('.') === -1 &&
-                    rec.table.fields[item].defines_relation
-                ) {
-                  return
-                }
+            if (
+              typeof item !== 'object' &&
+                item.indexOf('.') === -1 &&
+                rec.table.fields[item].defines_relation
+            ) {
+              return
+            }
 
-                if (typeof item == 'object') {
-                  return m(Fieldset, {
-                    rec: rec,
-                    fieldset: item,
-                    label: label
-                  })
-                } else if (
-                  typeof item == "string" &&
-                    item.includes('relations')
-                ) {
-                  return m(Relation, { rec: rec, ref: item, label: label })
-                } else if (typeof item == "string" && item.includes('actions')) {
-                  // TODO
-                } else {
-                  return m(Field, { rec: rec, colname: item, label: label })
-                }
-
+            if (typeof item == 'object') {
+              return m(Fieldset, {
+                rec: rec,
+                fieldset: item,
+                label: label
               })
-            ])
-          ])
+            } else if (
+              typeof item == "string" &&
+                item.includes('relations')
+            ) {
+              return m(Relation, { rec: rec, ref: item, label: label })
+            } else if (typeof item == "string" && item.includes('actions')) {
+              // TODO
+            } else {
+              return m(Field, { rec: rec, colname: item, label: label })
+            }
+          })
       ])
   }
 }

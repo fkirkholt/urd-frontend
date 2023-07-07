@@ -2,7 +2,7 @@ var Fieldset = {
 
   draw_inline_fieldset: function(rec, fieldset) {
 
-    return m('td.nowrap', [
+    return [
       Object.keys(fieldset.items).map(function(label, idx) {
         var fieldname = fieldset.items[label]
         var type = fieldname.indexOf('actions.') > -1
@@ -45,7 +45,7 @@ var Fieldset = {
             ])
         }
       })
-    ])
+    ]
   },
 
   view: function(vnode) {
@@ -65,67 +65,48 @@ var Fieldset = {
     })
 
     return [
-      m('tr', [
-        // Draw expansion icon
-        m('td', { class: 'tc' }, [
-          set.inline && !set.expandable ? '' : m('i.fa', {
-            class: [
-              set.expanded ? 'fa-angle-down' : 'fa-angle-right',
-              set.invalid ? 'invalid' : set.dirty ? 'dirty' : ''
-            ].join(' '),
-            onclick: function() {
-              if (set.expandable === false) return
-
+      // Draw label
+      set.expanded ? null : m('div.field', [
+        m('label', {
+          class: set.expandable ? 'pr1 mt1 underline pointer' : '',
+          onclick: function() {
+            if (set.expandable) {
               set.expanded = !set.expanded
             }
-          })
-        ]),
-        // Draw label
-        m('td.label', {
-          class: 'f6 nowrap pr2',
-          colspan: set.inline ? 1 : 3,
+          }
+        }, [
+            label + ':',
+          ]),
+        set.inline ? '' : m('span', {
+          class: 'normal ml1 moon-gray f7'
+        }, count_field_values + '/' + count_fields),
+        // Draw inline fieldset
+        !set.expanded && set.inline
+          ? Fieldset.draw_inline_fieldset(rec, set) : null,
+      ]),
+      // Draw fields if the field group is expanded
+      !set.expanded ? null : m('fieldset.borer-box', {class: 'mt1'}, [
+        m('legend', {
+          class: 'underline pointer',
           onclick: function() {
+            if (set.expandable === false) return
             set.expanded = !set.expanded
           }
         }, [
-            label,
-            set.inline ? '' : m('span', {
-              class: 'normal ml1 moon-gray f7'
-            }, count_field_values + '/' + count_fields),
+            label + ':',
           ]),
-        // Draw icons showing invalid or modified fields
-        m('td', [
-          set.expanded ? '' :
-            set.invalid
-              ? m('i', { class: 'fa fa-warning ml1 red' })
-              : set.dirty ? m('i', {
-                class: 'fa fa-pencil ml1 light-gray'
-              }) : '',
-        ]),
-        // Draw inline fieldset
-        !set.expanded && set.inline
-          ? Fieldset.draw_inline_fieldset(rec, set) : null
-      ]),
-      // Draw fields if the field group is expanded
-      !set.expanded ? null : m('tr', [
-        m('td'),
-        m('td', { colspan: 3 }, [
-          m('table', [
-            Object.keys(set.items).map(function(label) {
-              var subitem = set.items[label]
-
-              if (typeof subitem == 'object') {
-                return m(Fieldset, {
-                  rec: rec, fieldset: subitem, label: label
-                })
-              } else {
-                return m(Field, {
-                  rec: rec, colname: subitem, label: label
-                })
-              }
+        Object.keys(set.items).map(function(label) {
+          var subitem = set.items[label]
+          if (typeof subitem == 'object') {
+            return m(Fieldset, {
+              rec: rec, fieldset: subitem, label: label
             })
-          ])
-        ])
+          } else {
+            return m(Field, {
+              rec: rec, colname: subitem, label: label
+            })
+          }
+        })
       ])
     ]
   }

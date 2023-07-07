@@ -165,6 +165,10 @@ var Field = {
       return
     } else if (field.fkey) {
       field.expanded = true
+      // Don't send request again if already loaded
+      if (field.relation) {
+        return
+      }
     }
     var filters = []
 
@@ -295,34 +299,24 @@ var Field = {
       // TODO: sto i utgangspunktet list.betingelse. 
       // Finn ut hva jeg skal erstatte med.
       (
-        !config.edit_mode && config.hide_empty
-          && field.value === null
-      ) ? '' : m('tr', [
-          // Show expansion icon
-          m('td', { class: 'tc v-top' }, [
-            !field.fkey || !field.expandable ||
-              field.value === null ? null : m('i.fa.w1', {
-                class: !field.expanded
-                  ? 'fa-angle-right' : field.expandable
-                    ? 'fa-angle-down' : '',
-                onclick: Field.toggle_fkey.bind(this, rec, colname)
-              }),
-          ]),
+        (!config.edit_mode && config.hide_empty && field.value === null) ||
+          (field.fkey && field.expanded)
+      ) ? '' : m('div.field', {class: 'mt1'}, [
           // Show label
-          m('td.label', {
+          m('label', {
             class: [
-              'f6 pr1 v-top w1',
+              'f6 pr1 v-top',
               field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
               !config.admin ? 'max-w5 truncate' : '',
+              field.expandable && field.value !== null ? 'underline pointer' : '',
             ].join(' '),
             onclick: function() {
               if (field.fkey && field.expandable && field.value) {
                 Field.toggle_fkey(rec, colname)
-              } else if (field.element == 'textarea') {
-                field.expanded = !field.expanded
-              }
+              } 
             }
           }, [
+              m('i.fa', {class: ''}),
               get(field, 'attrs.title')
                 ? m('abbr', { title: field.attrs.title }, label)
                 : label,
@@ -332,7 +326,7 @@ var Field = {
               ':'
             ]),
           // Show icons signifying mandatory, modified, or illegal value
-          m('td', {
+          m('span', {
             class: 'v-top'
           }, [
               field.invalid && field.value == null
@@ -349,9 +343,9 @@ var Field = {
                       : ''
             ]),
           // Show field value
-          m('td', {
+          m('span.dib', {
             class: [
-              'max-w7 w-100',
+              'max-w7 v-top',
               (field.element == 'textarea' &&
                 !field.expanded && !config.edit_mode
               ) ? 'nowrap truncate' : '',
@@ -367,8 +361,8 @@ var Field = {
             }
           }, [
               (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode)
-                ? Field.display_value(field, rec)
-                : m(Input, $.extend({}, field.attrs)),
+                ? m('span', {...field.attrs}, Field.display_value(field, rec))
+                : m(Input, field.attrs),
               !field.expandable || field.value === null
                 ? ''
                 : m('a', {
@@ -396,13 +390,14 @@ var Field = {
             ])
         ]),
       // Expanded record
-      !field.fkey || !field.expanded ? null : m('tr', [
-        m('td'),
-        m('td', {
-          colspan: 3
-        }, [
-            m(Record, { record: field.relation })
-          ])
+      !field.fkey || !field.expanded ? null : m('fieldset', [
+        m('legend', {
+          class: 'underline pointer',
+          onclick: function() {
+            Field.toggle_fkey(rec, colname)
+          }
+        }, label),
+        m(Record, { record: field.relation })
       ])
     ]
   }

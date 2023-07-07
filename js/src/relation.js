@@ -295,8 +295,11 @@ var Relation = {
     }
 
     return [
-      m('tr.heading', 
+      rel.expanded ? null : m('.field', {class: 'mt1'}, [m('label', 
         {
+          class: [
+            "f6 nowrap pr2",
+          ].join(' '),
           onclick: function() {
             Relation.toggle_heading(rel)
             if (!rel.records) {
@@ -305,56 +308,45 @@ var Relation = {
           }
         }, 
         [
-          m('td.fa.tc.w1', {
-            class: [
-              rel.expanded === true
-                ? 'fa-angle-down' : 'fa-angle-right',
-              rel.invalid
-                ? 'invalid' : rel.dirty
-                  ? 'dirty' : ''
-            ].join(' ')
-          }),
-          m('td.label', 
-            {
-              class: [
-                "f6 nowrap pr2",
-              ].join(' '),
-              colspan: 3
-            }, 
-            [
-              label,
+          m('span', {class: 'underline pointer'}, label + ':'),
+          rel.count_records !== undefined
+            ? m('a', {
+              class: 'ml1 pr1 normal light-blue hover-blue f7 link',
+              href: url
+            }, [
+              rel.count_records,
+              rel.relationship == '1:1' ? ':1' : ''
+            ])
+            : '',
+          rel.dirty
+            ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
+            : '',
+        ]
+      )]),
+      rel.expanded
+        ? m('fieldset', {class: 'mt1'}, [
+          m('legend', {
+            onclick: function() {
+              Relation.toggle_heading(rel)
+            }
+          }, [
+              m('span', {class: 'underline pointer'}, label + ':'),
               rel.count_records !== undefined
-                ? m('span', { class: 'ml1 pr1 normal moon-gray f7' }, [
+                ? m('a', {
+                  class: 'ml1 pr1 normal light-blue hover-blue f7 link',
+                  href: url
+                }, [
                   rel.count_records,
                   rel.relationship == '1:1' ? ':1' : ''
                 ])
                 : '',
-              // show target icon for relations
-              !rel.name ? '' :
-                m('a', {
-                  class: [
-                    rel.relationship == '1:M'
-                      ? 'icon-crosshairs light-blue hover-blue pointer mr1 link'
-                      : '',
-                  ].join(' '),
-                  href: url
-                }),
-              rel.dirty
-                ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
-                : '',
-            ]
-          ),
-        ]
-      ),
-      rel.expanded && rel.records
-        ? ['1:M', 'M:M'].includes(rel.relationship)
+            ]),
+          rel.records && ['1:M', 'M:M'].includes(rel.relationship)
           ? Relation.draw_relation_table(rel, rec)
-          : m('tr', [
-            m('td'),
-            m('td', { colspan: 3 }, [
+          : m('div', [
               m(Record, { record: rel.records[0] })
             ])
-          ])
+        ])
         : null
     ]
   }
