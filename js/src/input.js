@@ -264,8 +264,15 @@ var Input = {
       field.element == 'input[type=checkbox]'
     ) {
       vnode.attrs.checked = +field.value
+      vnode.attrs.indeterminate = field.value === null ? true : false
+      vnode.attrs.onclick = function(event) {
+        var cb = event.target
+        if (field.nullable && cb.readOnly) cb.checked=cb.readOnly=false;
+        else if (field.nullable && !cb.checked) cb.readOnly=cb.indeterminate=true;
+      }
       vnode.attrs.onchange = function(event) {
-        var value = event.target.checked ? 1 : 0
+        var cb = event.target
+        var value = cb.indeterminate ? null : cb.checked ? 1 : 0
         Field.update(value, field.name, rec)
         Input.validate(value, field)
       }
