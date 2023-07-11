@@ -25,7 +25,7 @@ var Fieldset = {
 
             // determine if field should be displayd or edited
             var display = rec.table.privilege.update == 0 ||
-              rec.readonly || !config.edit_mode
+              rec.readonly || !config.edit_mode || !field.editable
 
             return m('span', { class: display ? '' : 'mr2' },
               display

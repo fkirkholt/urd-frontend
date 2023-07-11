@@ -360,9 +360,10 @@ var Field = {
               }
             }
           }, [
-              (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode)
+              (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode ||
+              !field.editable)
                 ? m('span', {...field.attrs}, Field.display_value(field, rec))
-                : m(Input, field.attrs),
+                : m(Input, {...field.attrs}),
               !field.expandable || field.value === null
                 ? ''
                 : m('a', {
