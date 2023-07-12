@@ -259,10 +259,7 @@ var Input = {
       }
 
       return vnode.attrs.disabled ? m.trust(text) : m('textarea', {...vnode.attrs})
-    } else if (
-      (field.element == 'input' && field.attr.type == 'checkbox') ||
-      field.element == 'input[type=checkbox]'
-    ) {
+    } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
       vnode.attrs.checked = +field.value
       vnode.attrs.indeterminate = field.value === null ? true : false
       vnode.attrs.onclick = function(event) {
@@ -278,7 +275,7 @@ var Input = {
       }
 
       return m('input[type=checkbox][name=' + field.name + ']', {...vnode.attrs})
-    } else if (field.element == 'input[type=date]') {
+    } else if (field.element == 'input' && field.attrs.type == 'date') {
       vnode.attrs.value = typeof field.value === 'object' && field.value !== null
         ? field.value.date
         : field.value

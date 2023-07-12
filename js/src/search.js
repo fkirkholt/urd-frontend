@@ -184,7 +184,7 @@ var Search = {
         ds.table.filters[filtername] = {
           field: filtername,
           operator: field.element == 'textarea' || (
-            field.element == 'input[type=text]' &&
+            field.element == 'input' && field.attrs.type == 'text' &&
             !['integer', 'decimal', 'float'].includes(field.datatype)
           ) ? 'LIKE' : '='
         }
@@ -267,7 +267,7 @@ var Search = {
       ((field.element == 'select' && field.options &&
         filter.operator !== 'IN') ||
         (field.element == 'input' &&
-          field.attr.type == 'checkbox')) &&
+          field.attrs.type == 'checkbox')) &&
       filter.operator !== ''
     ) {
       return m(Select, {
@@ -285,7 +285,7 @@ var Search = {
     } else if (
       (field.element === 'select' &&
         !['', 'LIKE', 'start', 'slutt', '>', '<'].includes(filter.operator)) ||
-      (field.element === 'input[type=text]' &&
+      (field.element === 'input' && field.attrs.type == 'text' &&
         has_idx &&
         ['=', '!='].includes(filter.operator))
     ) {
@@ -321,7 +321,7 @@ var Search = {
           }
         }
       })
-    } else if (field.element == 'input' && field.attr.type == 'radio') {
+    } else if (field.element == 'input' && field.attrs.type == 'radio') {
       return [
         field.options.map(function(filter, idx) {
           return [m('input[type="radio"]', {
@@ -329,7 +329,7 @@ var Search = {
           }), filter.label]
         })
       ]
-    } else if (field.element == 'input' && field.attr.type == 'date') {
+    } else if (field.element == 'input' && field.attrs.type == 'date') {
       return m('input[type=date]', {
         name: filter.field,
         value: filter.value,
@@ -382,7 +382,7 @@ var Search = {
       if (
         ((field.element == 'select' &&
           (field.fkey && field.fkey.table !== field.table)) ||
-          (field.element == 'input' && field.attr.type == 'radio')) &&
+          (field.element == 'input' && field.attrs.type == 'radio')) &&
         ['LIKE', 'NOT LIKE', 'start', 'slutt', '>', '<']
           .includes(operator.value)
       ) {
@@ -394,21 +394,20 @@ var Search = {
       ) {
         return false
       } else if (
-        (field.element == 'input[type=date]' ||
-          (field.element == 'input[type=text]' &&
-            field.datatype == 'integer') ||
-          (field.element == 'input' &&
-            (field.attr.type == 'date' ||
-              field.datatype == 'integer'))) &&
+        (field.element == 'input' & field.attrs.type == 'text' &&
+          field.datatype == 'integer') ||
+        (field.element == 'input' &&
+          (field.attrs.type == 'date' ||
+            field.datatype == 'integer')) &&
         ['LIKE', 'NOT LIKE', 'start', 'slutt'].includes(operator.value)
       ) {
         return false
       } else if (
         (field.datatype == 'string' &&
           (field.element == 'textarea' ||
-            field.element == 'input[type=text]' ||
+            (field.element == 'input' && field.attrs.type == 'text') ||
             (field.element == 'input' &&
-              field.attr.type == 'text'))) &&
+              field.attrs.type == 'text'))) &&
         ['IN'].includes(operator.value)
       ) {
         return false

@@ -4,7 +4,7 @@ var Cell = {
   align: function(list, colname) {
     var col = list.fields[colname];
     if ((['integer', 'float', 'decimal'].includes(col.datatype) &&
-      !col.fkey) && col.element !== 'input[type=checkbox]') {
+      !col.fkey) && (col.element !== 'input' || col.attrs.type != 'checkbox')) {
       return 'right';
     } else {
       return 'left';
@@ -28,7 +28,7 @@ var Cell = {
         // else show the display text (that also shows in a select box)
         : col.text
 
-    if (field.element == 'input[type=checkbox]') {
+    if (field.element == 'input' && field.attrs.type == 'checkbox') {
       var icon = value === 0 
         ? 'fa-square-o' : value === 1 
           ? 'fa-check-square-o' : 'fa-minus-square-o'
