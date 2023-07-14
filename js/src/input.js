@@ -112,11 +112,8 @@ var Input = {
     vnode.attrs.required = !field.nullable
     vnode.attrs.value = field.value
     vnode.attrs.disabled = !field.editable
-    vnode.attrs.class = [
-      'max-w7 border-box',
-      vnode.attrs.class ? vnode.attrs.class : ''
-    ].join(' ')
     vnode.attrs.style = vnode.attrs.style || {}
+    vnode.attrs['data-table'] = rec.table.name
     vnode.attrs['data-dirty'] = field.dirty
 
     $.each(rec.table.indexes, function(i, idx) {
@@ -248,11 +245,6 @@ var Input = {
     } else if (field.element == 'textarea') {
       text = field.value ? marked.parse(field.value) : ''
 
-      vnode.attrs.class = [
-        'ba b--light-grey w-100 max-w7',
-        field.format == 'markdown' ? 'code' : '',
-        vnode.attrs.class ? vnode.attrs.class : '',
-      ].join(' ')
       vnode.attrs.onchange = function(event) {
         Field.update(event.target.value, field.name, rec)
         Input.validate(event.target.value, field)

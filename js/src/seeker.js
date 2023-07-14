@@ -76,6 +76,7 @@ function Seeker() {
         m('input.search', {
           id: vnode.attrs.id,
           name: vnode.attrs.name,
+          'data-table': vnode.attrs['data-table'],
           value: option.label,
           placeholder: 'Search',
           style: vnode.attrs.style,
