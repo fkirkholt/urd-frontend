@@ -1,5 +1,14 @@
 
 var datapanel = {
+
+  onupdate: function() {
+    for (selector in ds.base.html_attrs) {
+      for (attr in ds.base.html_attrs[selector]) {
+        $(selector).attr(attr, ds.base.html_attrs[selector][attr])
+      }
+    } 
+  },
+
   view: function(vnode) {
 
     if (!ds.table) return
