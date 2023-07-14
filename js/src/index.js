@@ -84,6 +84,10 @@ m.route($('#main')[0], '/', {
         m.route.set(Grid.url)
       } else {
         if (Grid.url != grid_path) {
+          if (ds.table) {
+            ds.table.records = []
+            m.redraw()
+          }
           Grid.load(args)
           Grid.url = grid_path
         } else {

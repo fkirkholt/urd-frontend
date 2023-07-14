@@ -329,6 +329,7 @@ var Grid = {
     if (ds.table.search) return
 
     return [m('table#urdgrid.tbl', {
+      'data-name': ds.table.name,
       class: 'max-w10 bt b--moon-gray flex flex-column overflow-auto collapse',
       style: 'background: #f9f9f9',
     }, [
@@ -353,6 +354,7 @@ var Grid = {
                 ? label : ds.table.fields[col].label
                   ? ds.table.fields[col].label : col
               return m('th', {
+                id: col,
                 class: [
                   'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
                   config.compressed ? 'truncate' : '',

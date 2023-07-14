@@ -64,7 +64,9 @@ var Cell = {
         'f6 pl1 pr1',
         get(field, 'attrs.class') ? field.attrs.class : ''
       ].join(' '),
-      title: compressed && value.length > 30 ? value : ''
+      title: compressed && value.length > 30 ? value : '',
+      headers: colname,
+      'data-value': value
     }, [
         !(value && value.length > 30 && compressed)
           ? [m('div', [expansion ? icon : '', value])]
