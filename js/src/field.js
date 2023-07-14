@@ -325,26 +325,9 @@ var Field = {
               !field.use || !config.admin ? '' : m('span', {
                 class: 'ml2 light-silver'
               }, '(' + Field.get_percentage(field.use) + '%)'),
-              ':'
+              ':',
+              (Field.is_mandatory(field) && config.edit_mode) ? ' *' : ''
             ]),
-          // Show icons signifying mandatory, modified, or illegal value
-          m('span', {
-            class: 'v-top'
-          }, [
-              field.invalid && field.value == null
-                ? m('i', { class: 'fa fa-asterisk red' })
-                : field.invalid
-                  ? m('i', {
-                    class: 'fa fa-warning ml1 red',
-                    title: field.errormsg
-                  })
-                  : field.dirty
-                    ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
-                    : Field.is_mandatory(field) && config.edit_mode
-                      ? m('i', { class: 'fa fa-asterisk f7 light-gray' })
-                      : ''
-            ]),
-          // Show field value
           m('span.dib', {
             class: [
               'max-w7 v-top',

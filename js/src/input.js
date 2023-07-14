@@ -117,6 +117,7 @@ var Input = {
       vnode.attrs.class ? vnode.attrs.class : ''
     ].join(' ')
     vnode.attrs.style = vnode.attrs.style || {}
+    vnode.attrs['data-dirty'] = field.dirty
 
     $.each(rec.table.indexes, function(i, idx) {
       if (idx.columns[0] === field.name && idx.unique) {

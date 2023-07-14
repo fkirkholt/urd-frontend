@@ -80,6 +80,7 @@ function Seeker() {
           placeholder: 'Search',
           style: vnode.attrs.style,
           autocomplete: 'off',
+          required: vnode.attrs.required,
           oninput: function(event) {
             option.label = event.target.value
           },
