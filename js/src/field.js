@@ -328,52 +328,43 @@ var Field = {
               ':',
               (Field.is_mandatory(field) && config.edit_mode) ? ' *' : ''
             ]),
-          m('span.dib', {
-            class: [
-              'max-w7 v-top',
-              (field.element == 'textarea' &&
-                !field.expanded && !config.edit_mode
-              ) ? 'nowrap truncate' : '',
-              config.edit_mode ? 'nowrap' : '',
-              field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
-              rec.inherited ? 'gray' : '',
-            ].join(' '),
-            onclick: function() {
-              if (field.element == 'textarea') {
-                field = rec.fields[colname]
-                field.expanded = !field.expanded
+          (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode ||
+            !field.editable)
+            ? m('span', {
+              'data-field': field.name,
+              'data-expandable': field.element == 'textarea',
+              'data-expanded': field.expanded,
+              onclick: function() {
+                if (field.element == 'textarea') {
+                  field.expanded = !field.expanded
+                }
               }
-            }
-          }, [
-              (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode ||
-              !field.editable)
-                ? m('span', {...field.attrs}, Field.display_value(field, rec))
-                : m(Input, {...field.attrs}),
-              !field.expandable || field.value === null
-                ? ''
-                : m('a', {
-                  class: 'icon-crosshairs light-blue hover-blue pointer link',
-                  href: Field.get_url(field, rec),
-                  onclick: function(e) {
-                    // Delete active table to avoid flicker
-                    delete ds.table
-                  }
-                }),
+            }, Field.display_value(field, rec))
+            : m(Input, {...field.attrs}),
+          !field.expandable || field.value === null
+            ? ''
+            : m('a', {
+              class: 'icon-crosshairs light-blue hover-blue pointer link',
+              href: Field.get_url(field, rec),
+              onclick: function(e) {
+                // Delete active table to avoid flicker
+                delete ds.table
+              }
+            }),
 
-              // Show trash bin for field from cross reference table
-              rec.table.relationship != 'M:M' || !config.edit_mode
-                ? ''
-                : m('i', {
-                  class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
-                  onclick: Record.delete.bind(this, rec)
-                }),
+          // Show trash bin for field from cross reference table
+          rec.table.relationship != 'M:M' || !config.edit_mode
+            ? ''
+            : m('i', {
+              class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
+              onclick: Record.delete.bind(this, rec)
+            }),
 
-              !field.attrs || !field.attrs.href ? '' : m('a', {
-                href: sprintf(field.attrs.href, field.value)
-              }, m('i', {
-                  class: 'icon-crosshairs light-blue hover-blue pointer'
-                })),
-            ])
+          !field.attrs || !field.attrs.href ? '' : m('a', {
+            href: sprintf(field.attrs.href, field.value)
+          }, m('i', {
+              class: 'icon-crosshairs light-blue hover-blue pointer'
+            })),
         ]),
       // Expanded record
       !field.fkey || !field.expanded ? null : m('fieldset', [

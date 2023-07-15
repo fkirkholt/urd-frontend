@@ -38,6 +38,21 @@ form textarea {
     width: 16rem;
 }
 
+form span[data-field] {
+    display: inline-block;
+    max-width: 16rem;
+}
+
+form span[data-expandable] {
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+form span[data-expandable][data-expanded] {
+    white-space: normal;
+}
+
 .sans-serif {
     font-family: 'Open Sans', sans-serif;
 }
