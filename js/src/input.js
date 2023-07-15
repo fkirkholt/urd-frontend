@@ -288,15 +288,13 @@ var Input = {
       var size = field.datatype == 'float' || field.datatype == 'decimal'
         ? field.size + 1
         : field.size
-      var width = size ? Math.round(size * 0.6) + 'em' : ''
 
       vnode.attrs.value = typeof field.value === 'string'
         ? field.value.replace(/\n/g, '\u21a9')
         : field.value
 
+      vnode.attrs.size = size ? size : ''
       vnode.attrs.maxlength = size ? size : ''
-      vnode.attrs.style.width = width
-      vnode.attrs.style['text-overflow'] = 'ellipsis'
       vnode.attrs.onchange = function(event) {
         var value = event.target.value.replace(/\u21a9/g, "\n")
         Field.update(value, field.name, rec)

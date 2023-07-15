@@ -29,6 +29,15 @@ legend {
     font-weight: bold;
 }
 
+form input {
+    max-width: 16rem;
+    text-overflow: ellipsis;
+}
+
+form textarea {
+    width: 16rem;
+}
+
 .sans-serif {
     font-family: 'Open Sans', sans-serif;
 }
