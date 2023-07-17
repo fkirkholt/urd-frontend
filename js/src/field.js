@@ -357,7 +357,7 @@ var Field = {
             }),
         ],
       // Expanded record
-      !field.fkey || !field.expanded ? null : m('fieldset', [
+      !field.fkey || !field.expanded ? null : m('fieldset', { name: colname }, [
         m('legend', {
           class: 'underline pointer',
           onclick: function() {

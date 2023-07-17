@@ -322,7 +322,7 @@ var Relation = {
         ]
       )],
       rel.expanded
-        ? m('fieldset', {'data-expandable': true}, [
+        ? m('fieldset', { name: rel.name, 'data-expandable': true }, [
           m('legend', {
             onclick: function() {
               Relation.toggle_heading(rel)

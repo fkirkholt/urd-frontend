@@ -88,6 +88,7 @@ var Fieldset = {
       ],
       // Draw fields if the field group is expanded
       !set.expanded ? null : m('fieldset', {
+        name: set.name,
         'data-expandable': set.expandable
       }, [
         m('legend', {
