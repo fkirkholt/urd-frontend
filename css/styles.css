@@ -54,7 +54,7 @@ form label[data-expandable] abbr {
     cursor: pointer;
 }
 
-form label span {
+form label span, form label a {
     font-weight: normal;
     display: inline-block;
     max-width: 16rem;

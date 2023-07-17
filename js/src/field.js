@@ -324,26 +324,28 @@ var Field = {
               }, '(' + Field.get_percentage(field.use) + '%)'),
               (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode ||
                 !field.editable)
-                ? m('span', {
-                  'data-expandable': field.element == 'textarea',
-                  'data-expanded': field.expanded,
-                  onclick: function() {
-                    if (field.element == 'textarea') {
-                      field.expanded = !field.expanded
+                ? ((!(field.expandable && field.value) && !field.attrs.href) 
+                  ? m('span', {
+                    'data-expandable': field.element == 'textarea',
+                    'data-expanded': field.expanded,
+                    onclick: function() {
+                      if (field.element == 'textarea') {
+                        field.expanded = !field.expanded
+                      }
                     }
-                  }
-                }, Field.display_value(field, rec))
+                  }, Field.display_value(field, rec)) 
+                  : m('a', {
+                    'data-value': field.value,
+                    href: field.attrs.href 
+                      ? sprintf(field.attrs.href, field.value)
+                      : Field.get_url(field, rec),
+                    onclick: function(e) {
+                      // Delete active table to avoid flicker
+                       
+                      delete ds.table
+                    }
+                  }, Field.display_value(field, rec)))
                 : m(Input, {...field.attrs}),
-              !field.expandable || field.value === null
-                ? ''
-                : m('a', {
-                  class: 'icon-crosshairs light-blue hover-blue pointer link',
-                  href: Field.get_url(field, rec),
-                  onclick: function(e) {
-                    // Delete active table to avoid flicker
-                    delete ds.table
-                  }
-                }),
             ]),
 
           // Show trash bin for field from cross reference table
@@ -353,12 +355,6 @@ var Field = {
               class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
               onclick: Record.delete.bind(this, rec)
             }),
-
-          !field.attrs || !field.attrs.href ? '' : m('a', {
-            href: sprintf(field.attrs.href, field.value)
-          }, m('i', {
-              class: 'icon-crosshairs light-blue hover-blue pointer'
-            })),
         ],
       // Expanded record
       !field.fkey || !field.expanded ? null : m('fieldset', [
@@ -378,7 +374,6 @@ module.exports = Field
 
 var config = require('./config')
 var marked = require('marked')
-var sprintf = require("sprintf-js").sprintf
 var yaml = require('js-yaml')
 var Input = require('./input')
 var Record = require('./record')
