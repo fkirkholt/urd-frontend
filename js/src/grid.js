@@ -330,7 +330,7 @@ var Grid = {
 
     return [m('table#urdgrid.tbl', {
       'data-name': ds.table.name,
-      class: 'max-w10 bt b--moon-gray flex flex-column overflow-auto collapse',
+      class: 'bt b--moon-gray flex flex-column overflow-auto collapse',
       style: 'background: #f9f9f9',
     }, [
         m('thead', { class: 'db' }, [

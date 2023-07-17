@@ -106,7 +106,7 @@ var export_dialog = {
         })], ' as select'),
         m('br')
       ]),
-      m('div[name=buttons]', { class: "bottom-0 max-w8 mt2" }, [
+      m('div[name=buttons]', { class: "bottom-0 mt2" }, [
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',

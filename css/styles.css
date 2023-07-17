@@ -130,40 +130,19 @@ form span[data-expandable][data-expanded] {
   animation: fa-spin 0.5s infinite linear;
 }
 
-/* Use fibonacci for widths */
-
-.w0 {width: 0;}
-.w1 {width: 1rem;}
-.w2 {width: 2rem;}
-.w3 {width: 3rem;}
-.w4 {width: 5rem;}
-.w5 {width: 8rem;}
-.w6 {width:13rem;}
-.w7 {width:21rem;}
-.w8 {width:34rem;}
-.w9 {width:55rem;}
-
-.max-w1 {max-width: 1rem;}
-.max-w2 {max-width: 2rem;}
-.max-w3 {max-width: 3rem;}
-.max-w4 {max-width: 5rem;}
-.max-w5 {max-width: 8rem;}
-.max-w6 {max-width:13rem;}
-.max-w7 {max-width:21rem;}
-.max-w8 {max-width:34rem;}
-.max-w9 {max-width:55rem;}
-.max-w10 {max-width:89rem;}
-.max-w11 {max-width:144rem;}
+div[id=query] {
+    width: 32rem;
+}
 
 .min-w1 {min-width: 1rem;}
 .min-w2 {min-width: 2rem;}
-.min-w3 {min-width: 3rem;}
-.min-w4 {min-width: 5rem;}
-.min-w5 {min-width: 8rem;}
-.min-w6 {min-width:13rem;}
-.min-w7 {min-width:21rem;}
-.min-w8 {min-width:34rem;}
-.min-w9 {min-width:55rem;}
+.min-w3 {min-width: 4rem;}
+.min-w4 {min-width: 8rem;}
+.min-w5 {min-width:16rem;}
+.min-w6 {min-width:32rem;}
+.min-w7 {min-width:48rem;}
+.min-w8 {min-width:64rem;}
+.min-w9 {min-width:96rem;}
 
 .max-w-100 {max-width: 100%;}
 .min-w-100 {min-width: 100%;}

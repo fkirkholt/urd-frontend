@@ -79,6 +79,7 @@ var config = {
           m('td', 'Ant. poster'),
           m('td', [
             m('input#limit', {
+              size: 4,
               value: config.limit
             })
           ])

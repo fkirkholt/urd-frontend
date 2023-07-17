@@ -75,7 +75,7 @@ var Convert_dialog = {
           })
         ])
       ]),
-      m('div[name=buttons]', { class: "bottom-0 max-w8 mt2" }, [
+      m('div[name=buttons]', { class: "bottom-0 mw6 mt2" }, [
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',

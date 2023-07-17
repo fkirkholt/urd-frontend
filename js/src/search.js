@@ -209,7 +209,7 @@ var Search = {
           ]),
           // label
           m('td.label', {
-            class: 'f6 nowrap pr1 v-top max-w5 truncate',
+            class: 'f6 nowrap pr1 v-top mw4 truncate',
             title: label
           }, label),
           // operator
@@ -232,7 +232,7 @@ var Search = {
           }),
           // input
           m('td', {
-            class: 'max-w7 w-100'
+            class: 'mw5 w-100'
           }, Search.draw_value_field(table, field, filter))
         ]),
         !field.expanded ? null : m('tr', [

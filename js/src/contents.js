@@ -264,7 +264,7 @@ var Contents = {
           ]),
         // Draw select box for choosing schema within database.
         // Postgres has this structure.
-        m('.list', { class: "flex flex-column overflow-auto min-w5" }, [
+        m('.list', { class: "flex flex-column overflow-auto min-w4" }, [
           !ds.base.schemata || ds.base.schemata.length < 2
             ? '' : m('select', {
               class: 'mb2',

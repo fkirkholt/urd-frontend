@@ -139,7 +139,7 @@ var SQLpanel = {
           m('div', { style: 'width: fit-content' }, [
             m(Codefield, {
               id: 'query',
-              class: 'ml3 w8 ba b--light-silver mb2',
+              class: 'ml3 ba b--light-silver mb2',
               editable: true,
               lang: 'sql'
             }),
