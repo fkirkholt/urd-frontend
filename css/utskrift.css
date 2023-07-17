@@ -26,6 +26,14 @@ div .contents {
     display: none;
 }
 
+.icon-crosshairs {
+    display: none;
+}
+
+.fa {
+    visibility: hidden;
+}
+
 #print-view table {
     /*margin: 1px;*/
     border-collapse: collapse;
