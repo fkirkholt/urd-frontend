@@ -13,7 +13,8 @@ tr.bg-light-blue:focus {
 }
 
 fieldset {
-    border: none;
+    display: flex;
+    flex-direction: column;
 }
 
 div.field {
@@ -21,12 +22,52 @@ div.field {
     margin-left: 2px;
 }
 
+form[name] {
+    display: flex;
+    flex-direction: column;
+}
+
 form label {
+    display: inline-block;
     font-weight: bold;
+    vertical-align: top;
+    margin-left: 12px;
+}
+
+form label:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+}
+
+form label abbr {
+    display: inline-block;
+    width: 6em;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    vertical-align: top;
+}
+
+form label[data-expandable] abbr {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+form label span {
+    font-weight: normal;
+    display: inline-block;
+    max-width: 16rem;
+    vertical-align: top;
 }
 
 legend {
     font-weight: bold;
+}
+
+form fieldset[data-expandable] abbr {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 form input {
@@ -36,11 +77,6 @@ form input {
 
 form textarea {
     width: 16rem;
-}
-
-form span[data-field] {
-    display: inline-block;
-    max-width: 16rem;
 }
 
 form span[data-expandable] {

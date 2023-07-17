@@ -303,54 +303,48 @@ var Field = {
       (
         (!config.edit_mode && config.hide_empty && field.value === null) ||
           (field.fkey && field.expanded)
-      ) ? '' : m('div.field', {class: 'mt1'}, [
-          // Show label
+      ) ? '' : [
           m('label', {
-            class: [
-              'f6 pr1 v-top',
-              field.invalid ? 'invalid' : field.dirty ? 'dirty' : '',
-              !config.admin ? 'max-w5 truncate' : '',
-              field.expandable && field.value !== null ? 'underline pointer' : '',
-            ].join(' '),
-            onclick: function() {
-              if (field.fkey && field.expandable && field.value) {
-                Field.toggle_fkey(rec, colname)
-              } 
-            }
+            'data-expandable': field.expandable && field.value,
+            'data-field': field.name,
           }, [
-              m('i.fa', {class: ''}),
-              get(field, 'attrs.title')
-                ? m('abbr', { title: field.attrs.title }, label)
-                : label,
+              m('abbr', { 
+                title: field.attrs.title,
+                onclick: function() {
+                  if (field.fkey && field.expandable && field.value) {
+                    Field.toggle_fkey(rec, colname)
+                  } 
+                }
+              }, [
+                label,
+                (Field.is_mandatory(field) && config.edit_mode) ? ' *' : '',
+              ]),
               !field.use || !config.admin ? '' : m('span', {
                 class: 'ml2 light-silver'
               }, '(' + Field.get_percentage(field.use) + '%)'),
-              ':',
-              (Field.is_mandatory(field) && config.edit_mode) ? ' *' : ''
+              (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode ||
+                !field.editable)
+                ? m('span', {
+                  'data-expandable': field.element == 'textarea',
+                  'data-expanded': field.expanded,
+                  onclick: function() {
+                    if (field.element == 'textarea') {
+                      field.expanded = !field.expanded
+                    }
+                  }
+                }, Field.display_value(field, rec))
+                : m(Input, {...field.attrs}),
+              !field.expandable || field.value === null
+                ? ''
+                : m('a', {
+                  class: 'icon-crosshairs light-blue hover-blue pointer link',
+                  href: Field.get_url(field, rec),
+                  onclick: function(e) {
+                    // Delete active table to avoid flicker
+                    delete ds.table
+                  }
+                }),
             ]),
-          (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode ||
-            !field.editable)
-            ? m('span', {
-              'data-field': field.name,
-              'data-expandable': field.element == 'textarea',
-              'data-expanded': field.expanded,
-              onclick: function() {
-                if (field.element == 'textarea') {
-                  field.expanded = !field.expanded
-                }
-              }
-            }, Field.display_value(field, rec))
-            : m(Input, {...field.attrs}),
-          !field.expandable || field.value === null
-            ? ''
-            : m('a', {
-              class: 'icon-crosshairs light-blue hover-blue pointer link',
-              href: Field.get_url(field, rec),
-              onclick: function(e) {
-                // Delete active table to avoid flicker
-                delete ds.table
-              }
-            }),
 
           // Show trash bin for field from cross reference table
           rec.table.relationship != 'M:M' || !config.edit_mode
@@ -365,7 +359,7 @@ var Field = {
           }, m('i', {
               class: 'icon-crosshairs light-blue hover-blue pointer'
             })),
-        ]),
+        ],
       // Expanded record
       !field.fkey || !field.expanded ? null : m('fieldset', [
         m('legend', {

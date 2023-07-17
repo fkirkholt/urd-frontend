@@ -295,11 +295,9 @@ var Relation = {
     }
 
     return [
-      rel.expanded ? null : m('.field', {class: 'mt1'}, [m('label', 
+      rel.expanded ? null : [m('label', 
         {
-          class: [
-            "f6 nowrap pr2",
-          ].join(' '),
+          'data-expandable': true,
           onclick: function() {
             Relation.toggle_heading(rel)
             if (!rel.records) {
@@ -308,7 +306,7 @@ var Relation = {
           }
         }, 
         [
-          m('span', {class: 'underline pointer'}, label + ':'),
+          m('abbr', { title: field.attrs.title }, label),
           rel.count_records !== undefined
             ? m('a', {
               class: 'ml1 pr1 normal light-blue hover-blue f7 link',
@@ -322,15 +320,15 @@ var Relation = {
             ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
             : '',
         ]
-      )]),
+      )],
       rel.expanded
-        ? m('fieldset', {class: 'mt1'}, [
+        ? m('fieldset', {'data-expandable': true}, [
           m('legend', {
             onclick: function() {
               Relation.toggle_heading(rel)
             }
           }, [
-              m('span', {class: 'underline pointer'}, label + ':'),
+              m('abbr', label),
               rel.count_records !== undefined
                 ? m('a', {
                   class: 'ml1 pr1 normal light-blue hover-blue f7 link',

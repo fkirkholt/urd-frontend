@@ -66,34 +66,37 @@ var Fieldset = {
 
     return [
       // Draw label
-      set.expanded ? null : m('div.field', [
+      set.expanded ? null : [
         m('label', {
-          class: set.expandable ? 'pr1 mt1 underline pointer' : '',
-          onclick: function() {
-            if (set.expandable) {
-              set.expanded = !set.expanded
-            }
-          }
+          'data-expandable': true,
         }, [
-            label + ':',
+            m('abbr', {
+              title: field.attrs.title,
+              onclick: function() {
+                if (set.expandable) {
+                  set.expanded = !set.expanded
+                }
+              }
+            }, label),
+            set.inline ? '' : m('span', {
+              class: 'normal ml1 moon-gray f7'
+            }, count_field_values + '/' + count_fields),
+            // Draw inline fieldset
+            !set.expanded && set.inline
+              ? Fieldset.draw_inline_fieldset(rec, set) : null,
           ]),
-        set.inline ? '' : m('span', {
-          class: 'normal ml1 moon-gray f7'
-        }, count_field_values + '/' + count_fields),
-        // Draw inline fieldset
-        !set.expanded && set.inline
-          ? Fieldset.draw_inline_fieldset(rec, set) : null,
-      ]),
+      ],
       // Draw fields if the field group is expanded
-      !set.expanded ? null : m('fieldset.borer-box', {class: 'mt1'}, [
+      !set.expanded ? null : m('fieldset', {
+        'data-expandable': set.expandable
+      }, [
         m('legend', {
-          class: 'underline pointer',
           onclick: function() {
             if (set.expandable === false) return
             set.expanded = !set.expanded
           }
         }, [
-            label + ':',
+            m('abbr', label),
           ]),
         Object.keys(set.items).map(function(label) {
           var subitem = set.items[label]

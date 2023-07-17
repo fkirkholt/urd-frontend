@@ -467,7 +467,6 @@ var Record = {
 
     return m('form', {
       name: ds.table.name,
-      class: 'flex flex-column',
     }, [
         !ds.table.edit && !ds.table.hide
           ? ''
