@@ -77,6 +77,8 @@ function Seeker() {
           id: vnode.attrs.id,
           name: vnode.attrs.name,
           'data-table': vnode.attrs['data-table'],
+          size: vnode.attrs.item.size,
+          maxlength: vnode.attrs.item.size,
           value: option.label,
           placeholder: 'Search',
           style: vnode.attrs.style,
