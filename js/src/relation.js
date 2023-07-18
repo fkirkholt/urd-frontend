@@ -325,7 +325,7 @@ var Relation = {
             : '',
         ]
       )],
-      rel.expanded
+      rel.expanded && rel.records
         ? m('fieldset', { name: rel.name, 'data-expandable': true }, [
           m('legend', {
             onclick: function() {
@@ -343,7 +343,7 @@ var Relation = {
                 ])
                 : '',
             ]),
-          rel.records && ['1:M', 'M:M'].includes(rel.relationship)
+          ['1:M', 'M:M'].includes(rel.relationship)
           ? Relation.draw_relation_table(rel, rec)
           : m('div', [
               m(Record, { record: rel.records[0] })
