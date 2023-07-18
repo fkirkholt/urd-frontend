@@ -113,3 +113,10 @@ input:focus-visible {
 .cm-wrap { height: 100% }
 .cm-scroller { overflow: auto }
 
+label abbr:after {
+    content: attr(data-after)
+}
+
+label abbr:before {
+    content: attr(data-before)
+}

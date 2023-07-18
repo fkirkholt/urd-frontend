@@ -322,7 +322,6 @@ var Field = {
                 }
               }, [
                 label,
-                (Field.is_mandatory(field) && config.edit_mode) ? ' *' : '',
               ]),
               !field.use || !config.admin ? '' : m('span', {
                 class: 'ml2 light-silver'
