@@ -109,7 +109,7 @@ var Input = {
       vnode.attrs.placeholder = 'autoincr.'
     }
 
-    vnode.attrs.required = !field.nullable
+    vnode.attrs.required = field.extra != 'auto_increment' && !field.nullable
     vnode.attrs.value = field.value
     vnode.attrs.disabled = !field.editable
     vnode.attrs.style = vnode.attrs.style || {}
