@@ -307,9 +307,14 @@ var Field = {
           m('label', {
             'data-expandable': field.expandable && field.value,
             'data-field': field.name,
+            class: 'dib ml3'
           }, [
               m('abbr', { 
                 title: field.attrs.title,
+                class: [
+                  'dib w4 b truncate v-top',
+                  field.expandable && field.value ? 'underline pointer' : ''
+                ].join(' '),
                 onclick: function() {
                   if (field.fkey && field.expandable && field.value) {
                     Field.toggle_fkey(rec, colname)
@@ -326,6 +331,10 @@ var Field = {
                 !field.editable)
                 ? ((!(field.expandable && field.value) && !field.attrs.href) 
                   ? m('span', {
+                    class: [
+                      'dib mw5 v-top',
+                      field.expanded ? '' : 'truncate'
+                    ].join(' '),
                     'data-expandable': field.element == 'textarea',
                     'data-expanded': field.expanded,
                     onclick: function() {
@@ -335,6 +344,7 @@ var Field = {
                     }
                   }, Field.display_value(field, rec)) 
                   : m('a', {
+                    class: 'dib mw5 v-top',
                     'data-value': field.value,
                     href: field.attrs.href 
                       ? sprintf(field.attrs.href, field.value)
@@ -357,9 +367,12 @@ var Field = {
             }),
         ],
       // Expanded record
-      !field.fkey || !field.expanded ? null : m('fieldset', { name: colname }, [
+      !field.fkey || !field.expanded ? null : m('fieldset', {
+        name: colname,
+        class: 'flex flex-column'
+      }, [
         m('legend', {
-          class: 'underline pointer',
+          class: 'b underline pointer',
           onclick: function() {
             Field.toggle_fkey(rec, colname)
           }

@@ -69,8 +69,10 @@ var Fieldset = {
       set.expanded ? null : [
         m('label', {
           'data-expandable': true,
+          class: 'dib ml3'
         }, [
             m('abbr', {
+              class: 'dib w4 b truncate v-top underline pointer',
               title: field.attrs.title,
               onclick: function() {
                 if (set.expandable) {
@@ -89,15 +91,21 @@ var Fieldset = {
       // Draw fields if the field group is expanded
       !set.expanded ? null : m('fieldset', {
         name: set.name,
+        class: 'flex flex-column',
         'data-expandable': set.expandable
       }, [
-        m('legend', {
-          onclick: function() {
-            if (set.expandable === false) return
-            set.expanded = !set.expanded
-          }
-        }, [
-            m('abbr', label),
+          m('legend', {
+            onclick: function() {
+              if (set.expandable === false) return
+              set.expanded = !set.expanded
+            }
+          }, [
+              m('abbr', { 
+                class: [
+                  'b',
+                  set.expandable ? 'underline pointer' : ''
+                ].join(' ')
+              }, label),
           ]),
         Object.keys(set.items).map(function(label) {
           var subitem = set.items[label]

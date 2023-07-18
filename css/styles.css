@@ -12,82 +12,16 @@ tr.bg-light-blue:focus {
     background-color: #96CCFF
 }
 
-fieldset {
-    display: flex;
-    flex-direction: column;
-}
-
 div.field {
     padding-left: 0.75em;
     margin-left: 2px;
 }
 
-form[name] {
-    display: flex;
-    flex-direction: column;
-}
-
-form label {
-    display: inline-block;
-    font-weight: bold;
-    vertical-align: top;
-    margin-left: 12px;
-}
-
-form label:hover {
-    text-overflow: clip;
-    white-space: normal;
-    word-break: break-all;
-}
-
-form label abbr {
-    display: inline-block;
-    width: 6em;
-    white-space: nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    vertical-align: top;
-}
-
-form label[data-expandable] abbr {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-form label span, form label a {
-    font-weight: normal;
-    display: inline-block;
-    max-width: 16rem;
-    vertical-align: top;
-}
-
-legend {
-    font-weight: bold;
-}
-
-form fieldset[data-expandable] abbr {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-form input {
-    max-width: 16rem;
-    text-overflow: ellipsis;
-}
-
-form textarea {
-    width: 16rem;
-}
-
-form span[data-expandable] {
-    white-space: nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-form span[data-expandable][data-expanded] {
-    white-space: normal;
-}
+/* form label:hover { */
+/*     text-overflow: clip; */
+/*     white-space: normal; */
+/*     word-break: break-all; */
+/* } */
 
 .sans-serif {
     font-family: 'Open Sans', sans-serif;

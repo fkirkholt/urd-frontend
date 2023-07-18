@@ -298,6 +298,7 @@ var Relation = {
       rel.expanded ? null : [m('label', 
         {
           'data-expandable': true,
+          class: 'dib ml3',
           onclick: function() {
             Relation.toggle_heading(rel)
             if (!rel.records) {
@@ -306,7 +307,10 @@ var Relation = {
           }
         }, 
         [
-          m('abbr', { title: field.attrs.title }, label),
+          m('abbr', { 
+            class: 'b underline pointer', 
+            title: field.attrs.title 
+          }, label),
           rel.count_records !== undefined
             ? m('a', {
               class: 'ml1 pr1 normal light-blue hover-blue f7 link',
@@ -328,7 +332,7 @@ var Relation = {
               Relation.toggle_heading(rel)
             }
           }, [
-              m('abbr', label),
+              m('abbr', { class: 'b underline pointer' }, label),
               rel.count_records !== undefined
                 ? m('a', {
                   class: 'ml1 pr1 normal light-blue hover-blue f7 link',

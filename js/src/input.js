@@ -245,6 +245,7 @@ var Input = {
     } else if (field.element == 'textarea') {
       text = field.value ? marked.parse(field.value) : ''
 
+      vnode.attrs.class = 'w5'
       vnode.attrs.onchange = function(event) {
         Field.update(event.target.value, field.name, rec)
         Input.validate(event.target.value, field)
@@ -295,6 +296,7 @@ var Input = {
 
       vnode.attrs.size = size ? size : ''
       vnode.attrs.maxlength = size ? size : ''
+      vnode.attrs.class = 'border-box mw5 truncate'
       vnode.attrs.onchange = function(event) {
         var value = event.target.value.replace(/\u21a9/g, "\n")
         Field.update(value, field.name, rec)
