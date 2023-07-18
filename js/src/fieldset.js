@@ -27,7 +27,7 @@ var Fieldset = {
             var display = rec.table.privilege.update == 0 ||
               rec.readonly || !config.edit_mode || !field.editable
 
-            return m('span',
+            return m('a',
               display
                 ? [separator, Field.display_value(field, rec)].join('')
                 : m(Input, field.attrs)

@@ -329,32 +329,23 @@ var Field = {
               }, '(' + Field.get_percentage(field.use) + '%)'),
               (rec.table.privilege.update == 0 || rec.readonly || !config.edit_mode ||
                 !field.editable)
-                ? ((!(field.expandable && field.value) && !field.attrs.href) 
-                  ? m('span', {
-                    class: [
-                      'dib mw5 v-top',
-                      field.expanded ? '' : 'truncate'
-                    ].join(' '),
-                    'data-expandable': field.element == 'textarea',
-                    'data-expanded': field.expanded,
-                    onclick: function() {
-                      if (field.element == 'textarea') {
-                        field.expanded = !field.expanded
-                      }
+                ? m('a', {
+                  class: [
+                    'dib mw5 v-top',
+                    (field.expanded) ? '' : 'truncate'
+                  ].join(' '),
+                  'data-expandable': (field.element == 'textarea'),
+                  'data-expanded': field.expanded,
+                  'data-value': field.value,
+                  href: field.attrs.href 
+                    ? sprintf(field.attrs.href, field.value)
+                    : Field.get_url(field, rec),
+                  onclick: function() {
+                    if (field.element == 'textarea') {
+                      field.expanded = !field.expanded
                     }
-                  }, Field.display_value(field, rec)) 
-                  : m('a', {
-                    class: 'dib mw5 v-top',
-                    'data-value': field.value,
-                    href: field.attrs.href 
-                      ? sprintf(field.attrs.href, field.value)
-                      : Field.get_url(field, rec),
-                    onclick: function(e) {
-                      // Delete active table to avoid flicker
-                       
-                      delete ds.table
-                    }
-                  }, Field.display_value(field, rec)))
+                  }
+                }, Field.display_value(field, rec)) 
                 : m(Input, {...field.attrs}),
             ]),
 
