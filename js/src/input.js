@@ -170,7 +170,6 @@ var Input = {
 
       vnode.attrs.item = field
       vnode.attrs.text = field.text
-      vnode.attrs.placeholder = vnode.attrs.placeholder || 'Velg'
       vnode.attrs.hide_options = field.unique
       vnode.attrs.ajax = {
         url: 'options',

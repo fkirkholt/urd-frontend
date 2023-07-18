@@ -82,7 +82,9 @@ function Seeker() {
           maxlength: vnode.attrs.item.size,
           class: 'mw5',
           value: option.label,
-          placeholder: 'Search',
+          placeholder: vnode.attrs.placeholder
+            ? vnode.attrs.placeholder
+            : vnode.attrs.hide_options ? '' : 'Search',
           style: vnode.attrs.style,
           autocomplete: 'off',
           required: vnode.attrs.required,
