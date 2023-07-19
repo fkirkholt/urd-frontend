@@ -307,7 +307,7 @@ var Field = {
           m('label', {
             'data-expandable': field.expandable && field.value,
             'data-field': field.name,
-            class: 'dib ml3'
+            class: 'dib ml3 mt1'
           }, [
               m('abbr', { 
                 title: field.attrs.title,
