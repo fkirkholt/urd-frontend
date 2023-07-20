@@ -124,71 +124,62 @@ var Relation = {
   },
 
   draw_relation_list: function(rel, record) {
-    return m('tr', [
-      m('td', {}),
-      m('td', { colspan: 3 }, [
-        m('table', { class: 'w-100 collapse' }, [
-          rel.records.map(function(rec, rowidx) {
-            rec.rowidx = rowidx
-            // Make editable only relations attached directly to
-            // record and not to parent records
-            var ismatch = Object.keys(rel.conds).every(function(k) {
-              return rel.conds[k] == rec.columns[k].value
-            })
-            rec.readonly = !rec.new && !ismatch
-            if (rec.readonly) rec.inherited = true
+    return [
+      rel.records.map(function(rec, rowidx) {
+        rec.rowidx = rowidx
+        // Make editable only relations attached directly to
+        // record and not to parent records
+        var ismatch = Object.keys(rel.conds).every(function(k) {
+          return rel.conds[k] == rec.columns[k].value
+        })
+        rec.readonly = !rec.new && !ismatch
+        if (rec.readonly) rec.inherited = true
 
-            if (rec.delete) return
-            if (rec.fields === undefined) {
-              rec.fields = JSON.parse(JSON.stringify(rel.fields))
+        if (rec.delete) return
+        if (rec.fields === undefined) {
+          rec.fields = JSON.parse(JSON.stringify(rel.fields))
+        }
+        rec.table = rel
+        rec.loaded = true
+        rec.relations = {}
+
+        rel.grid.columns.map(function(key) {
+          var field = rec.fields[key]
+          if (field.value === undefined) {
+            field.value = rec.columns[key].value
+              ? rec.columns[key].value
+              : null
+            field.text = rec.columns[key].text
+            field.editable = rel.privilege.update
+          }
+        })
+
+        return [
+          rel.grid.columns.map(function(key) {
+            label = rel.fields[key].label
+
+            if (rel.fields[key].defines_relation) {
+              return
             }
-            rec.table = rel
-            rec.loaded = true
-            rec.relations = {}
-
-            rel.grid.columns.map(function(key) {
-              var field = rec.fields[key]
-              if (field.value === undefined) {
-                field.value = rec.columns[key].value
-                  ? rec.columns[key].value
-                  : null
-                field.text = rec.columns[key].text
-                field.editable = rel.privilege.update
-              }
+            return m(Field, {
+              rec: rec, colname: key, label: label
             })
-
-            return [
-              rel.grid.columns.map(function(key) {
-                label = rel.fields[key].label
-
-                if (rel.fields[key].defines_relation) {
-                  return
-                }
-                return m(Field, {
-                  rec: rec, colname: key, label: label
-                })
-              })
-            ]
-          }),
-          (
-            record.readonly ||
-            !config.edit_mode ||
-            rel.relationship == "1:1"
-          ) ? '' : m('tr', [
-            m('td'),
-            m('td'),
-            m('td', [
-              !rel.privilege.insert ? '' : m('a', {
-                onclick: function(e) { Relation.add(e, rel) }
-              }, m('i', {
-                class: 'fa fa-plus light-blue hover-blue '
-                  + 'pointer ml1'
-              }))
-            ])
-          ]),
-        ])
-      ])
-    ])
+          })
+        ]
+      }),
+      (
+        record.readonly ||
+        !config.edit_mode ||
+        rel.relationship == "1:1"
+      ) ? '' : [
+          !rel.privilege.insert ? '' : m('a', {
+            onclick: function(e) { Relation.add(e, rel) }
+          }, m('i', {
+            class: 'fa fa-plus light-blue hover-blue '
+              + 'pointer ml1'
+          }))
+        ]
+    ]
   },
 
   // Decide if the relation represents a direct descendant
@@ -326,7 +317,7 @@ var Relation = {
         ]
       )],
       rel.expanded && rel.records
-        ? m('fieldset', { name: rel.name, 'data-expandable': true }, [
+        ? m('fieldset', { name: rel.name, 'data-expandable': true, class: 'flex flex-column' }, [
           m('legend', {
             onclick: function() {
               Relation.toggle_heading(rel)

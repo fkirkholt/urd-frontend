@@ -78,8 +78,12 @@ function Seeker() {
           name: vnode.attrs.name,
           'data-table': vnode.attrs['data-table'],
           type: 'text',
-          size: vnode.attrs.item.size,
-          maxlength: vnode.attrs.item.size,
+          size: vnode.attrs.item.element == 'input'
+            ? vnode.attrs.item.size
+            : null,
+          maxlength: vnode.attrs.item.element == 'input'
+            ? vnode.attrs.item.size
+            : null,
           class: 'mw5',
           value: option.label,
           placeholder: vnode.attrs.placeholder

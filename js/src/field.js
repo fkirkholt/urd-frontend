@@ -305,7 +305,7 @@ var Field = {
           (field.fkey && field.expanded)
       ) ? '' : [
           m('label', {
-            'data-expandable': field.expandable && field.value,
+            'data-expandable': field.expandable && field.value !== null,
             'data-field': field.name,
             class: 'dib ml3 mt1'
           }, [
@@ -346,15 +346,15 @@ var Field = {
                   }
                 }, Field.display_value(field, rec)) 
                 : m(Input, {...field.attrs}),
+              // Show trash bin for field from cross reference table
+              rec.table.relationship != 'M:M' || !config.edit_mode
+                ? ''
+                : m('i', {
+                  class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
+                  onclick: Record.delete.bind(this, rec)
+                }),
             ]),
 
-          // Show trash bin for field from cross reference table
-          rec.table.relationship != 'M:M' || !config.edit_mode
-            ? ''
-            : m('i', {
-              class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
-              onclick: Record.delete.bind(this, rec)
-            }),
         ],
       // Expanded record
       !field.fkey || !field.expanded ? null : m('fieldset', {
