@@ -265,7 +265,7 @@ var Relation = {
     var key = ref.replace('relations.', '')
     var rel = rec.relations && rec.relations[key]
       ? rec.relations[key] : null
-    if (rel === null) {
+    if (rel === null || !('tables' in ds.base)) {
       return
     }
 
