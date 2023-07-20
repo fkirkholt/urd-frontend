@@ -31,7 +31,7 @@ var Record = {
 
         // Get virtual columns from table.fields.
         for (field_name in table.fields) {
-          field = table.fields[field_name]
+          field = $.extend({}, table.fields[field_name])
           if (rec.fields[field.name] === undefined) {
             rec.fields[field.name] = field
           }
@@ -185,8 +185,8 @@ var Record = {
         }
       }
 
-      field.editable = field.editable === false
-        ? field.editable : list.privilege.update
+      field.editable = (field.editable === false || field.virtual)
+        ? false : list.privilege.update
       rec.fields[name] = field
 
       if (field.value) {
