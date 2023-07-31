@@ -23,7 +23,7 @@ var home = {
         $('#login').show();
         $('#brukernavn').trigger('focus');
       } else {
-        alert(e.response.detail);
+        alert(e.response ? e.response.detail : 'An error has happened.')
       }
     });
   },

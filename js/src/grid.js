@@ -171,13 +171,12 @@ var Grid = {
       }
       $('#urdgrid tr.focus').trigger('focus')
     }).catch(function(e) {
-      console.log('error:', e)
       if (e.code === 401) {
         $('div.curtain').show()
         $('#login').show()
         $('#brukernavn').trigger('focus')
       } else {
-        alert(e.response.detail)
+        alert(e.response ? e.response.detail : 'An error has happened.')
       }
     })
   },
