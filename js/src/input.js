@@ -293,7 +293,7 @@ var Input = {
         ? field.value.replace(/\n/g, '\u21a9')
         : field.value
 
-      vnode.attrs.size = size ? size : ''
+      vnode.attrs.size = size ? size : null
       vnode.attrs.maxlength = size ? size : ''
       vnode.attrs.class = 'border-box mw5 truncate'
       vnode.attrs.onchange = function(event) {
