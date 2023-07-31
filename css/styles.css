@@ -113,10 +113,27 @@ input:focus-visible {
 .cm-wrap { height: 100% }
 .cm-scroller { overflow: auto }
 
-label abbr:after {
-    content: attr(data-after)
+label:after {
+    content: attr(data-after);
 }
 
-label abbr:before {
-    content: attr(data-before)
+label b:after {
+    content: attr(data-after);
+    font-weight: normal;
+}
+
+label b[data-after-color=red]:after {
+    content: attr(data-after);
+    color: red;
+    font-weight: normal;
+}
+
+label b[data-after-color=gray]:after {
+    content: attr(data-after);
+    color: gray;
+    font-weight: normal;
+}
+
+label b:before {
+    content: attr(data-before);
 }

@@ -309,10 +309,10 @@ var Field = {
             'data-field': field.name,
             class: 'dib ml3 mt1'
           }, [
-              m('abbr', { 
+              m('b', { 
                 title: field.attrs.title,
                 class: [
-                  'dib w4 b truncate v-top',
+                  'dib w4 truncate v-top',
                   field.expandable && field.value ? 'underline pointer' : ''
                 ].join(' '),
                 onclick: function() {

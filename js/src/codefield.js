@@ -8,7 +8,7 @@ var Codefield = {
 
   set_value: function(id, value) {
     editors[id].view.dispatch({
-      changes: { from: 0, to: editors[id].state.doc.length, insert: value }
+      changes: { from: 0, to: editors[id].view.state.doc.length, insert: value }
     })
   },
 
