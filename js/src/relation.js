@@ -210,7 +210,7 @@ var Relation = {
     var base_path
     var conditions
     if (
-      ds.base.system == 'postgres' &&
+      ds.base.system == 'postgresql' &&
       rel.schema_name &&
       rel.schema_name != rel.base_name && rel.schema_name != 'public'
     ) {

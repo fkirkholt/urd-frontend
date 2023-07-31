@@ -89,12 +89,12 @@ var export_dialog = {
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dialect',
-          value: 'postgres'
+          value: 'postgresql'
         })], ' PostgreSQL'),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dialect',
-          value: 'sqlite3'
+          value: 'sqlite'
         })], ' SQLite'),
         m('br'), m('br'),
         m('label', [m('input[type=checkbox]', {

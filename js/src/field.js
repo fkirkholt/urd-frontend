@@ -229,13 +229,13 @@ var Field = {
     var url
     if (field.fkey) {
       if (
-        ds.base.system == 'postgres' &&
+        ds.base.system == 'postgresql' &&
         field.fkey.schema &&
         field.fkey.schema != field.fkey.base &&
         field.fkey.schema != 'public'
       ) {
         base = field.fkey.base + '.' + field.fkey.schema
-      } else if (ds.base.system == 'sqlite3') {
+      } else if (ds.base.system == 'sqlite') {
         base = ds.base.name
       } else {
         base = field.fkey.base || field.fkey.schema
