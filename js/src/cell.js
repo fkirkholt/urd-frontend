@@ -3,7 +3,7 @@ var Cell = {
   /** Text alignment in cell */
   align: function(list, colname) {
     var col = list.fields[colname];
-    if ((['integer', 'float', 'decimal'].includes(col.datatype) &&
+    if ((['int', 'float', 'Decimal'].includes(col.datatype) &&
       !col.fkey) && (col.element !== 'input' || col.attrs.type != 'checkbox')) {
       return 'right';
     } else {
@@ -53,8 +53,8 @@ var Cell = {
       class: [
         Cell.align(list, colname) === 'right' ? 'tr' : 'tl',
         compressed || value.length < 30 || (
-          field.datatype !== 'string' &&
-            field.datatype !== 'binary' &&
+          field.datatype !== 'str' &&
+            field.datatype !== 'bytes' &&
             field.element != 'select'
         )
           ? 'nowrap' : '',

@@ -185,7 +185,7 @@ var Search = {
           field: filtername,
           operator: field.element == 'textarea' || (
             field.element == 'input' && field.attrs.type == 'text' &&
-            !['integer', 'decimal', 'float'].includes(field.datatype)
+            !['int', 'Decimal', 'float'].includes(field.datatype)
           ) ? 'LIKE' : '='
         }
       }
@@ -388,22 +388,22 @@ var Search = {
       ) {
         return false
       } else if (
-        field.datatype == 'boolean' &&
+        field.datatype == 'bool' &&
         ['IN', 'LIKE', 'NOT LIKE', 'start', 'slutt', '>', '<']
           .includes(operator.value)
       ) {
         return false
       } else if (
         (field.element == 'input' & field.attrs.type == 'text' &&
-          field.datatype == 'integer') ||
+          field.datatype == 'int') ||
         (field.element == 'input' &&
           (field.attrs.type == 'date' ||
-            field.datatype == 'integer')) &&
+            field.datatype == 'int')) &&
         ['LIKE', 'NOT LIKE', 'start', 'slutt'].includes(operator.value)
       ) {
         return false
       } else if (
-        (field.datatype == 'string' &&
+        (field.datatype == 'str' &&
           (field.element == 'textarea' ||
             (field.element == 'input' && field.attrs.type == 'text') ||
             (field.element == 'input' &&

@@ -63,10 +63,10 @@ var Input = {
     ) {
       field.errormsg = 'Feltet kan ikke stå tomt'
       field.invalid = true
-    } else if (field.datatype == 'integer' && field.format === 'byte') {
+    } else if (field.datatype == 'int' && field.format === 'byte') {
       field.errormsg = 'Må ha enhet (B, kB, MB, GB) til slutt'
       field.invalid = false
-    } else if (field.datatype == 'integer') {
+    } else if (field.datatype == 'int') {
       var pattern = new RegExp("^-?[0-9]*$")
       if (!pattern.test(value)) {
         field.errormsg = 'Feltet skal ha heltall som verdi'
@@ -78,7 +78,7 @@ var Input = {
         field.invalid = true
       }
     } else if (
-      field.datatype == 'string' && 
+      field.datatype == 'str' && 
       field.attrs.placeholder == 'yyyy(-mm(-dd))'
     ) {
       if (
@@ -285,7 +285,7 @@ var Input = {
 
       return m('input[type=date]', {...vnode.attrs})
     } else {
-      var size = field.datatype == 'float' || field.datatype == 'decimal'
+      var size = field.datatype == 'float' || field.datatype == 'Decimal'
         ? field.size + 1
         : field.size
 
