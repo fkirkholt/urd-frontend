@@ -267,11 +267,15 @@ var Contents = {
         m('.list', { class: "flex flex-column overflow-auto min-w4" }, [
           !ds.base.schemata || ds.base.schemata.length < 2
             ? '' : m('select', {
+              name: 'schemata',
               class: 'mb2',
               onchange: function() {
                 var schema = $(this).val()
                 db_name = ds.base.name.split('.')[0]
-                m.route.set('/' + db_name + '.' + schema)
+                adr = ['postgresql', 'mssql'].includes(ds.base.system)
+                  ? '/' + db_name + '.' + schema
+                  : '/' + schema
+                m.route.set(adr)
               }
             }, [
                 ds.base.schemata.map(function(schema) {
