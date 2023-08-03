@@ -14,7 +14,7 @@ var Search = {
       url: "table",
       params: {
         base: field.fkey.base,
-        table: field.fkey.table,
+        table: field.fkey.referred_table,
         limit: 0
       }
     }).then(function(result) {
@@ -289,7 +289,7 @@ var Search = {
         has_idx &&
         ['=', '!='].includes(filter.operator))
     ) {
-      key = field.fkey ? field.fkey.primary : [field.name]
+      key = field.fkey ? field.fkey.referred_columns : [field.name]
 
       return m(Autocomplete, {
         name: filter.field,
@@ -381,7 +381,7 @@ var Search = {
 
       if (
         ((field.element == 'select' &&
-          (field.fkey && field.fkey.table !== field.table)) ||
+          (field.fkey && field.fkey.referred_table !== field.table)) ||
           (field.element == 'input' && field.attrs.type == 'radio')) &&
         ['LIKE', 'NOT LIKE', 'start', 'slutt', '>', '<']
           .includes(operator.value)

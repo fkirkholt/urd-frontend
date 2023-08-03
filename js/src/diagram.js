@@ -124,8 +124,8 @@ var Diagram = {
     var fk_tables = []
     Object.keys(table.fkeys).map(function(name) {
       var fkey = table.fkeys[name]
-      if (fkey.table != table.name) {
-        fk_tables.push(fkey.table)
+      if (fkey.referred_table != table.name) {
+        fk_tables.push(fkey.referred_table)
       }
     })
 

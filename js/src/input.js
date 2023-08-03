@@ -33,9 +33,9 @@ var Input = {
         var col = rec.fields[column]
         var cond
         if (col.value != null && column in rec.fields) {
-          var pkcol = field.fkey.primary.slice(-1)[0]
+          var pkcol = field.fkey.referred_columns.slice(-1)[0]
 
-          if (key.table == field.fkey.table) {
+          if (key.table == field.fkey.referred_table) {
             cond = key.primary[i] + " = '" + col.value + "'"
           } else {
             cond = pkcol + ' in (select ' + key.primary[key.foreign_idx]

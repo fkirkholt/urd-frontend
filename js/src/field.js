@@ -30,10 +30,10 @@ var Field = {
 
       if (
         other_field.element == 'select' &&
-        other_field.fkey.foreign.length > 1
+        other_field.fkey.constrained_columns.length > 1
       ) {
         // If the field is part of the dropdowns foreign keys
-        if (other_field.fkey.foreign.includes(field.name)) {
+        if (other_field.fkey.constrained_columns.includes(field.name)) {
           if (rec.fields[name].value !== null) {
             rec.fields[name].value = null
             rec.fields[name].dirty = true
@@ -174,10 +174,10 @@ var Field = {
     }
     var filters = []
 
-    $.each(field.fkey.primary, function(i, ref_field) {
-      var fk_field = field.fkey.foreign[i]
+    $.each(field.fkey.referred_columns, function(i, ref_field) {
+      var fk_field = field.fkey.constrained_columns[i]
       var value = rec.fields[fk_field].value
-      filters.push(field.fkey.table + '.' + ref_field + " = " + value)
+      filters.push(field.fkey.referred_table + '.' + ref_field + " = " + value)
     })
 
     m.request({
@@ -186,7 +186,7 @@ var Field = {
       params: {
         base: field.fkey.base || ds.base.name,
         schema: field.fkey.schema,
-        table: field.fkey.table,
+        table: field.fkey.referred_table,
         filter: filters.join(' AND ')
       }
     }).then(function(result) {
@@ -201,7 +201,7 @@ var Field = {
         params: {
           base: field.fkey.base || ds.base.name,
           schema: field.fkey.schema,
-          table: field.fkey.table,
+          table: field.fkey.referred_table,
           // betingelse: betingelse,
           pkey: JSON.stringify(pk)
         }
@@ -240,11 +240,11 @@ var Field = {
       } else {
         base = field.fkey.base || field.fkey.schema
       }
-      url = '#/' + base + '/data/' + field.fkey.table + '?'
-      $.each(field.fkey.primary, function(i, colname) {
-        var fk_field = field.fkey.foreign[i]
+      url = '#/' + base + '/data/' + field.fkey.referred_table + '?'
+      $.each(field.fkey.referred_columns, function(i, colname) {
+        var fk_field = field.fkey.constrained_columns[i]
         url += colname + '=' + rec.fields[fk_field].value
-        if (i !== field.fkey.primary.length - 1) url += '&'
+        if (i !== field.fkey.referred_columns.length - 1) url += '&'
       })
     }
 
