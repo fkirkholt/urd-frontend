@@ -19,8 +19,6 @@ var Fieldset = {
             }
 
             field.attrs = field.attrs || {}
-            field.attrs.rec = rec
-            field.attrs.name = fieldname
             field.attrs.placeholder = field.attrs.placeholder || field.label
 
             // determine if field should be displayd or edited
@@ -30,7 +28,7 @@ var Fieldset = {
             return m('a',
               display
                 ? [separator, Field.display_value(field, rec)].join('')
-                : m(Input, field.attrs)
+                : m(Input, { rec: rec, name: fieldname, ...field.attrs })
             )
           case 'action':
             var action = ds.table.actions[fieldname]

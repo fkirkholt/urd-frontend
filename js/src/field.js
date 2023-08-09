@@ -278,8 +278,6 @@ var Field = {
     var field = rec.fields[colname]
 
     field.attrs = field.attrs || {}
-    field.attrs.rec = rec
-    field.attrs.name = colname
 
     // Don't show fields used below threshold value
     if (field.use && field.use < config.threshold) {
@@ -345,7 +343,7 @@ var Field = {
                     }
                   }
                 }, Field.display_value(field, rec)) 
-                : m(Input, {...field.attrs}),
+                : m(Input, { rec: rec, fieldname: colname, ...field.attrs }),
               // Show trash bin for field from cross reference table
               rec.table.relationship != 'M:M' || !config.edit_mode
                 ? ''
