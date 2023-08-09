@@ -23,6 +23,10 @@ var login = {
             value: 'sqlite'
           },
           {
+            label: 'MariaDB',
+            value: 'mariadb'
+          },
+          {
             label: 'MySQL',
             value: 'mysql'
           },
@@ -37,7 +41,7 @@ var login = {
           {
             label: 'SQL Server',
             value: 'mssql'
-          }
+          },
         ]
       }),
       m('input[type=text]', {
