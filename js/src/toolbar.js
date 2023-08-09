@@ -94,7 +94,7 @@ var Toolbar = {
           $('#progress').show().children('[name=message]').html(txt)
         }
       }).catch(function(e) {
-        alert(e.response ? e.response.detail : 'An error has happened.')
+        alert(e.response ? e.response.detail : 'An error has occured.')
       })
 
       // show progress bar

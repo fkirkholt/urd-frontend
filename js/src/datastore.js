@@ -39,7 +39,7 @@ var store = {
         $('#login').show();
         $('#brukernavn').trigger('focus');
       } else {
-        alert(e.response ? e.response.detail : 'An error has happened.')
+        alert(e.response ? e.response.detail : 'An error has occurred.')
       }
     });
   },
