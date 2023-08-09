@@ -107,7 +107,7 @@ var tabbar = {
         class: 'fa fa-edit fr mr3 pt1',
         title: 'Oppdater cache',
         onclick: function() {
-          if (['oracle', 'sql server'].includes(ds.base.system)) {
+          if (['oracle', 'mssql'].includes(ds.base.system)) {
             alert('Cache not supported for ' + ds.base.system)
             return
           }
