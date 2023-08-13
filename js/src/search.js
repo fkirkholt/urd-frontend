@@ -128,6 +128,7 @@ var Search = {
 
       return [
         m('tr', [
+          // Draw expansion icon
           m('td', { class: 'tc' }, [
             item.inline && !item.expandable ? '' : m('i.fa', {
               class: item.expanded ? 'fa-angle-down' : 'fa-angle-right',
@@ -138,6 +139,7 @@ var Search = {
               }
             })
           ]),
+          // Draw label
           m('td.label', {
             class: [
               'f6 nowrap pr2',
@@ -149,6 +151,7 @@ var Search = {
             }
           }, label),
         ]),
+        // Draw fields if expanded
         !item.expanded ? null : m('tr', [
           m('td'),
           m('td', { colspan: 3 }, [
@@ -195,6 +198,7 @@ var Search = {
 
       return [
         m('tr', [
+          // expansion icon
           m('td', { class: 'tc v-top' }, [
             !field.fkey || !field.expandable || table.sublevel
               ? null
