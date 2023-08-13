@@ -358,19 +358,9 @@ var Grid = {
                   'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
                   config.compressed ? 'truncate' : '',
                 ].join(' '),
+                'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
                 onclick: Grid.sort.bind(Grid, col)
-              }, m('div', { class: 'flex' }, [
-                  m('span', {
-                    class: "flex-auto truncate",
-                    title: label
-                  }, label), [
-                    !Grid.column_order(col) ? '' : m('i', {
-                      class: 'pl1 di fa fa-angle-'
-                        + (Grid.column_order(col) === 'asc'
-                          ? 'down' : 'up')
-                    })
-                  ]
-                ]))
+              }, label)
             }),
             !ds.table.grid.actions.length
               ? ''

@@ -137,3 +137,11 @@ label b[data-after-color=gray]:after {
 label b:before {
     content: attr(data-before);
 }
+
+th[data-sort=asc]:after {
+    content: ' ▲'
+}
+
+th[data-sort=desc]:after {
+    content: ' ▼'
+}
