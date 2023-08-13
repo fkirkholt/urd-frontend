@@ -5,7 +5,7 @@ var Select = {
 
     return m('select', {
       id: vnode.attrs.id,
-      name: vnode.attrs.name,
+      name: vnode.attrs.fieldname,
       required: vnode.attrs.required,
       onchange: vnode.attrs.onchange,
       style: vnode.attrs.style,

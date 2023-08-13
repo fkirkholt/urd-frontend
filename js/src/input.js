@@ -98,7 +98,7 @@ var Input = {
   view: function(vnode) {
     var rec = vnode.attrs.rec
     delete vnode.attrs.rec
-    var fieldname = vnode.attrs.name
+    var fieldname = vnode.attrs.fieldname
     var field = rec.fields[fieldname]
 
     if (

@@ -28,7 +28,7 @@ var Fieldset = {
             return m('a',
               display
                 ? [separator, Field.display_value(field, rec)].join('')
-                : m(Input, { rec: rec, name: fieldname, ...field.attrs })
+                : m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
             )
           case 'action':
             var action = ds.table.actions[fieldname]
