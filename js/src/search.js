@@ -394,11 +394,11 @@ var Search = {
       ) {
         return false
       } else if (
-        (field.element == 'input' & field.attrs.type == 'text' &&
+        ((field.element == 'input' & field.attrs.type == 'text' &&
           field.datatype == 'int') ||
-        (field.element == 'input' &&
-          (field.attrs.type == 'date' ||
-            field.datatype == 'int')) &&
+          (field.element == 'input' &&
+            (field.attrs.type == 'date' ||
+              field.datatype == 'int'))) &&
         ['LIKE', 'NOT LIKE', 'start', 'slutt'].includes(operator.value)
       ) {
         return false
