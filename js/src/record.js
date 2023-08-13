@@ -378,8 +378,8 @@ var Record = {
         base_name: ds.base.name,
         table_name: rel.name,
         condition: rel.conditions.join(' AND '),
-        foreign: rec.table.relations[alias].foreign,
-        primary: rec.table.relations[alias].primary,
+        constrained_columns: rec.table.relations[alias].constrained_columns,
+        referred_columns: rec.table.relations[alias].referred_columns,
         records: []
       }
       for (let idx in rel.records) {

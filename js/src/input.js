@@ -12,15 +12,15 @@ var Input = {
     Object.keys(rec.table.fkeys).map(function(fk_name) {
       var key = rec.table.fkeys[fk_name]
 
-      if (key.foreign.indexOf(field.name) > 0) {
-        last_fk_col = key.foreign.slice(-1)
+      if (key.constrained_columns.indexOf(field.name) > 0) {
+        last_fk_col = key.constrained_columns.slice(-1)
         if (
           last_fk_col != field.name &&
           rec.fields[last_fk_col].nullable == true
         ) {
           return
         }
-        key.foreign_idx = key.foreign.indexOf(field.name)
+        key.foreign_idx = key.constrained_columns.indexOf(field.name)
         keys.push(key)
       }
     })
@@ -28,7 +28,7 @@ var Input = {
     // Sets conditions based on values of the other
     // columns in the foreign key
     keys.forEach(function(key) {
-      $.each(key.foreign, function(i, column) {
+      $.each(key.constrained_columns, function(i, column) {
         if (column === field.name) return
         var col = rec.fields[column]
         var cond
@@ -36,10 +36,10 @@ var Input = {
           var pkcol = field.fkey.referred_columns.slice(-1)[0]
 
           if (key.table == field.fkey.referred_table) {
-            cond = key.primary[i] + " = '" + col.value + "'"
+            cond = key.referred_columns[i] + " = '" + col.value + "'"
           } else {
-            cond = pkcol + ' in (select ' + key.primary[key.foreign_idx]
-            cond += ' from ' + key.table + ' where ' + key.foreign[i]
+            cond = pkcol + ' in (select ' + key.referred_columns[key.foreign_idx]
+            cond += ' from ' + key.table + ' where ' + key.constrained_columns[i]
             cond += " = '" + col.value + "')"
           }
           conditions.push(cond)

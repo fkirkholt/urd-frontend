@@ -132,7 +132,7 @@ var Diagram = {
     // Draw belongs-to relations from foreign keys
     Object.keys(table.fkeys).map(function(alias) {
       var fk = table.fkeys[alias]
-      var field_name = fk.foreign[fk.foreign.length - 1]
+      var field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
       var field = table.fields ? table.fields[field_name] : null
       var fk_table = ds.base.tables[fk.table]
       var line = field && field.hidden ? '..' : '--'
@@ -215,7 +215,7 @@ var Diagram = {
         return
       }
 
-      var fk_field_name = rel.foreign[rel.foreign.length - 1]
+      var fk_field_name = rel.constrained_columns[rel.constrained_columns.length - 1]
       var fk_field = ds.base.tables[rel.table].fields
         ? ds.base.tables[rel.table].fields[fk_field_name]
         : null
@@ -261,7 +261,7 @@ var Diagram = {
     if (table.hidden) return
     Object.keys(table.fkeys).map(function(alias) {
       var fk = table.fkeys[alias]
-      var field_name = fk.foreign.slice(-1)[0]
+      var field_name = fk.constrained_columns.slice(-1)[0]
       var field = table.fields[field_name]
       if (field.hidden) return
       var fk_table = ds.base.tables[fk.table]
@@ -313,7 +313,7 @@ var Diagram = {
 
       var fk = table.relations[fk_name]
       // name of last column in foreign key
-      var fk_last_col = fk.foreign[fk.foreign.length - 1]
+      var fk_last_col = fk.constrained_columns[fk.constrained_columns.length - 1]
       var fk_field = ds.base.tables[fk.table].fields
         ? ds.base.tables[fk.table].fields[fk_last_col]
         : null
@@ -351,7 +351,7 @@ var Diagram = {
     Object.keys(table.fkeys).map(function(fk_name) {
       new_path = path.slice()
       var fk = table.fkeys[fk_name]
-      var fk_field_name = fk.foreign[fk.foreign.length - 1]
+      var fk_field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
       var fk_field = table.fields ? table.fields[fk_field_name] : null
       var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
