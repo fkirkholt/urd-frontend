@@ -35,11 +35,11 @@ var Input = {
         if (col.value != null && column in rec.fields) {
           var pkcol = field.fkey.referred_columns.slice(-1)[0]
 
-          if (key.table == field.fkey.referred_table) {
+          if (key.referred_table == field.fkey.referred_table) {
             cond = key.referred_columns[i] + " = '" + col.value + "'"
           } else {
             cond = pkcol + ' in (select ' + key.referred_columns[key.foreign_idx]
-            cond += ' from ' + key.table + ' where ' + key.constrained_columns[i]
+            cond += ' from ' + key.referred_table + ' where ' + key.constrained_columns[i]
             cond += " = '" + col.value + "')"
           }
           conditions.push(cond)
