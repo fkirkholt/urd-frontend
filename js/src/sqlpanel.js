@@ -128,7 +128,7 @@ var SQLpanel = {
       })
     }
 
-    return [
+    return (!ds.user || !ds.user.admin) ? null : [
       m(Tablelist),
       m('div', {
         onclick: function() {

@@ -12,7 +12,7 @@ var tabbar = {
 
   view: function(vnode) {
     return !m.route.param('base') ? '' : [
-      m('ul', {
+      !ds.user.admin ? '' : m('ul', {
         class: 'di w-100'
       }, [
           m('li', {
