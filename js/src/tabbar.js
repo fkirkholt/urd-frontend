@@ -11,6 +11,9 @@ var tabbar = {
   },
 
   view: function(vnode) {
+    if (!ds.base.name) {
+        return
+    }
     return !m.route.param('base') ? '' : [
       !ds.user.admin ? '' : m('ul', {
         class: 'di w-100'
@@ -54,7 +57,8 @@ var tabbar = {
             }
           }, 'SQL')
         ]),
-      !ds.table || !(config.tab == 'data') || !ds.table.privilege.update ? '' : m('label', {
+      !ds.table || !(config.tab == 'data') || 
+      !(ds.base.privilege.update || ds.table.privilege.update) ? '' : m('label', {
         class: 'fr mr3'
       }, [
           m('input#view_checkbox', {
