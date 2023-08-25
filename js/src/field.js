@@ -324,7 +324,7 @@ var Field = {
               !field.use || !config.admin ? '' : m('span', {
                 class: 'ml2 light-silver'
               }, '(' + Field.get_percentage(field.use) + '%)'),
-              (!(ds.base.privilege.update || rec.table.privilege.update) || 
+              (!((ds.base.privilege && ds.base.privilege.update) || rec.table.privilege.update) || 
               rec.readonly || !config.edit_mode || !field.editable)
                 ? m('a', {
                   class: [

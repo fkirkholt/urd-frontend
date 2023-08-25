@@ -58,7 +58,7 @@ var tabbar = {
           }, 'SQL')
         ]),
       !ds.table || !(config.tab == 'data') || 
-      !(ds.base.privilege.update || ds.table.privilege.update) ? '' : m('label', {
+      !((ds.base.privilege && ds.base.privilege.update) || ds.table.privilege.update) ? '' : m('label', {
         class: 'fr mr3'
       }, [
           m('input#view_checkbox', {
