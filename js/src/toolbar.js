@@ -209,7 +209,7 @@ var Toolbar = {
     }
 
     // Table can just hold one row if last pkey column starts with 'const_'
-    var single_rec = ds.table.pkey.slice(-1)[0].substr(0, 6) == 'const_'
+    var single_rec = ds.table.pkey && ds.table.pkey.slice(-1)[0].substr(0, 6) == 'const_'
     var params = m.route.param()
     var full = single_rec && ds.table.records.length
     is_pkey = true
