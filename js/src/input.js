@@ -116,9 +116,13 @@ var Input = {
     vnode.attrs['data-table'] = rec.table.name
     vnode.attrs['data-dirty'] = field.dirty
 
+    var has_idx = false
     $.each(rec.table.indexes, function(i, idx) {
-      if (idx.columns[0] === field.name && idx.unique) {
-        field.unique = true
+      if (idx.columns[0] === field.name) {
+        has_idx = true
+        if (idx.unique) {
+          field.unique = true
+        }
       }
     })
 
@@ -164,7 +168,7 @@ var Input = {
           disabled: true, value: option ? option.label : field.value
         })
         : m(Select, {...vnode.attrs})
-    } else if (field.element === 'select' || field.unique) {
+    } else if (field.element === 'select' || has_idx) {
 
       if (!field.text) field.text = field.value
 
