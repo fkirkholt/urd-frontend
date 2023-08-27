@@ -518,10 +518,7 @@ var Record = {
                 fieldset: item,
                 label: label
               })
-            } else if (
-              typeof item == "string" &&
-                item.includes('relations')
-            ) {
+            } else if (typeof item == "string" && item.includes('relations')) {
               return m(Relation, { rec: rec, ref: item, label: label })
             } else if (typeof item == "string" && item.includes('actions')) {
               // TODO
