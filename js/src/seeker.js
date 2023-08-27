@@ -99,7 +99,7 @@ function Seeker() {
             keydown(event, vnode.attrs)
           },
           onblur: function(event) {
-            if (vnode.attrs.hide_options) {
+            if (vnode.attrs.hide_options || vnode.attrs.item.element == 'input') {
               vnode.attrs.onchange(event)
             } else {
               options = []
