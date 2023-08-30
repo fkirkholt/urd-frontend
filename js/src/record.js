@@ -65,7 +65,11 @@ var Record = {
         count: true
       }
     }).then(function(result) {
-        rec.relations = result.data
+        if (ds.rec) {
+          ds.rec.relations = result.data
+        } else {
+          rec.relations = result.data
+        }
       })
   },
 
@@ -250,7 +254,7 @@ var Record = {
             clone.text = null
           }
         }
-        }
+      }
     })
 
     clone.pkey = {}
