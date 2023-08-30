@@ -142,7 +142,7 @@ var Toolbar = {
         deletable = false
       }
     })
-    if ((ds.base.privilege.delete || ds.table.privilege.delete) != true || !deletable) return
+    if (ds.table.privilege.delete != true || !deletable) return
 
     var r = true
     if (config.autosave || !config.edit_mode) {
@@ -202,11 +202,6 @@ var Toolbar = {
 
     var idx = ds.table.selection
     var rec = ds.table.records[idx]
-    var privilege = {
-        insert: ds.base.privilege.insert || ds.table.privilege.insert,
-        update: ds.base.privilege.update || ds.table.privilege.update,
-        delete: ds.base.privilege.delete || ds.table.privilege.delete
-    }
 
     // Table can just hold one row if last pkey column starts with 'const_'
     var single_rec = ds.table.pkey && ds.table.pkey.slice(-1)[0].substr(0, 6) == 'const_'
@@ -277,13 +272,13 @@ var Toolbar = {
         m('i', {
           class: [
             'fa fa-file-o ml3 mr1',
-            privilege.insert && !full
+            ds.table.privilege.insert && !full
               ? 'dim pointer'
               : 'moon-gray'
           ].join(' '),
           title: 'Ny post',
           onclick: function() {
-            if (privilege.insert != true || full) return
+            if (ds.table.privilege.insert != true || full) return
             Record.create(ds.table)
 
             if (config.recordview) {
@@ -312,12 +307,12 @@ var Toolbar = {
         m('i', {
           class: [
             'fa fa-copy ml2 mr1 f6',
-            privilege.insert == true && !full
+            ds.table.privilege.insert == true && !full
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
           title: 'Kopier post',
           onclick: function() {
-            if (privilege.insert != true || full) return
+            if (ds.table.privilege.insert != true || full) return
             Record.copy()
             if (!config.edit_mode) {
               ds.table.edit = true
@@ -331,7 +326,7 @@ var Toolbar = {
         m('i', {
           class: [
             'fa fa-edit ml2 mr1 pointer f6',
-            privilege.update == true
+            ds.table.privilege.update == true
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
           title: 'Rediger post',
@@ -362,7 +357,7 @@ var Toolbar = {
         m('i', {
           class: [
             'fa fa-trash-o ml2 mr1',
-            (privilege.delete == true &&
+            (ds.table.privilege.delete == true &&
               rec && Record.is_deletable(rec))
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),

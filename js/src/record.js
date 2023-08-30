@@ -186,7 +186,7 @@ var Record = {
       }
 
       field.editable = (field.editable === false || field.virtual)
-        ? false : ds.base.privilege.update || list.privilege.update
+        ? false : list.privilege.update
       rec.fields[name] = field
 
       if (field.value) {

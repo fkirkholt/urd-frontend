@@ -151,7 +151,7 @@ var Relation = {
               ? rec.columns[key].value
               : null
             field.text = rec.columns[key].text
-            field.editable = ds.base.privilege.update || rel.privilege.update
+            field.editable = rel.privilege.update
           }
         })
 
@@ -173,7 +173,7 @@ var Relation = {
         !config.edit_mode ||
         rel.relationship == "1:1"
       ) ? '' : [
-          !(ds.base.privilege.insert || rel.privilege.insert) ? '' : m('a', {
+          !rel.privilege.insert ? '' : m('a', {
             onclick: function(e) { Relation.add(e, rel) }
           }, m('i', {
             class: 'fa fa-plus light-blue hover-blue '

@@ -183,7 +183,7 @@ var Row = {
         list.ismain ? '' : m('td', [
           !record.open || parent.readonly ? '' : m('i', {
             class: [
-              (ds.base.privilege.delete || list.privilege.delete) && config.edit_mode
+              list.privilege.delete && config.edit_mode
                 ? 'fa fa-trash-o pl1' : '',
               record.deletable ? 'light-blue' : 'moon-gray',
               record.deletable ? (
