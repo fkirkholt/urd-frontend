@@ -90,9 +90,6 @@ var Input = {
         field.invalid = true
       }
     }
-    if (field.invalid) {
-      field.errormsg += '. Verdien er nå ' + value
-    }
   },
 
   view: function(vnode) {

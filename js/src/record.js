@@ -475,15 +475,18 @@ var Record = {
             config.recordview ? '' : m('input[type=button]', {
               value: 'Lagre og lukk',
               onclick: function() {
-                var saved = true
-                if (ds.table.dirty) {
-                  vnode.attrs.record = merge(vnode.attrs.record, rec)
-                  delete ds.rec
-                  saved = Grid.save()
-                }
-                if (saved) {
-                  ds.table.edit = false
-                  config.edit_mode = false
+                var valid = $(this).parents('form')[0].reportValidity()
+                if (valid) {
+                    var saved = true
+                    if (ds.table.dirty) {
+                      vnode.attrs.record = merge(vnode.attrs.record, rec)
+                      delete ds.rec
+                      saved = Grid.save()
+                    }
+                    if (saved) {
+                      ds.table.edit = false
+                      config.edit_mode = false
+                    }
                 }
               }
             }),
