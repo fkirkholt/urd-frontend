@@ -165,7 +165,7 @@ var Input = {
           disabled: true, value: option ? option.label : field.value
         })
         : m(Select, {...vnode.attrs})
-    } else if (field.element === 'select' || has_idx) {
+    } else if (field.element === 'select' || (has_idx && !field.unique)) {
 
       if (!field.text) field.text = field.value
 
@@ -197,15 +197,6 @@ var Input = {
 
         Field.update(value, field.name, rec)
 
-        if (field.unique) {
-          options = JSON.parse(event.target.dataset.options)
-          for (idx in options) {
-            if (value == options[idx].value) {
-              field.invalid = true
-              field.errormsg = 'Ikke unik verdi'
-            }
-          }
-        }
         Input.validate(value, field)
       }
       vnode.attrs.onclick = function(event) {
@@ -300,6 +291,32 @@ var Input = {
       vnode.attrs.onchange = function(event) {
         var value = event.target.value.replace(/\u21a9/g, "\n")
         Field.update(value, field.name, rec)
+        if (field.unique) {
+          var data = {
+            schema: ds.base.schema,
+            base: ds.base.name,
+            table: rec.table.name,
+            column: field.name,
+            condition: Input.get_condition(rec, field)
+          }
+          data.q = event.target.value
+
+          m.request({
+            method: 'get',
+            url: 'options',
+            params: data
+          }).then(function(result) {
+            options = result
+            event.target.setCustomValidity("")
+            for (idx in options) {
+              if (value == options[idx].value) {
+                event.target.setCustomValidity("Ikke unik verdi")
+                field.invalid = true
+                field.errormsg = 'Ikke unik verdi'
+              }
+            }
+          })
+        }
         Input.validate(value, field)
       }
 
