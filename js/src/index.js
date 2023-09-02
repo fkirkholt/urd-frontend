@@ -1,6 +1,18 @@
 window.m = require('mithril')
 window.$ = require('cash-dom')
 window.ds = require('./datastore.js')
+window.fix_circular = function () {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+}
 
 var contents = require('./contents.js')
 var header = require('./header.js')
