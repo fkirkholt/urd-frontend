@@ -77,14 +77,13 @@ var header = {
                   m.request({
                     url: 'logout'
                   }).then(function() {
-                      ds.base.server = null
-                      ds.base.name = null
-                      if (m.route.get() == "") {
-                        window.location.reload()
-                      } else {
-                        m.route.set('')
-                      }
-                    })
+                    ds.base.server = null
+                    ds.base.name = null
+                    m.route.set('')
+                    $('div.curtain').show()
+                    $('#login').show()
+                    $('#brukernavn').trigger('focus')
+                  })
                 }
               }, 'Logg ut'),
             ])
