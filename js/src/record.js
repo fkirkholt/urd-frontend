@@ -65,12 +65,8 @@ var Record = {
         count: true
       }
     }).then(function(result) {
-        if (ds.rec) {
-          ds.rec.relations = result.data
-        } else {
-          rec.relations = result.data
-        }
-      })
+      rec.relations = result.data
+    })
   },
 
   get_relations: function(rec, alias) {
@@ -319,7 +315,9 @@ var Record = {
     if (record.dirty) {
       for (let fieldname in record.fields) {
         field = record.fields[fieldname]
-        Input.validate(field.value, field)
+        if (!field.defines_relation) {
+          Input.validate(field.value, field)
+        }
         if (field.invalid) {
           record.invalid = true
           record.messages.push('Invalid field ' + field.name + '.')
@@ -450,12 +448,16 @@ var Record = {
     var rec = vnode.attrs.record
 
     // Clone record so the registration can be cancelled easily
-    if (ds.table.edit && !ds.rec) {
+    // This requires that relations is loaded before cloning
+    if (ds.table.edit && !rec.relations) {
+      return
+    }
+    if (ds.table.edit && rec.root && !ds.rec) {
       if (!config.recordview) {
         rec = structuredClone(rec)
       }
       ds.rec = rec
-    } else if (ds.table.edit) {
+    } else if (ds.table.edit && rec.root) {
       rec = ds.rec
     }
 
@@ -476,7 +478,7 @@ var Record = {
         !ds.table.edit && !ds.table.hide
           ? ''
           : m('div', [
-            config.recordview ? '' : m('input[type=button]', {
+            config.recordview || !rec.root ? '' : m('input[type=button]', {
               value: 'Lagre og lukk',
               onclick: function() {
                 var valid = $(this).parents('form')[0].reportValidity()
@@ -494,7 +496,7 @@ var Record = {
                 }
               }
             }),
-            config.recordview ? '' : m('input[type=button]', {
+            config.recordview || !rec.root ? '' : m('input[type=button]', {
               value: 'Avbryt',
               onclick: function() {
                 ds.table.edit = false
