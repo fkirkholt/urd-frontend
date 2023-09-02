@@ -76,6 +76,20 @@ var Row = {
       rel.table = tbl
       rel.list = tbl
       rec.loaded = true
+
+      // Get virtual columns from tbl.fields.
+      for (field_name in tbl.fields) {
+        field = $.extend({}, tbl.fields[field_name])
+        if (rel.fields[field.name] === undefined) {
+          rel.fields[field.name] = field
+        }
+      }
+      for (fieldname in tbl.fields) {
+        if (tbl.fields[fieldname].virtual) {
+          rel.fields[fieldname].text = rel.columns[fieldname].text
+        }
+      }
+
       Record.get_relations_count(rel)
       setTimeout(function() {
         $('#main').get().scrollLeft = 420
