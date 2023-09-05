@@ -33,8 +33,6 @@ var home = {
   view: function(vnode) {
     if (!ds.dblist) return
 
-    if (config.admin) return m(datapanel)
-
     return m('div', [
       m('h2', 'Databaser'),
       m('ul', [
