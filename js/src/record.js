@@ -471,10 +471,7 @@ var Record = {
 
     rec.dirty = rec.dirty == undefined ? false : rec.dirty
 
-    return m('form', {
-      name: ds.table.name,
-      class: 'flex flex-column',
-    }, [
+    return [
         !ds.table.edit && !ds.table.hide
           ? ''
           : m('div', [
@@ -535,7 +532,7 @@ var Record = {
               return m(Field, { rec: rec, colname: item, label: label })
             }
           })
-      ])
+     ]
   }
 }
 

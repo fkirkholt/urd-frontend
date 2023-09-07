@@ -43,84 +43,79 @@ var Relation = {
       return Relation.draw_relation_list(rel, record)
     }
 
-    return m('tr', { 'data-name': rel.name }, [
-      m('td', {}),
-      m('td', { colspan: 3 }, [
-        m('table', { class: 'w-100 collapse' }, [
-          // draw header cells
-          m('tr', { class: 'bb' }, [
-            m('td'),
-            rel.pkey.length == 0 ? '' : m('td', { class: 'w0' }),
-            Object.keys(rel.grid.columns).map(function(label, idx) {
-              var field_name = rel.grid.columns[label]
+    return m('table', { class: 'w-100 collapse' }, [
+      // draw header cells
+      m('tr', { class: 'bb' }, [
+        m('td'),
+        rel.pkey.length == 0 ? '' : m('td', { class: 'w0' }),
+        Object.keys(rel.grid.columns).map(function(label, idx) {
+          var field_name = rel.grid.columns[label]
 
-              var field = rel.fields[field_name]
+          var field = rel.fields[field_name]
 
-              // If this is for instance an action
-              if (field === undefined) {
-                return m('td', '')
-              }
+          // If this is for instance an action
+          if (field === undefined) {
+            return m('td', '')
+          }
 
-              if (!(field.defines_relation)) {
-                count_columns++
-              }
-              var label = label && !$.isArray(rel.grid.columns)
-                ? label : field.label_column
-                  ? field.label_column : field.label
-              return field.defines_relation
-                ? ''
-                : m('td', {
-                  style: 'text-align: left',
-                  class: 'f6 pa1 pb0'
-                }, label)
-            }),
-            m('td'),
-          ]),
-          // draw records
-          !rel.records ? '' : rel.records.map(function(rec, rowidx) {
-            rec.table_name = rel.name
-            rec.rowidx = rowidx
+          if (!(field.defines_relation)) {
+            count_columns++
+          }
+          var label = label && !$.isArray(rel.grid.columns)
+            ? label : field.label_column
+              ? field.label_column : field.label
+          return field.defines_relation
+            ? ''
+            : m('td', {
+              style: 'text-align: left',
+              class: 'f6 pa1 pb0'
+            }, label)
+        }),
+        m('td'),
+      ]),
+      // draw records
+      !rel.records ? '' : rel.records.map(function(rec, rowidx) {
+        rec.table_name = rel.name
+        rec.rowidx = rowidx
 
-            // Make editable only relations attached directly to
-            // record and not to parent records
-            var ismatch = Object.keys(rel.conds).every(function(k) {
-              if (!rec.columns[k]) return true
-              return rel.conds[k] == rec.columns[k].value
-            })
-            rec.readonly = !rec.new && !ismatch
+        // Make editable only relations attached directly to
+        // record and not to parent records
+        var ismatch = Object.keys(rel.conds).every(function(k) {
+          if (!rec.columns[k]) return true
+          return rel.conds[k] == rec.columns[k].value
+        })
+        rec.readonly = !rec.new && !ismatch
 
-            rec.deletable = rec.relations ? true : false
+        rec.deletable = rec.relations ? true : false
 
-            if (rec.relations) {
-              $.each(rec.relations, function(idx, rel) {
-                var count = rel.count_records - rel.count_inherited
-                if (count && rel.options?.ondelete != "CASCADE") {
-                  rec.deletable = false
-                }
-              })
+        if (rec.relations) {
+          $.each(rec.relations, function(idx, rel) {
+            var count = rel.count_records - rel.count_inherited
+            if (count && rel.options?.ondelete != "CASCADE") {
+              rec.deletable = false
             }
+          })
+        }
 
-            return m(Row, {
-              list: rel,
-              record: rec,
-              idx: rowidx,
-              parent: record,
-              colspan: count_columns + 1
-            })
-          }),
-          record.readonly || !config.edit_mode ? '' : m('tr', [
-            m('td'),
-            m('td'),
-            m('td', [
-              !rel.privilege.insert ? '' : m('a', {
-                onclick: function(e) { Relation.add(e, rel) }
-              }, m('i', {
-                class: 'fa fa-plus light-blue hover-blue pointer ml1'
-              }))
-            ])
-          ]),
+        return m(Row, {
+          list: rel,
+          record: rec,
+          idx: rowidx,
+          parent: record,
+          colspan: count_columns + 1
+        })
+      }),
+      record.readonly || !config.edit_mode ? '' : m('tr', [
+        m('td'),
+        m('td'),
+        m('td', [
+          !rel.privilege.insert ? '' : m('a', {
+            onclick: function(e) { Relation.add(e, rel) }
+          }, m('i', {
+            class: 'fa fa-plus light-blue hover-blue pointer ml1'
+          }))
         ])
-      ])
+      ]),
     ])
   },
 
@@ -337,9 +332,7 @@ var Relation = {
             ]),
           ['1:M', 'M:M'].includes(rel.relationship)
           ? Relation.draw_relation_table(rel, rec)
-          : m('div', [
-              m(Record, { record: rel.records[0] })
-            ])
+          : m(Record, { record: rel.records[0] })
         ])
         : null
     ]
