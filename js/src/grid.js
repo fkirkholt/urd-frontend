@@ -60,7 +60,7 @@ var Grid = {
     $table.find('thead tr').children().each(function(i, v) {
       // Add 0,8 to th width because of margin width
       if (col_widths[i] != head_col_widths[i]) {
-        $(v).width(col_widths[i] + 0.8)
+        $(v).width(col_widths[i] + 0.6)
       }
     })
 

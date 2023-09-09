@@ -144,11 +144,9 @@ var Row = {
           $(this).next('tr').trigger('click')
         }
       },
+      'data-selected': list.selection == idx,
       // classes for row
       class: [
-        (list.selection == idx && list.pkey)
-          ? 'bg-light-blue focus'
-          : '',
         'lh-copy cursor-default bg-white',
         record.class ? record.class : '',
         !list.ismain ? '' : (idx < list.records.length - 1)
