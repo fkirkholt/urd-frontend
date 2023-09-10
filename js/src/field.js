@@ -295,6 +295,10 @@ var Field = {
     // Show hidden fields only in edit mode
     if (rec.table.fields[colname].hidden && !config.edit_mode) return
 
+    // determine if field should be displayd or edited
+    var display = !rec.table.privilege.update ||
+      rec.readonly || !config.edit_mode || !field.editable
+
     return [
       // TODO: sto i utgangspunktet list.betingelse. 
       // Finn ut hva jeg skal erstatte med.
@@ -324,25 +328,33 @@ var Field = {
               !field.use || !config.admin ? '' : m('span', {
                 class: 'ml2 light-silver'
               }, '(' + Field.get_percentage(field.use) + '%)'),
-              (!rec.table.privilege.update || rec.readonly || !config.edit_mode || !field.editable)
-                ? m('a', {
-                  class: [
-                    'dib mw5 v-top',
-                    (field.expanded) ? '' : 'truncate'
-                  ].join(' '),
-                  'data-expandable': (field.element == 'textarea'),
-                  'data-expanded': field.expanded,
-                  'data-value': field.value,
-                  href: field.attrs.href 
-                    ? sprintf(field.attrs.href, field.value)
-                    : Field.get_url(field, rec),
-                  onclick: function() {
-                    if (field.element == 'textarea') {
-                      field.expanded = !field.expanded
+              !display
+                ? m(Input, { rec: rec, fieldname: colname, ...field.attrs })
+                : field.fkey || field.attrs.href
+                  ? m('a', {
+                    class: [
+                      'dib mw5 v-top',
+                      (field.expanded) ? '' : 'truncate'
+                    ].join(' '),
+                    'data-expandable': (field.element == 'textarea'),
+                    'data-expanded': field.expanded,
+                    'data-value': field.value,
+                    href: field.attrs.href 
+                      ? sprintf(field.attrs.href, field.value)
+                      : Field.get_url(field, rec),
+                    onclick: function() {
+                      if (field.element == 'textarea') {
+                        field.expanded = !field.expanded
+                      }
                     }
-                  }
-                }, Field.display_value(field, rec)) 
-                : m(Input, { rec: rec, fieldname: colname, ...field.attrs }),
+                  }, Field.display_value(field, rec)) 
+                  : field.datatype == 'date' || field.attrs['data-type'] == 'date'
+                    ? m('time', {
+                      datetime: field.value
+                    }, Field.display_value(field, rec))
+                    : m('data', {
+                      value: field.value
+                    }, Field.display_value(field, rec)),
               // Show trash bin for field from cross reference table
               rec.table.relationship != 'M:M' || !config.edit_mode
                 ? ''

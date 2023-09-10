@@ -25,11 +25,11 @@ var Fieldset = {
             var display = !rec.table.privilege.update ||
               rec.readonly || !config.edit_mode || !field.editable
 
-            return m('a',
-              display
-                ? [separator, Field.display_value(field, rec)].join('')
-                : m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
-            )
+            return !display
+            ? m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
+            : field.datatype == 'date' || field.attrs['data-type'] == 'date'
+              ? [separator, m('time', { datetime: field.value }, Field.display_value(field, rec))]
+              : [separator, m('data', { value: field.value }, Field.display_value(field, rec))]
           case 'action':
             var action = ds.table.actions[fieldname]
             return m('span', { class: 'mr2' }, [
@@ -69,8 +69,8 @@ var Fieldset = {
           'data-expandable': true,
           class: 'dib ml3 mt1'
         }, [
-            m('abbr', {
-              class: 'dib w4 b truncate v-top underline pointer',
+            m('b', {
+              class: 'dib w4 truncate v-top underline pointer',
               title: field.attrs.title,
               onclick: function() {
                 if (set.expandable) {
