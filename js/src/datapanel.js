@@ -1,25 +1,32 @@
 
 var datapanel = {
 
+  set_attrs: function() {
+    var string_value
+    for (selector in ds.base.html_attrs) {
+      for (attr in ds.base.html_attrs[selector]) {
+        value = ds.base.html_attrs[selector][attr]
+        if (attr == 'style' && typeof(value) == 'object' && value !== null) {
+          string_value = ''
+          for (key in value) {
+            string_value += key + ':' + value[key] + ';'
+          }
+          $(selector).attr(attr, string_value)
+        } else {
+          $(selector).attr(attr, value)
+        }
+
+        if (attr == 'data-text') {
+          $(selector).text(value)
+        }
+      }
+    } 
+  },
+
   onupdate: function() {
-    for (selector in ds.base.html_attrs) {
-      for (attr in ds.base.html_attrs[selector]) {
-        $(selector).attr(attr, ds.base.html_attrs[selector][attr])
-
-        if (attr == 'data-text') {
-          $(selector).text(ds.base.html_attrs[selector][attr])
-        }
-      }
-    } 
-    for (selector in ds.base.html_attrs) {
-      for (attr in ds.base.html_attrs[selector]) {
-        $(selector).attr(attr, ds.base.html_attrs[selector][attr])
-
-        if (attr == 'data-text') {
-          $(selector).text(ds.base.html_attrs[selector][attr])
-        }
-      }
-    } 
+    datapanel.set_attrs()
+    // Repeat to set attributes based on other attributes set
+    datapanel.set_attrs()
   },
 
   view: function(vnode) {
