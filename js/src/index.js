@@ -96,6 +96,7 @@ m.route($('#main')[0], '/', {
         if (Grid.url != grid_path) {
           if (ds.table) {
             ds.table.records = []
+            ds.table.grid.columns = []
             m.redraw()
           }
           Grid.load(args)
