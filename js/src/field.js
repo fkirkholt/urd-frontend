@@ -308,7 +308,7 @@ var Field = {
       ) ? '' : [
           m('label', {
             'data-expandable': field.expandable && field.value !== null,
-            'data-field': field.name,
+            'data-field': rec.table.name + '.' + field.name,
             class: 'dib ml3 mt1'
           }, [
               m('b', { 
