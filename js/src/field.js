@@ -330,7 +330,7 @@ var Field = {
               }, '(' + Field.get_percentage(field.use) + '%)'),
               !display
                 ? m(Input, { rec: rec, fieldname: colname, ...field.attrs })
-                : field.fkey || field.attrs.href
+                : field.fkey || field.attrs['data-format'] == 'link'
                   ? m('a', {
                     class: [
                       'dib mw5 v-top',
