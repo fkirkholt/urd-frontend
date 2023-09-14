@@ -230,15 +230,13 @@ var Field = {
     if (field.fkey) {
       if (
         ds.base.system == 'postgresql' &&
-        field.fkey.schema &&
-        field.fkey.schema != field.fkey.base &&
-        field.fkey.schema != 'public'
+        field.fkey.referred_schema != 'public'
       ) {
-        base = field.fkey.base + '.' + field.fkey.schema
-      } else if (ds.base.system == 'sqlite') {
+        base = ds.base.name + '.' + field.fkey.referred_schema
+      } else if (['postgresql', 'sqlite'].includes(ds.base.system)) {
         base = ds.base.name
       } else {
-        base = field.fkey.base || field.fkey.schema
+        base = field.fkey.referred_schema
       }
       url = '#/' + base + '/data/' + field.fkey.referred_table + '?'
       $.each(field.fkey.referred_columns, function(i, colname) {
