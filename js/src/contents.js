@@ -273,7 +273,7 @@ var Contents = {
                 var schema = $(this).val()
                 db_name = ds.base.name.split('.')[0]
                 adr = ['postgresql', 'mssql'].includes(ds.base.system)
-                  ? '/' + db_name + '.' + schema
+                  ? '/' + db_name + (['dbo', 'public'].includes(schema) ? '' : '.' + schema)
                   : '/' + schema
                 m.route.set(adr)
               }
