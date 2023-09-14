@@ -227,12 +227,13 @@ var Field = {
   // Get url to foreign key field
   get_url: function(field, rec) {
     var url
+
     if (field.fkey) {
       if (
-        ds.base.system == 'postgresql' &&
-        field.fkey.referred_schema != 'public'
+        (ds.base.system == 'postgresql' && field.fkey.referred_schema != 'public') ||
+        (ds.base.system == 'mssql' && field.fkey.referred_schema != 'dbo')
       ) {
-        base = ds.base.name + '.' + field.fkey.referred_schema
+        base = ds.base.cat + '.' + field.fkey.referred_schema
       } else if (['postgresql', 'sqlite'].includes(ds.base.system)) {
         base = ds.base.name
       } else {
