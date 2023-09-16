@@ -351,9 +351,11 @@ var Field = {
                     ? m('time', {
                       datetime: field.value
                     }, Field.display_value(field, rec))
-                    : m('data', {
-                      value: field.value
-                    }, Field.display_value(field, rec)),
+                    : ['json', 'yaml'].includes(field.attrs['data-format'])
+                      ? Field.display_value(field, rec)
+                      : m('data', {
+                        value: field.value
+                      }, Field.display_value(field, rec)),
               // Show trash bin for field from cross reference table
               rec.table.relationship != 'M:M' || !config.edit_mode
                 ? ''
