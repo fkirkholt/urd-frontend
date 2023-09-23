@@ -11,8 +11,43 @@ var tabbar = {
   },
 
   view: function(vnode) {
-    if (!ds.base.name) {
-        return
+    if (ds.type == 'dblist') {
+      return !ds.dblist || ds.dblist.roles.length == 0 ? null : m('label', { class: 'fr'}, [
+        'Rolle: ',
+        m('select', {
+          name: 'role',
+          onchange: function() {
+            m.request({
+              method: 'get',
+              url: 'dblist',
+              params: {
+                role: $(this).val()
+              }
+            }).then(function(result) {
+              ds.dblist = result.data
+            }).catch(function(e) {
+              if (e.code === 401) {
+                $('div.curtain').show()
+                $('#login').show()
+                $('#brukernavn').trigger('focus')
+              } else {
+                alert(e.response ? e.response.detail : 'An error has occurred.')
+              }
+            })
+          }
+        }, [
+          m('option', {
+            value: 'NONE',
+            selected: ds.dblist.role == null
+          }, 'Ingen'),
+          ds.dblist.roles.map(function(role) {
+            return m('option', {
+              value: role,
+              selected: ds.dblist.role == role
+            }, role)
+          })
+        ])
+      ])
     }
     return !m.route.param('base') ? '' : [
       !ds.user.admin ? '' : m('ul', {
