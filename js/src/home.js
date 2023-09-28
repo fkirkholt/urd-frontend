@@ -34,7 +34,6 @@ var home = {
     if (!ds.dblist) return
 
     return m('div', [
-      m('h2', 'Databaser'),
       m('ul', [
         ds.dblist.records.map(function(post, i) {
           return m('li', [

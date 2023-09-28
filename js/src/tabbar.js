@@ -12,42 +12,57 @@ var tabbar = {
 
   view: function(vnode) {
     if (ds.type == 'dblist') {
-      return !ds.dblist || ds.dblist.roles.length == 0 ? null : m('label', { class: 'fr'}, [
-        'Rolle: ',
-        m('select', {
-          name: 'role',
-          onchange: function() {
-            m.request({
-              method: 'get',
-              url: 'dblist',
-              params: {
-                role: $(this).val()
-              }
-            }).then(function(result) {
-              ds.dblist = result.data
-            }).catch(function(e) {
-              if (e.code === 401) {
-                $('div.curtain').show()
-                $('#login').show()
-                $('#brukernavn').trigger('focus')
-              } else {
-                alert(e.response ? e.response.detail : 'An error has occurred.')
-              }
-            })
-          }
+      return [
+        m('ul', {
+          class: 'di w-100'
         }, [
-          m('option', {
-            value: 'NONE',
-            selected: ds.dblist.role == null
-          }, 'Ingen'),
-          ds.dblist.roles.map(function(role) {
-            return m('option', {
-              value: role,
-              selected: ds.dblist.role == role
-            }, role)
-          })
+          m('li', {
+            class: [
+              'list di pl1 pr1 bl bt br b--gray pointer br1 br--top',
+              (!config.tab || config.tab == 'data')
+                ? 'bg-white' : 'bg-near-white'
+            ].join(' '),
+            style: (!config.tab || config.tab == 'data')
+              ? 'padding-bottom: 1px' : '',
+          }, 'Databaser')
+        ]),
+        !ds.dblist || ds.dblist.roles.length == 0 ? null : m('label', { class: 'fr'}, [
+          'Rolle: ',
+          m('select', {
+            name: 'role',
+            onchange: function() {
+              m.request({
+                method: 'get',
+                url: 'dblist',
+                params: {
+                  role: $(this).val()
+                }
+              }).then(function(result) {
+                ds.dblist = result.data
+              }).catch(function(e) {
+                if (e.code === 401) {
+                  $('div.curtain').show()
+                  $('#login').show()
+                  $('#brukernavn').trigger('focus')
+                } else {
+                  alert(e.response ? e.response.detail : 'An error has occurred.')
+                }
+              })
+            }
+          }, [
+            m('option', {
+              value: 'NONE',
+              selected: ds.dblist.role == null
+            }, 'Ingen'),
+            ds.dblist.roles.map(function(role) {
+              return m('option', {
+                value: role,
+                selected: ds.dblist.role == role
+              }, role)
+            })
+          ])
         ])
-      ])
+      ]
     }
     return !m.route.param('base') ? '' : [
       !ds.user.admin ? '' : m('ul', {
