@@ -19,12 +19,36 @@ var tabbar = {
           m('li', {
             class: [
               'list di pl1 pr1 bl bt br b--gray pointer br1 br--top',
-              (!config.tab || config.tab == 'data')
+              (!config.tab || config.tab == 'databases')
                 ? 'bg-white' : 'bg-near-white'
             ].join(' '),
-            style: (!config.tab || config.tab == 'data')
+            style: (!config.tab || config.tab == 'databases')
               ? 'padding-bottom: 1px' : '',
-          }, 'Databaser')
+            onclick: function() {
+              config.tab = 'databases'
+            }
+          }, 'Databases'),
+          m('li', {
+            class: [
+              'list di ml2 pl1 pr1 bl bt br b--gray pointer br1 br--top',
+              (config.tab == 'users')
+                ? 'bg-white' : 'bg-near-white'
+            ].join(' '),
+            style: (config.tab == 'users')
+              ? 'padding-bottom: 1px' : '',
+            onclick: function() {
+              config.tab = 'users'
+              if (!ds.users) {
+                m.request({
+                  method: 'get',
+                  url: 'userlist'
+                }).then(function(result) {
+                  ds.users = result.data.users
+                  ds.roles = result.data.roles
+                })
+              }
+            }
+          }, 'Users')
         ]),
         !ds.dblist || ds.dblist.roles.length == 0 ? null : m('label', { class: 'fr'}, [
           'Rolle: ',

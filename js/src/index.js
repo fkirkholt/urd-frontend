@@ -35,6 +35,7 @@ m.route($('#main')[0], '/', {
   "/": {
     onmatch: function(args, requestedPath) {
       ds.type = 'dblist'
+      config.tab = 'databases'
       return home
     }
   },
