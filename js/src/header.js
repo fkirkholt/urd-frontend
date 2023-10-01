@@ -88,7 +88,16 @@ var header = {
               }, 'Logg ut'),
             ])
         ]),
-      m('div#user', { class: 'fr mr1 mt2' }, ds.user.name),
+      m('div#user', { 
+        class: 'fr mr1 mt2 cursor-default',
+        onclick: function() {
+          $('.curtain').show()
+          $('#pwd-dialog').show()
+          $('#old_pwd').val('')
+          $('#new_pwd').val('')
+          $('#rep_pwd').val('')
+        }
+      }, ds.user.name),
       (!ds.user.admin) ? null : m('label', { class: 'fr mr3 mt2' }, [
         m('input#admin_checkbox', {
           class: 'mr1',

@@ -24,6 +24,7 @@ var Diagram = require('./diagram')
 var SQLpanel = require('./sqlpanel')
 var export_dialog = require('./export.js')
 var convert_dialog = require('./convert.js')
+var pwd_dialog = require('./password.js')
 var config = require('./config.js')
 var login = require('./login.js')
 var Grid = require('./grid.js')
@@ -163,6 +164,9 @@ m.mount($export[0], export_dialog)
 
 var $convert = $('#convert-dialog')
 m.mount($convert[0], convert_dialog)
+
+var $password = $('#pwd-dialog')
+m.mount($password[0], pwd_dialog)
 
 var $config = $('#preferences')
 m.mount($config[0], config)
