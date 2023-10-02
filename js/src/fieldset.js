@@ -67,7 +67,7 @@ var Fieldset = {
       set.expanded ? null : [
         m('label', {
           'data-expandable': true,
-          class: 'dib ml3 mt1'
+          class: 'db ml3 mt1'
         }, [
             m('b', {
               class: 'dib w4 truncate v-top underline pointer',

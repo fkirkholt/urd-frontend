@@ -462,9 +462,7 @@ var Record = {
     }
 
     if (!rec || !rec.table) {
-      return m('form[name="record"]', {
-        class: 'flex flex-column',
-      })
+      return m('form[name="record"]')
     }
 
     Record.validate(rec)

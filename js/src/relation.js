@@ -285,7 +285,7 @@ var Relation = {
       rel.expanded ? null : [m('label', 
         {
           'data-expandable': true,
-          class: 'dib ml3 mt1',
+          class: 'db ml3 mt1',
           onclick: function() {
             Relation.toggle_heading(rel)
             if (!rel.records) {
