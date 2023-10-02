@@ -99,7 +99,48 @@ var home = {
             })
           ])
         ]
-      })
+      }),
+      config.tab !== 'users' || ds.new_user ? '' : m('p', {
+        class: 'ml3 mt1 mb1 underline pointer',    
+        onclick: function() {
+          ds.new_user = true
+        }
+      }, 'Opprett ny bruker'),
+      config.tab !== 'users' || !ds.new_user ? '' : m('fieldset', [
+        m('legend', {
+          class: 'pointer underline',
+          onclick: function() {
+            ds.new_user = false
+          }
+        }, 'Opprett ny bruker '),
+        m('legend', [m('b', { class: 'db' }, 'brukernavn'), m('input#uid')]),
+        m('legend', [m('b', { class: 'db' }, 'passord'), m('input#pwd')]),
+        m('input[type=button]', { 
+          class: 'fr mt2',
+          value: 'OK',
+          onclick: function() {
+            m.request({
+              method: 'put',
+              url: 'create_user',
+              params: {
+                name: $('#uid').val(),
+                pwd: $('#pwd').val()
+              }
+            }).then(function(result) {
+              ds.users = result.data.users
+              ds.new_user = false
+            }).catch(function(e) {
+              if (e.code === 401) {
+                $('div.curtain').show()
+                $('#login').show()
+                $('#brukernavn').trigger('focus')
+              } else {
+                alert(e.response ? e.response.detail : 'An error has occurred.')
+              }
+            })
+          }
+        })
+      ])
     ])
   }
 }
