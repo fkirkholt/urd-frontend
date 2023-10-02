@@ -28,7 +28,7 @@ var tabbar = {
               config.tab = 'databases'
             }
           }, 'Databases'),
-          m('li', {
+          !ds.dblist || !ds.dblist.useradmin ? '' : m('li', {
             class: [
               'list di ml2 pl1 pr1 bl bt br b--gray pointer br1 br--top',
               (config.tab == 'users')
