@@ -67,6 +67,7 @@ var Fieldset = {
       set.expanded ? null : [
         m('label', {
           'data-expandable': true,
+          'data-fieldset': set.name,
           class: 'db ml3 mt1'
         }, [
             m('b', {
