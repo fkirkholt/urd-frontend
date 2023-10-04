@@ -354,7 +354,16 @@ var Field = {
                     : ['json', 'yaml'].includes(field.attrs['data-format'])
                       ? Field.display_value(field, rec)
                       : m('data', {
-                        value: field.value
+                        class: [
+                          'dib mw5 v-top',
+                          (field.expanded) ? '' : 'truncate'
+                        ].join(' '),
+                        value: field.value,
+                        onclick: function() {
+                          if (field.element == 'textarea') {
+                            field.expanded = !field.expanded
+                          }
+                        }
                       }, Field.display_value(field, rec)),
               // Show trash bin for field from cross reference table
               rec.table.relationship != 'M:M' || !config.edit_mode
