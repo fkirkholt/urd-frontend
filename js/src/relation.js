@@ -295,8 +295,8 @@ var Relation = {
           }
         }, 
         [
-          m('abbr', { 
-            class: 'b underline pointer', 
+          m('b', { 
+            class: 'underline pointer', 
             title: field.attrs.title 
           }, label),
           rel.count_records !== undefined
