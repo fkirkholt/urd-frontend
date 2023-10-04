@@ -22,7 +22,7 @@ var Fieldset = {
             field.attrs.placeholder = field.attrs.placeholder || field.label
 
             // determine if field should be displayd or edited
-            var display = !rec.table.privilege.update ||
+            var display = !rec.table.privilege.update || field.virtual ||
               rec.readonly || !config.edit_mode || !field.editable
 
             return !display

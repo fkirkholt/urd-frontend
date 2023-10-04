@@ -295,7 +295,7 @@ var Field = {
     if (rec.table.fields[colname].hidden && !config.edit_mode) return
 
     // determine if field should be displayd or edited
-    var display = !rec.table.privilege.update ||
+    var display = !rec.table.privilege.update || field.virtual ||
       rec.readonly || !config.edit_mode || !field.editable
 
     return [
