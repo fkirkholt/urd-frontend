@@ -134,7 +134,7 @@ var Diagram = {
       var fk = table.fkeys[alias]
       var field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
       var field = table.fields ? table.fields[field_name] : null
-      var fk_table = ds.base.tables[fk.table]
+      var fk_table = ds.base.tables[fk.referred_table]
       var line = field && field.hidden ? '..' : '--'
       var symbol = field && field.nullable ? ' o|' : ' ||'
       var skip = false
@@ -161,7 +161,7 @@ var Diagram = {
         return
       }
 
-      def.push(fk.table + symbol + line + ' o{' + table.name +
+      def.push(fk.referred_table + symbol + line + ' o{' + table.name +
         ' : ' + field_name)
       if (fk_table === undefined) return
       // def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
@@ -199,7 +199,7 @@ var Diagram = {
       if (config.simplified_hierarchy) {
         Object.keys(rel_table.fkeys).map(function(name) {
           var rel_fk = rel_table.fkeys[name]
-          if (rel_tables.includes(rel_fk.table)) {
+          if (rel_tables.includes(rel_fk.referred_table)) {
             skip = true
           }
         })
@@ -356,12 +356,12 @@ var Diagram = {
       var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
       if (
-        path.includes(fk.table + symbol + '--o{ ' + table.name +
+        path.includes(fk.referred_table + symbol + '--o{ ' + table.name +
           ' : ' + fk_field_name)
       ) {
         return
       }
-      var fk_table = ds.base.tables[fk.table]
+      var fk_table = ds.base.tables[fk.referred_table]
 
       if (fk_table.hidden || fk_table.type == 'list') {
         return
@@ -372,7 +372,7 @@ var Diagram = {
       } else {
         if (fk_table.type == 'list') return
 
-        new_path.push(fk.table + symbol + '--o{ ' + table.name +
+        new_path.push(fk.referred_table + symbol + '--o{ ' + table.name +
           ' : ' + fk_field_name)
 
         new_path = Diagram.get_path(fk_table, new_path)
