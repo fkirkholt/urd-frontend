@@ -74,7 +74,7 @@ var home = {
               return m('label', { class: 'ml2' }, [
                 m('input[type=checkbox]', {
                   class: 'mr1',
-                  checked: user.roles.includes(role),
+                  checked: user.roles && user.roles.includes(role),
                   onchange: function() {
                     if (this.checked) {
                       user.roles.push(role)
