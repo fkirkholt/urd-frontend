@@ -1,18 +1,21 @@
 var pwd_dialog = {
 
   view: function() {
-    return m('div', [
+    return m('div', {class: 'w-100'}, [
       m('label', { class: 'db' }, 'Eksisterende passord'),
       m('input[type=password]', {
-        id: 'old_pwd'
+        id: 'old_pwd',
+        class: 'w-100'
       }),
       m('label', { class: 'db' }, 'Nytt passord'),
       m('input[type=password]', {
-        id: 'new_pwd'
+        id: 'new_pwd',
+        class: 'w-100'
       }),
       m('label', { class: 'db' }, 'Gjenta passord'),
       m('input[type=password]', {
-        id: 'rep_pwd'
+        id: 'rep_pwd',
+        class: 'w-100'
       }),
 
       m('input[type=button]', {
