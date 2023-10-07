@@ -367,7 +367,7 @@ var Diagram = {
         return
       }
 
-      if (fk.table == Diagram.root) {
+      if (fk.referred_table == Diagram.root) {
         found_paths.push(new_path)
       } else {
         if (fk_table.type == 'list') return
