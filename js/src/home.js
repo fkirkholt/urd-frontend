@@ -13,6 +13,7 @@ var home = {
       url: 'dblist'
     }).then(function(result) {
       ds.dblist = result.data
+      ds.base.system = result.data.system
     }).catch(function(e) {
       if (e.code === 401) {
         $('div.curtain').show()

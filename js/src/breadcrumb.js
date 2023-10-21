@@ -4,10 +4,17 @@ module.exports = {
   get_items: function() {
     var items = []
     var param = m.route.param()
+    var systems = {
+      mariadb: 'MariaDB',
+      mysql: 'MySQL',
+      mssql: 'SQL Server',
+      postgresql: 'PostgreSQL',
+      sqlite: 'SQLite'
+    }
 
     items.push({
       icon: "icon-crosshairs",
-      text: "Urðr",
+      text: ds.base.system ? systems[ds.base.system] : "Urðr",
       addr: '',
       branch: ds.branch
     })
