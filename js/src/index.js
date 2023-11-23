@@ -117,6 +117,7 @@ m.route($('#main')[0], '/', {
   "/:base/diagram": {
     onmatch: function(args, requestedPath) {
       config.tab = 'diagram'
+      ds.type = 'diagram'
       if (args.base != ds.base.name) {
         ds.load_database(args.base)
       }

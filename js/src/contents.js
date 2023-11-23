@@ -306,7 +306,7 @@ var Contents = {
         ]),
       ]),
       // Show database description to the right of the contents
-      ds.table || !ds.base.description ? '' : m('div', { class: 'pl5' }, [
+      ds.type != 'contents' || !ds.base.description ? '' : m('div', { class: 'pl5' }, [
         m('b', 'Beskrivelse'),
         m('br'),
         m('p', ds.base.description)
