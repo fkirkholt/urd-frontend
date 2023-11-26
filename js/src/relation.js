@@ -193,7 +193,7 @@ var Relation = {
     // Removes relations that represents grand children and down
     Object.keys(rel_table.fkeys).map(function(name) {
       var rel_fk = rel_table.fkeys[name]
-      if (rel_tables.includes(rel_fk.table)) {
+      if (rel_tables.includes(rel_fk.referred_table)) {
         result = false
       }
     })
@@ -212,7 +212,7 @@ var Relation = {
     ) {
       base_path = rel.base_name + '.' + rel.schema_name
     } else {
-      base_path = rel.base_name || rel.schema_name
+      base_path = rel.schema_name
     }
     url = '#/' + base_path + '/data/' + rel.name + '?'
 
