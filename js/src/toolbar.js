@@ -146,7 +146,7 @@ var Toolbar = {
 
     var r = true
     if (config.autosave || !config.edit_mode) {
-      var r = confirm('Er du sikker på at du vil slette posten?')
+      var r = confirm('Are you sure you want to delete the record?')
     }
 
     if (r === true) {
@@ -255,7 +255,7 @@ var Toolbar = {
       }),
       // Search field
       ds.table.hidden ? '' : m('input[type=search]', {
-        placeholder: "Søk i alle tekstfelter",
+        placeholder: "Search all texst fields",
         value: Toolbar.get_search(),
         style: 'flex: 1',
         onfocus: function(event) {
@@ -276,7 +276,7 @@ var Toolbar = {
               ? 'dim pointer'
               : 'moon-gray'
           ].join(' '),
-          title: 'Ny post',
+          title: 'New record',
           onclick: function() {
             if (ds.table.privilege.insert != true || full) return
             Record.create(ds.table)
@@ -310,7 +310,7 @@ var Toolbar = {
             ds.table.privilege.insert == true && !full
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
-          title: 'Kopier post',
+          title: 'Copy record',
           onclick: function() {
             if (ds.table.privilege.insert != true || full) return
             Record.copy()
@@ -329,7 +329,7 @@ var Toolbar = {
             ds.table.privilege.update == true
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
-          title: 'Rediger post',
+          title: 'Edit record',
           onclick: function() {
             ds.table.edit = true
             config.edit_mode = true
@@ -344,7 +344,7 @@ var Toolbar = {
               'fa fa-save ml2 mr1',
               ds.table.dirty ? 'dim pointer' : 'moon-gray'
             ].join(' '),
-            title: 'Lagre endringer',
+              title: 'Save',
             onclick: function() {
               if (!ds.table.dirty) return
               Grid.save()
@@ -361,7 +361,7 @@ var Toolbar = {
               rec && Record.is_deletable(rec))
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
-          title: 'Slett post',
+          title: 'Delete',
           onclick: Toolbar.delete_record
         })
       ]),
@@ -378,7 +378,7 @@ var Toolbar = {
       m('li', { class: 'dib relative' }, [
         m('i', {
           class: 'fa fa-cog ml2 mr1 pointer dim',
-          title: 'Flere handlinger',
+          title: 'More actions',
           onclick: function() {
             $('ul#actions').toggle()
           }
@@ -393,7 +393,7 @@ var Toolbar = {
                 $('div.curtain').show()
                 $('ul#actions').hide()
               }
-            }, 'Eksporter poster ...'),
+            }, 'Export records ...'),
             m('li', {
               class: 'nowrap hover-blue',
               onclick: function() {
@@ -401,7 +401,7 @@ var Toolbar = {
                 $('div.curtain').show()
                 $('ul#actions').hide()
               }
-            }, 'Konverter felter ...'),
+            }, 'Convert fields ...'),
             Object.keys(ds.table.actions).map(function(label, idx) {
               var action = ds.table.actions[label]
 

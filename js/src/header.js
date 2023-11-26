@@ -39,11 +39,11 @@ var header = {
                 onclick: function() {
                   if ($('#keyboard-shortcuts').css('visibility') == 'visible') {
                     $('#keyboard-shortcuts').css('visibility', 'hidden')
-                    $(this).html('Vis hurtigtaster')
+                    $(this).html('Show keyboard shortcuts')
                   }
                   else {
                     $('#keyboard-shortcuts').css('visibility', 'visible')
-                    $(this).html('Skjul hurtigtaster')
+                    $(this).html('Hide keyboard shortcuts')
                   }
                 }
               }, 'Hurtigtaster'),
@@ -54,7 +54,7 @@ var header = {
                     $('div.print-view').hide()
                     $('#header').show()
                     $('#page-container').show()
-                    $('#meny option[value="utskrift"]').html('Utskriftsvisning')
+                    $('#meny option[value="utskrift"]').html('Print view')
                   }
                   else {
                     m.request({
@@ -68,10 +68,10 @@ var header = {
                     $('#page-container').hide()
                     $('#print-view').show()
                     $('#meny option[value="utskrift"]')
-                      .html('Lukk utskriftsvisning')
+                      .html('Hide print view')
                   }
                 }
-              }, 'Utskrift'),
+              }, 'Print'),
               m('li', {
                 onclick: function() {
                   m.request({
@@ -85,7 +85,7 @@ var header = {
                     $('#brukernavn').trigger('focus')
                   })
                 }
-              }, 'Logg ut'),
+              }, 'Log out'),
             ])
         ]),
       m('div#user', { 
@@ -108,7 +108,7 @@ var header = {
             header.set_admin(ev.target.checked)
           }
         }),
-      ], 'Adminmodus'),
+      ], 'Admin mode'),
     ]
   }
 }

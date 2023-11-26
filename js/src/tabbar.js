@@ -51,7 +51,7 @@ var tabbar = {
           }, 'Users')
         ]),
         !ds.dblist || ds.dblist.roles.length == 0 ? null : m('label', { class: 'fr'}, [
-          'Rolle: ',
+          'Role: ',
           m('select', {
             name: 'role',
             onchange: function() {
@@ -144,7 +144,7 @@ var tabbar = {
               tabbar.set_view(ev.target.checked)
             }
           })
-        ], 'Redigeringsmodus'),
+        ], 'Edit mode'),
       !ds.table || !(config.tab == 'data') ? '' : m('label', {
         class: 'fr mr3'
       }, [
@@ -157,11 +157,11 @@ var tabbar = {
               tabbar.set_hidden(ev.target.checked)
             }
           })
-        ], 'Skjul tomme felt'),
+        ], 'Hide empty fields'),
       (!ds.user.admin) || config.tab == 'sql' ? null : m('label', {
         class: 'fr mr3'
       }, [
-          'Terskel ',
+          'Threshold ',
           m('input.threshold', {
             type: "number",
             class: "w3 v-top",
@@ -212,16 +212,16 @@ var tabbar = {
               config.simplified_hierarchy = ev.target.checked
             }
           })
-        ], 'Forenklet hierarki')),
+        ], 'Simplified hierarchy')),
       (config.tab != 'diagram' ? null : m('label', {
         class: 'fr mr3',
         title: "Velg hvilke relasjoner som skal vises"
       }, [
-          'Vis relasjoner:',
+          'Show relations:',
           Object.entries({
-            nearest: "nærmeste",
-            subordinate: "underordnede",
-            all: "alle"
+            nearest: "nearest",
+            subordinate: "subordinate",
+            all: "all"
           }).map(([key, value]) =>
             m('label', m('input[type=radio]', {
               class: 'ml2 mr1',

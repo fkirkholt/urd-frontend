@@ -58,7 +58,7 @@ var config = {
     return m('div', [
       m('table', [
         m('tr', [
-          m('td', 'Autolagring'),
+          m('td', 'Autosave'),
           m('td', [
             m('input[type=checkbox]', {
               name: 'autosave',
@@ -67,7 +67,7 @@ var config = {
           ])
         ]),
         m('tr', [
-          m('td', 'Vis post på egen side'),
+          m('td', 'Show record on separate page'),
           m('td', [
             m('input[type=checkbox]', {
               name: 'recordview',
@@ -76,7 +76,7 @@ var config = {
           ])
         ]),
         m('tr', [
-          m('td', 'Ant. poster'),
+          m('td', 'Number records'),
           m('td', [
             m('input#limit', {
               size: 4,
@@ -85,12 +85,12 @@ var config = {
           ])
         ]),
         m('tr', [
-          m('td', 'Visningsterskel'),
+          m('td', 'Display threshold'),
           m('td', [
             m('input[type=text]', {
               name: 'threshold',
               value: config.threshold * 100,
-              title: 'Terskel for at feltet skal vises',
+              title: 'Threshold to show the field',
               class: 'w3'
             }), ' %'
           ])

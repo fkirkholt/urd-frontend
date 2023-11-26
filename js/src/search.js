@@ -430,20 +430,20 @@ var Search = {
     return [
       m('div', { class: 'ml3' }, [vnode.attrs.table ? '' : m('div', [
         m('input[type=button]', {
-          value: 'Utfør søk',
+          value: 'Search',
           onclick: function() {
             Search.search()
           }
         }),
         m('input[type=button]', {
-          value: 'Avbryt',
+          value: 'Cancel',
           onclick: function() {
             ds.table.search = !ds.table.search
             m.redraw()
           }
         }),
         m('input[type=button]', {
-          value: 'Nullstill skjema',
+          value: 'Reset form',
           disabled: Object.keys(ds.table.filters).filter(function(key) {
             var filter = ds.table.filters[key]
             return filter.value ||
@@ -463,7 +463,7 @@ var Search = {
               ds.table.filters = Search.parse_query(ds.table.query)
             }
           }
-        }), ' Vis aktive søkekriterier']),
+        }), ' Show active search criteria']),
       m('form[name="search"]', {
         class: 'flex flex-column',
         style: 'flex: 0 0 550px;'

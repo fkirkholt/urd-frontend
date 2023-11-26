@@ -172,8 +172,8 @@ var Contents = {
             Contents.context_table = table
 
             var hidden_txt = table.hidden
-              ? 'Vis tabell'
-              : 'Skjul tabell'
+              ? 'Show table'
+              : 'Hide table'
             $('ul#context-table li.hide').html(hidden_txt)
 
             var type_txt = table.type == 'list'
@@ -222,7 +222,7 @@ var Contents = {
                 Diagram.root = Contents.context_module
                 $('ul#context-module').hide()
               }
-            }, 'Vis diagram')
+            }, 'Show diagram')
           ]),
         // Context menu for single tables
         m('ul#context-table', {
@@ -236,7 +236,7 @@ var Contents = {
                 Diagram.add_path(Contents.context_table)
                 $('ul#context-table').hide()
               }
-            }, 'Vis koblinger til denne tabellen'),
+            }, 'Show links to this table'),
             // Hide table
             m('li.hide', {
               class: 'hover-blue',
@@ -260,7 +260,7 @@ var Contents = {
 
                 ds.set_cfg_value(tbl, 'type', tbl.type)
               }
-            }, 'Sett til referansetabell')
+            }, 'Set to lookup table')
           ]),
         // Draw select box for choosing schema within database.
         // Postgres has this structure.
@@ -307,7 +307,7 @@ var Contents = {
       ]),
       // Show database description to the right of the contents
       ds.type != 'contents' || !ds.base.description ? '' : m('div', { class: 'pl5' }, [
-        m('b', 'Beskrivelse'),
+        m('b', 'Description'),
         m('br'),
         m('p', ds.base.description)
       ])
