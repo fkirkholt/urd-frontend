@@ -6,6 +6,7 @@ var Diagram = {
   def: "",
   root: "",
   type: "",
+  added_tables: [],
 
   // Show tooltip for boxes on mouseover when text is too small to read
   show_tooltip: function(evt) {
@@ -60,6 +61,10 @@ var Diagram = {
     } else if (Diagram.type == 'table') {
       Diagram.def = Diagram.get_table_def(root_table, [])
     }
+    Diagram.added_tables.map(function(tbl_name) {
+      Diagram.add_path(tbl_name)
+    })
+
   },
 
   onupdate: function(vnode) {

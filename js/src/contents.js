@@ -232,8 +232,7 @@ var Contents = {
             config.tab == 'data' ? '' : m('li', {
               class: 'hover-blue',
               onclick: function() {
-                Diagram.type = 'custom'
-                Diagram.add_path(Contents.context_table)
+                Diagram.added_tables.push(Contents.context_table)
                 $('ul#context-table').hide()
               }
             }, 'Show links to this table'),
