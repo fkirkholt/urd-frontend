@@ -135,6 +135,9 @@ var Diagram = {
       var field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
       var field = table.fields ? table.fields[field_name] : null
       var fk_table = ds.base.tables[fk.referred_table]
+      if (fk_table == undefined) {
+        return
+      }
       var line = field && field.hidden ? '..' : '--'
       var symbol = field && field.nullable ? ' o|' : ' ||'
       var skip = false
@@ -362,6 +365,9 @@ var Diagram = {
         return
       }
       var fk_table = ds.base.tables[fk.referred_table]
+      if (fk_table == undefined) {
+        return
+      }
 
       if (fk_table.hidden || fk_table.type == 'list') {
         return
