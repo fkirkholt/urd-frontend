@@ -49,10 +49,8 @@ var Grid = {
     // Set width of tbody columns
     if (!config.compressed) {
       $.each(col_widths, function(idx, width) {
-        if (width > body_col_widths[idx]) {
-          $col = $table.find('tbody tr').first()
-            .find('td:nth-child(' + (idx + 1) + ') div').width(width)
-        }
+        $col = $table.find('tbody tr').first()
+          .find('td:nth-child(' + (idx + 1) + ') div').width(width)
       })
     }
 
@@ -74,7 +72,11 @@ var Grid = {
   oncreate: function() {
     Grid.align_thead()
     // Adjust the width of thead cells when window resizes
-    window.onresize = Grid.align_thead
+    var align
+    window.onresize = function() {
+      clearTimeout(align)
+      align = setTimeout(Grid.align_thead, 100)
+    }
   },
 
   onupdate: function() {
