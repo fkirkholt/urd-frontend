@@ -1,6 +1,14 @@
 
 var Record = {
 
+  onupdate: function(vnode) {
+    var scroll_left = $('#main')[0].scrollLeft
+    if (scroll_left > 0) {
+      // scroll right
+      $('#main')[0].scrollTo(1000, $('#main')[0].scrollTop)
+    }
+  },
+
   select: function(table, idx, root) {
     table.selection = idx
 
