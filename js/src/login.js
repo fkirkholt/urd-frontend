@@ -17,7 +17,11 @@ var login = {
           ds.base.system = $('#system').val()
         },
         options: [
-
+        
+          {
+            label: 'DuckDB',
+            value: 'duckdb'
+          },
           {
             label: 'SQLite',
             value: 'sqlite'

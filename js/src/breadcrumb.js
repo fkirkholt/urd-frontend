@@ -9,7 +9,8 @@ module.exports = {
       mysql: 'MySQL',
       mssql: 'SQL Server',
       postgresql: 'PostgreSQL',
-      sqlite: 'SQLite'
+      sqlite: 'SQLite',
+      duckdb: 'DuckDB'
     }
 
     items.push({

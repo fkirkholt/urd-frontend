@@ -234,7 +234,7 @@ var Field = {
         (ds.base.system == 'mssql' && field.fkey.referred_schema != 'dbo')
       ) {
         base = ds.base.cat + '.' + field.fkey.referred_schema
-      } else if (['postgresql', 'sqlite'].includes(ds.base.system)) {
+      } else if (['postgresql', 'sqlite', 'duckdb'].includes(ds.base.system)) {
         base = ds.base.name
       } else {
         base = field.fkey.referred_schema
