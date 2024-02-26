@@ -181,6 +181,14 @@ var tabbar = {
           $('#export-dialog').show()
         }
       }),
+      ds.table ? null : m('i', {
+        class: 'fa fa-file-code-o fr mr3 pt1',
+        title: 'Eksporter KDRS-skjema',
+        onclick: function() {
+          $('.curtain').show()
+          $('#kdrs-dialog').show()
+        }
+      }),
       (!ds.user.admin) || config.tab != 'diagram' ? null : m('i', {
         class: 'fa fa-edit fr mr3 pt1',
         title: 'Oppdater cache',
