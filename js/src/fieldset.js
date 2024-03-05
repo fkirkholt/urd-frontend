@@ -71,7 +71,8 @@ var Fieldset = {
           class: 'db ml3 mt1'
         }, [
             m('b', {
-              class: 'dib w4 truncate v-top underline pointer',
+              class: 'dib w4 v-top underline pointer',
+              style: 'word-wrap: break-word; hyphens: auto',
               title: field.attrs.title,
               onclick: function() {
                 if (set.expandable) {

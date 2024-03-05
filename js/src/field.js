@@ -313,9 +313,10 @@ var Field = {
               m('b', { 
                 title: field.attrs.title,
                 class: [
-                  'dib w4 truncate v-top',
+                  'dib w4 v-top',
                   field.expandable && field.value ? 'underline pointer' : ''
                 ].join(' '),
+                style: 'word-wrap: break-word; hyphens: auto',
                 onclick: function() {
                   if (field.fkey && field.expandable && field.value) {
                     Field.toggle_fkey(rec, colname)
