@@ -283,9 +283,10 @@ var Field = {
       return
     }
     // Don't show fields where one value is used very frequent
-    if (field.frequency && field.frequency > (1 - config.threshold)) {
-      return
-    }
+    // Disabled until we get ui for choosing this
+    // if (field.frequency && field.frequency > (1 - config.threshold)) {
+    //   return
+    // }
     // Don't show columns that has no values
     if (field.use === 0) {
       return
