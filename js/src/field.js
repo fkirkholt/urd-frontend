@@ -264,7 +264,7 @@ var Field = {
     if (number == 1) {
       percentage = 100
     } else if (number) {
-      percentage = (number * 100).toPrecision(2)
+      percentage = (number * 100).toFixed(1)
     }
 
     return percentage
