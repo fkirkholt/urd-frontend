@@ -67,7 +67,7 @@ var Fieldset = {
       set.expanded ? null : [
         m('label', {
           'data-expandable': true,
-          'data-fieldset': set.name,
+          'data-set': rec.table.name + '.' + set.name,
           class: 'db ml3 mt1'
         }, [
             m('b', {
@@ -90,7 +90,7 @@ var Fieldset = {
       ],
       // Draw fields if the field group is expanded
       !set.expanded ? null : m('fieldset', {
-        name: set.name,
+        'data-set': rec.table.name + '.' + set.name,
         class: 'flex flex-column',
         'data-expandable': set.expandable
       }, [
@@ -100,11 +100,8 @@ var Fieldset = {
               set.expanded = !set.expanded
             }
           }, [
-              m('abbr', { 
-                class: [
-                  'b',
-                  set.expandable ? 'underline pointer' : ''
-                ].join(' ')
+              m('b', { 
+                class: set.expandable ? 'underline pointer' : ''
               }, label),
           ]),
         Object.keys(set.items).map(function(label) {

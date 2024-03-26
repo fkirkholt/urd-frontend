@@ -285,7 +285,7 @@ var Relation = {
       rel.expanded ? null : [m('label', 
         {
           'data-expandable': true,
-          'data-relation': rel.name, 
+          'data-set': ref, 
           class: 'db ml3 mt1',
           onclick: function() {
             Relation.toggle_heading(rel)
@@ -314,13 +314,17 @@ var Relation = {
         ]
       )],
       rel.expanded && rel.records
-        ? m('fieldset', { name: rel.name, 'data-expandable': true, class: 'flex flex-column' }, [
+        ? m('fieldset', { 
+          'data-set': ref, 
+          'data-expandable': true, 
+          class: 'flex flex-column' 
+        }, [
           m('legend', {
             onclick: function() {
               Relation.toggle_heading(rel)
             }
           }, [
-              m('abbr', { class: 'b underline pointer' }, label),
+              m('b', { class: 'underline pointer' }, label),
               rel.count_records !== undefined
                 ? m('a', {
                   class: 'ml1 pr1 normal light-blue hover-blue f7 link',
