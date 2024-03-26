@@ -258,7 +258,7 @@ var Relation = {
     var rec = vnode.attrs.rec
     var ref = vnode.attrs.ref
     var label = vnode.attrs.label
-    var key = ref.replace('relations.', '')
+    var key = ref.replace('relation.', '')
     var rel = rec.relations && rec.relations[key]
       ? rec.relations[key] : null
     if (rel === null || !('tables' in ds.base)) {

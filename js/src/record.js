@@ -530,9 +530,9 @@ var Record = {
                 fieldset: item,
                 label: label
               })
-            } else if (typeof item == "string" && item.includes('relations')) {
+            } else if (typeof item == "string" && item.includes('relation')) {
               return m(Relation, { rec: rec, ref: item, label: label })
-            } else if (typeof item == "string" && item.includes('actions')) {
+            } else if (typeof item == "string" && item.includes('action')) {
               // TODO
             } else {
               return m(Field, { rec: rec, colname: item, label: label })
