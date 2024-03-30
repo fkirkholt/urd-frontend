@@ -1,5 +1,3 @@
-var login = require('./login')
-
 var store = {
   base: {},
   user: {},
@@ -33,8 +31,6 @@ var store = {
       }
     }).catch(function(e) {
       if (e.code === 401 || e.code === 404) {
-        login.msg = e.response.detail
-        login.error = true
         $('div.curtain').show();
         $('#login').show();
         $('#brukernavn').trigger('focus');
