@@ -29,8 +29,14 @@ var store = {
       if (typeof callback === 'function') {
         callback(data);
       }
-    }).catch(function(e) {
+    })
+    .catch(function(e) {
       if (e.code === 401 || e.code === 404) {
+        if (e.code === 401) {
+          store.base.system = e.response.detail.system
+          store.base.server = e.response.detail.host
+          store.base.name = e.response.detail.database
+        }
         $('div.curtain').show();
         $('#login').show();
         $('#brukernavn').trigger('focus');

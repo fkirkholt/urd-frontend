@@ -172,8 +172,12 @@ var Grid = {
         Record.select(ds.table, ds.table.selection || 0, true)
       }
       $('#urdgrid tr.focus').trigger('focus')
-    }).catch(function(e) {
+    })
+    .catch(function(e) {
       if (e.code === 401) {
+        ds.base.system = e.response.detail.system
+        ds.base.server = e.response.detail.host
+        ds.base.name = e.response.detail.database
         $('div.curtain').show()
         $('#login').show()
         $('#brukernavn').trigger('focus')

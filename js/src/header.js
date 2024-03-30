@@ -76,9 +76,10 @@ var header = {
                 onclick: function() {
                   m.request({
                     url: 'logout'
-                  }).then(function() {
-                    ds.base.server = null
-                    ds.base.name = null
+                  }).then(function(result) {
+                    ds.base.system = result.cnxn.system
+                    ds.base.server = result.cnxn.host
+                    ds.base.name = result.cnxn.database
                     m.route.set('')
                     $('div.curtain').show()
                     $('#login').show()

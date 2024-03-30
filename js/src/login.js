@@ -8,7 +8,7 @@ var login = {
       !login.error
         ? '' : m('div', { class: 'red' }, login.msg || 'Logg inn'),
       m(select, {
-        class: 'w-100 mb1',
+        class: ds.base.name == 'urdr.db' ? 'dn' : 'w-100 mb1',
         id: 'system',
         name: 'system',
         label: 'System',
@@ -54,15 +54,15 @@ var login = {
         placeholder: $('#system').val() == 'sqlite'
           ? 'Sti til mappe' : 'localhost',
         value: ds.base.server,
-        class: 'db w-100 mb1'
+        class: ds.base.name == 'urdr.db' ? 'dn' : 'db w-100 mb1'
       }),
-      $('#system').val() == 'sqlite' ? '' : m('input[type=text]', {
+      $('#system').val() == 'sqlite' && ds.base.name != 'urdr.db' ? '' : m('input[type=text]', {
         id: 'brukernavn',
         name: 'brukernavn',
         placeholder: 'Brukernavn',
         class: 'db w-100 mb1'
       }),
-      $('#system').val() == 'sqlite' ? '' : m('input[type=password]', {
+      $('#system').val() == 'sqlite' && ds.base.name != 'urdr.db' ? '' : m('input[type=password]', {
         id: 'passord',
         name: 'passord',
         placeholder: 'Passord',
@@ -78,7 +78,7 @@ var login = {
         name: 'database',
         placeholder: 'Database',
         value: ds.base.name,
-        class: 'db w-100 mb1'
+        class: ds.base.name == 'urdr.db' ? 'dn' : 'db w-100 mb1'
       }),
       m('input[type=button]', {
         id: 'btn_login',

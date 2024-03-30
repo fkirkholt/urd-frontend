@@ -1,5 +1,79 @@
 var config = require('./config')
 
+var create_usertables = 
+`-- Create tables needed to administer users and rights.
+-- Only supported in SQLite for now.
+-- They should be crated in database 'urdr.db'.
+
+CREATE TABLE user (
+  id varchar(10),
+  password varchar(100),
+  name_last varchar(50),
+  name_first varchar(30),
+  primary key (id)
+);
+
+INSERT INTO user (id, password) values
+  ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918');
+
+CREATE TABLE access (
+  code varchar(16),
+  description varchar(255),
+  parent varchar(16),
+  primary key (code),
+  foreign key (parent) references access (code)
+);
+
+INSERT INTO access values
+  ('sysadmin', 'System administrator', NULL),
+  ('useradmin', 'User administrator', 'sysadmin');
+
+CREATE TABLE user_access (
+  user_id varchar(10),
+  access_code varchar(16),
+  primary key (user_id, access_code),
+  foreign key (user_name) references user (id),
+  foreign key (access_code) references access (code)
+);
+
+INSERT INTO user_access values
+  ('admin', 'sysadmin');
+
+CREATE TABLE database_ (
+  name varchar(30) not null,
+  description varchar(255),
+  primary key (name)
+);
+
+INSERT INTO database_ values
+  ('urdr.db', 'User administration');
+
+CREATE TABLE database_access (
+  database_name varchar(30) not null,
+  read_access varchar(16),
+  write_access varchar(16) not null default 'sysadmin',
+  primary key (database_name),
+  foreign key (database_name) references database_ (name),
+  foreign key (read_access) references access (code),
+  foreign key (write_access) references access (code)
+);
+
+INSERT INTO database_access values
+  ('urdr.db', 'useradmin', 'useradmin');
+
+CREATE TABLE table_access (
+  database_name varchar(30) not null,
+  table_name varchar(30) not null,
+  read_access varchar(16),
+  write_access varchar(16) not null default 'sysadmin',
+  primary key (database_name, table_name),
+  foreign key (database_name) references database_ (name),
+  foreign key (read_access) references access (code),
+  foreign key (write_access) references access (code)
+);
+
+`
+
 var tabbar = {
 
   set_view: function(value) {
@@ -65,6 +139,9 @@ var tabbar = {
                 ds.dblist = result.data
               }).catch(function(e) {
                 if (e.code === 401) {
+                  ds.base.system = e.response.detail.system
+                  ds.base.server = e.response.detail.host
+                  ds.base.name = e.response.detail.database
                   $('div.curtain').show()
                   $('#login').show()
                   $('#brukernavn').trigger('focus')
@@ -239,9 +316,27 @@ var tabbar = {
               onchange: () => config.show_relations = key
             }), value)
           ),
-        ]))
+        ])),
+      (config.tab != 'sql' ? null : m('label', {
+        class: 'fr mr3',
+        title: 'Choose sql expression',
+      }, [
+        m('select', {
+          onchange: function(ev) {
+            Codefield.set_value('query', ev.target.value)
+            ev.target.value = 0
+          }
+        }, [
+          m('option', {value: 0}, 'Queries:'),
+          m('option', { 
+            value: create_usertables 
+          }, 'create user tables')
+        ])
+      ]))
     ]
   }
 }
 
 module.exports = tabbar
+
+var Codefield = require('./codefield')
