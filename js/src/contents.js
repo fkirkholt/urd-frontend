@@ -119,7 +119,7 @@ var Contents = {
     if (item.indexOf('.') == -1) item = 'tables.' + item
     if (
       ((table.hidden || table.type == 'list') && !config.admin)
-        || ['xref', 'link', 'ext'].includes(table.type)
+        || ['xref', 'link'].includes(table.type)
     ) {
       return
     }
