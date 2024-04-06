@@ -3,7 +3,6 @@ var Pagination = {
   navigate: function(name, set_index) {
     var list = ds.table
     var offset = parseInt(list.limit) + parseInt(list.offset)
-    var sort = list.grid.sort_columns
     var selection = set_index == false ? null : 0
     switch (name) {
       case 'next':

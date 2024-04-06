@@ -90,21 +90,21 @@ var Grid = {
   },
 
   column_order: function(col) {
-    return ds.table.sort_fields[col]
-      ? ds.table.sort_fields[col]['order'].toLowerCase()
+    return ds.table.grid.sort_columns[col]
+      ? ds.table.grid.sort_columns[col]['dir'].toLowerCase()
       : ''
   },
 
   sort: function(col) {
     var list = ds.table
-    var sort = []
+    var sort_cols = {}
     var order
-    if (list.sort_fields[col] && list.sort_fields[col]['idx'] == 0) {
-      order = list.sort_fields[col]['order'] == 'ASC' ? 'DESC' : 'ASC'
+    if (list.grid.sort_columns[col] && list.grid.sort_columns[col]['idx'] == 0) {
+      order = list.grid.sort_columns[col]['dir'] == 'ASC' ? 'DESC' : 'ASC'
     } else {
       order = 'ASC'
     }
-    sort.push(col + ' ' + order)
+    sort_cols[col] = {col: col, dir: order, idx: 0}
     var data = {
       base: ds.base.name,
       table: list.name,
@@ -114,7 +114,7 @@ var Grid = {
       condition: m.route.param('where')
         ? decodeURI(m.route.param('where'))
         : null,
-      sort: JSON.stringify(sort),
+      sort: JSON.stringify(sort_cols),
       offset: list.offset
     }
     this.get(data)
@@ -137,27 +137,6 @@ var Grid = {
       ds.table = result.data
       ds.table.dirty = false
       ds.table.ismain = true // represents main grid, and not relations
-
-      // Parses sort data
-      // TODO: Virker rart å måtte gjøre dette
-      var sort_fields = {}
-      $.each(ds.table.grid.sort_columns, function(i, value) {
-        // splits the value into field and sort order
-        var sort_order
-        var value_parts = value !== null ? value.split(' ') : []
-        var key = value_parts[0]
-        if (value_parts[1] !== undefined) {
-          sort_order = value_parts[1]
-        } else {
-          sort_order = 'ASC'
-        }
-        sort_fields[key] = {}
-        sort_fields[key]['order'] = sort_order
-        // idx angir her hvilken prioritet dette feltet 
-        // har i sorteringen
-        sort_fields[key]['idx'] = i
-      })
-      ds.table.sort_fields = sort_fields
 
       ds.table.query = data.filter
 
