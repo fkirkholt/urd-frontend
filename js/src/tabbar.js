@@ -258,9 +258,9 @@ var tabbar = {
           $('#export-dialog').show()
         }
       }),
-      ds.table ? null : m('i', {
+      !ds.user.admin || ds.table ? null : m('i', {
         class: 'fa fa-file-code-o fr mr3 pt1',
-        title: 'Eksporter KDRS-skjema',
+        title: 'Export to KDRS Search & View',
         onclick: function() {
           $('.curtain').show()
           $('#kdrs-dialog').show()
