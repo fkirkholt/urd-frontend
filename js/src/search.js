@@ -169,7 +169,7 @@ var Search = {
     // If this is a field
     if (
       typeof item === 'string' &&
-      !item.includes('relations') &&
+      !item.includes('relation.') &&
       !item.includes('actions.')
     ) {
       var field = table.fields[item]
