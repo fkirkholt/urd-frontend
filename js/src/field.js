@@ -277,6 +277,9 @@ var Field = {
     var field = rec.fields[colname]
 
     field.attrs = field.attrs || {}
+    if (field.size) {
+      field.attrs.class = 'mw5'
+    }
 
     // Don't show fields used below threshold value
     if (field.use && field.use < config.threshold) {

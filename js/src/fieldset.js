@@ -20,6 +20,14 @@ var Fieldset = {
 
             field.attrs = field.attrs || {}
             field.attrs.placeholder = field.attrs.placeholder || field.label
+            if (field.size) {
+              percent = (100/fieldset.size) * field.size
+              if (percent >= 35) {
+                field.attrs.class = 'mw4'
+              } else {
+                field.attrs.class = 'mw3'
+              }
+            }
 
             // determine if field should be displayd or edited
             var display = !rec.table.privilege.update || field.virtual ||
