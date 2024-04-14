@@ -1,5 +1,17 @@
 var config = require('./config')
 
+var create_html_attributes =
+`
+create table html_attributes(
+   selector varchar(100) not null,
+   attributes text not null,
+   primary key (selector)
+);
+
+insert into html_attributes values
+('[data-field="html_attributes.attributes"]', '{"data-type": "json", "data-format": "yaml"}')
+`
+
 var create_usertables = 
 `-- Create tables needed to administer users and rights.
 -- Only supported in SQLite for now.
@@ -330,7 +342,10 @@ var tabbar = {
           m('option', {value: 0}, 'Queries:'),
           m('option', { 
             value: create_usertables 
-          }, 'create user tables')
+          }, 'create user tables'),
+          m('option', {
+            value: create_html_attributes
+          }, 'create html_attributes')
         ])
       ]))
     ]
