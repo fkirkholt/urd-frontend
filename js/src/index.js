@@ -43,6 +43,7 @@ m.route($('#main')[0], '/', {
   },
   "/:base": {
     onmatch: function(args, requestedPath) {
+      Grid.url = ''
       var base_name = args.base
       if (ds.table && ds.table.dirty) {
         if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
@@ -59,6 +60,7 @@ m.route($('#main')[0], '/', {
   },
   "/:base/data": {
     onmatch: function(args, requestedPath) {
+      Grid.url = ''
       var base_name = args.base
       if (ds.table && ds.table.dirty) {
         if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
