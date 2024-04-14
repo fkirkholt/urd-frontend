@@ -275,6 +275,7 @@ var Field = {
     var colname = vnode.attrs.colname
     var label = vnode.attrs.label
     var field = rec.fields[colname]
+    var href = field.attrs['data-href']
 
     field.attrs = field.attrs || {}
     if (field.size) {
@@ -301,6 +302,12 @@ var Field = {
     // determine if field should be displayd or edited
     var display = !rec.table.privilege.update || field.virtual ||
       rec.readonly || !config.edit_mode || !field.editable
+
+    if (href) {
+      for (fieldname in rec.fields) {
+        href = href.replace('{'+fieldname+'}', rec.fields[fieldname].value)
+      }
+    }
 
     return [
       // TODO: sto i utgangspunktet list.betingelse. 
@@ -334,7 +341,7 @@ var Field = {
               }, '(' + Field.get_percentage(field.use) + '%)'),
               !display
                 ? m(Input, { rec: rec, fieldname: colname, ...field.attrs })
-                : field.expandable && (field.fkey || field.attrs['data-format'] == 'link')
+                : (field.expandable && field.fkey) || field.attrs['data-format'] == 'link'
                   ? m('a', {
                     class: [
                       'dib mw5 v-top',
@@ -343,9 +350,9 @@ var Field = {
                     'data-expandable': (field.element == 'textarea'),
                     'data-expanded': field.expanded,
                     'data-value': field.value,
-                    href: field.attrs.href 
-                      ? sprintf(field.attrs.href, field.value)
-                      : Field.get_url(field, rec),
+                    href: field.attrs['data-href'] ? href 
+                      : field.fkey ? Field.get_url(field, rec) 
+                      : '#',
                     onclick: function() {
                       if (field.element == 'textarea') {
                         field.expanded = !field.expanded
