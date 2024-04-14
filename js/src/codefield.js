@@ -84,6 +84,8 @@ var Codefield = {
               if ('onchange' in vnode.attrs && view.docChanged) {
                 var value = view.state.doc.toString()
                 vnode.attrs.onchange(value);
+                // Set classes manually to activate save button
+                $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
               }
             })
           ],
