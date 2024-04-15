@@ -53,7 +53,7 @@ INSERT INTO user_access values
 
 CREATE TABLE database_ (
   name varchar(30) not null,
-  description varchar(255),
+  description varchar(250),
   primary key (name)
 );
 
@@ -73,17 +73,25 @@ CREATE TABLE database_access (
 INSERT INTO database_access values
   ('urdr.db', 'useradmin', 'useradmin');
 
+CREATE TABLE table_ (
+  database_name varchar(30) not null,
+  name varchar(30) not null,
+  description varchar(250),
+  primary key (database_name, name),
+  foreign key (database_name) references database_ (name)
+)
+
 CREATE TABLE table_access (
   database_name varchar(30) not null,
   table_name varchar(30) not null,
   read_access varchar(16),
-  write_access varchar(16) not null default 'sysadmin',
+  write_access varchar(16),
   primary key (database_name, table_name),
   foreign key (database_name) references database_ (name),
+  foreign key (database_name, table_name) references table_(database_name, name),
   foreign key (read_access) references access (code),
   foreign key (write_access) references access (code)
 );
-
 `
 
 var tabbar = {
