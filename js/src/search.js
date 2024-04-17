@@ -13,7 +13,8 @@ var Search = {
       method: "GET",
       url: "table",
       params: {
-        base: field.fkey.base,
+        base: field.fkey.base || ds.base.name,
+        schema: field.fkey.schema,
         table: field.fkey.referred_table,
         limit: 0
       }
