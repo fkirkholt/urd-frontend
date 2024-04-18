@@ -63,7 +63,7 @@ INSERT INTO database_ values
 CREATE TABLE database_access (
   database_name varchar(30) not null,
   read_access varchar(16),
-  write_access varchar(16) not null default 'sysadmin',
+  write_access varchar(16),
   primary key (database_name),
   foreign key (database_name) references database_ (name),
   foreign key (read_access) references access (code),
