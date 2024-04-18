@@ -246,6 +246,62 @@ var Search = {
         ])
       ]
     }
+
+    if (item.includes('relation')) {
+      var key = item.replace('relation.', '')
+      var rel = table.relations[key]
+
+      if (rel.relationship == '1:1') {
+        return [
+          rel.expanded ? null : [m('label', 
+            {
+              'data-expandable': true,
+              'data-set': item, 
+              class: 'db ml2 mt1',
+              onclick: function() {
+                m.request({
+                  method: "get",
+                  url: "table",
+                  params: {
+                    base: ds.base.name,
+                    table: rel.table,
+                    limit: 0
+                  }
+                }).then(function(result) {
+                  rel.tbl = result.data
+                })
+              }
+            },
+            [
+              m('b', { 
+                class: 'underline pointer' 
+              }, label)
+            ]
+          )],
+          !rel.tbl ? null : m('div', {
+            class: 'ml4'
+          }, [
+            Object.keys(rel.tbl.form.items).map(function(label, idx) {
+              var item = rel.tbl.form.items[label]
+
+              if (rel.constrained_columns.includes(item)) {
+                return
+              }
+
+              if (
+                typeof item !== 'object' &&
+                item.indexOf('.') === -1 &&
+                rel.tbl.fields[item].defines_relaton
+              ) {
+                return
+              }
+
+              return Search.draw_field(rel.tbl, item, label)
+            })
+          ]) 
+        ]
+      }
+    } 
   },
 
   /** Draws a value field for the search parameter
