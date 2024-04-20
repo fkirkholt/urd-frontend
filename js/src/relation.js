@@ -211,6 +211,8 @@ var Relation = {
       rel.schema_name != rel.base_name && rel.schema_name != 'public'
     ) {
       base_path = rel.base_name + '.' + rel.schema_name
+    } else if (['sqlite', 'duckdb'].includes(ds.base.system)) {
+      base_path = ds.base.name
     } else {
       base_path = rel.schema_name
     }
