@@ -93,13 +93,20 @@ var Record = {
         alias: alias
       }
     }).then(function(result) {
-        if (result.data[alias].relationship == '1:1') {
-          record = result.data[alias].records[0]
-          record.table = result.data[alias]
-          Record.get_relations_count(record)
+        rel = result.data[alias]
+        if (rel.relationship == '1:1') {
+          if (rel.count_records == 0) {
+            Record.create(rel, true)
+            rel.expanded = true
+            rel.count_records = 1
+          } else {
+            record = rel.records[0]
+            record.table = rel
+            Record.get_relations_count(record)
+          }
         }
         $('.icon-crosshairs').removeClass('fast-spin')
-        Object.assign(rec.relations[alias], result.data[alias])
+        Object.assign(rec.relations[alias], rel)
       })
   },
 

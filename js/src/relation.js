@@ -282,35 +282,58 @@ var Relation = {
     }
 
     return [
-      rel.expanded ? null : [m('label', 
+      rel.expanded ? null : [m('div', 
         {
-          'data-expandable': true,
+          'data-expandable': rel.count_records ? true : false,
           'data-set': ref, 
-          class: 'db ml3 mt1',
-          onclick: function() {
-            Relation.toggle_heading(rel)
-            if (!rel.records) {
-              Record.get_relations(rec, key)
-            }
-          }
+          class: 'db ml3 mt1'
         }, 
         [
           m('b', { 
-            class: 'underline pointer', 
-            title: field.attrs.title 
+            class: [
+              'mr2 ',
+              rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) ? ''
+              : 'underline pointer' 
+            ].join(''),
+            title: field.attrs.title,
+            onclick: function() {
+              if (rel.count_records == 0 && rel.relationship == '1:1') {
+                return
+              }
+              Relation.toggle_heading(rel)
+              if (!rel.records || !rel.records[0].table) {
+                Record.get_relations(rec, key)
+              } 
+            }
           }, label),
-          rel.count_records !== undefined
-            ? m('a', {
+          rel.dirty
+            ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
+            : '',
+          (config.edit_mode && rel.relationship == '1:1') ? m('input', {
+            type: 'checkbox',
+            checked: rel.count_records > 0 && rel.records[0].delete != true,
+            onchange: function(ev) {
+              if (ev.target.checked) {
+                if (rel.count_records) {
+                  rel.records[0].delete = false
+                } else {
+                  Record.get_relations(rec, key)
+                }
+              } else {
+                if (rel.records[0].new) {
+                  rel.records.splice(0, 1)
+                }
+                Record.delete(rel.records[0])
+              }
+            }
+          })
+          : (rel.relationship == '1:1') ? (rel.count_records ? '1:1' : '0:1')
+          : m('a', {
               class: 'ml1 pr1 normal light-blue hover-blue f7 link',
               href: url
             }, [
               rel.count_records,
-              rel.relationship == '1:1' ? ':1' : ''
             ])
-            : '',
-          rel.dirty
-            ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
-            : '',
         ]
       )],
       rel.expanded && rel.records
@@ -324,16 +347,23 @@ var Relation = {
               Relation.toggle_heading(rel)
             }
           }, [
-              m('b', { class: 'underline pointer' }, label),
-              rel.count_records !== undefined
-                ? m('a', {
+              m('b', { class: 'underline pointer mr2' }, label),
+              (config.edit_mode && rel.relationship == '1:1') ? m('input', {
+                type: 'checkbox',
+                checked: rel.count_records > 0 && rel.records[0].delete != true,
+                onchange: function(ev) {
+                  if (!ev.target.checked) {
+                    Record.delete(rel.records[0])
+                  }
+                }
+              })
+              : (rel.relationship == '1:1') ? ''
+              : m('a', {
                   class: 'ml1 pr1 normal light-blue hover-blue f7 link',
                   href: url
                 }, [
                   rel.count_records,
-                  rel.relationship == '1:1' ? ':1' : ''
                 ])
-                : '',
             ]),
           ['1:M', 'M:M'].includes(rel.relationship)
           ? Relation.draw_relation_table(rel, rec)
