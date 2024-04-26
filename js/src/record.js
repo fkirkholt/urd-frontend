@@ -100,8 +100,10 @@ var Record = {
             rel.expanded = true
             rel.count_records = 1
           } else {
-            record = rel.records[0]
+            record = rec.relations[alias].records[0]
+            record.base_name = rec.base_name
             record.table = rel
+            rel.records = [record]
             Record.get_relations_count(record)
           }
         }
