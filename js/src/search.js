@@ -264,11 +264,11 @@ var Search = {
                   url: "table",
                   params: {
                     base: ds.base.name,
-                    table: rel.table,
+                    table: rel.table_name,
                     limit: 0
                   }
                 }).then(function(result) {
-                  rel.tbl = result.data
+                  rel.table = result.data
                 })
               }
             },
@@ -278,11 +278,11 @@ var Search = {
               }, label)
             ]
           )],
-          !rel.tbl ? null : m('div', {
+          !rel.table ? null : m('div', {
             class: 'ml4'
           }, [
-            Object.keys(rel.tbl.form.items).map(function(label, idx) {
-              var item = rel.tbl.form.items[label]
+            Object.keys(rel.table.form.items).map(function(label, idx) {
+              var item = rel.table.form.items[label]
 
               if (rel.constrained_columns.includes(item)) {
                 return
@@ -291,12 +291,12 @@ var Search = {
               if (
                 typeof item !== 'object' &&
                 item.indexOf('.') === -1 &&
-                rel.tbl.fields[item].defines_relaton
+                rel.table.fields[item].defines_relaton
               ) {
                 return
               }
 
-              return Search.draw_field(rel.tbl, item, label)
+              return Search.draw_field(rel.table, item, label)
             })
           ]) 
         ]

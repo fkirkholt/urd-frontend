@@ -73,7 +73,7 @@ var Row = {
       }
     }).then(function(result) {
       var rel = $.extend(rec, result.data)
-      rel.table = tbl
+      rel.table_name = tbl
       rel.list = tbl
       rec.loaded = true
 

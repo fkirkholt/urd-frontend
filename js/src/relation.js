@@ -185,8 +185,8 @@ var Relation = {
     var rel_tables = []
 
     Object.values(table.relations).map(function(relation) {
-      if (relation.table != table.name) {
-        rel_tables.push(relation.table)
+      if (relation.table_name != table.name) {
+        rel_tables.push(relation.table_name)
       }
     })
 

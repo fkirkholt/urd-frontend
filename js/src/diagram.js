@@ -188,15 +188,15 @@ var Diagram = {
     var rel_tables = []
     Object.keys(table.relations).map(function(alias) {
       var rel = table.relations[alias]
-      if (rel.table != table.name) {
-        rel_tables.push(rel.table)
+      if (rel.table_name != table.name) {
+        rel_tables.push(rel.table_name)
       }
     })
 
     // Draw has-many relations
     Object.keys(table.relations).map(function(alias) {
       var rel = table.relations[alias]
-      var rel_table = ds.base.tables[rel.table]
+      var rel_table = ds.base.tables[rel.table_name]
       var skip = false
 
       if (rel_table.hidden) {
@@ -224,22 +224,22 @@ var Diagram = {
       }
 
       var fk_field_name = rel.constrained_columns[rel.constrained_columns.length - 1]
-      var fk_field = ds.base.tables[rel.table].fields
-        ? ds.base.tables[rel.table].fields[fk_field_name]
+      var fk_field = ds.base.tables[rel.table_name].fields
+        ? ds.base.tables[rel.table_name].fields[fk_field_name]
         : null
       var symbol = fk_field && fk_field.nullable ? ' o|' : ' ||'
-      if (rel.table == table.name) {
+      if (rel.table_name == table.name) {
         return
       }
 
       var line = rel.hidden ? '..' : '--'
-      def.push(table.name + symbol + line + 'o{ ' + rel.table +
+      def.push(table.name + symbol + line + 'o{ ' + rel.table_name +
         ' : ' + fk_field_name)
 
       // Draw relations recursively
       if (
         config.show_relations != 'nearest' &&
-        !tablenames.includes(rel.table)
+        !tablenames.includes(rel.table_name)
       ) {
         def_recur = Diagram.get_table_def(rel_table, tablenames)
         def = def.concat(def_recur)
