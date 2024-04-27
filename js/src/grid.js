@@ -261,7 +261,7 @@ var Grid = {
       url: 'table',
       body: data
     }).then(function(result) {
-      $('#message').show().html('Lagring vellykket')
+      $('#message').show().html('Saved')
 
       setTimeout(function() {
         $('#message').hide()
