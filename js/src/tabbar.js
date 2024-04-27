@@ -312,12 +312,12 @@ var tabbar = {
             class: 'mr1',
             type: 'checkbox',
             value: 1,
-            checked: config.simplified_hierarchy,
+            checked: config.show_all_descendants,
             onclick: function(ev) {
-              config.simplified_hierarchy = ev.target.checked
+              config.show_all_descendants = ev.target.checked
             }
           })
-        ], 'Simplified hierarchy')),
+        ], 'Show all descendants')),
       (config.tab != 'diagram' ? null : m('label', {
         class: 'fr mr3',
         title: "Velg hvilke relasjoner som skal vises"

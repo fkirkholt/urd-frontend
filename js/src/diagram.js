@@ -156,7 +156,7 @@ var Diagram = {
       }
 
       // Removes relations that represents grand parents and up
-      if (config.simplified_hierarchy) {
+      if (!config.show_all_descendants) {
         Object.keys(fk_table.relations).map(function(name) {
           var rel_fk = fk_table.relations[name]
           if (fk_tables.includes(rel_fk.table)) {
@@ -204,7 +204,7 @@ var Diagram = {
       }
 
       // Removes relations that represents grand children and down
-      if (config.simplified_hierarchy) {
+      if (!config.show_all_descendants) {
         Object.keys(rel_table.fkeys).map(function(name) {
           var rel_fk = rel_table.fkeys[name]
           if (rel_tables.includes(rel_fk.referred_table)) {

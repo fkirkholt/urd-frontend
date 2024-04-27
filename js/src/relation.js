@@ -275,7 +275,7 @@ var Relation = {
       return
     }
 
-    if (config.simplified_hierarchy && !Relation.is_direct(rel, table)) {
+    if (!config.show_all_descendants && !Relation.is_direct(rel, table)) {
       return
     }
 
