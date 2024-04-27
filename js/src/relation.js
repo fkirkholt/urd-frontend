@@ -329,7 +329,9 @@ var Relation = {
               }
             }
           })
-          : (rel.relationship == '1:1') ? (rel.count_records ? '1:1' : '0:1')
+          : (rel.relationship == '1:1') ? m('span', {
+            class: 'gray f7'
+          }, rel.count_records ? '1:1' : '0:1')
           : m('a', {
               class: 'ml1 pr1 normal light-blue hover-blue f7 link',
               href: url
