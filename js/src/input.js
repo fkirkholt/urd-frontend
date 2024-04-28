@@ -117,7 +117,7 @@ var Input = {
     $.each(rec.table.indexes, function(i, idx) {
       if (idx.columns[0] === field.name) {
         has_idx = true
-        if (idx.unique) {
+        if (idx.columns.length == 1 && idx.unique) {
           field.unique = true
         }
       }
@@ -165,13 +165,13 @@ var Input = {
           disabled: true, value: option ? option.label : field.value
         })
         : m(Select, {...vnode.attrs})
-    } else if (field.element === 'select' || (has_idx && !field.unique)) {
+    } else if (field.element === 'select' || has_idx) {
 
       if (!field.text) field.text = field.value
 
       vnode.attrs.item = field
       vnode.attrs.text = field.text
-      vnode.attrs.hide_options = field.unique
+      vnode.attrs.unique = field.unique
       vnode.attrs.self_reference = field.element !== 'select'
       vnode.attrs.ajax = {
         url: 'options',
@@ -194,6 +194,33 @@ var Input = {
 
         if (field.value === value) {
           return
+        }
+
+        if (field.unique) {
+          var data = {
+            schema: ds.base.schema,
+            base: ds.base.name,
+            table: rec.table.name,
+            column: field.name,
+            condition: Input.get_condition(rec, field)
+          }
+          data.q = event.target.value
+
+          m.request({
+            method: 'get',
+            url: 'options',
+            params: data
+          }).then(function(result) {
+            options = result
+            event.target.setCustomValidity("")
+            for (idx in options) {
+              if (value == options[idx].value) {
+                event.target.setCustomValidity("Ikke unik verdi")
+                field.invalid = true
+                field.errormsg = 'Ikke unik verdi'
+              }
+            }
+          })
         }
 
         Field.update(value, field.name, rec)
@@ -292,32 +319,6 @@ var Input = {
       vnode.attrs.onchange = function(event) {
         var value = event.target.value.replace(/\u21a9/g, "\n")
         Field.update(value, field.name, rec)
-        if (field.unique) {
-          var data = {
-            schema: ds.base.schema,
-            base: ds.base.name,
-            table: rec.table.name,
-            column: field.name,
-            condition: Input.get_condition(rec, field)
-          }
-          data.q = event.target.value
-
-          m.request({
-            method: 'get',
-            url: 'options',
-            params: data
-          }).then(function(result) {
-            options = result
-            event.target.setCustomValidity("")
-            for (idx in options) {
-              if (value == options[idx].value) {
-                event.target.setCustomValidity("Ikke unik verdi")
-                field.invalid = true
-                field.errormsg = 'Ikke unik verdi'
-              }
-            }
-          })
-        }
         Input.validate(value, field)
       }
 

@@ -12,7 +12,7 @@ function Seeker() {
   var fieldname = ''
 
   function keydown(event, attrs) {
-    if (event.keyCode == KEY_CODE_ENTER) {
+    if (event.keyCode == KEY_CODE_ENTER && !attrs.unique) {
       option = options[index]
       event.target.value = option.label
       // Use JSON.stringify to set correct data type
@@ -90,7 +90,7 @@ function Seeker() {
           value: option.label,
           placeholder: vnode.attrs.placeholder
             ? vnode.attrs.placeholder
-            : vnode.attrs.hide_options ? '' : 'Search',
+            : vnode.attrs.unique ? '' : 'Search',
           style: vnode.attrs.style,
           autocomplete: 'off',
           required: vnode.attrs.required,
@@ -115,8 +115,10 @@ function Seeker() {
             options.map(function(row, i) {
               return m('li', {
                 class: [
+                  vnode.attrs.unique ? 'gray' : '',
                   'pl1 pr1',
-                  i == index ? 'bg-light-blue' : 'bg-white'
+                  !vnode.attrs.unique && i == index ? 'bg-light-blue' 
+                  : 'bg-white'
                 ].join(' ')
               }, row.label)
             })
