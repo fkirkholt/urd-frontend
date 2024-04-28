@@ -9,6 +9,7 @@ function Seeker() {
   var option = {}
   var index = 0
   var timer = null
+  var fieldname = ''
 
   function keydown(event, attrs) {
     if (event.keyCode == KEY_CODE_ENTER) {
@@ -56,12 +57,14 @@ function Seeker() {
   return {
 
     onupdate: function(vnode) {
-      var input_width = $(vnode.dom).outerWidth()
-      var offset = $(vnode.dom).offset()
-      $('ul.options').css('min-width', input_width)
-      $('ul.options').css('top', offset.top + $(vnode.dom).outerHeight())
-      $('ul.options').css('left', offset.left)
-      $('ul.options').css('overflow', 'hidden')
+      if (fieldname == vnode.attrs.fieldname) {
+        var input_width = $(vnode.dom).outerWidth()
+        var offset = $(vnode.dom).offset()
+        $('ul.options').css('min-width', input_width)
+        $('ul.options').css('top', offset.top + $(vnode.dom).outerHeight())
+        $('ul.options').css('left', offset.left)
+        $('ul.options').css('overflow', 'hidden')
+      }
     },
 
     view: function(vnode) {
@@ -93,6 +96,7 @@ function Seeker() {
           required: vnode.attrs.required,
           oninput: function(event) {
             option.label = event.target.value
+            fieldname = vnode.attrs.fieldname
           },
           onkeydown: function(event) {
             keydown(event, vnode.attrs)
