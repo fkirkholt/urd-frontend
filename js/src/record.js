@@ -340,7 +340,7 @@ var Record = {
         }
         if (field.invalid) {
           record.invalid = true
-          record.messages.push('Invalid field ' + field.name + '.')
+          record.messages.push('Invalid field: ' + field.name + ' - ' + field.errormsg)
         }
       }
     }
