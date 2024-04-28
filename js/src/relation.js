@@ -303,7 +303,7 @@ var Relation = {
                 return
               }
               Relation.toggle_heading(rel)
-              if (!rel.records || !rel.records[0].table) {
+              if (!rel.records || (rel.relationship == '1:1' && !rel.records[0].table)) {
                 Record.get_relations(rec, key)
               } 
             }
