@@ -73,8 +73,7 @@ var Row = {
       }
     }).then(function(result) {
       var rel = $.extend(rec, result.data)
-      rel.table_name = tbl
-      rel.list = tbl
+      rel.table = tbl
       rec.loaded = true
 
       // Get virtual columns from tbl.fields.
