@@ -172,6 +172,7 @@ var Input = {
       vnode.attrs.item = field
       vnode.attrs.text = field.text
       vnode.attrs.hide_options = field.unique
+      vnode.attrs.self_reference = field.element !== 'select'
       vnode.attrs.ajax = {
         url: 'options',
         data: {

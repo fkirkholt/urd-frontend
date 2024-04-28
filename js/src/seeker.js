@@ -102,6 +102,10 @@ function Seeker() {
             keydown(event, vnode.attrs)
           },
           onblur: function(event) {
+            if (vnode.attrs.self_reference) {
+              vnode.attrs.onchange(event)
+            }
+            option = {}
             options = []
           },
         }),
