@@ -345,7 +345,15 @@ var Grid = {
                 ].join(' '),
                 'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
                 onclick: Grid.sort.bind(Grid, col)
-              }, label)
+              }, [
+              label, m('i', {
+                class: [
+                  'fr ml2',
+                  Grid.column_order(col) == 'asc' ? 'fa fa-angle-up'
+                    : Grid.column_order(col) == 'desc' ? 'fa fa-angle-down'
+                    : ''
+                ].join(' ')
+              })])
             }),
             !ds.table.grid.actions.length
               ? ''

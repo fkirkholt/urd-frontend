@@ -146,10 +146,3 @@ label b:before {
     content: attr(data-before);
 }
 
-th[data-sort=asc]:after {
-    content: ' ▲'
-}
-
-th[data-sort=desc]:after {
-    content: ' ▼'
-}
