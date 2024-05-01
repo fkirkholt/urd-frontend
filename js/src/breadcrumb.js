@@ -30,7 +30,7 @@ module.exports = {
 
     if (param.table && ds.table) {
       items.push({
-        icon: "fa-table",
+        icon: ds.table.type == 'list' ? "fa-list" : "fa-table",
         text: ds.table.label,
         addr: ds.base.name + '/data/' + ds.table.name
       })
