@@ -115,7 +115,8 @@ var Grid = {
         ? decodeURI(m.route.param('where'))
         : null,
       sort: JSON.stringify(sort_cols),
-      offset: list.offset
+      offset: list.offset,
+      compressed: config.compressed
     }
     this.get(data)
   },
