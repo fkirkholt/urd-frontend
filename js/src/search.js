@@ -20,7 +20,7 @@ var Search = {
       }
     }).then(function(result) {
       field.relation = result.data
-      field.relation.alias = field.name
+      field.relation.alias = field.fkey.ref_table_alias
       // mark the relation so that we don't expand more
       // than one level deep
       field.relation.sublevel = true
