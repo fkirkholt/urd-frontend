@@ -378,7 +378,7 @@ var Grid = {
           m('tr', { class: 'bg--light-gray' }, [
             m('td', {
               class: 'tc bt b--moon-gray pb0 bg-light-gray'
-            }, m.trust('Σ')),
+            }),
             Object.keys(ds.table.grid.columns).map(function(label) {
               var col = ds.table.grid.columns[label]
               return m('td', {
