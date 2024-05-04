@@ -34,11 +34,13 @@ var Field = {
       ) {
         // If the field is part of the dropdowns foreign keys
         if (other_field.fkey.constrained_columns.includes(field.name)) {
-          if (rec.fields[name].value !== null) {
+          if ('value' in rec.fields[name] && rec.fields[name].value !== null) {
             rec.fields[name].value = null
             rec.fields[name].dirty = true
-            rec.columns[name].value = null
-            rec.columns[name].text = null
+            if (name in rec.columns) {
+              rec.columns[name].value = null
+              rec.columns[name].text = null
+            }
           }
           m.request({
             method: 'GET',
@@ -48,7 +50,7 @@ var Field = {
               limit: 1000,
               schema: ds.base.schema,
               base: ds.base.name,
-              table: ds.table.name,
+              table: rec.table.name,
               column: other_field.name,
               condition: Input.get_condition(rec, other_field)
             }
