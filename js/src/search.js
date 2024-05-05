@@ -358,6 +358,7 @@ var Search = {
         placeholder: 'Velg',
         multiple: filter.operator === 'IN' ? true : false,
         options: field.options ? field.options : null,
+        type: field.datatype == 'int' ? 'number' : 'text',
         value: filter.value,
         text: filter.text,
         class: 'w-100',
@@ -405,6 +406,7 @@ var Search = {
         : field.size + 'em'
       return m('input', {
         name: filter.field,
+        type: field.datatype == 'int' ? 'number' : 'text',
         value: filter.value !== undefined ? filter.value : '',
         style: 'width: ' + width,
         disabled: filter.operator === '' ? true : false,
