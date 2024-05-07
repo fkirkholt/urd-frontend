@@ -23,10 +23,12 @@ var export_dialog = {
 
   },
 
-  export_sql: function(dialect, include_recs, select_recs) {
+  export_sql: function(dialect, table_defs, list_recs, data_recs, select_recs) {
     var param = {}
     param.dialect = dialect
-    param.include_recs = include_recs
+    param.table_defs = table_defs
+    param.list_recs = list_recs
+    param.data_recs = data_recs
     param.select_recs = select_recs
     param.base = ds.base.name
     if (ds.table) {
@@ -98,12 +100,20 @@ var export_dialog = {
         })], ' SQLite'),
         m('br'), m('br'),
         m('label', [m('input[type=checkbox]', {
-          name: 'records'
-        })], ' Export records'),
-        m('br'), m('span', { class: 'dib w1' }),
+          name: 'table-defs'
+        })], ' Export table definitions'),
+        m('br'),
+        m('label', [m('input[type=checkbox]', {
+          name: 'list-records'
+        })], ' Export records from lookup tables'),
+        m('br'),
+        m('label', [m('input[type=checkbox]', {
+          name: 'data-records'
+        })], ' Export records from data tables'),
+        m('br'),
         m('label', [m('input[type=checkbox]', {
           name: 'select'
-        })], ' as select'),
+        })], ' Export as select'),
         m('br')
       ]),
       m('div[name=buttons]', { class: "bottom-0 mt2" }, [
@@ -116,11 +126,16 @@ var export_dialog = {
             } else {
               var dialect = $('#export-dialog input[name="dialect"]:checked')
                 .val()
-              var include_records = $('#export-dialog input[name="records"]')
+              var table_defs = $('#export-dialog input[name="table-defs"]')
+                .prop('checked')
+              var list_records = $('#export-dialog input[name="list-records"]')
+                .prop('checked')
+              var data_records = $('#export-dialog input[name="data-records"]')
                 .prop('checked')
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
-              export_dialog.export_sql(dialect, include_records, select_records)
+              export_dialog.export_sql(dialect, table_defs, list_records, 
+                                       data_records, select_records)
             }
             $('div.curtain').hide()
             $('#export-dialog').hide()
