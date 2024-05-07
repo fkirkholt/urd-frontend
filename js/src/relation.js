@@ -297,7 +297,6 @@ var Relation = {
               rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) ? ''
               : 'underline pointer' 
             ].join(''),
-            title: field.attrs.title,
             onclick: function() {
               if (rel.count_records == 0 && rel.relationship == '1:1') {
                 return

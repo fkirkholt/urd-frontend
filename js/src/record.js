@@ -38,6 +38,7 @@ var Record = {
         rec.root = root
 
         // Get virtual columns from table.fields.
+        var field
         for (field_name in table.fields) {
           field = $.extend({}, table.fields[field_name])
           if (rec.fields[field.name] === undefined) {
@@ -236,6 +237,7 @@ var Record = {
     var selected = ds.table.selection
     var active_rec = ds.table.records[selected]
     var clone = {}
+    var field
     clone.fields = $.extend(true, {}, active_rec.fields)
     for (let name in clone.fields) {
       field = clone.fields[name]

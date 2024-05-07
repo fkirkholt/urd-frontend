@@ -77,6 +77,7 @@ var Row = {
       rec.loaded = true
 
       // Get virtual columns from tbl.fields.
+      var field
       for (field_name in tbl.fields) {
         field = $.extend({}, tbl.fields[field_name])
         if (rel.fields[field.name] === undefined) {
