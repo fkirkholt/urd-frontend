@@ -81,7 +81,6 @@ var Fieldset = {
             m('b', {
               class: 'dib w4 v-top underline pointer',
               style: 'word-wrap: break-word; hyphens: auto',
-              title: field.attrs.title,
               onclick: function() {
                 if (set.expandable) {
                   set.expanded = !set.expanded
