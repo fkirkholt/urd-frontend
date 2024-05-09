@@ -52,7 +52,7 @@ var Cell = {
     return m('td', {
       class: [
         Cell.align(list, colname) === 'right' ? 'tr' : 'tl',
-        compressed || value.length < 30 || (
+        compressed || (value && value.length < 30) || (
           field.datatype !== 'str' &&
             field.datatype !== 'bytes' &&
             field.element != 'select'
