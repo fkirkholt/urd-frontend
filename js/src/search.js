@@ -57,10 +57,10 @@ var Search = {
         var operator = filter.operator
         if (filter.operator === 'LIKE' || filter.operator === 'NOT LIKE') {
           value = '*' + value + '*'
-        } else if (filter.operator === 'start') {
+        } else if (filter.operator === 'startswith') {
           value = value + '*'
           operator = 'LIKE'
-        } else if (filter.operator === 'slutt') {
+        } else if (filter.operator === 'endswith') {
           value = '*' + value
           operator = 'LIKE'
         } else if (filter.operator.search('=') !== -1) {
@@ -92,10 +92,10 @@ var Search = {
           val = val.substr(1, val.length - 2)
         } else if (val.charAt(0) === '*') {
           val = val.substr(1, val.length)
-          operator = 'slutt'
+          operator = 'endswith'
         } else if (val.slice(-1) === '*') {
           val = val.substr(0, val.length - 1)
-          operator = 'start'
+          operator = 'startswith'
         }
 
         if (operator === 'IN') {
@@ -219,7 +219,7 @@ var Search = {
           }, label),
           // operator
           m(Select, {
-            class: 'mr2 w5',
+            class: 'mr2 w4',
             options: operators,
             required: true,
             value: filter.operator,
@@ -345,7 +345,7 @@ var Search = {
       })
     } else if (
       (field.element === 'select' &&
-        !['', 'LIKE', 'start', 'slutt', '>', '<'].includes(filter.operator)) ||
+        !['', 'LIKE', 'startswith', 'endswith', '>', '<'].includes(filter.operator)) ||
       (field.element === 'input' && field.attrs.type == 'text' &&
         has_idx &&
         ['=', '!='].includes(filter.operator))
@@ -428,17 +428,17 @@ var Search = {
 
   get_operators: function(field) {
     var operators = [
-      { value: 'IN', label: 'blant' },
-      { value: 'LIKE', label: 'inneholder' },
-      { value: 'NOT LIKE', label: 'inneholder ikke' },
-      { value: 'start', label: 'starter på' },
-      { value: 'slutt', label: 'slutter på' },
+      { value: 'IN', label: 'in' },
+      { value: 'LIKE', label: 'contains' },
+      { value: 'NOT LIKE', label: 'does not contain' },
+      { value: 'startswith', label: 'starts with' },
+      { value: 'endswith', label: 'ends with' },
       { value: '=', label: '=' },
       { value: '!=', label: '!=' },
       { value: '>', label: '>' },
       { value: '<', label: '<' },
-      { value: 'IS NULL', label: 'er tom' },
-      { value: 'IS NOT NULL', label: 'er ikke tom' },
+      { value: 'IS NULL', label: 'is null' },
+      { value: 'IS NOT NULL', label: 'is not null' },
     ]
     operators = operators.filter(function(operator) {
 
@@ -446,13 +446,13 @@ var Search = {
         ((field.element == 'select' &&
           (field.fkey && field.fkey.referred_table !== field.table)) ||
           (field.element == 'input' && field.attrs.type == 'radio')) &&
-        ['LIKE', 'NOT LIKE', 'start', 'slutt', '>', '<']
+        ['LIKE', 'NOT LIKE', 'startswith', 'endswith', '>', '<']
           .includes(operator.value)
       ) {
         return false
       } else if (
         field.datatype == 'bool' &&
-        ['IN', 'LIKE', 'NOT LIKE', 'start', 'slutt', '>', '<']
+        ['IN', 'LIKE', 'NOT LIKE', 'startswith', 'endswith', '>', '<']
           .includes(operator.value)
       ) {
         return false
@@ -462,7 +462,7 @@ var Search = {
           (field.element == 'input' &&
             (field.attrs.type == 'date' ||
               field.datatype == 'int'))) &&
-        ['LIKE', 'NOT LIKE', 'start', 'slutt'].includes(operator.value)
+        ['LIKE', 'NOT LIKE', 'startswith', 'endswith'].includes(operator.value)
       ) {
         return false
       } else if (
