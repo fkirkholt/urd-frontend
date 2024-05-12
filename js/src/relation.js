@@ -126,7 +126,7 @@ var Relation = {
         // Make editable only relations attached directly to
         // record and not to parent records
         var ismatch = Object.keys(rel.conds).every(function(k) {
-          return rel.conds[k] == rec.columns[k].value
+          return rec.columns[k] && rel.conds[k] == rec.columns[k].value
         })
         rec.readonly = !rec.new && !ismatch
         if (rec.readonly) rec.inherited = true
