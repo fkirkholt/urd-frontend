@@ -293,7 +293,7 @@ var Relation = {
         [
           m('b', { 
             class: [
-              'mr2 ',
+              'dib mr2 w4 ',
               rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) ? ''
               : 'underline pointer' 
             ].join(''),
