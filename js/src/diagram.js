@@ -135,55 +135,66 @@ var Diagram = {
     })
 
     // Draw belongs-to relations from foreign keys
-    Object.keys(table.fkeys).map(function(alias) {
-      var fk = table.fkeys[alias]
-      var field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
-      var field = table.fields ? table.fields[field_name] : null
-      var fk_table = ds.base.tables[fk.referred_table]
-      if (fk_table == undefined) {
-        return
-      }
-      var line = field && field.hidden ? '..' : '--'
-      var symbol = field && field.nullable ? ' o|' : ' ||'
-      var skip = false
+    if (config.show_relations != 'subordinate') {
+      Object.keys(table.fkeys).map(function(alias) {
+        var fk = table.fkeys[alias]
+        var field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
+        var field = table.fields ? table.fields[field_name] : null
+        var fk_table = ds.base.tables[fk.referred_table]
+        if (fk_table == undefined) {
+          return
+        }
+        var line = field && field.hidden ? '..' : '--'
+        var symbol = field && field.nullable ? ' o|' : ' ||'
+        var skip = false
 
-      if (fk_table.hidden) {
-        skip = true
-      }
+        if (fk_table.hidden) {
+          skip = true
+        }
 
-      if (field_name[0] == '_') {
-        skip = true
-      }
+        if (field_name[0] == '_') {
+          skip = true
+        }
 
-      // Removes relations that represents grand parents and up
-      if (!config.show_all_descendants) {
-        Object.keys(fk_table.relations).map(function(name) {
-          var rel_fk = fk_table.relations[name]
-          if (fk_tables.includes(rel_fk.table)) {
-            skip = true
-          }
-        })
-      }
+        // Removes relations that represents grand parents and up
+        if (!config.show_all_descendants) {
+          Object.keys(fk_table.relations).map(function(name) {
+            var rel_fk = fk_table.relations[name]
+            if (fk_tables.includes(rel_fk.table)) {
+              skip = true
+            }
+          })
+        }
+        // Removes relations that represents grand parents and up
+        if (config.simplified_hierarchy) {
+          Object.keys(fk_table.relations).map(function(name) {
+            var rel_fk = fk_table.relations[name]
+            if (fk_tables.includes(rel_fk.table)) {
+              skip = true
+            }
+          })
+        }
 
-      if (skip) {
-        return
-      }
+        if (skip) {
+          return
+        }
 
-      def.push(fk.referred_table + symbol + line + ' o{' + table.name +
-        ' : ' + field_name)
-      if (fk_table === undefined) return
-      // def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
-      if (fk_table.rowcount && fk.table != table.name) {
-        // def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
-      }
+        def.push(fk.referred_table + symbol + line + ' o{' + table.name +
+          ' : ' + field_name)
+        if (fk_table === undefined) return
+        // def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
+        if (fk_table.rowcount && fk.table != table.name) {
+          // def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
+        }
 
 
-      // Draw relations recursively
-      if (config.show_relations == 'all' && !tablenames.includes(fk.table)) {
-        def_recur = Diagram.get_table_def(fk_table, tablenames)
-        def = def.concat(def_recur)
-      }
-    })
+        // Draw relations recursively
+        if (config.show_relations == 'all' && !tablenames.includes(fk.referred_table)) {
+          def_recur = Diagram.get_table_def(fk_table, tablenames)
+          def = def.concat(def_recur)
+        }
+      })
+    }
 
     var rel_tables = []
     Object.keys(table.relations).map(function(alias) {
@@ -272,10 +283,10 @@ var Diagram = {
       var field_name = fk.constrained_columns.slice(-1)[0]
       var field = table.fields[field_name]
       if (field.hidden) return
-      var fk_table = ds.base.tables[fk.table]
+      var fk_table = ds.base.tables[fk.table_name]
       if (fk_table.hidden) return
       var symbol = field.nullable ? ' o|' : ' ||'
-      def.push(fk.table + symbol + '--o{ ' + table.name + ' : ' + field.name)
+      def.push(fk.referred_table + symbol + '--o{ ' + table.name + ' : ' + field.name)
     })
   },
 
@@ -322,8 +333,8 @@ var Diagram = {
       var fk = table.relations[fk_name]
       // name of last column in foreign key
       var fk_last_col = fk.constrained_columns[fk.constrained_columns.length - 1]
-      var fk_field = ds.base.tables[fk.table].fields
-        ? ds.base.tables[fk.table].fields[fk_last_col]
+      var fk_field = ds.base.tables[fk.table_name].fields
+        ? ds.base.tables[fk.table_name].fields[fk_last_col]
         : null
       var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
@@ -335,17 +346,17 @@ var Diagram = {
         return
       }
 
-      var fk_table = ds.base.tables[fk.table]
+      var fk_table = ds.base.tables[fk.table_name]
       // Don't make paths that goes through hidden tables or
       // reference tables
       if (fk_table.hidden || fk_table.type == 'list') {
         return
       }
 
-      new_path.push(table.name + symbol + '--o{ ' + fk.table +
+      new_path.push(table.name + symbol + '--o{ ' + fk.table_name +
         ' : ' + fk_last_col)
 
-      if (fk.table == Diagram.root) {
+      if (fk.table_name == Diagram.root) {
         found_paths.push(new_path)
       } else {
         // goes further in the path in search for Diagram.root
