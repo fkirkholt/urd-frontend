@@ -44,7 +44,7 @@ CREATE TABLE user_access (
   user_id varchar(10),
   access_code varchar(16),
   primary key (user_id, access_code),
-  foreign key (user_name) references user (id),
+  foreign key (user_id) references user (id),
   foreign key (access_code) references access (code)
 );
 
@@ -79,7 +79,7 @@ CREATE TABLE table_ (
   description varchar(250),
   primary key (database_name, name),
   foreign key (database_name) references database_ (name)
-)
+);
 
 CREATE TABLE table_access (
   database_name varchar(30) not null,
