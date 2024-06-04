@@ -315,7 +315,7 @@ var Field = {
       // TODO: sto i utgangspunktet list.betingelse. 
       // Finn ut hva jeg skal erstatte med.
       (
-        (!config.edit_mode && config.hide_empty && field.value === null) ||
+        (!config.edit_mode && config.hide_empty && field.value == null) ||
           (field.fkey && field.expanded)
       ) ? '' : [
           m('label', {
