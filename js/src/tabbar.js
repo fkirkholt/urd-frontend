@@ -196,7 +196,7 @@ var tabbar = {
                 ? 'bg-white' : 'bg-near-white'
             ].join(' '),
             style: (!config.tab || config.tab == 'data')
-              ? 'padding-bottom: 2px' : 'padding-bottom: 1px',
+              ? 'padding-bottom: 2px' : 'padding-bottom: 0px',
             onclick: function() {
               config.tab = 'data'
               m.route.set('/' + ds.base.name + '/data')
@@ -208,7 +208,7 @@ var tabbar = {
               'list ml2 pl2 pt0 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
               config.tab == 'diagram' ? 'bg-white' : 'bg-near-white'
             ].join(' '),
-            style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '1px'),
+            style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '0px'),
             onclick: function() {
               config.tab = 'diagram'
               m.route.set('/' + ds.base.name + '/diagram')
@@ -221,7 +221,7 @@ var tabbar = {
               'list ml2 pl2 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
               config.tab == 'sql' ? 'bg-white' : 'bg-near-white'
             ].join(' '),
-            style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '1px'),
+            style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '0px'),
             onclick: function() {
               config.tab = 'sql'
               m.route.set('/' + ds.base.name + '/sql')
