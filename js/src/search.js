@@ -269,6 +269,8 @@ var Search = {
                   }
                 }).then(function(result) {
                   rel.table = result.data
+                  prefix = table.name.replace(/_+$/, '') + '_'
+                  rel.table.alias = rel.table.name.replace(prefix, '')
                 })
               }
             },
