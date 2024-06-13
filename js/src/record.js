@@ -249,6 +249,7 @@ var Record = {
     clone.table = ds.table
     clone.new = true
     clone.relations = []
+    clone.root = true
 
     var idx = ds.table.selection + 1
     ds.table.records.splice(idx, 0, clone)
