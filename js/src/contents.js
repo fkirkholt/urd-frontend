@@ -176,8 +176,8 @@ var Contents = {
             $('ul#context-table li.hide').html(hidden_txt)
 
             var type_txt = table.type == 'list'
-              ? 'Sett til datatabell'
-              : 'Sett til referansetabell'
+              ? 'Set as data table'
+              : 'Set as looup table'
             $('ul#context-table li.type').html(type_txt)
 
             $('ul#context-table')

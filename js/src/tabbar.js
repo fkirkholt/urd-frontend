@@ -272,7 +272,7 @@ var tabbar = {
         ]),
       ds.table ? null : m('i', {
         class: 'fa fa-file-text-o fr mr3 pt1',
-        title: 'Eksporter',
+        title: 'Export',
         onclick: function() {
           $('.curtain').show()
           $('#export-dialog').show()
@@ -288,7 +288,7 @@ var tabbar = {
       }),
       (!ds.user.admin) || config.tab != 'diagram' ? null : m('i', {
         class: 'fa fa-edit fr mr3 pt1',
-        title: 'Oppdater cache',
+        title: 'Update cache',
         onclick: function() {
           if (['oracle', 'mssql'].includes(ds.base.system)) {
             alert('Cache not supported for ' + ds.base.system)
@@ -306,7 +306,7 @@ var tabbar = {
       }),
       (config.tab === 'sql' ? null : m('label', {
         class: 'fr mr3',
-        title: "Fjerner koblinger som går direkte til forfedre"
+        title: "Show descendants that are also descendants of children of the record"
       }, [
           m('input', {
             class: 'mr1',
@@ -320,7 +320,7 @@ var tabbar = {
         ], 'Show all descendants')),
       (config.tab != 'diagram' ? null : m('label', {
         class: 'fr mr3',
-        title: "Velg hvilke relasjoner som skal vises"
+        title: "Choose which relations to display"
       }, [
           'Show relations:',
           Object.entries({

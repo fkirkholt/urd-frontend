@@ -496,7 +496,7 @@ var Record = {
           ? ''
           : m('div', [
             config.recordview || !rec.root ? '' : m('input[type=button]', {
-              value: 'Lagre og lukk',
+              value: 'Save and close',
               onclick: function() {
                 var valid = $(this).parents('form')[0].reportValidity()
                 if (valid) {
@@ -514,7 +514,7 @@ var Record = {
               }
             }),
             config.recordview || !rec.root ? '' : m('input[type=button]', {
-              value: 'Avbryt',
+              value: 'Cancel',
               onclick: function() {
                 ds.table.edit = false
                 config.edit_mode = false
