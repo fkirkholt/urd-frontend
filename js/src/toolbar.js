@@ -256,7 +256,7 @@ var Toolbar = {
       }),
       // Search field
       ds.table.hidden ? '' : m('input[type=search]', {
-        placeholder: "Search all text fields",
+        placeholder: ds.table.fts ? "Full-text search" : "Search all text fields",
         value: Toolbar.get_search(),
         style: 'flex: 1',
         onfocus: function(event) {
