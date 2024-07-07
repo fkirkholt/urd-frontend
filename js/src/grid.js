@@ -178,9 +178,10 @@ var Grid = {
       delete param.limit
       var search_params = []
       $.each(param, function(key, value) {
-        search_params.push(key + ' = ' + value)
+        expr = value ? key + '=' + value : key
+        search_params.push(expr)
       })
-      filter = search_params.join(' AND ')
+      filter = search_params.join('; ')
     }
 
     return filter

@@ -171,9 +171,10 @@ var Toolbar = {
       search_params = []
       $.each(param, function(key, value) {
         if (['base', 'table', 'index', 'offset'].indexOf(key) >= 0) return
-        search_params.push(key + ' = ' + value)
+        expr = value ? key + '=' + value : key 
+        search_params.push(expr)
       })
-      search = search_params.join(' AND ')
+      search = search_params.join('; ')
     }
 
     return search
@@ -264,7 +265,7 @@ var Toolbar = {
         onchange: function(event) {
           var value = event.target.value
           m.route.set('/' + ds.base.name + '/data/' + ds.table.name +
-            '?query=' + encodeURI(value.replace(/=/g, '%3D')))
+            '?' + encodeURI(value.replace(/;\s*/g, '&')))
         }
       }),
       // Button for creating new record

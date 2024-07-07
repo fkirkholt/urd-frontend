@@ -35,13 +35,10 @@ var Search = {
   },
 
   search: function() {
-    var query = {}
     var search_criterias = Search.parse_search()
-    query.key = 'query'
-    query.value = search_criterias.join(' AND ')
 
     m.route.set('/' + ds.base.name + '/data/' + ds.table.name +
-      '?' + query.key + '=' + query.value)
+      '?' + search_criterias.join('&'))
   },
 
   parse_search: function() {
@@ -63,8 +60,6 @@ var Search = {
         } else if (filter.operator === 'endswith') {
           value = '*' + value
           operator = 'LIKE'
-        } else if (filter.operator.search('=') !== -1) {
-          operator = filter.operator.replace('=', '%3D')
         }
         search_criterias
           .push((filter.field + ' ' + operator + ' ' + (value || ''))
