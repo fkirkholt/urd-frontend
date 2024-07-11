@@ -403,7 +403,7 @@ var Search = {
         : field.size + 'em'
       return m('input', {
         name: filter.field,
-        type: field.datatype == 'int' ? 'number' : 'text',
+        type: field.datatype == 'int' && filter.operator !== 'IN' ? 'number' : 'text',
         value: filter.value !== undefined ? filter.value : '',
         style: 'width: ' + width,
         disabled: filter.operator === '' ? true : false,
