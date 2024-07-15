@@ -44,7 +44,7 @@ var home = {
           return m('li', [
             m('h4.mt1.mb1', [
               m('a', {
-                href: '#/' + post.columns.name + '/data'
+                href: '#/' + post.columns.name.split('.').at(0) + '/data'
               }, post.columns.label),
             ]),
             m('p.mt1.mb1', post.columns.description)
