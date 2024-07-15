@@ -277,11 +277,11 @@ var Contents = {
               }
             }, [
                 ds.base.schemata.map(function(schema) {
-                  var selected = (schema == ds.base.schema)
+                  var selected = (schema.split('.').at(-1) == ds.base.schema)
                   return m('option', {
                     value: schema,
                     selected: selected
-                  }, schema)
+                  }, schema.split('.').at(-1))
                 })
               ]),
           ds.base.contents && Object.keys(ds.base.contents).length
