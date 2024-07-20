@@ -15,7 +15,7 @@ insert into html_attributes values
 var create_usertables = 
 `-- Create tables needed to administer users and rights.
 -- Only supported in SQLite for now.
--- They should be crated in database 'urdr.db'.
+-- They should be crated in database 'urdr'.
 
 CREATE TABLE user (
   id varchar(10),
@@ -58,7 +58,7 @@ CREATE TABLE database_ (
 );
 
 INSERT INTO database_ values
-  ('urdr.db', 'User administration');
+  ('urdr', 'User administration');
 
 CREATE TABLE database_access (
   database_name varchar(30) not null,
@@ -71,7 +71,7 @@ CREATE TABLE database_access (
 );
 
 INSERT INTO database_access values
-  ('urdr.db', 'useradmin', 'useradmin');
+  ('urdr', 'useradmin', 'useradmin');
 
 CREATE TABLE table_ (
   database_name varchar(30) not null,
