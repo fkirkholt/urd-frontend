@@ -29,12 +29,15 @@ INSERT INTO user (id, password) values
   ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918');
 
 CREATE TABLE access (
-  code varchar(16),
+  code varchar(16) not null,
+  title varchar(50) not null
   description varchar(255),
   parent varchar(16),
   primary key (code),
   foreign key (parent) references access (code)
 );
+
+CREATE UNIQUE INDEX access_title on access (title);
 
 INSERT INTO access values
   ('sysadmin', 'System administrator', NULL),
