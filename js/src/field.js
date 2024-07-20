@@ -15,7 +15,7 @@ var Field = {
     // Update grid cell
     if (rec.columns && field.name in rec.columns) {
       rec.columns[field.name].text = field.text
-        ? field.text
+        ? field.text.replace(/\u00a0/g, '')
         : typeof value == "string"
           ? value.substring(0, 256)
           : value

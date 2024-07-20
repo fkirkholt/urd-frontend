@@ -1,5 +1,22 @@
 var Select = {
 
+  draw_option: function(options, option, value, level) {
+    whitespace = '&nbsp;&nbsp;&nbsp'.repeat(level)
+    return [
+      m('option', {
+        value: option.value,
+        class: 'black',
+        selected: option.value == value
+      }, m.trust(whitespace + option.label)),
+      options.filter(function(opt) {
+        return opt.parent == option.value
+      }).map(function(opt, idx) {
+        level += 1
+        return Select.draw_option(options, opt, value, level)
+      })
+    ]
+  },
+
   view: function(vnode) {
     var value = vnode.attrs.value
 
@@ -39,12 +56,10 @@ var Select = {
                 })
               ])
           })
-          : vnode.attrs.options.map(function(option, idx) {
-            return m('option', {
-              value: option.value,
-              class: 'black',
-              selected: option.value == value
-            }, option.label)
+          : vnode.attrs.options.filter(function(option) {
+            return 'parent' in option ? option.parent === null : true
+          }).map(function(option, idx) {
+            return Select.draw_option(vnode.attrs.options, option, value, 0)
           })
       ])
   }
