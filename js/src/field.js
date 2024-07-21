@@ -326,7 +326,7 @@ var Field = {
               m('b', { 
                 title: field.attrs.title,
                 class: [
-                  'dib w4 v-top',
+                  'dib w4 v-top mr2',
                   field.expandable && field.value ? 'underline pointer' : ''
                 ].join(' '),
                 style: 'word-wrap: break-word; hyphens: auto',

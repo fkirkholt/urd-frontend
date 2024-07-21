@@ -128,6 +128,8 @@ label:after {
 label b:after {
     content: attr(data-after);
     font-weight: normal;
+    display: inline-block;
+    margin-right: -2px;
 }
 
 label b[data-after-color=red]:after {
