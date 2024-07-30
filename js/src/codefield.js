@@ -29,7 +29,7 @@ var Codefield = {
         const nextIndent = nextLine.text.search(/\S|$/) // Indent level of the next line
 
         // If the next line is on a deeper indent level, add it to the fold
-        if (nextIndent > indent) {
+        if (nextIndent > indent || nextLine.text == '') {
             foldEnd = nextLine.to // Set the fold end to the end of the next line
         } else {
             break // If the next line is not on a deeper indent level, stop
