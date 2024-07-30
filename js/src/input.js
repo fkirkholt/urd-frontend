@@ -263,6 +263,18 @@ var Input = {
       }
 
       return m(JSONed, {...vnode.attrs})
+    } else if (get(field, 'attrs.data-format') == 'markdown') {
+      vnode.attrs.id = field.name
+      vnode.attrs['data-pkey'] = rec.pkey
+      vnode.attrs.class = vnode.attrs.class + ' ba b--light-silver'
+      vnode.attrs.editable = true
+      vnode.attrs.lang = 'markdown'
+      vnode.attrs.value = field.value
+      vnode.attrs.onchange = function(value) {
+        Field.update(value, field.name, rec)
+      }
+
+      return m(Codefield, {...vnode.attrs})
     } else if (field.element == 'textarea') {
       text = field.value ? marked.parse(field.value) : ''
 

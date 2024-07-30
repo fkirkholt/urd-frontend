@@ -56,7 +56,8 @@ var Codefield = {
       import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
       import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
       import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
-    ]).then(([cm, sql, json, language, yaml]) => {
+      import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
+    ]).then(([cm, sql, json, language, yaml, markdown]) => {
         var lang
         if (vnode.attrs.lang == 'sql') {
           lang = sql.sql()
@@ -65,6 +66,8 @@ var Codefield = {
         } else if (vnode.attrs.lang == 'yaml') {
           // Use legacy mode for yaml
           lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
+        } else if (vnode.attrs.lang == 'markdown') {
+          lang = markdown.markdown()
         }
         editors[vnode.attrs.id] = {}
         if (vnode.attrs['data-pkey']) {
@@ -102,7 +105,8 @@ var Codefield = {
       import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
       import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
       import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
-    ]).then(([cm, state, sql, json, language, yaml]) => {
+      import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
+    ]).then(([cm, state, sql, json, language, yaml, markdown]) => {
         var lang
         if (vnode.attrs.lang == 'sql') {
           lang = sql.sql()
@@ -111,6 +115,8 @@ var Codefield = {
         } else if (vnode.attrs.lang == 'yaml') {
           // Use legacy mode for yaml
           lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
+        } else if (vnode.attrs.lang == 'markdown') {
+          lang = markdown.markdown()
         }
         id = vnode.attrs.id
 
