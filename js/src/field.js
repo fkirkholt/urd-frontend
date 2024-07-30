@@ -281,7 +281,7 @@ var Field = {
 
     field.attrs = field.attrs || {}
     if (field.size) {
-      field.attrs.class = 'mw5'
+      field.attrs.class = 'mw6'
     }
 
     // Don't show fields used below threshold value
@@ -346,7 +346,7 @@ var Field = {
                 : (field.expandable && field.fkey) || field.attrs['data-format'] == 'link'
                   ? m('a', {
                     class: [
-                      'dib mw5 v-top',
+                      'dib mw6 v-top',
                       (field.expanded) ? '' : 'truncate'
                     ].join(' '),
                     'data-expandable': (field.element == 'textarea'),
@@ -369,7 +369,7 @@ var Field = {
                       ? Field.display_value(field, rec)
                       : m('data', {
                         class: [
-                          'dib mw5 v-top',
+                          'dib mw6 v-top',
                           (field.expanded) ? '' : 'truncate'
                         ].join(' '),
                         value: field.value,
