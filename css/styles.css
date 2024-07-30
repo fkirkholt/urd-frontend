@@ -148,3 +148,10 @@ label b:before {
     content: attr(data-before);
 }
 
+ul {
+    padding-left: 15px
+}
+
+ol {
+    padding-left: 15px
+}
