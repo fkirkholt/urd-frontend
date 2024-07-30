@@ -86,7 +86,7 @@ function Seeker() {
           maxlength: vnode.attrs.item.element == 'input'
             ? vnode.attrs.item.size
             : null,
-          class: 'mw5',
+          class: vnode.attrs.class,
           value: option.label,
           placeholder: vnode.attrs.placeholder
             ? vnode.attrs.placeholder

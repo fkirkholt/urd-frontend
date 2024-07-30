@@ -169,6 +169,8 @@ var Input = {
 
       if (!field.text) field.text = field.value
 
+      vnode.attrs.type = field.datatype == 'int' ? 'number' : 'text'
+      vnode.attrs.class = field.datatype == 'int' ? 'mw4' : 'mw5'
       vnode.attrs.item = field
       vnode.attrs.text = field.text
       vnode.attrs.unique = field.unique
@@ -304,17 +306,32 @@ var Input = {
       }
 
       return m('input[type=date]', {...vnode.attrs})
+    } else if (field.datatype == 'float' || field.datatype == 'Decimal') {
+      vnode.attrs.type = 'number'
+      vnode.attrs.class = field.precision < 5 
+        ? 'mw3' : 'mw4'
+      vnode.attrs.onchange = function(event) {
+        var value = event.target.value
+        Field.update(value, field.name, rec)
+        Input.validate(value, field)
+      }
+      return m('input', {...vnode.attrs})
+    } else if (field.datatpe == 'int') {
+      vnode.attrs.type = 'number'
+      vnode.attrs.class = 'mw4'
+      vnode.attrs.onchange = function(event) {
+        var value = event.target.value
+        Field.update(value, field.name, rec)
+        Input.validate(value, field)
+      }
+      return m('input', {...vnode.attrs})
     } else {
-      var size = field.datatype == 'float' || field.datatype == 'Decimal'
-        ? field.size + 1
-        : field.size
-
       vnode.attrs.value = typeof field.value === 'string'
         ? field.value.replace(/\n/g, '\u21a9')
         : field.value
 
-      vnode.attrs.size = size ? size : null
-      vnode.attrs.maxlength = size ? size : ''
+      vnode.attrs.size = field.size ? field.size : null
+      vnode.attrs.maxlength = field.size ? field.size : ''
       vnode.attrs.class = vnode.attrs.class + ' border-box truncate'
       vnode.attrs.onchange = function(event) {
         var value = event.target.value.replace(/\u21a9/g, "\n")
