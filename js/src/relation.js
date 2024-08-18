@@ -178,14 +178,14 @@ var Relation = {
     ]
   },
 
-  // Decide if the relation represents a direct descendant
+  // Decide if the relation represents a direct descendant of the table
   is_direct: function(rel, table) {
     var result = true
     var rel_table = ds.base.tables[rel.name]
     var rel_tables = []
 
     Object.values(table.relations).map(function(relation) {
-      if (relation.table_name != table.name) {
+      if (relation.table_name != table.name && relation.table_name != rel.name) {
         rel_tables.push(relation.table_name)
       }
     })
