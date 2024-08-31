@@ -301,8 +301,9 @@ var Grid = {
     }
     
     Grid.get({
-      base: params.base, table: params.table, filter: query, index: index,
-      limit: config.limit, offset: params.offset || 0
+      base: params.base, table: params.table, filter: query, 
+      index: index, show_all_levels: config.show_all_levels || false,
+      limit: config.limit, offset: params.offset || 0, 
     })
 
 

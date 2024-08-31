@@ -321,6 +321,20 @@ var tabbar = {
             }
           })
         ], 'Show all descendants')),
+      (config.tab !== 'data' || (ds.table && !ds.table.expansion_column) ? null : m('label', {
+        class: 'fr mr3'
+      }, [
+        m('input', {
+          class: 'mr1',
+          type: 'checkbox',
+          value: 1,
+          checked: config.show_all_levels,
+          onclick: function(ev) {
+            config.show_all_levels = ev.target.checked
+            Grid.load(m.route.param())
+          }
+        })
+      ], 'Show all levels')),
       (config.tab != 'diagram' ? null : m('label', {
         class: 'fr mr3',
         title: "Choose which relations to display"
@@ -366,3 +380,4 @@ var tabbar = {
 module.exports = tabbar
 
 var Codefield = require('./codefield')
+var Grid = require('./grid')

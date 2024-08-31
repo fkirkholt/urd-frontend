@@ -69,7 +69,7 @@ var Cell = {
       'data-value': value
     }, [
         !(value && value.length > 30 && compressed)
-          ? [m('div', [expansion ? icon : '', value])]
+          ? [m('div', [expansion && !config.show_all_levels ? icon : '', value])]
           : m('table', {
             class: 'w-100',
             style: 'table-layout:fixed;'
@@ -90,3 +90,4 @@ var ds = require('./datastore')
 var Field = require('./field')
 var Row = require('./row')
 var get = require('just-safe-get')
+var config = require('./config')
