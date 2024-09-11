@@ -81,21 +81,21 @@ m.route($('#main')[0], '/', {
       ds.type = 'table'
 
       var grid_path = path
+      var query = m.parsePathname(path)
 
-      if (path.includes('?')) {
-        var query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
-        if ('index' in query_params) {
-          delete query_params.index
-          grid_path = '/' + args.base + '/data/' + args.table 
-          if (Object.keys(query_params).length) {
-            grid_path += '?' + m.buildQueryString(query_params)
-          }
+      // remove `index` from grid_path so that grid is not
+      // reloaded because of change in url when another record is shown
+      if ('index' in query.params) {
+        delete query.params.index
+        grid_path = query.path
+        if (Object.keys(query.params).length) {
+          grid_path += '?' + m.buildQueryString(query.params)
         }
       }
 
       if (
         ds.table && ds.table.dirty && Grid.url !== grid_path &&
-        !confirm('Du har ulagrede data. Vil du fortsette?')
+        !confirm('You have unsaved data. Continue?')
       ) {
         m.route.set(Grid.url)
       } else {
@@ -108,6 +108,7 @@ m.route($('#main')[0], '/', {
           Grid.load(args)
           Grid.url = grid_path
         } else {
+          // Load correct record when index parameter changes
           if ('index' in args) {
             Record.select(ds.table, args.index)
             ds.table.selection = args.index

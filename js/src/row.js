@@ -230,16 +230,7 @@ var Row = {
             'br b--moon-gray bb--light-gray'
           ].join(' '),
           onclick: function(e) {
-            var query_params
-            path = m.route.get()
-            if (path.includes('?')) {
-              query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
-            }
-
-            query_params = query_params ? query_params.index = idx : {index: idx}
-
-            // m.route.set(Grid.url + '?' + m.buildQueryString(query_params))
-            Toolbar.set_url(idx, query_params.offset)
+            Toolbar.set_url(idx)
             e.stopPropagation()
           }
         })

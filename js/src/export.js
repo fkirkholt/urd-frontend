@@ -6,7 +6,7 @@ var export_dialog = {
     var param = {}
     param.base = ds.base.name
     param.table = ds.table.name
-    param.filter = m.route.param('query')
+    param.filter = ds.table.query
 
     var fields = []
     $('input[name=field][type=checkbox]').each(function() {

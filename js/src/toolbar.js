@@ -166,16 +166,13 @@ var Toolbar = {
   get_search: function() {
     var search_params
     var param = m.route.param()
-    var search = param['query'] ? param['query'].replace(/%3D/g, '=') : null
-    if (!('query' in param) && !('where' in param)) {
-      search_params = []
-      $.each(param, function(key, value) {
-        if (['base', 'table', 'index', 'offset'].indexOf(key) >= 0) return
-        expr = value ? key + '=' + value : key 
-        search_params.push(expr)
-      })
-      search = search_params.join('; ')
-    }
+    search_params = []
+    $.each(param, function(key, value) {
+      if (['base', 'table', 'index', 'offset'].indexOf(key) >= 0) return
+      expr = value ? key + '=' + value : key 
+      search_params.push(expr)
+    })
+    search = search_params.join('; ')
 
     return search
   },
@@ -496,23 +493,7 @@ var Toolbar = {
               // TODO: Se på hvordan dette skal implementeres
           }
       }),
-      m('br'),
-      m('input', {
-          id: 'advanced_search',
-          type: 'text',
-          style: 'display:none',
-          value: decodeURI(m.route.param('query')),
-          onkeypress: function(e) {
-              if (e.which == 13) {
-                  m.route.set('/' + ds.table.base.name + '/' + 
-                              ds.table.name + '?query=' +
-                              encodeURI($(this).val()))
-              }
-          }
-      })
       */
-
-
     ])
   }
 }

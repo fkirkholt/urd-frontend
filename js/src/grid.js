@@ -108,12 +108,6 @@ var Grid = {
     var data = {
       base: ds.base.name,
       table: list.name,
-      filter: m.route.param('query')
-        ? decodeURI(m.route.param('query'))
-        : null,
-      condition: m.route.param('where')
-        ? decodeURI(m.route.param('where'))
-        : null,
       sort: JSON.stringify(sort_cols),
       offset: list.offset,
       compressed: config.compressed
@@ -124,11 +118,11 @@ var Grid = {
   /**
    * Get table data from server
    *
-   * @param {object} data  ajax data: base, table, condition, limit, 
-   *                                  offset, sort, filter, prim_key
+   * @param {object} data  ajax data: base, table, limit, offset 
+   *                                  sort, filter, prim_key
    *
    */
-  get: function(data) {
+  get: function(data, index=0) {
 
     m.request({
       method: "get",
@@ -147,7 +141,7 @@ var Grid = {
         ds.table.selection = data.index
       }
 
-      // Show first record
+      // Show selected record
       if (ds.table.pkey) {
         Record.select(ds.table, ds.table.selection || 0, true)
       }
@@ -170,19 +164,17 @@ var Grid = {
   get_filter: function(params) {
     var param = Object.assign({}, params)
     var filter = ''
-    if (!('query' in param) && !('where' in param)) {
-      delete param.base
-      delete param.table
-      delete param.index
-      delete param.offset
-      delete param.limit
-      var search_params = []
-      $.each(param, function(key, value) {
-        expr = value ? key + '=' + value : key
-        search_params.push(expr)
-      })
-      filter = search_params.join('; ')
-    }
+    delete param.base
+    delete param.table
+    delete param.index
+    delete param.offset
+    delete param.limit
+    var search_params = []
+    $.each(param, function(key, value) {
+      expr = value ? key + '=' + value : key
+      search_params.push(expr)
+    })
+    filter = search_params.join('; ')
 
     return filter
   },
@@ -205,15 +197,7 @@ var Grid = {
 
     p.base = ds.base.name
     p.table = list.name
-    p.filter = m.route.param('query')
-      ? decodeURI(m.route.param('query'))
-      : null
-    p.condition = m.route.param('where')
-      ? decodeURI(m.route.param('where'))
-      : null
-    if (!p.filter) {
-      p.filter = Grid.get_filter()
-    }
+    p.filter = ds.table.query
     p.sort = JSON.stringify(list.grid.sort_columns)
     p.limit = list.limit
     p.offset = list.offset
@@ -290,7 +274,7 @@ var Grid = {
 
   load: function(params) {
     var index = 0
-    var query = params.query ? params.query : Grid.get_filter(params)
+    var query = Grid.get_filter(params)
 
     if (ds.base.name != params.base) {
       ds.load_database(params.base)
@@ -302,9 +286,9 @@ var Grid = {
     
     Grid.get({
       base: params.base, table: params.table, filter: query, 
-      index: index, show_all_levels: config.show_all_levels || false,
+      show_all_levels: config.show_all_levels || false,
       limit: config.limit, offset: params.offset || 0, 
-    })
+    }, index)
 
 
     $('div[name="vis"]').removeClass('inactive')
