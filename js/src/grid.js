@@ -108,6 +108,7 @@ var Grid = {
     var data = {
       base: ds.base.name,
       table: list.name,
+      filter: ds.table.query,
       sort: JSON.stringify(sort_cols),
       offset: list.offset,
       compressed: config.compressed
