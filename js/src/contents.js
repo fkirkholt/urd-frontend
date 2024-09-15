@@ -1,6 +1,7 @@
 var get = require('just-safe-get')
 var config = require('./config')
 var Diagram = require('./diagram')
+var Relation = require('./relation')
 
 var Contents = {
 
@@ -197,6 +198,15 @@ var Contents = {
         }, [
             Object.keys(subitems).map(function(label) {
               var subitem = subitems[label]
+              if (typeof subitem == 'object') {
+                subitem_name = subitem.item
+              } else {
+                subitem_name = subitem
+              }
+              var rel = get(ds.base, subitem_name, ds.base.tables[item])
+              if (!config.show_all_descendants && !Relation.is_direct(rel, table)) {
+                return
+              }
               return Contents.draw_table_node(label, subitem)
             })
           ])
