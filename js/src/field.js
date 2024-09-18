@@ -189,7 +189,7 @@ var Field = {
         base: field.fkey.base || ds.base.name,
         schema: field.fkey.schema,
         table: field.fkey.referred_table,
-        filter: filters.join(' AND ')
+        filter: filters.join(';')
       }
     }).then(function(result) {
       var table = result.data
