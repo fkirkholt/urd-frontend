@@ -24,19 +24,20 @@ var Select = {
       id: vnode.attrs.id,
       name: vnode.attrs.fieldname,
       required: vnode.attrs.required,
+      disabled: vnode.attrs.disabled || false,
       onchange: vnode.attrs.onchange,
       style: vnode.attrs.style,
       // value: value,
       class: [
         vnode.attrs.class,
-        value === '' || value === null ? 'moon-gray' : ''
+        value === '' || value === null ? 'gray' : ''
       ].join(' ')
     }, [
         vnode.attrs.required && value !== null && value !== ''
           ? ''
           : m('option', {
             value: '',
-            class: 'moon-gray normal'
+            class: 'gray normal'
           }, vnode.attrs.placeholder
               ? vnode.attrs.placeholder : m.trust('&nbsp;')
           ),

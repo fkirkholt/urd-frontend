@@ -1,20 +1,58 @@
 var select = require('./select.js');
+var Cookies = require('js-cookie')
 
 var login = {
 
+  create: false,
+  param: {},
+
   view: function() {
+    var cnxn_names = Object.keys(Cookies.get())
+      .filter(key => key.startsWith('urdr-cnxn'))
+
+    cnxn_options = [{label: 'New connection ...', value: 'new'}]
+    cnxn_names.forEach(name => cnxn_options.push({
+      label: name.replace('urdr-cnxn-', ''), 
+      value: name
+    }))
+
     return m('form', [
       m('div', { class: 'f4 mb2' }, 'Logg inn'),
       !login.error
         ? '' : m('div', { class: 'red' }, login.msg || 'Logg inn'),
+      this.create ? '' : m(select, {
+        value: login.param.name,
+        onchange: function() {
+          if (this.value == 'new') {
+            login.create = true
+            login.param = {}
+          } else if (this.value) {
+            login.param = JSON.parse(Cookies.get(this.value))
+            login.param.name = this.value
+          }
+        },
+        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
+        placeholder: '-- Choose connection --',
+        options: cnxn_options
+      }),
+      !this.create ? '' : m('input[type=text]', {
+        id: 'connection-name',
+        placeholder: 'Connection name',
+        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
+        onchange: function() {
+          login.param.name = this.value
+        }
+      }),
       m(select, {
         class: ds.base.name == 'urdr' ? 'dn' : 'w-100 mb1',
         id: 'system',
         name: 'system',
         label: 'System',
-        value: ds.base.system || 'sqlite',
+        placeholder: '-- Choose system --',
+        value: login.param.system,
+        disabled: login.param.name ? false : true,
         onchange: function() {
-          ds.base.system = $('#system').val()
+          login.param.system = this.value
         },
         options: [
         
@@ -52,20 +90,29 @@ var login = {
         id: 'server',
         name: 'server',
         placeholder: $('#system').val() == 'sqlite'
-          ? 'Sti til mappe' : 'localhost',
-        value: ds.base.server,
+          ? 'Path to folder' : 'Host',
+        value: login.param.server,
+        disabled: login.param.name ? false : true,
+        onkeyup: function(e) {
+          login.param.server = this.value
+          return true
+        },
         class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1'
       }),
-      $('#system').val() == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=text]', {
+      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=text]', {
         id: 'brukernavn',
         name: 'brukernavn',
         placeholder: 'Brukernavn',
+        value: login.param.username,
+        disabled: login.param.name ? false : true,
         class: 'db w-100 mb1'
       }),
-      $('#system').val() == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=password]', {
+      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=password]', {
         id: 'passord',
         name: 'passord',
         placeholder: 'Passord',
+        value: login.param.password,
+        disabled: login.param.name ? false : true,
         class: 'db w-100 mb1',
         onkeypress: function(e) {
           if (e.which == 13) {
@@ -77,40 +124,52 @@ var login = {
         id: 'database',
         name: 'database',
         placeholder: 'Database',
-        value: ds.base.name,
+        value: login.param.database,
+        disabled: login.param.name ? false : true,
         class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1'
       }),
       m('input[type=button]', {
         id: 'btn_login',
-        value: 'Logg inn',
+        value: login.param.server || !login.param.name ? 'Logg inn' : 'Delete',
+        disabled: !login.param.name,
         class: 'db w-100',
         onclick: function() {
-          login.error = false
-          var param = {};
-          param.system = $('#system').val()
-          param.server = $('#server').val().trim()
-          param.username = $('#brukernavn').val()
-          param.password = $('#passord').val()
-          param.database = $('#database').val().trim()
+          if (login.param.server) {
+            login.error = false
+            var conn_name = $('#connection-name').val()
+            var param = {};
+            param.system = $('#system').val()
+            param.server = $('#server').val().trim()
+            param.username = $('#brukernavn').val()
+            param.password = $('#passord').val()
+            param.database = $('#database').val().trim()
 
-          m.request({
-            method: 'post',
-            url: 'login',
-            params: param
-          }).then(function(result) {
-            if (param.database && param.database != ds.base.name) {
-              m.route.set('/' + param.database)
-              $('div.curtain').hide();
-              $('#login').hide();
-            } else {
-              window.location.reload()
-            }
-          }).catch(function(e) {
-            if (e.code == 401) {
-              login.error = true
-              $('#brukernavn').trigger('focus').trigger('select')
-            }
-          })
+            if (conn_name) {
+              Cookies.set('urdr-cnxn-' + conn_name, JSON.stringify(param), { expires: 365 })
+            } 
+
+            m.request({
+              method: 'post',
+              url: 'login',
+              params: param
+            }).then(function(result) {
+              if (param.database && param.database != ds.base.name) {
+                m.route.set('/' + param.database)
+                $('div.curtain').hide();
+                $('#login').hide();
+              } else {
+                window.location.reload()
+              }
+            }).catch(function(e) {
+              if (e.code == 401) {
+                login.error = true
+                $('#brukernavn').trigger('focus').trigger('select')
+              }
+            })
+          } else {
+            Cookies.remove(login.param.name)
+            login.param = {}
+          }
         }
       })
     ])
