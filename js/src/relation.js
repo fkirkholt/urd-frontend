@@ -382,6 +382,5 @@ module.exports = Relation
 
 var Record = require('./record')
 var Row = require('./row')
-var ds = require('./datastore')
 var config = require('./config')
 var Field = require('./field')

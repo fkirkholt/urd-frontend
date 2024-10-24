@@ -86,7 +86,6 @@ var Cell = {
 
 module.exports = Cell
 
-var ds = require('./datastore')
 var Field = require('./field')
 var Row = require('./row')
 var get = require('just-safe-get')

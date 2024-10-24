@@ -252,7 +252,6 @@ module.exports = Row
 
 var compare = require('just-compare')
 var get = require('just-safe-get')
-var ds = require('./datastore')
 var config = require('./config')
 var Cell = require('./cell')
 var Record = require('./record')
