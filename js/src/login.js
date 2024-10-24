@@ -136,7 +136,6 @@ var login = {
         onclick: function() {
           if (login.param.server) {
             login.error = false
-            var conn_name = $('#connection-name').val()
             var param = {};
             param.system = $('#system').val()
             param.server = $('#server').val().trim()
@@ -144,8 +143,9 @@ var login = {
             param.password = $('#passord').val()
             param.database = $('#database').val().trim()
 
-            if (conn_name) {
-              Cookies.set('urdr-cnxn-' + conn_name, JSON.stringify(param), { expires: 365 })
+            if (login.param.name) {
+              Cookies.set('urdr-cnxn-' + login.param.name, JSON.stringify(param), { expires: 365 })
+              Cookies.set('urdr-cnxn', login.param.name, { expires: 1 })
             } 
 
             m.request({

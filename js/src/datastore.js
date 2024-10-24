@@ -17,17 +17,18 @@ var store = {
       url: "database",
       params: { base: base_name }
     }).then(function(result) {
-      var data = result.data;
-      store.base = data.base;
-      store.user = data.user;
-      store.branch = data.branch;
+      var data = result.data
+      store.base = data.base
+      store.user = data.user
+      store.branch = data.branch
+      store.config = data.config
 
       if (data.config) {
-        $.extend(store.cache.config, data.config);
+        $.extend(store.cache.config, data.config)
       }
 
       if (typeof callback === 'function') {
-        callback(data);
+        callback(data)
       }
     })
     .catch(function(e) {
@@ -37,9 +38,9 @@ var store = {
           store.base.server = e.response.detail.host
           store.base.name = e.response.detail.database
         }
-        $('div.curtain').show();
-        $('#login').show();
-        $('#brukernavn').trigger('focus');
+        $('div.curtain').show()
+        $('#login').show()
+        $('#brukernavn').trigger('focus')
       } else {
         alert(e.response ? e.response.detail : 'An error has occurred.')
       }
@@ -48,15 +49,15 @@ var store = {
 
   set_cfg_value: function(tbl, attr, value) {
     if (ds.cache.config.tables === undefined) {
-      ds.cache.config.tables = {};
+      ds.cache.config.tables = {}
     }
 
     if (ds.cache.config.tables[tbl.name] === undefined) {
-      ds.cache.config.tables[tbl.name] = {};
+      ds.cache.config.tables[tbl.name] = {}
     }
 
-    ds.cache.config.tables[tbl.name][attr] = value;
+    ds.cache.config.tables[tbl.name][attr] = value
   }
 }
 
-module.exports = store;
+module.exports = store

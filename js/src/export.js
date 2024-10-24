@@ -1,30 +1,50 @@
+var Cookies = require('js-cookie')
+
 var export_dialog = {
 
   type: 'sql',
+  cnxn_name: '',
 
   export_csv: function() {
     var param = {}
     param.base = ds.base.name
-    param.table = ds.table.name
-    param.filter = ds.table.query
 
-    var fields = []
-    $('input[name=field][type=checkbox]').each(function() {
+    if (ds.table) {
+      param.table = ds.table.name
+      param.filter = ds.table.query
+    }
+
+    param.folder = export_dialog.cnxn_name
+
+    var objects = []
+    $('input[name=object][type=checkbox]').each(function() {
       if ($(this).prop('checked')) {
-        fields.push($(this).val())
+        objects.push($(this).val())
       }
     })
-    param.fields = JSON.stringify(fields)
+    param.dest = $('input[name=dest]:checked').val() || 'download'
+    param.objects = JSON.stringify(objects)
 
-    var params = Object.keys(param).map(function(k) {
-      return k + '=' + param[k]
-    }).join('&')
-    window.open('/table_csv?' + params, '_blank')
+    if (param.dest == 'download') {
+      var params = Object.keys(param).map(function(k) {
+        return k + '=' + param[k]
+      }).join('&')
+      window.open('/export_tsv?' + params, '_blank')
+    } else {
+      m.request({
+        method: "get",
+        url: "export_tsv",
+        params: param
+      }).then(function(result) {
+        alert("Export finished")
+      })
+    }
 
   },
 
   export_sql: function(dialect, table_defs, list_recs, data_recs, select_recs) {
     var param = {}
+    param.dest = $('input[name=dest]:checked').val() || 'download'
     param.dialect = dialect
     param.table_defs = table_defs
     param.list_recs = list_recs
@@ -34,29 +54,61 @@ var export_dialog = {
     if (ds.table) {
       param.table = ds.table.name
     }
-    var params = Object.keys(param).map(function(k) {
-      return k + '=' + param[k]
-    }).join('&')
-    window.open('/table_sql?' + params, '_blank')
+    if (param.dest == 'download') {
+      var params = Object.keys(param).map(function(k) {
+        return k + '=' + param[k]
+      }).join('&')
+      window.open('/export_sql?' + params, '_blank')
+    } else {
+      m.request({
+        method: "get",
+        url: "export_sql",
+        params: param
+      }).then(function(result) {
+        alert("Export finished")
+      })
+    }
   },
 
   view: function() {
+    if (!ds.config) {
+      return
+    }
+    export_dialog.cnxn_name = Cookies.get('urdr-cnxn') 
+    ? Cookies.get('urdr-cnxn').toLowerCase().replace('urdr-cnxn-', '').replace(' ', '-')
+    : ds.base.system
     return m('div', [
       m('h3', 'Export ' + (!ds.table ? 'database' : 'table')),
+      !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
+        m('label', [m('input[type=radio]', {
+          name: 'dest',
+          value: ds.config.exportdir + '/' + export_dialog.cnxn_name
+        })], ' ' + ds.config.exportdir + '/' + export_dialog.cnxn_name),
+        m('br'),
+        m('label', [m('input[type=radio]', {
+          name: 'dest',
+          value: ds.config.exportdir + '/' + export_dialog.cnxn_name + '/' + ds.base.name
+        })], ' ' + ds.config.exportdir + '/' + export_dialog.cnxn_name + '/' + ds.base.name),
+        m('br'),
+        m('label', [m('input[type=radio]', {
+          name: 'dest',
+          value: 'download'
+        })], ' Download')
+      ]),
       m('div', [
-        !ds.table ? null : m('select', {
+        m('select', {
           onchange: function(event) {
             this.type = event.target.value
           }.bind(this)
         }, [
           m('option', { value: 'sql' }, 'sql'),
-          m('option', { value: 'csv' }, 'csv'),
+          m('option', { value: 'tsv' }, 'tsv'),
         ]),
       ]),
-      this.type !== 'csv' ? '' : m('div[name=valg]', {
+      this.type !== 'tsv' ? '' : m('div[name=valg]', {
         class: 'mt2 max-h5 overflow-y-auto'
       }, [
-        'Velg felter:',
+        ds.table ? 'Choose columns:' : 'Choose tables:',
         m('ul', { class: 'list' }, [
           m('li', { class: 'mb2' }, [
             m('input[type=checkbox]', {
@@ -67,18 +119,30 @@ var export_dialog = {
               }
             }), ' (alle)',
           ]),
-          Object.keys(ds.table.fields).map(function(fieldname, idx) {
+          !ds.table ? '' : Object.keys(ds.table.fields).map(function(fieldname, idx) {
             var field = ds.table.fields[fieldname]
+            if (field.virtual) {
+              return
+            }
             return m('li', {}, [
               m('input[type=checkbox]', {
-                name: 'field',
+                name: 'object',
                 value: field.name
               }), ' ', field.label
+            ])
+          }),
+          ds.table ? '' : Object.keys(ds.base.tables).sort().map(function(tblname, idx) {
+            var tbl = ds.base.tables[tblname]
+            return m('li', {}, [
+              m('input[type=checkbox]', {
+                name: 'object',
+                value: tblname
+              }), ' ', tblname
             ])
           })
         ])
       ]),
-      this.type == 'csv' ? '' : m('div[name=valg]', { class: "mt2" }, [
+      this.type == 'tsv' ? '' : m('div[name=valg]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dialect',
           value: 'mysql'
@@ -121,7 +185,7 @@ var export_dialog = {
           value: 'OK',
           class: 'fr',
           onclick: function() {
-            if (this.type === 'csv') {
+            if (this.type === 'tsv') {
               this.export_csv()
             } else {
               var dialect = $('#export-dialog input[name="dialect"]:checked')
@@ -155,3 +219,5 @@ var export_dialog = {
 }
 
 module.exports = export_dialog
+
+var login = require('./login.js')
