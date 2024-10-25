@@ -114,10 +114,10 @@ var export_dialog = {
             m('input[type=checkbox]', {
               onchange: function(e) {
                 var checked = $(this).prop('checked')
-                $('input[type=checkbox][name=field]').prop('checked', checked)
+                $('input[type=checkbox][name=object]').prop('checked', checked)
                 e.redraw = false
               }
-            }), ' (alle)',
+            }), ' (All)',
           ]),
           !ds.table ? '' : Object.keys(ds.table.fields).map(function(fieldname, idx) {
             var field = ds.table.fields[fieldname]
