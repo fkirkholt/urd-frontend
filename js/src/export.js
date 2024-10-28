@@ -76,19 +76,25 @@ var export_dialog = {
     }
     export_dialog.cnxn_name = Cookies.get('urdr-cnxn') 
     ? Cookies.get('urdr-cnxn').toLowerCase().replace('urdr-cnxn-', '').replace(' ', '-')
+    .replace('sqlite', '').replace('mysql', '').replace('mssql', '')
+    .replace('duckdb', '').replace('oracle', '').replace('pgsql', '').replace('--', '-')
+    .replace(/-$/g, '')
     : ds.base.system
+    var exportdir = export_dialog.cnxn_name
+    ? ds.config.exportdir + '/' + export_dialog.cnxn_name
+    : ds.config.exportdir
     return m('div', [
       m('h3', 'Export ' + (!ds.table ? 'database' : 'table')),
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dest',
-          value: ds.config.exportdir + '/' + export_dialog.cnxn_name
-        })], ' ' + ds.config.exportdir + '/' + export_dialog.cnxn_name),
+          value: exportdir
+        })], ' ' + exportdir),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dest',
-          value: ds.config.exportdir + '/' + export_dialog.cnxn_name + '/' + ds.base.name
-        })], ' ' + ds.config.exportdir + '/' + export_dialog.cnxn_name + '/' + ds.base.name),
+          value: exportdir + '/' + ds.base.name
+        })], ' ' + exportdir + '/' + ds.base.name),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dest',
