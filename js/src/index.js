@@ -24,6 +24,7 @@ var Diagram = require('./diagram')
 var SQLpanel = require('./sqlpanel')
 var kdrs_dialog = require('./kdrs.js')
 var export_dialog = require('./export.js')
+var import_dialog = require('./import.js')
 var convert_dialog = require('./convert.js')
 var pwd_dialog = require('./password.js')
 var config = require('./config.js')
@@ -170,6 +171,9 @@ m.mount($kdrs[0], kdrs_dialog)
 
 var $export = $('#export-dialog')
 m.mount($export[0], export_dialog)
+
+var $import = $('#import-dialog')
+m.mount($import[0], import_dialog)
 
 var $convert = $('#convert-dialog')
 m.mount($convert[0], convert_dialog)

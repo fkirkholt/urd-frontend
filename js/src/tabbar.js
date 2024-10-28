@@ -273,6 +273,14 @@ var tabbar = {
             }
           }), ' %',
         ]),
+      ds.table || ds.base.system != 'sqlite' ? null : m('i', {
+        class: 'fa fa-sign-in fr mr3 pt1',
+        title: 'Import',
+        onclick: function() {
+          $('.curtain').show()
+          $('#import-dialog').show()
+        }
+      }),
       ds.table ? null : m('i', {
         class: 'fa fa-file-text-o fr mr3 pt1',
         title: 'Export',
