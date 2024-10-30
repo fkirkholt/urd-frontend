@@ -311,9 +311,10 @@ var Field = {
       }
     }
 
+    var filepath_idx_name = rec.table.name + '_' + field.name + '_filepath_idx'
+    field.is_filepath = (filepath_idx_name in rec.table.indexes) 
+
     return [
-      // TODO: sto i utgangspunktet list.betingelse. 
-      // Finn ut hva jeg skal erstatte med.
       (
         (!config.edit_mode && config.hide_empty && field.value == null) ||
           (field.fkey && field.expanded)
@@ -370,12 +371,25 @@ var Field = {
                       : m('data', {
                         class: [
                           'dib mw6 v-top',
-                          (field.expanded) ? '' : 'truncate'
+                          (field.expanded) ? '' : 'truncate',
+                          (field.is_filepath) ? 'underline pointer blue' : ''
                         ].join(' '),
                         value: field.value,
                         onclick: function() {
                           if (field.element == 'textarea') {
                             field.expanded = !field.expanded
+                          }
+                          if (field.is_filepath) {
+                            data = {}
+                            data.base = rec.base_name;
+                            data.table = rec.table_name;
+                            data.column = field.name
+                            data.pkey = JSON.stringify(rec.pkey);
+
+                            params = Object.keys(data).map(function(k) {
+                              return k + '=' + data[k]
+                            }).join('&')
+                            window.open('/file?' + params, '_blank')
                           }
                         }
                       }, Field.display_value(field, rec)),
