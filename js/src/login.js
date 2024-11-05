@@ -8,12 +8,12 @@ var login = {
 
   view: function() {
     var cnxn_names = Object.keys(Cookies.get())
-      .filter(key => key.startsWith('urdr-cnxn'))
+      .filter(key => key.startsWith('urdr-cnxn-'))
 
     cnxn_options = [{label: 'New connection ...', value: 'new'}]
     cnxn_names.forEach(name => cnxn_options.push({
       label: name.replace('urdr-cnxn-', ''), 
-      value: name
+      value: name.replace('urdr-cnxn-', '')
     }))
 
     return m('form', [
@@ -27,7 +27,7 @@ var login = {
             login.create = true
             login.param = {}
           } else if (this.value) {
-            login.param = JSON.parse(Cookies.get(this.value))
+            login.param = JSON.parse(Cookies.get('urdr-cnxn-' + this.value))
             login.param.name = this.value
           }
         },
@@ -136,6 +136,7 @@ var login = {
         onclick: function() {
           if (login.param.server) {
             login.error = false
+            login.create = false
             var param = {};
             param.system = $('#system').val()
             param.server = $('#server').val().trim()
@@ -167,7 +168,7 @@ var login = {
               }
             })
           } else {
-            Cookies.remove(login.param.name)
+            Cookies.remove('urdr-cnxn-' + login.param.name)
             login.param = {}
           }
         }
