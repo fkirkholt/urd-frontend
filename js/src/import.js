@@ -2,6 +2,8 @@ var Cookies = require('js-cookie')
 
 var import_dialog = {
 
+  import_started: false,
+
   import_tsv: function() {
     params = {}
     params.base = ds.base.name
@@ -10,6 +12,10 @@ var import_dialog = {
       method: 'put',
       url: 'import_tsv',
       params: params
+    }).then(function(data) {
+      self.import_started = false
+      $('div.curtain').hide()
+      $('#import-dialog').hide()
     })
   },
 
@@ -42,18 +48,22 @@ var import_dialog = {
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',
+          disabled: this.import_started,
           onclick: function() {
             this.import_tsv()
+            this.import_started = true
           }.bind(this)
         }),
         m('input[type=button]', {
           value: 'Avbryt',
           class: 'fr',
+          disabled: this.import_started,
           onclick: function() {
             $('div.curtain').hide()
             $('#import-dialog').hide()
           }
         }),
+        !this.import_started ? '' : m('span', 'Importing ...')
       ])
     ])
   }
