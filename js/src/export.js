@@ -139,7 +139,7 @@ var export_dialog = {
           }),
           ds.table ? '' : Object.keys(ds.base.tables).sort().map(function(tblname, idx) {
             var tbl = ds.base.tables[tblname]
-            return m('li', {}, [
+            return tbl.type == 'view' ? '' :  m('li', {}, [
               m('input[type=checkbox]', {
                 name: 'object',
                 value: tblname
