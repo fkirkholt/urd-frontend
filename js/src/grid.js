@@ -296,87 +296,155 @@ var Grid = {
     $('div[name="sok"]').addClass('inactive')
   },
 
+  get_chart_data: function() {
+    var is_chart = false
+    var chart_columns = []
+
+    ds.table.grid.columns.forEach(function(colname) {
+      field = ds.table.fields[colname]
+      if (
+        ['int', 'float', 'Decimal'].includes(field.datatype) && 
+        !field.fkey && ds.table.pkey && !ds.table.pkey.includes(colname)
+      ) {
+        is_chart = true
+        chart_columns.push(colname)
+      }
+      if (field.datatype == 'unknown' && !isNaN(ds.table.records[0].columns[colname].value)) {
+        field.datatype = 'Decimal'
+        is_chart = true
+      }
+    })
+
+    var unique_cols
+    for (let key in ds.table.indexes) {
+      idx = ds.table.indexes[key]
+      if (idx.unique && JSON.stringify(idx.columns) !== JSON.stringify(ds.table.pkey)) {
+        unique_cols = idx.columns
+      }
+    }
+    if (!unique_cols && ds.table.pkey) {
+      unique_cols = ds.table.pkey
+    }
+
+    if (!is_chart || chart_columns.length == 0) {
+      return []
+    }
+    var chart_data = ds.table.records.map(function(item) {
+      var new_item = {}
+      if (unique_cols) {
+        var values = []
+        unique_cols.map(function(colname) {
+          if (config.compressed) {
+            values.push(item.columns[colname].value)
+          } else {
+            values.push(item.columns[colname].text)
+          }
+        })
+        new_item.x = values.join(', ')
+      } 
+      chart_columns.map(function(colname) {
+        if (config.compressed) {
+          new_item[colname] = item.columns[colname].value
+        } else {
+          new_item[colname] = item.columns[colname].text
+        }
+      })
+
+      return new_item || false
+    })
+
+    return chart_data
+  },
+
   view: function() {
 
     if (ds.table.search) return
+    chart_data = Grid.get_chart_data()
+    ds.table.is_chart = chart_data.length > 0
 
-    return [m('table#urdgrid.tbl', {
-      'data-name': ds.table.name,
-      class: 'bt b--moon-gray flex flex-column overflow-auto collapse',
-      style: 'background: #f9f9f9',
-    }, [
-        m('thead', { class: 'db' }, [
-          m('tr', { class: 'cursor-default bb b-moon-gray flex' }, [
-            m('th', {
-              class: 'tl br b--moon-gray bg-light-gray normal f6 pa0'
-            }, ''),
-            Object.keys(ds.table.grid.columns).map(function(label) {
-              var col = ds.table.grid.columns[label]
+    return [
+      ds.table.tab == 'chart' ? '' : m('table#urdgrid.tbl', {
+        'data-name': ds.table.name,
+        class: 'bt b--moon-gray flex flex-column overflow-auto collapse',
+        style: 'background: #f9f9f9',
+      }, [
+          m('thead', { class: 'db' }, [
+            m('tr', { class: 'cursor-default bb b-moon-gray flex' }, [
+              m('th', {
+                class: 'tl br b--moon-gray bg-light-gray normal f6 pa0'
+              }, ''),
+              Object.keys(ds.table.grid.columns).map(function(label) {
+                var col = ds.table.grid.columns[label]
 
-              var field = ds.table.fields[col]
+                var field = ds.table.fields[col]
 
-              // If this is for instance an action
-              if (field === undefined) {
-                return m('th', '')
-              }
+                // If this is for instance an action
+                if (field === undefined) {
+                  return m('th', '')
+                }
 
-              if (field.hidden) return
+                if (field.hidden) return
 
-              var label = isNaN(parseInt(label))
-                ? label : ds.table.fields[col].label
-                  ? ds.table.fields[col].label : col
-              return m('th', {
-                id: col,
-                class: [
-                  'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
-                  config.compressed ? 'truncate' : '',
-                ].join(' '),
-                'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
-                onclick: Grid.sort.bind(Grid, col)
-              }, [
-              label, m('i', {
-                class: [
-                  'fr ml2',
-                  Grid.column_order(col) == 'asc' ? 'fa fa-angle-up'
-                    : Grid.column_order(col) == 'desc' ? 'fa fa-angle-down'
-                    : ''
-                ].join(' ')
-              })])
-            }),
-            !ds.table.grid.actions.length
-              ? ''
-              : m('th', {
-                class: 'br bb b--moon-gray bg-light-gray f6 pa0'
-              })
-          ])
-        ]),
-        m('tbody', { class: 'db overflow-y-auto overflow-x-hidden' }, [
-          ds.table.records.map(function(record, idx) {
-            record.base_name = ds.base.name
-            record.table_name = ds.table.name
-            if (record.dirty) Record.validate(record)
+                var label = isNaN(parseInt(label))
+                  ? label : ds.table.fields[col].label
+                    ? ds.table.fields[col].label : col
+                return m('th', {
+                  id: col,
+                  class: [
+                    'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
+                    config.compressed ? 'truncate' : '',
+                  ].join(' '),
+                  'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
+                  onclick: Grid.sort.bind(Grid, col)
+                }, [
+                label, m('i', {
+                  class: [
+                    'fr ml2',
+                    Grid.column_order(col) == 'asc' ? 'fa fa-angle-up'
+                      : Grid.column_order(col) == 'desc' ? 'fa fa-angle-down'
+                      : ''
+                  ].join(' ')
+                })])
+              }),
+              !ds.table.grid.actions.length
+                ? ''
+                : m('th', {
+                  class: 'br bb b--moon-gray bg-light-gray f6 pa0'
+                })
+            ])
+          ]),
+          m('tbody', { class: 'db overflow-y-auto overflow-x-hidden' }, [
+            ds.table.records.map(function(record, idx) {
+              record.base_name = ds.base.name
+              record.table_name = ds.table.name
+              if (record.dirty) Record.validate(record)
 
-            return record.hidden
-              ? ''
-              : m(Row, { list: ds.table, record: record, idx: idx })
-          })
-        ]),
-        (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
-          m('tr', { class: 'bg--light-gray' }, [
-            m('td', {
-              class: 'tc bt b--moon-gray pb0 bg-light-gray'
-            }),
-            Object.keys(ds.table.grid.columns).map(function(label) {
-              var col = ds.table.grid.columns[label]
-              return m('td', {
-                class: 'tr bl bt b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib'
-              }, (col in ds.table.grid.sums)
-                  ? m.trust(String(ds.table.grid.sums[col]))
-                  : m.trust('&nbsp'))
+              return record.hidden
+                ? ''
+                : m(Row, { list: ds.table, record: record, idx: idx })
             })
+          ]),
+          (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
+            m('tr', { class: 'bg--light-gray bb br' }, [
+              m('td', {
+                class: 'tc bt b--moon-gray pb0'
+              }),
+              Object.keys(ds.table.grid.columns).map(function(label) {
+                var col = ds.table.grid.columns[label]
+                return m('td', {
+                  class: 'tr bl bt b--moon-gray bg-white f6 pa1 pb0 nowrap dib'
+                }, (col in ds.table.grid.sums)
+                    ? m.trust(String(ds.table.grid.sums[col]))
+                    : m.trust('&nbsp'))
+              })
+            ])
           ])
-        ])
-      ])]
+      ]),
+      !ds.table.tab || ds.table.tab == 'data' ? '' : m(Chart, { 
+        data: chart_data,
+        class: 'bb bt b--moon-gray bg-white'
+      })
+    ]
   }
 }
 
@@ -386,4 +454,5 @@ module.exports = Grid
 var Search = require('./search')
 var Record = require('./record')
 var Row = require('./row')
+var Chart = require('./chart')
 var config = require('./config')

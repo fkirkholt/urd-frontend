@@ -54,9 +54,30 @@ var Pagination = {
     var from = Number(ds.table.offset) + 1
     var to = Pagination.to()
     return m('div', [
-      m('div[name="statuslinje"]', {
-        class: 'f6 fl mb1 mt1 ml1'
-      }, [count ? from + '-' + to + ' av ' + count : count]),
+      !ds.table.is_chart ? '' : m('ul', {class: 'di fl mt1 pl0'}, [
+        m('li', {
+          class: ['fa fa-table list di ml0 pl2 pr2 bb b--gray pointer br1 br--top f5 pt1',
+          (!ds.table.tab || ds.table.tab == 'data')
+            ? 'bg-white br pb2' : 'bg-light-gray pb1'
+          ].join(' '),
+          style: (!ds.table.tab || ds.table.tab == 'data')
+            ? 'padding-top: 4px; padding-bottom: 2px' : 'padding-top: 3px; padding-bottom: 1px',
+          onclick: function() {
+            ds.table.tab = 'data'
+          }
+        }),
+        m('li', {
+          class: ['fa fa-bar-chart list di ml0 pl2 pr2 bb br b--gray pointer br1 br--top f5 pt1',
+          (ds.table.tab == 'chart')
+            ? 'bg-white bl' : 'bg-light-gray'
+          ].join(' '),
+          style: (ds.table.tab == 'chart')
+            ? 'padding-top: 4px; padding-bottom: 2px' : 'padding-top: 3px; padding-bottom: 1px',
+          onclick: function() {
+            ds.table.tab = 'chart'
+          }
+        }),
+      ]),
       m('div[name="navigation"]', {
         class: 'fr ml2 mb1 mt1 mr1',
         onclick: function(e) {
@@ -94,6 +115,9 @@ var Pagination = {
             disabled: Pagination.disabled('last', table)
           })
         ]),
+      m('div[name="statuslinje"]', {
+        class: 'f6 fr mb1 mt1 ml2'
+      }, [count ? from + '-' + to + ' av ' + count : count]),
     ])
   }
 
