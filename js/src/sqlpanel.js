@@ -1,10 +1,10 @@
 var SQLpanel = {
 
   get_chart_data: function(data, table) {
-    if (table.name.endsWith('_grid') && table.name.replace('_grid', '') in ds.base.tables) {
+    if (table && table.name.endsWith('_grid') && table.name.replace('_grid', '') in ds.base.tables) {
       table = ds.base.tables[table.name.replace('_grid', '')]
     }
-    else if (table.name.endsWith('_view') && table.name.replace('_view', '') in ds.base.tables) {
+    else if (table && table.name.endsWith('_view') && table.name.replace('_view', '') in ds.base.tables) {
       table = ds.base.tables[table.name.replace('_view', '')]
     }
 
@@ -19,9 +19,11 @@ var SQLpanel = {
       pkey = table.pkey.columns
     }
     fkey_cols = []
-    for (key in table.fkeys) {
-      fkey = table.fkeys[key]
-      fkey_cols = fkey_cols.concat(fkey.constrained_columns)
+    if (table) {
+      for (key in table.fkeys) {
+        fkey = table.fkeys[key]
+        fkey_cols = fkey_cols.concat(fkey.constrained_columns)
+      }
     }
     chart_data = []
     data.forEach(function(item, i) {
@@ -71,7 +73,7 @@ var SQLpanel = {
       if (query.data) {
         var show_chart = false
         var chart_data = SQLpanel.get_chart_data(query.data, table)
-        if (chart_data.length && table.type != 'xref') {
+        if (chart_data.length && table && table.type != 'xref') {
           show_chart = true
         }
 
