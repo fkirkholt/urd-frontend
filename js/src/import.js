@@ -3,6 +3,7 @@ var Cookies = require('js-cookie')
 var import_dialog = {
 
   import_started: false,
+  msg: '',
 
   import_tsv: function() {
     params = {}
@@ -13,7 +14,14 @@ var import_dialog = {
       url: 'import_tsv',
       params: params
     }).then(function(data) {
-      self.import_started = false
+      this.import_started = false
+      $('div.curtain').hide()
+      $('#import-dialog').hide()
+    }).catch(function(e) {
+      alert(e.response.detail)
+      import_dialog.msg = e.response.detail
+      import_dialog.import_started = false
+      m.redraw()
       $('div.curtain').hide()
       $('#import-dialog').hide()
     })
@@ -48,25 +56,26 @@ var import_dialog = {
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',
-          disabled: this.import_started,
+          disabled: import_dialog.import_started,
           onclick: function() {
-            this.import_tsv()
-            this.import_started = true
-          }.bind(this)
+            import_dialog.import_tsv()
+            import_dialog.import_started = true
+            import_dialog.msg = 'Importing ...'
+          }
         }),
         m('input[type=button]', {
           value: 'Avbryt',
           class: 'fr',
-          disabled: this.import_started,
+          disabled: import_dialog.import_started,
           onclick: function() {
             $('div.curtain').hide()
             $('#import-dialog').hide()
           }
         }),
-        !this.import_started ? '' : m('span', 'Importing ...')
+        m('span', import_dialog.msg)
       ])
     ])
-  }
+  } 
 }
 
 module.exports = import_dialog
