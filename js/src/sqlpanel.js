@@ -145,6 +145,8 @@ var SQLpanel = {
                         ? m.trust(item[cell]
                           .replace(/\n/g, '<br>')
                           .replace(/\s/g, '&nbsp;'))
+                        : typeof (item[cell]) == 'boolean'
+                        ? (item[cell] ? 1 : 0)
                         : item[cell]
 
 

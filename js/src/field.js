@@ -115,8 +115,8 @@ var Field = {
     if (field.text !== null && field.text !== undefined) {
       value = field.text
     } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
-      var icon = value === 0 ? 'fa-square-o' 
-        : value === 1 ? 'fa-check-square-o'
+      var icon = value == 0 ? 'fa-square-o' 
+        : value == 1 ? 'fa-check-square-o'
           : 'fa-minus-square-o'
       value = m('i', { class: 'fa ' + icon })
     } else if (field.value && (
