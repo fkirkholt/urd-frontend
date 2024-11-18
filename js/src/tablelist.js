@@ -80,7 +80,10 @@ var Tablelist = {
           })]),
           Object.keys(ds.base.tables).sort().map(function(item, i) {
             var filter = $('#filter_tables').val()
-            return (filter !== undefined && !item.includes(filter)) ? '' : m('li', {
+            return (
+              filter !== undefined && 
+              !item.toLowerCase().includes(filter.toLowerCase())
+            ) ? '' : m('li', {
               class: 'pointer',
               onclick: function(ev) {
                 Codefield.set_value('query', 'select * from ' + item)
