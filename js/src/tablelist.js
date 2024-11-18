@@ -51,7 +51,7 @@ var Tablelist = {
               var sql
               if (ds.base.system == 'sqlite') {
                 sql = "select sql "
-                  + "from sqlite_schema "
+                  + "from sqlite_master "
                   + "where name = '" + Tablelist.context_table + "'"
               } else if (ds.base.system == 'mysql') {
                 sql = "show columns from " + Tablelist.context_table
