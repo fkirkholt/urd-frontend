@@ -1,5 +1,7 @@
 var SQLpanel = {
 
+  query: '',
+
   get_chart_data: function(data, table) {
     chart_cols = Object.keys(data[0])
     has_pkey = false
@@ -252,7 +254,8 @@ var SQLpanel = {
               id: 'query',
               class: 'ml3 ba b--light-silver mb2',
               editable: true,
-              lang: 'sql'
+              lang: 'sql',
+              value: SQLpanel.query
             }),
             m('div', { class: 'ml3 h2' }, [
               !ds.result
@@ -263,6 +266,7 @@ var SQLpanel = {
                 class: 'fr pt0 pb0 fa fa-play',
                 onclick: function() {
                   var sql = Codefield.get_value('query')
+                  SQLpanel.query = sql
                   expressions = sql.split(';')
                   expressions.reverse()
                   ds.result = []
