@@ -28,7 +28,11 @@ var Contents = {
         display = Contents.display_header(subitem, display)
       } else {
         var object = get(ds.base, subitem, ds.base.tables[subitem])
-        if ((object.hidden != true && object.type != 'list') || config.admin) {
+        if (ds.table_filter && !object.name.toLowerCase().includes(ds.table_filter.toLowerCase())) {
+          return
+        }
+        if (
+          (object.hidden != true && object.type != 'list') || config.admin) {
           display = 'block'
         }
       }
@@ -119,7 +123,8 @@ var Contents = {
     var table = get(ds.base, item, ds.base.tables[item])
     if (item.indexOf('.') == -1) item = 'tables.' + item
     if (
-      ((table.hidden || table.type == 'list') && !config.admin)
+      ((table.hidden || table.type == 'list') && !config.admin) ||
+      (ds.table_filter && !table.name.toLowerCase().includes(ds.table_filter.toLowerCase()))
     ) {
       return
     }
@@ -294,6 +299,13 @@ var Contents = {
                   }, schema.split('.').at(-1))
                 })
               ]),
+          !config.admin ? '' : m('input', {
+            id: 'filter_tables',
+            placeholder: 'filter tables',
+            onkeydown: function() {
+              ds.table_filter = $(this).val()
+            }
+          }),
           ds.base.contents && Object.keys(ds.base.contents).length
             // Draw contents from ds.base.contents
             ? Object.keys(ds.base.contents).sort().map(function(label) {
