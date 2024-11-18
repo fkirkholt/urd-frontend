@@ -70,8 +70,17 @@ var Tablelist = {
       m('ul', {
         class: 'list flex flex-column pl2 mt0'
       }, [
+          m('li', [m('input', {
+            id: 'filter_tables',
+            placeholder: 'filter tables',
+            onkeydown: function() {
+              // triggers redraw on keydown
+              return
+            }
+          })]),
           Object.keys(ds.base.tables).sort().map(function(item, i) {
-            return m('li', {
+            var filter = $('#filter_tables').val()
+            return (filter !== undefined && !item.includes(filter)) ? '' : m('li', {
               class: 'pointer',
               onclick: function(ev) {
                 Codefield.set_value('query', 'select * from ' + item)

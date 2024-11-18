@@ -1,13 +1,6 @@
 var SQLpanel = {
 
   get_chart_data: function(data, table) {
-    if (table && table.name.endsWith('_grid') && table.name.replace('_grid', '') in ds.base.tables) {
-      table = ds.base.tables[table.name.replace('_grid', '')]
-    }
-    else if (table && table.name.endsWith('_view') && table.name.replace('_view', '') in ds.base.tables) {
-      table = ds.base.tables[table.name.replace('_view', '')]
-    }
-
     chart_cols = Object.keys(data[0])
     has_pkey = false
     pkey = []
@@ -66,15 +59,31 @@ var SQLpanel = {
 
     return ds.result.map(function(query, i) {
       var table = ds.base.tables[query.table]
+      if (table && table.name.endsWith('_grid') && table.name.replace('_grid', '') in ds.base.tables) {
+        table = ds.base.tables[table.name.replace('_grid', '')]
+      }
+      else if (table && table.name.endsWith('_view') && table.name.replace('_view', '') in ds.base.tables) {
+        table = ds.base.tables[table.name.replace('_view', '')]
+      }
       if (table) {
         var pk_length = table.pkey.columns.length
         var pk_col = table.pkey.columns[pk_length - 1]
       }
-      if (query.data) {
+      if (query.data && query.data.length) {
         var show_chart = false
         var chart_data = SQLpanel.get_chart_data(query.data, table)
         if (chart_data.length && table && table.type != 'xref') {
           show_chart = true
+        }
+
+        is_link = false
+        if (table && pk_length) {
+          is_link = true
+          table.pkey.columns.forEach(function(col) {
+            if (col in query.data[0] === false) {
+              is_link = false
+            }
+          })
         }
 
         return [
@@ -119,6 +128,7 @@ var SQLpanel = {
               // m('tr.striped--light-gray', [
               m('thead', [
                 m('tr', [
+                  is_link ? m('th') : '',
                   Object.keys(query.data[0]).map(function(item, i) {
                     return m('th', {
                       class: 'pl1 pl2 tl'
@@ -137,7 +147,17 @@ var SQLpanel = {
                     })
                   }
 
+                  if (is_link) {
+                    link = m('a.link', {
+                      class: 'icon-crosshairs light-blue hover-blue pointer v-mid',
+                      href: "#" + ds.base.name + '/data/'
+                        + table.name + '?'
+                        + pk_values.join('&')
+                    }, '')
+                  }
+
                   return m('tr.striped--light-gray', [
+                    is_link ? m('td', { class: 'pl1 pl2' }, [link]) : '', 
                     Object.keys(item).map(function(cell, i) {
                       var is_link = false
                       var link
@@ -149,23 +169,9 @@ var SQLpanel = {
                         ? (item[cell] ? 1 : 0)
                         : item[cell]
 
-
-                      if (
-                        table &&
-                          pk_values.length == pk_length &&
-                          cell == pk_col
-                      ) {
-                        is_link = true
-                        link = m('a', {
-                          href: "#" + ds.base.name + '/data/'
-                            + table.name + '?'
-                            + pk_values.join('&')
-                        }, item[cell])
-                      }
-
                       return m('td', {
                         class: 'pl1 pl2'
-                      }, is_link ? link : value)
+                      }, value)
                     })
                   ])
                 })
