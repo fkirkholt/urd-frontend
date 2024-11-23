@@ -152,7 +152,7 @@ var Relation = {
 
         return [
           rel.grid.columns.map(function(key) {
-            label = rel.fields[key].label
+            var label = rel.fields[key].label
 
             if (rel.fields[key].defines_relation) {
               return
@@ -378,9 +378,9 @@ var Relation = {
 
 }
 
-module.exports = Relation
+export default Relation
 
-var Record = require('./record')
-var Row = require('./row')
-var config = require('./config')
-var Field = require('./field')
+import Record from './record.js'
+import Row from './row.js'
+import config from './config.js'
+import Field from './field.js'

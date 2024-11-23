@@ -1,12 +1,12 @@
-var config = require('./config.js')
-var datapanel = require('./datapanel.js')
-var grid = require('./grid.js')
+import config from './config.js'
+import Datapanel from './datapanel.js'
+import Grid from './grid.js'
 
 var home = {
 
   load_databases: function() {
 
-    grid.url = ''
+    Grid.url = ''
 
     m.request({
       method: 'get',
@@ -152,4 +152,4 @@ var home = {
   }
 }
 
-module.exports = home
+export default home

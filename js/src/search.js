@@ -545,9 +545,9 @@ var Search = {
   }
 }
 
-module.exports = Search
+export default Search
 
-var Select = require('./select')
-var Autocomplete = require('./seeker')
-var config = require('./config')
-var Cookies = require('js-cookie')
+import Select from './select.js'
+import Autocomplete from './autocomplete.js'
+import config from './config.js'
+import Cookies from 'js-cookie'

@@ -21,7 +21,7 @@ var Fieldset = {
             field.attrs = field.attrs || {}
             field.attrs.placeholder = field.attrs.placeholder || field.label
             if (field.size) {
-              percent = (100/fieldset.size) * field.size
+              let percent = (100/fieldset.size) * field.size
               if (percent >= 35) {
                 field.attrs.class = 'mw4'
               } else {
@@ -128,8 +128,8 @@ var Fieldset = {
   }
 }
 
-module.exports = Fieldset
+export default Fieldset
 
-var config = require('./config')
-var Field = require('./field')
-var Input = require('./input')
+import config from './config.js'
+import Field from './field.js'
+import Input from './input.js'

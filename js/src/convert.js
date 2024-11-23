@@ -1,4 +1,4 @@
-var Grid = require('./grid')
+import Grid from './grid.js'
 
 var Convert_dialog = {
 
@@ -99,4 +99,4 @@ var Convert_dialog = {
 
 }
 
-module.exports = Convert_dialog
+export default Convert_dialog

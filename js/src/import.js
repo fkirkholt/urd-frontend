@@ -1,6 +1,6 @@
-var Cookies = require('js-cookie')
+import Cookies from 'js-cookie'
 
-var import_dialog = {
+var Import_dialog = {
 
   import_started: false,
   msg: '',
@@ -19,8 +19,8 @@ var import_dialog = {
       $('#import-dialog').hide()
     }).catch(function(e) {
       alert(e.response.detail)
-      import_dialog.msg = e.response.detail
-      import_dialog.import_started = false
+      Import_dialog.msg = e.response.detail
+      Import_dialog.import_started = false
       m.redraw()
       $('div.curtain').hide()
       $('#import-dialog').hide()
@@ -32,7 +32,7 @@ var import_dialog = {
       return
     }
 
-    import_dialog.cnxn_name = Cookies.get('urdr-cnxn') 
+    Import_dialog.cnxn_name = Cookies.get('urdr-cnxn') 
     ? Cookies.get('urdr-cnxn').toLowerCase().replace('urdr-cnxn-', '').replace(' ', '-')
     .replace('sqlite', '').replace('mysql', '').replace('mssql', '')
     .replace('duckdb', '').replace('oracle', '').replace('pgsql', '').replace('--', '-')
@@ -44,38 +44,38 @@ var import_dialog = {
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dir',
-          value: ds.config.exportdir + '/' + import_dialog.cnxn_name + '/data/'
-        })], ' ' + ds.config.exportdir + '/' + import_dialog.cnxn_name + '/data/'),
+          value: ds.config.exportdir + '/' + Import_dialog.cnxn_name + '/data/'
+        })], ' ' + ds.config.exportdir + '/' + Import_dialog.cnxn_name + '/data/'),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dir',
-          value: ds.config.exportdir + '/' + import_dialog.cnxn_name + '/' + ds.base.name + '/data/'
-        })], ' ' + ds.config.exportdir + '/' + import_dialog.cnxn_name + '/' + ds.base.name + '/data/')
+          value: ds.config.exportdir + '/' + Import_dialog.cnxn_name + '/' + ds.base.name + '/data/'
+        })], ' ' + ds.config.exportdir + '/' + Import_dialog.cnxn_name + '/' + ds.base.name + '/data/')
       ]),
       m('div[name=buttons]', { class: "bottom-0 mt2" }, [
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',
-          disabled: import_dialog.import_started,
+          disabled: Import_dialog.import_started,
           onclick: function() {
-            import_dialog.import_tsv()
-            import_dialog.import_started = true
-            import_dialog.msg = 'Importing ...'
+            Import_dialog.import_tsv()
+            Import_dialog.import_started = true
+            Import_dialog.msg = 'Importing ...'
           }
         }),
         m('input[type=button]', {
           value: 'Avbryt',
           class: 'fr',
-          disabled: import_dialog.import_started,
+          disabled: Import_dialog.import_started,
           onclick: function() {
             $('div.curtain').hide()
             $('#import-dialog').hide()
           }
         }),
-        m('span', import_dialog.msg)
+        m('span', Import_dialog.msg)
       ])
     ])
   } 
 }
 
-module.exports = import_dialog
+export default Import_dialog

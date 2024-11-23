@@ -1,4 +1,4 @@
-var store = {
+var datastore = {
   base: {},
   user: {},
   cache: {
@@ -18,13 +18,13 @@ var store = {
       params: { base: base_name }
     }).then(function(result) {
       var data = result.data
-      store.base = data.base
-      store.user = data.user
-      store.branch = data.branch
-      store.config = data.config
+      datastore.base = data.base
+      datastore.user = data.user
+      datastore.branch = data.branch
+      datastore.config = data.config
 
       if (data.config) {
-        $.extend(store.cache.config, data.config)
+        $.extend(datastore.cache.config, data.config)
       }
 
       if (typeof callback === 'function') {
@@ -34,9 +34,9 @@ var store = {
     .catch(function(e) {
       if (e.code === 401 || e.code === 404) {
         if (e.code === 401) {
-          store.base.system = e.response.detail.system
-          store.base.server = e.response.detail.host
-          store.base.name = e.response.detail.database
+          datastore.base.system = e.response.detail.system
+          datastore.base.server = e.response.detail.host
+          datastore.base.name = e.response.detail.database
         }
         $('div.curtain').show()
         $('#login').show()
@@ -60,4 +60,7 @@ var store = {
   }
 }
 
-module.exports = store
+export default datastore
+
+import $ from 'cash-dom'
+

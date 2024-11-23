@@ -124,8 +124,8 @@ var Pagination = {
 
 }
 
-module.exports = Pagination
+export default Pagination
 
-var config = require('./config')
-var Record = require('./record')
-var Toolbar = require('./toolbar')
+import config from './config.js'
+import Record from './record.js'
+import Toolbar from './toolbar.js'

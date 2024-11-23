@@ -172,9 +172,8 @@ var Toolbar = {
       expr = value ? key + '=' + value : key 
       search_params.push(expr)
     })
-    search = search_params.join('; ')
 
-    return search
+    return search_params.join('; ')
   },
 
   set_url: function(index, offset) {
@@ -205,9 +204,9 @@ var Toolbar = {
     var single_rec = ds.table.pkey && ds.table.pkey.slice(-1)[0].substr(0, 6) == 'const_'
     var params = m.route.param()
     var full = single_rec && ds.table.records.length
-    is_pkey = true
-    for (idx in ds.table.pkey) {
-      key = ds.table.pkey[idx]
+    var is_pkey = true
+    for (let idx in ds.table.pkey) {
+      let key = ds.table.pkey[idx]
       if (params[key] === undefined) {
         is_pkey = false
       }
@@ -498,11 +497,11 @@ var Toolbar = {
   }
 }
 
-module.exports = Toolbar
+export default Toolbar
 
-var mousetrap = require('mousetrap')
-var config = require('./config')
-var Grid = require('./grid')
-var Search = require('./search')
-var Record = require('./record')
-var Pagination = require('./pagination')
+import mousetrap from 'mousetrap'
+import config from './config.js'
+import Grid from './grid.js'
+import Search from './search.js'
+import Record from './record.js'
+import Pagination from './pagination.js'

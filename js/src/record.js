@@ -20,7 +20,7 @@ var Record = {
       return
     }
 
-    pk = ('pkey' in table.records[idx])
+    var pk = ('pkey' in table.records[idx])
       ? JSON.stringify(table.records[idx].pkey)
       : JSON.stringify(table.records[idx].columns)
 
@@ -33,20 +33,20 @@ var Record = {
         pkey: pk
       }
     }).then(function(result) {
-        rec = $.extend(table.records[idx], result.data)
+        var rec = $.extend(table.records[idx], result.data)
         rec.table = table
         rec.root = root
 
         // Get virtual columns from table.fields.
         var field
-        for (field_name in table.fields) {
-          field = $.extend({}, table.fields[field_name])
+        for (let field_name in table.fields) {
+          let field = $.extend({}, table.fields[field_name])
           if (rec.fields[field.name] === undefined) {
             rec.fields[field.name] = field
           }
         }
 
-        for (fieldname in table.fields) {
+        for (let fieldname in table.fields) {
           if (table.fields[fieldname].virtual) {
             rec.fields[fieldname].text = rec.columns[fieldname].text
           }
@@ -54,7 +54,8 @@ var Record = {
 
         rec.columns = table.records[idx].columns
         Record.get_relations_count(rec)
-      }).catch(function(e) {
+      })
+      .catch(function(e) {
         if (e.code === 401) {
           ds.base.system = e.response.detail.system
           ds.base.server = e.response.detail.host
@@ -94,7 +95,7 @@ var Record = {
         alias: alias
       }
     }).then(function(result) {
-        rel = result.data[alias]
+        var rel = result.data[alias]
         if (rel.relationship == '1:1') {
           if (rel.count_records == 0) {
             Record.create(rel, true)
@@ -457,7 +458,7 @@ var Record = {
     var deletable = rec.relations ? true : false
 
     for (let idx in rec.relations) {
-      rel = rec.relations[idx]
+      let rel = rec.relations[idx]
       var count_local = rel.count_records - rel.count_inherited
       if (count_local && rel.options?.ondelete != "CASCADE") {
         deletable = false
@@ -557,13 +558,13 @@ var Record = {
   }
 }
 
-module.exports = Record
+export default Record
 
-var config = require('./config')
-var merge = require('just-merge')
-var Grid = require('./grid')
-var Toolbar = require('./toolbar')
-var Fieldset = require('./fieldset')
-var Field = require('./field')
-var Input = require('./input')
-var Relation = require('./relation')
+import config from './config.js'
+import merge from 'just-merge'
+import Grid from './grid.js'
+import Toolbar from './toolbar.js'
+import Fieldset from './fieldset.js'
+import Field from './field.js'
+import Input from './input.js'
+import Relation from './relation.js'

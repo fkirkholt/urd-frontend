@@ -1,5 +1,3 @@
-var config = require('./config')
-
 var create_html_attributes =
 `
 create table html_attributes(
@@ -97,7 +95,7 @@ CREATE TABLE table_access (
 );
 `
 
-var tabbar = {
+var Tabbar = {
 
   set_view: function(value) {
     config.edit_mode = value
@@ -241,7 +239,7 @@ var tabbar = {
             value: 1,
             checked: config.edit_mode,
             onclick: function(ev) {
-              tabbar.set_view(ev.target.checked)
+              Tabbar.set_view(ev.target.checked)
             }
           })
         ], 'Edit mode'),
@@ -254,7 +252,7 @@ var tabbar = {
             value: 1,
             checked: config.hide_empty,
             onclick: function(ev) {
-              tabbar.set_hidden(ev.target.checked)
+              Tabbar.set_hidden(ev.target.checked)
             }
           })
         ], 'Hide empty fields'),
@@ -266,7 +264,7 @@ var tabbar = {
             type: "number",
             class: "w3 v-top",
             style: "height: 18px",
-            value: config.threshold * 100,
+            value: config.threshold * 100 || 0,
             title: 'Terskel',
             onchange: function(ev) {
               config.threshold = ev.target.value / 100
@@ -385,7 +383,8 @@ var tabbar = {
   }
 }
 
-module.exports = tabbar
+export default Tabbar
 
-var Codefield = require('./codefield')
-var Grid = require('./grid')
+import Codefield from './codefield.js'
+import Grid from './grid.js'
+import config from './config.js'

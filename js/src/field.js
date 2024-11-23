@@ -110,7 +110,7 @@ var Field = {
 
   display_value: function(field, rec) {
     // field.value is not set for cells in grid
-    value = field.value
+    var value = field.value
 
     if (field.text !== null && field.text !== undefined) {
       value = field.text
@@ -211,7 +211,7 @@ var Field = {
         var record = result.data
         var field
         // Get virtual columns from table.fields
-        for (field_name in table.fields) {
+        for (let field_name in table.fields) {
           field = table.fields[field_name]
           if (record.fields[field.name] === undefined) {
             record.fields[field.name] = field
@@ -229,6 +229,7 @@ var Field = {
   // Get url to foreign key field
   get_url: function(field, rec) {
     var url
+    var base
 
     if (field.fkey) {
       if (
@@ -420,13 +421,13 @@ var Field = {
   }
 }
 
-module.exports = Field
+export default Field
 
-var config = require('./config')
-var marked = require('marked')
-var yaml = require('js-yaml')
-var Input = require('./input')
-var Record = require('./record')
-var get = require('just-safe-get')
-var JSONed = require('./jsoned')
-var Codefield = require('./codefield')
+import config from './config.js'
+import { marked } from 'marked'
+import yaml from 'js-yaml'
+import Input from './input.js'
+import Record from './record.js'
+import get from 'just-safe-get'
+import JSONed from './jsoned.js'
+import Codefield from './codefield.js'

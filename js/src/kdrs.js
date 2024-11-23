@@ -1,4 +1,4 @@
-var kdrs_dialog = {
+var KDRS_dialog = {
 
   export_xml: function(version, descr) {
     var param = {}
@@ -32,7 +32,7 @@ var kdrs_dialog = {
         onclick: function() {
           var version = $('#kdrs-dialog input[name="version"]').val()
           var descr = $('#kdrs-dialog textarea[name="description"]').val()
-          kdrs_dialog.export_xml(version, descr)
+          KDRS_dialog.export_xml(version, descr)
           $('div.curtain').hide()
           $('#kdrs-dialog').hide()
         }
@@ -49,4 +49,4 @@ var kdrs_dialog = {
   }
 }
 
-module.exports = kdrs_dialog
+export default KDRS_dialog

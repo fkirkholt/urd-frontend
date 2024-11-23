@@ -112,6 +112,6 @@ var Tablelist = {
   }
 }
 
-module.exports = Tablelist
+export default Tablelist
 
-var Codefield = require('./codefield')
+import Codefield from './codefield.js'

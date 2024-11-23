@@ -78,13 +78,13 @@ var Row = {
 
       // Get virtual columns from tbl.fields.
       var field
-      for (field_name in tbl.fields) {
-        field = $.extend({}, tbl.fields[field_name])
+      for (let field_name in tbl.fields) {
+        let field = $.extend({}, tbl.fields[field_name])
         if (rel.fields[field.name] === undefined) {
           rel.fields[field.name] = field
         }
       }
-      for (fieldname in tbl.fields) {
+      for (let fieldname in tbl.fields) {
         if (tbl.fields[fieldname].virtual) {
           rel.fields[fieldname].text = rel.columns[fieldname].text
         }
@@ -248,11 +248,11 @@ var Row = {
   }
 }
 
-module.exports = Row
+export default Row
 
-var compare = require('just-compare')
-var get = require('just-safe-get')
-var config = require('./config')
-var Cell = require('./cell')
-var Record = require('./record')
-var Toolbar = require('./toolbar')
+import compare from 'just-compare'
+import get from 'just-safe-get'
+import config from './config.js'
+import Cell from './cell.js'
+import Record from './record.js'
+import Toolbar from './toolbar.js'

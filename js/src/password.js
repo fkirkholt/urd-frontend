@@ -1,4 +1,4 @@
-var pwd_dialog = {
+var Pwd_dialog = {
 
   view: function() {
     return m('div', {class: 'w-100'}, [
@@ -69,4 +69,4 @@ var pwd_dialog = {
 
 }
 
-module.exports = pwd_dialog
+export default Pwd_dialog

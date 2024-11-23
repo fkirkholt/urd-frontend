@@ -1,5 +1,5 @@
-var select = require('./select.js');
-var Cookies = require('js-cookie')
+import Select from './select.js'
+import Cookies from 'js-cookie'
 
 var login = {
 
@@ -10,7 +10,7 @@ var login = {
     var cnxn_names = Object.keys(Cookies.get())
       .filter(key => key.startsWith('urdr-cnxn-'))
 
-    cnxn_options = [{label: 'New connection ...', value: 'new'}]
+    var cnxn_options = [{label: 'New connection ...', value: 'new'}]
     cnxn_names.forEach(name => cnxn_options.push({
       label: name.replace('urdr-cnxn-', ''), 
       value: name.replace('urdr-cnxn-', '')
@@ -20,7 +20,7 @@ var login = {
       m('div', { class: 'f4 mb2' }, 'Logg inn'),
       !login.error
         ? '' : m('div', { class: 'red' }, login.msg || 'Logg inn'),
-      this.create ? '' : m(select, {
+      this.create ? '' : m(Select, {
         value: login.param.name,
         onchange: function() {
           if (this.value == 'new') {
@@ -43,7 +43,7 @@ var login = {
           login.param.name = this.value
         }
       }),
-      m(select, {
+      m(Select, {
         class: ds.base.name == 'urdr' ? 'dn' : 'w-100 mb1',
         id: 'system',
         name: 'system',
@@ -177,4 +177,4 @@ var login = {
   }
 }
 
-module.exports = login;
+export default login

@@ -3,9 +3,9 @@ var SQLpanel = {
   query: '',
 
   get_chart_data: function(data, table) {
-    chart_cols = Object.keys(data[0])
-    has_pkey = false
-    pkey = []
+    var chart_cols = Object.keys(data[0])
+    var has_pkey = false
+    var pkey = []
     if (table && table.pkey.columns) {
       has_pkey = table.pkey.columns.every(val => chart_cols.includes(val));
     }
@@ -13,14 +13,14 @@ var SQLpanel = {
       chart_cols.unshift('pkey')
       pkey = table.pkey.columns
     }
-    fkey_cols = []
+    var fkey_cols = []
     if (table) {
-      for (key in table.fkeys) {
-        fkey = table.fkeys[key]
+      for (let key in table.fkeys) {
+        let fkey = table.fkeys[key]
         fkey_cols = fkey_cols.concat(fkey.constrained_columns)
       }
     }
-    chart_data = []
+    var chart_data = []
     data.forEach(function(item, i) {
       for (let col in item) {
         if (typeof(item[col]) != 'number' || pkey.includes(col) || fkey_cols.includes(col)) {
@@ -33,9 +33,9 @@ var SQLpanel = {
     }) 
     if (chart_cols.length > 1) {
       data.forEach(function(item, i) {
-        new_item = {}
+        var new_item = {}
         if (has_pkey) {
-          values = []
+          let values = []
           table.pkey.columns.forEach(function(col, i) {
             values.push(item[col])
           })
@@ -78,7 +78,7 @@ var SQLpanel = {
           show_chart = true
         }
 
-        is_link = false
+        var is_link = false
         if (table && pk_length) {
           is_link = true
           table.pkey.columns.forEach(function(col) {
@@ -150,7 +150,7 @@ var SQLpanel = {
                   }
 
                   if (is_link) {
-                    link = m('a.link', {
+                    var link = m('a.link', {
                       class: 'icon-crosshairs light-blue hover-blue pointer v-mid',
                       href: "#" + ds.base.name + '/data/'
                         + table.name + '?'
@@ -214,7 +214,7 @@ var SQLpanel = {
   },
 
   run_query: function(expressions) {
-    sql = expressions.pop().trim()
+    var sql = expressions.pop().trim()
     if (sql.length == 0) {
       return
     }
@@ -267,7 +267,7 @@ var SQLpanel = {
                 onclick: function() {
                   var sql = Codefield.get_value('query')
                   SQLpanel.query = sql
-                  expressions = sql.split(';')
+                  var expressions = sql.split(';')
                   expressions.reverse()
                   ds.result = []
                   SQLpanel.run_query(expressions)
@@ -299,10 +299,9 @@ var SQLpanel = {
   }
 }
 
-module.exports = SQLpanel
+export default SQLpanel
 
-var config = require('./config')
-// var Contents = require('./contents')
-var Tablelist = require('./tablelist')
-var Codefield = require('./codefield')
-var Chart = require('./chart')
+import config from './config.js' 
+import Tablelist from './tablelist.js'
+import Codefield from './codefield.js'
+import Chart from './chart'

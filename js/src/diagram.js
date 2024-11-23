@@ -1,6 +1,6 @@
 var mermaid
-var config = require('./config')
-var get = require('just-safe-get')
+import config from './config.js'
+import get from 'just-safe-get'
 
 var Diagram = {
   def: "",
@@ -429,4 +429,4 @@ var Diagram = {
   }
 }
 
-module.exports = Diagram
+export default Diagram

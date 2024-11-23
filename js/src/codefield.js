@@ -118,7 +118,7 @@ var Codefield = {
         } else if (vnode.attrs.lang == 'markdown') {
           lang = markdown.markdown()
         }
-        id = vnode.attrs.id
+        var id = vnode.attrs.id
 
         const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
 
@@ -151,4 +151,4 @@ var Codefield = {
   }
 }
 
-module.exports = Codefield
+export default Codefield

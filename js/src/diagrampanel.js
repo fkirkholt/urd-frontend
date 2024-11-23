@@ -1,4 +1,4 @@
-var diagrampanel = {
+var Diagrampanel = {
   view: function(vnode) {
     if (!ds.user || !ds.user.admin) {
         return null
@@ -10,7 +10,7 @@ var diagrampanel = {
   }
 }
 
-module.exports = diagrampanel
+export default Diagrampanel
 
-var Contents = require('./contents')
-var Diagram = require('./diagram')
+import Contents from './contents.js'
+import Diagram from './diagram.js'

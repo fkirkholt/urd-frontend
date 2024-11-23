@@ -1,6 +1,12 @@
-window.m = require('mithril')
-window.$ = require('cash-dom')
-window.ds = require('./datastore.js')
+import m from 'mithril'
+window.m = m
+import $ from 'cash-dom'
+$(function () {
+  $('html').addClass ( 'dom-loaded' );
+});
+window.$ = $
+import { default as ds } from './datastore.js'
+window.ds = ds
 window.fix_circular = function () {
   const seen = new WeakSet();
   return (key, value) => {
@@ -14,23 +20,23 @@ window.fix_circular = function () {
   };
 }
 
-var contents = require('./contents.js')
-var header = require('./header.js')
-var home = require('./home.js')
-var tabbar = require('./tabbar.js')
-var datapanel = require('./datapanel.js')
-var diagrampanel = require('./diagrampanel.js')
-var Diagram = require('./diagram')
-var SQLpanel = require('./sqlpanel')
-var kdrs_dialog = require('./kdrs.js')
-var export_dialog = require('./export.js')
-var import_dialog = require('./import.js')
-var convert_dialog = require('./convert.js')
-var pwd_dialog = require('./password.js')
-var config = require('./config.js')
-var login = require('./login.js')
-var Grid = require('./grid.js')
-var Record = require('./record')
+import Contents from './contents.js'
+import header from './header.js'
+import home from './home.js'
+import Tabbar from './tabbar.js'
+import Datapanel from './datapanel.js'
+import Diagrampanel from './diagrampanel.js'
+import Diagram from './diagram'
+import SQLpanel from './sqlpanel'
+import KDRS_dialog from './kdrs.js'
+import Export_dialog from './export.js'
+import Import_dialog from './import.js'
+import Convert_dialog from './convert.js'
+import Pwd_dialog from './password.js'
+import config from './config'
+import login from './login.js'
+import Grid from './grid.js'
+import Record from './record.js'
 
 
 m.route.prefix = "#"
@@ -56,7 +62,7 @@ m.route($('#main')[0], '/', {
       ds.type = 'contents'
       ds.load_database(base_name)
 
-      return contents
+      return Contents
     }
   },
   "/:base/data": {
@@ -73,7 +79,7 @@ m.route($('#main')[0], '/', {
       ds.type = 'contents'
       ds.load_database(base_name)
 
-      return contents
+      return Contents
     }
   },
   "/:base/data/:table": {
@@ -116,7 +122,7 @@ m.route($('#main')[0], '/', {
           }
         }
 
-        return datapanel
+        return Datapanel
       }
     }
   },
@@ -130,7 +136,7 @@ m.route($('#main')[0], '/', {
       delete ds.table
       Diagram.def = ""
 
-      return diagrampanel
+      return Diagrampanel
     }
   },
   "/:base/diagram/:table": {
@@ -143,7 +149,7 @@ m.route($('#main')[0], '/', {
       Diagram.def = ""
       config.tab = 'diagram'
 
-      return diagrampanel
+      return Diagrampanel
     }
   },
   "/:base/sql": {
@@ -167,19 +173,19 @@ var $header = $('#header')
 m.mount($header[0], header)
 
 var $kdrs = $('#kdrs-dialog')
-m.mount($kdrs[0], kdrs_dialog)
+m.mount($kdrs[0], KDRS_dialog)
 
 var $export = $('#export-dialog')
-m.mount($export[0], export_dialog)
+m.mount($export[0], Export_dialog)
 
 var $import = $('#import-dialog')
-m.mount($import[0], import_dialog)
+m.mount($import[0], Import_dialog)
 
 var $convert = $('#convert-dialog')
-m.mount($convert[0], convert_dialog)
+m.mount($convert[0], Convert_dialog)
 
 var $password = $('#pwd-dialog')
-m.mount($password[0], pwd_dialog)
+m.mount($password[0], Pwd_dialog)
 
 var $config = $('#preferences')
 m.mount($config[0], config)
@@ -188,4 +194,4 @@ var $login = $('#login')
 m.mount($login[0], login)
 
 var $tabbar = $('#tabbar')
-m.mount($tabbar[0], tabbar)
+m.mount($tabbar[0], Tabbar)

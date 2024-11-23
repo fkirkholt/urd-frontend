@@ -49,7 +49,7 @@ var Grid = {
     // Set width of tbody columns
     if (!config.compressed) {
       $.each(col_widths, function(idx, width) {
-        $col = $table.find('tbody tr').first()
+        var $col = $table.find('tbody tr').first()
           .find('td:nth-child(' + (idx + 1) + ') div').width(width)
       })
     }
@@ -301,7 +301,8 @@ var Grid = {
     var chart_columns = []
 
     ds.table.grid.columns.forEach(function(colname) {
-      field = ds.table.fields[colname]
+      var field = ds.table.fields[colname]
+      var is_char
       if (
         ['int', 'float', 'Decimal'].includes(field.datatype) && 
         !field.fkey && ds.table.pkey && !ds.table.pkey.includes(colname)
@@ -317,7 +318,7 @@ var Grid = {
 
     var unique_cols
     for (let key in ds.table.indexes) {
-      idx = ds.table.indexes[key]
+      let idx = ds.table.indexes[key]
       if (idx.unique && JSON.stringify(idx.columns) !== JSON.stringify(ds.table.pkey)) {
         unique_cols = idx.columns
       }
@@ -359,7 +360,7 @@ var Grid = {
   view: function() {
 
     if (ds.table.search) return
-    chart_data = Grid.get_chart_data()
+    var chart_data = Grid.get_chart_data()
     ds.table.is_chart = chart_data.length > 0
 
     return [
@@ -448,11 +449,11 @@ var Grid = {
   }
 }
 
-module.exports = Grid
+export default Grid
 
 // Place here modules which requires grid (circular reference)
-var Search = require('./search')
-var Record = require('./record')
-var Row = require('./row')
-var Chart = require('./chart')
-var config = require('./config')
+import Search from './search.js'
+import Record from './record.js'
+import Row from './row.js'
+import Chart from './chart.js'
+import config from './config.js'

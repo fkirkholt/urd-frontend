@@ -1,7 +1,7 @@
 var Select = {
 
   draw_option: function(options, option, value, level) {
-    whitespace = '&nbsp;&nbsp;&nbsp'.repeat(level)
+    var whitespace = '&nbsp;&nbsp;&nbsp'.repeat(level)
     return [
       m('option', {
         value: option.value,
@@ -66,4 +66,4 @@ var Select = {
   }
 }
 
-module.exports = Select
+export default Select

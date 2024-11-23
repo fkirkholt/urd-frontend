@@ -1,7 +1,7 @@
-var config = require('./config.js')
-var breadcrumb = require('./breadcrumb.js')
+import config from './config.js'
+import Breadcrumb from './breadcrumb.js'
 
-var header = {
+var Header = {
 
   set_admin: function(value) {
     config.admin = value
@@ -10,7 +10,7 @@ var header = {
 
   view: function(vnode) {
     return [
-      m(breadcrumb),
+      m(Breadcrumb),
       m('div#menu', {
         class: 'fr relative mt2'
       }, [
@@ -106,7 +106,7 @@ var header = {
           value: 1,
           checked: config.admin,
           onclick: function(ev) {
-            header.set_admin(ev.target.checked)
+            Header.set_admin(ev.target.checked)
           }
         }),
       ], 'Admin mode'),
@@ -114,4 +114,4 @@ var header = {
   }
 }
 
-module.exports = header
+export default Header

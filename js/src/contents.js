@@ -1,7 +1,7 @@
-var get = require('just-safe-get')
-var config = require('./config')
-var Diagram = require('./diagram')
-var Relation = require('./relation')
+import get from 'just-safe-get'
+import config from './config.js'
+import Diagram from './diagram.js'
+import Relation from './relation.js'
 
 var Contents = {
 
@@ -110,6 +110,7 @@ var Contents = {
   //   } else {
   draw_table_node: function(label, node) {
     var subitems
+    var item
     // If this is a table with subordinate tables
     if (typeof node == 'object') {
       subitems = node.subitems
@@ -203,6 +204,7 @@ var Contents = {
         }, [
             Object.keys(subitems).map(function(label) {
               var subitem = subitems[label]
+              var subitem_name
               if (typeof subitem == 'object') {
                 subitem_name = subitem.item
               } else {
@@ -335,4 +337,4 @@ var Contents = {
   }
 }
 
-module.exports = Contents
+export default Contents

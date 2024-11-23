@@ -84,9 +84,9 @@ var Cell = {
   }
 }
 
-module.exports = Cell
+export default Cell
 
-var Field = require('./field')
-var Row = require('./row')
-var get = require('just-safe-get')
-var config = require('./config')
+import Field from './field.js'
+import Row from './row.js'
+import get from 'just-safe-get'
+import config from './config'

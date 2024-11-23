@@ -1,5 +1,5 @@
 
-module.exports = {
+var Breadcrumb = {
 
   get_items: function() {
     var items = []
@@ -72,3 +72,5 @@ module.exports = {
     ])
   }
 }
+
+export default Breadcrumb

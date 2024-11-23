@@ -33,4 +33,4 @@ var JSONed = {
   }
 }
 
-module.exports = JSONed;
+export default JSONed

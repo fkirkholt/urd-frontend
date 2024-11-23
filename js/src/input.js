@@ -213,9 +213,9 @@ var Input = {
             url: 'options',
             params: data
           }).then(function(result) {
-            options = result
+            var options = result
             event.target.setCustomValidity("")
-            for (idx in options) {
+            for (let idx in options) {
               if (value == options[idx].value) {
                 event.target.setCustomValidity("Ikke unik verdi")
                 field.invalid = true
@@ -276,7 +276,7 @@ var Input = {
 
       return m(Codefield, {...vnode.attrs})
     } else if (field.element == 'textarea') {
-      text = field.value ? marked.parse(field.value) : ''
+      let text = field.value ? marked.parse(field.value) : ''
 
       vnode.attrs.class = 'w5'
       vnode.attrs.onchange = function(event) {
@@ -356,16 +356,16 @@ var Input = {
   }
 }
 
-module.exports = Input
+export default Input
 
-var Select = require('./select')
-var Autocomplete = require('./seeker')
-var JSONed = require('./jsoned')
-var Field = require('./field')
-var get = require('just-safe-get')
-var marked = require('marked')
-var dayjs = require('dayjs')
-var customParseFormat = require('dayjs/plugin/customParseFormat')
+import Select from './select.js'
+import Autocomplete from './autocomplete.js'
+import JSONed from './jsoned.js'
+import Field from './field.js'
+import get from 'just-safe-get'
+import { marked } from 'marked'
+import dayjs from 'dayjs' 
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
-var Codefield = require('./codefield')
-var yaml = require('js-yaml')
+import Codefield from './codefield'
+import yaml from 'js-yaml'

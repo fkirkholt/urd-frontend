@@ -1,14 +1,13 @@
-
-var datapanel = {
+var Datapanel = {
 
   set_attrs: function() {
     var string_value
-    for (selector in ds.base.html_attrs) {
-      for (attr in ds.base.html_attrs[selector]) {
-        value = ds.base.html_attrs[selector][attr]
+    for (let selector in ds.base.html_attrs) {
+      for (let attr in ds.base.html_attrs[selector]) {
+        let value = ds.base.html_attrs[selector][attr]
         if (attr == 'style' && typeof(value) == 'object' && value !== null) {
           string_value = ''
-          for (key in value) {
+          for (let key in value) {
             string_value += key + ':' + value[key] + ';'
           }
           $(selector).attr(attr, string_value)
@@ -24,9 +23,9 @@ var datapanel = {
   },
 
   onupdate: function() {
-    datapanel.set_attrs()
+    Datapanel.set_attrs()
     // Repeat to set attributes based on other attributes set
-    datapanel.set_attrs()
+    Datapanel.set_attrs()
   },
 
   view: function(vnode) {
@@ -38,9 +37,9 @@ var datapanel = {
     var params = m.route.param()
     // Find if primary key columns in query parameters.
     // This means a specific record is shown.
-    is_pkey = true
-    for (idx in ds.table.pkey) {
-      key = ds.table.pkey[idx]
+    var is_pkey = true
+    for (let idx in ds.table.pkey) {
+      let key = ds.table.pkey[idx]
       if (params[key] === undefined) {
         is_pkey = false
       }
@@ -82,12 +81,12 @@ var datapanel = {
   }
 }
 
-module.exports = datapanel
+export default Datapanel
 
-var Pagination = require('./pagination')
-var Toolbar = require('./toolbar')
-var Contents = require('./contents')
-var Grid = require('./grid')
-var Record = require('./record')
-var Search = require('./search')
-var config = require('./config')
+import Pagination from './pagination.js'
+import Toolbar from './toolbar.js'
+import Contents from './contents.js'
+import Grid from './grid.js'
+import Record from './record.js'
+import Search from './search.js'
+import config from './config.js'

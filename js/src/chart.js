@@ -52,4 +52,4 @@ var Chart = {
 }
 
 
-module.exports = Chart;
+export default Chart

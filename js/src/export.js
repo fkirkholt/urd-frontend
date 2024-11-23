@@ -1,6 +1,6 @@
-var Cookies = require('js-cookie')
+import Cookies from 'js-cookie'
 
-var export_dialog = {
+var Export_dialog = {
 
   type: 'sql',
   cnxn_name: '',
@@ -14,7 +14,7 @@ var export_dialog = {
       param.filter = ds.table.query
     }
 
-    param.folder = export_dialog.cnxn_name
+    param.folder = Export_dialog.cnxn_name
 
     var objects = []
     $('input[name=object][type=checkbox]').each(function() {
@@ -74,14 +74,14 @@ var export_dialog = {
     if (!ds.config) {
       return
     }
-    export_dialog.cnxn_name = Cookies.get('urdr-cnxn') 
+    Export_dialog.cnxn_name = Cookies.get('urdr-cnxn') 
     ? Cookies.get('urdr-cnxn').toLowerCase().replace('urdr-cnxn-', '').replace(' ', '-')
     .replace('sqlite', '').replace('mysql', '').replace('mssql', '')
     .replace('duckdb', '').replace('oracle', '').replace('pgsql', '').replace('--', '-')
     .replace(/-$/g, '')
     : ds.base.system
-    var exportdir = export_dialog.cnxn_name
-    ? ds.config.exportdir + '/' + export_dialog.cnxn_name
+    var exportdir = Export_dialog.cnxn_name
+    ? ds.config.exportdir + '/' + Export_dialog.cnxn_name
     : ds.config.exportdir
     return m('div', [
       m('h3', 'Export ' + (!ds.table ? 'database' : 'table')),
@@ -204,7 +204,7 @@ var export_dialog = {
                 .prop('checked')
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
-              export_dialog.export_sql(dialect, table_defs, list_records, 
+              Export_dialog.export_sql(dialect, table_defs, list_records, 
                                        data_records, select_records)
             }
             $('div.curtain').hide()
@@ -224,6 +224,6 @@ var export_dialog = {
   }
 }
 
-module.exports = export_dialog
+export default Export_dialog
 
-var login = require('./login.js')
+import Login from './login.js'

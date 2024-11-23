@@ -1,5 +1,3 @@
-var Cookies = require('js-cookie')
-
 var config = {
 
   limit: Cookies.get('limit') ? Cookies.get('limit') : 20,
@@ -120,7 +118,8 @@ var config = {
   }
 }
 
-module.exports = config
+export default config
 
 // Placed here to avoid problems with circular inclusion
-var Grid = require('./grid')
+import Grid from './grid'
+import Cookies from 'js-cookie'
