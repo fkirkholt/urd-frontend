@@ -72,10 +72,6 @@ div.field {
   animation: fa-spin 0.5s infinite linear;
 }
 
-div[id=query] {
-    width: 32rem;
-}
-
 .min-w1 {min-width: 1rem;}
 .min-w2 {min-width: 2rem;}
 .min-w3 {min-width: 4rem;}

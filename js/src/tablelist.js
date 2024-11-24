@@ -67,47 +67,50 @@ var Tablelist = {
             }
           }, 'Describe table')
         ]),
-      m('ul', {
-        class: 'list flex flex-column pl2 mt0'
-      }, [
-          m('li', [m('input', {
-            id: 'filter_tables',
-            placeholder: 'filter tables',
-            onkeydown: function() {
-              // triggers redraw on keydown
-              return
-            }
-          })]),
-          Object.keys(ds.base.tables).sort().map(function(item, i) {
-            var filter = $('#filter_tables').val()
-            return (
-              filter !== undefined && 
-              !item.toLowerCase().includes(filter.toLowerCase())
-            ) ? '' : m('li', {
-              class: 'pointer',
-              onclick: function(ev) {
-                Codefield.set_value('query', 'select * from ' + item)
-                $('#run_sql').trigger('click')
-              },
-              oncontextmenu: function(event) {
-                var top
-                $('#tablelist-context').toggle()
-                var height = $('#tablelist-context').height()
-                Tablelist.context_table = item
-                if (window.innerHeight - event.clientY < height) {
-                  top = event.clientY - 20 - height
-                } else {
-                  top = event.clientY - 20
-                  }
-                $('ul#tablelist-context').css({
-                  top: top,
-                  left: event.clientX
-                })
-                return false
-              }
-            }, item)
-          })
-        ])
+
+      m('div', { class: 'flex flex-column'}, [
+        m('input', {
+          id: 'filter_tables',
+          placeholder: 'filter tables',
+          onkeydown: function() {
+            // triggers redraw on keydown
+            return
+          }
+        }),
+        m('ul', {
+          class: 'list pl2 mt0 overflow-scroll'
+        }, [
+            Object.keys(ds.base.tables).sort().map(function(item, i) {
+              var filter = $('#filter_tables').val()
+              return (
+                filter !== undefined && 
+                !item.toLowerCase().includes(filter.toLowerCase())
+              ) ? '' : m('li', {
+                class: 'pointer',
+                onclick: function(ev) {
+                  Codefield.set_value('query', 'select * from ' + item)
+                  $('#run_sql').trigger('click')
+                },
+                oncontextmenu: function(event) {
+                  var top
+                  $('#tablelist-context').toggle()
+                  var height = $('#tablelist-context').height()
+                  Tablelist.context_table = item
+                  if (window.innerHeight - event.clientY < height) {
+                    top = event.clientY - 20 - height
+                  } else {
+                    top = event.clientY - 20
+                    }
+                  $('ul#tablelist-context').css({
+                    top: top,
+                    left: event.clientX
+                  })
+                  return false
+                }
+              }, item)
+            })
+          ])
+      ])
     ]
   }
 }

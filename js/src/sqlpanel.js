@@ -124,8 +124,8 @@ var SQLpanel = {
               }
             })
           ]),
-          query.tab == 'chart' ? '' : m('table', {
-            class: 'collapse ba'
+          query.tab == 'chart' ? '' : m('div', { class: 'overflow-scroll mb3' }, [ m('table', {
+            class: 'collapse ba overflow-scroll'
           }, [
               // m('tr.striped--light-gray', [
               m('thead', [
@@ -178,7 +178,7 @@ var SQLpanel = {
                   ])
                 })
               ])
-              ]),
+            ])]),
           // m('p'),
           !show_chart || query.tab != 'chart' ? '' : m(Chart, {
             // id: 'nychart', 
@@ -246,10 +246,12 @@ var SQLpanel = {
       m('div', {
         onclick: function() {
           $('#tablelist-context').hide()
-        }
+        },
+        class: 'flex flex-column mr3 overflow-scroll',
+        style: 'flex-grow: 1'
 
       }, [
-          m('div', { style: 'width: fit-content' }, [
+          m('div', [
             m(Codefield, {
               id: 'query',
               class: 'ml3 ba b--light-silver mb2',
