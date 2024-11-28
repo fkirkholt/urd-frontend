@@ -124,8 +124,8 @@ var SQLpanel = {
               }
             })
           ]),
-          query.tab == 'chart' ? '' : m('div', { class: 'overflow-scroll mb3' }, [ m('table', {
-            class: 'collapse ba overflow-scroll'
+          query.tab == 'chart' ? '' : m('div', { class: 'overflow-auto mb3' }, [ m('table', {
+            class: 'collapse ba overflow-auto'
           }, [
               // m('tr.striped--light-gray', [
               m('thead', [
@@ -247,7 +247,7 @@ var SQLpanel = {
         onclick: function() {
           $('#tablelist-context').hide()
         },
-        class: 'flex flex-column mr3 overflow-scroll',
+        class: 'flex flex-column mr3 overflow-auto',
         style: 'flex-grow: 1'
 
       }, [

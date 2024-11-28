@@ -78,7 +78,7 @@ var Tablelist = {
           }
         }),
         m('ul', {
-          class: 'list pl2 mt0 overflow-scroll'
+          class: 'list pl2 mt0 overflow-auto'
         }, [
             Object.keys(ds.base.tables).sort().map(function(item, i) {
               var filter = $('#filter_tables').val()
