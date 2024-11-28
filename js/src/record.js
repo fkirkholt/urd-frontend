@@ -126,7 +126,7 @@ var Record = {
     // all columns and values defaults to null
     var columns = {}
     for (let idx in list.grid.columns) {
-      col = list.grid.columns[idx]
+      let col = list.grid.columns[idx]
       columns[col] = {
         text: null,
         value: null

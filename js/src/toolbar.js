@@ -169,7 +169,7 @@ var Toolbar = {
     search_params = []
     $.each(param, function(key, value) {
       if (['base', 'table', 'index', 'offset'].indexOf(key) >= 0) return
-      expr = value ? key + '=' + value : key 
+      var expr = value ? key + '=' + value : key 
       search_params.push(expr)
     })
 

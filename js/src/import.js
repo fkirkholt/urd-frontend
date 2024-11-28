@@ -6,7 +6,7 @@ var Import_dialog = {
   msg: '',
 
   import_tsv: function() {
-    params = {}
+    var params = {}
     params.base = ds.base.name
     params.dir = $('input[name=dir]:checked').val()
     m.request({
