@@ -194,7 +194,7 @@ var Field = {
     }).then(function(result) {
       var table = result.data
       if (table.count_records == 0) {
-        alert('Fant ikke posten i databasen')
+        alert("Record not found")
       }
       var pk = table.records[0].pkey
       m.request({
