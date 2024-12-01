@@ -42,11 +42,12 @@ var Export_dialog = {
 
   },
 
-  export_sql: function(dialect, table_defs, list_recs, data_recs, select_recs) {
+  export_sql: function(dialect, table_defs, no_fkeys, list_recs, data_recs, select_recs) {
     var param = {}
     param.dest = $('input[name=dest]:checked').val() || 'download'
     param.dialect = dialect
     param.table_defs = table_defs
+    param.no_fkeys = no_fkeys
     param.list_recs = list_recs
     param.data_recs = data_recs
     param.select_recs = select_recs
@@ -174,6 +175,11 @@ var Export_dialog = {
         })], ' Export table definitions'),
         m('br'),
         m('label', [m('input[type=checkbox]', {
+          name: 'no_fkeys',
+          class: 'ml3'
+        })], ' Exclude foreign keys'),
+        m('br'),
+        m('label', [m('input[type=checkbox]', {
           name: 'list-records'
         })], ' Export records from lookup tables'),
         m('br'),
@@ -198,13 +204,15 @@ var Export_dialog = {
                 .val()
               var table_defs = $('#export-dialog input[name="table-defs"]')
                 .prop('checked')
+              var no_fkeys = $('#export-dialog input[name="no_fkeys"]')
+                .prop('checked')
               var list_records = $('#export-dialog input[name="list-records"]')
                 .prop('checked')
               var data_records = $('#export-dialog input[name="data-records"]')
                 .prop('checked')
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
-              Export_dialog.export_sql(dialect, table_defs, list_records, 
+              Export_dialog.export_sql(dialect, table_defs, no_fkeys, list_records, 
                                        data_records, select_records)
             }
             $('div.curtain').hide()
