@@ -179,7 +179,7 @@ var Toolbar = {
   set_url: function(index, offset) {
     // Set index in url
     var query_params = {}
-    path = m.route.get()
+    var path = m.route.get()
     if (path.includes('?')) {
       query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
       delete query_params.index
