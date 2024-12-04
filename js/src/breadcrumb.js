@@ -8,6 +8,7 @@ var Breadcrumb = {
       mariadb: 'MariaDB',
       mysql: 'MySQL',
       mssql: 'SQL Server',
+      oracle: 'Oracle',
       postgresql: 'PostgreSQL',
       sqlite: 'SQLite',
       duckdb: 'DuckDB'
