@@ -29,8 +29,8 @@ var Cell = {
         : col.text
 
     if (field.element == 'input' && field.attrs.type == 'checkbox') {
-      var icon = value === 0 
-        ? 'fa-square-o' : value === 1 
+      var icon = value == 0 
+        ? 'fa-square-o' : value == 1 
           ? 'fa-check-square-o' : 'fa-minus-square-o'
       value = m('i', { class: 'fa ' + icon })
     }
