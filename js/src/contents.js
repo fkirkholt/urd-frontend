@@ -210,8 +210,7 @@ var Contents = {
               } else {
                 subitem_name = subitem
               }
-              var rel = get(ds.base, subitem_name, ds.base.tables[item])
-              if (!config.show_all_descendants && !Relation.is_direct(rel, table)) {
+              if (!config.show_all_descendants && !Relation.is_direct(rel.name, subitem_name)) {
                 return
               }
               return Contents.draw_table_node(label, subitem)

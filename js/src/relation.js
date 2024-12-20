@@ -178,22 +178,20 @@ var Relation = {
     ]
   },
 
-  // Decide if the relation represents a direct descendant of the table
-  is_direct: function(rel, table) {
+  /** Decide if the relation represents a direct descendant of the table */
+  is_direct: function(rel_tbl_name, fkey_name) {
     var result = true
-    var rel_table = ds.base.tables[rel.name]
-    var rel_tables = []
+    var rel_table = ds.base.tables[rel_tbl_name]
+    var rel_fkey = rel_table.fkeys[fkey_name]
 
-    Object.values(table.relations).map(function(relation) {
-      if (relation.table_name != table.name && relation.table_name != rel.name) {
-        rel_tables.push(relation.table_name)
-      }
-    })
+    // The foreign key columns of should not be part of other foreign keys
+    // of the table if this is a direct descendant
+    Object.values(rel_table.fkeys).map(function(fkey) {
+      var res = rel_fkey.constrained_columns.every(function(col) {
+        return fkey.name != fkey_name && fkey.constrained_columns.indexOf(col) >= 0
+      });
 
-    // Removes relations that represents grand children and down
-    Object.keys(rel_table.fkeys).map(function(name) {
-      var rel_fk = rel_table.fkeys[name]
-      if (rel_tables.includes(rel_fk.referred_table)) {
+      if (res) {
         result = false
       }
     })
@@ -275,7 +273,7 @@ var Relation = {
       return
     }
 
-    if (!config.show_all_descendants && !Relation.is_direct(rel, table)) {
+    if (!config.show_all_descendants && !Relation.is_direct(rel.name, key)) {
       return
     }
 
