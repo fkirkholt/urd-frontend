@@ -163,13 +163,19 @@ var SQLpanel = {
                     Object.keys(item).map(function(cell, i) {
                       var is_link = false
                       var link
-                      var value = typeof (item[cell]) == 'string'
+                      var value = (item[cell] && typeof (item[cell])) == 'string'
                         ? m.trust(item[cell]
                           .replace(/\n/g, '<br>')
                           .replace(/\s/g, '&nbsp;'))
                         : typeof (item[cell]) == 'boolean'
                         ? (item[cell] ? 1 : 0)
                         : item[cell]
+
+                      if (value === '') {
+                        value = '(empty)'
+                      } else if (value === null) {
+                        value = '(null)'
+                      }
 
                       return m('td', {
                         class: 'pl1 pl2'
