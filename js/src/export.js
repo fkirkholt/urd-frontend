@@ -179,14 +179,20 @@ var Export_dialog = {
           class: 'ml3'
         })], ' Exclude foreign keys'),
         m('br'),
-        m('label', [m('input[type=checkbox]', {
-          name: 'list-records'
-        })], ' Export records from lookup tables'),
-        m('br'),
-        m('label', [m('input[type=checkbox]', {
-          name: 'data-records'
-        })], ' Export records from data tables'),
-        m('br'),
+        ds.table && ds.table.type == 'table' ? '' : [
+          m('label', [m('input[type=checkbox]', {
+            name: 'list-records'
+          })], ds.table ? ' Export records' 
+          : ' Export records from lookup tables'),
+          m('br'),
+        ],
+        ds.table && ds.table.type == 'list' ? '' : [
+          m('label', [m('input[type=checkbox]', {
+            name: 'data-records'
+          })], ds.table ? ' Export records'
+          : ' Export records from data tables'),
+          m('br'),
+        ],
         m('label', [m('input[type=checkbox]', {
           name: 'select'
         })], ' Export as select'),
