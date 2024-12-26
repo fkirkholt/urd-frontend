@@ -119,7 +119,7 @@ var Diagram = {
             if (n > 10) {
               return
             }
-            def.push(field.datatype + ' ' + field.name);
+            def.push(field.datatype + ' "' + field.name + '"');
           }
         });
       }
@@ -179,8 +179,8 @@ var Diagram = {
           return
         }
 
-        def.push(fk.referred_table + symbol + line + ' o{' + table.name +
-          ' : ' + field_name)
+        def.push('"' + fk.referred_table + '"' + symbol + line + ' o{' 
+        + '"' + table.name + '"' + ' : "' + field_name + '"')
         if (fk_table === undefined) return
         // def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
         if (fk_table.rowcount && fk.table != table.name) {
@@ -244,8 +244,8 @@ var Diagram = {
       }
 
       var line = rel.hidden ? '..' : '--'
-      def.push(table.name + symbol + line + 'o{ ' + rel.table_name +
-        ' : ' + fk_field_name)
+      def.push('"' + table.name + '"' + symbol + line + 'o{ "' + rel.table_name + '"' +
+        ' : "' + fk_field_name + '"')
 
       // Draw relations recursively
       if (
@@ -286,7 +286,8 @@ var Diagram = {
       var fk_table = ds.base.tables[fk.table_name]
       if (fk_table.hidden) return
       var symbol = field.nullable ? ' o|' : ' ||'
-      def.push(fk.referred_table + symbol + '--o{ ' + table.name + ' : ' + field.name)
+      def.push('"' + fk.referred_table + '"' + symbol + '--o{ "' + 
+               table.name + '" : "' + field.name + '"')
     })
   },
 
@@ -340,8 +341,8 @@ var Diagram = {
 
       // continue if path already includes this relation
       if (
-        path.includes(table.name + symbol + '--{o ' + fk.table +
-          ' : ' + fk_last_col)
+        path.includes('"' + table.name + '"' + symbol + '--{o "' + fk.table +
+          '" : "' + fk_last_col + '"')
       ) {
         return
       }
@@ -353,8 +354,8 @@ var Diagram = {
         return
       }
 
-      new_path.push(table.name + symbol + '--o{ ' + fk.table_name +
-        ' : ' + fk_last_col)
+      new_path.push('"' + table.name + '"' + symbol + '--o{ "' + fk.table_name +
+        '" : "' + fk_last_col + '"')
 
       if (fk.table_name == Diagram.root) {
         found_paths.push(new_path)
@@ -375,8 +376,8 @@ var Diagram = {
       var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
 
       if (
-        path.includes(fk.referred_table + symbol + '--o{ ' + table.name +
-          ' : ' + fk_field_name)
+        path.includes('"' + fk.referred_table + '"' + symbol + '--o{ "' + table.name +
+          '" : "' + fk_field_name + '"')
       ) {
         return
       }
@@ -394,8 +395,8 @@ var Diagram = {
       } else {
         if (fk_table.type == 'list') return
 
-        new_path.push(fk.referred_table + symbol + '--o{ ' + table.name +
-          ' : ' + fk_field_name)
+        new_path.push('"' + fk.referred_table + '"' + symbol + '--o{ "' + table.name +
+          '" : "' + fk_field_name + '"')
 
         new_path = Diagram.get_path(fk_table, new_path)
         if (new_path) {
