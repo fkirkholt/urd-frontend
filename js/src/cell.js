@@ -35,7 +35,7 @@ var Cell = {
       value = m('i', { class: 'fa ' + icon })
     }
     
-    var expansion = colname === list.expansion_column && list.ismain
+    var expansion = list.ismain && list.expansion_column && colname == ds.table.grid.columns[0] 
 
     var icon = m('i', {
       class: [
@@ -69,7 +69,7 @@ var Cell = {
       'data-value': value
     }, [
         !(value && value.length > 30 && compressed)
-          ? [m('div', [expansion && !config.show_all_levels ? icon : '', value])]
+          ? [m('div', [expansion ? icon : '', value])]
           : m('table', {
             class: 'w-100',
             style: 'table-layout:fixed;'

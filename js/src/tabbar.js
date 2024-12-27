@@ -334,13 +334,24 @@ var Tabbar = {
           class: 'mr1',
           type: 'checkbox',
           value: 1,
-          checked: config.show_all_levels,
+          checked: ds.table && ds.table.filters && 
+                   ds.table.expansion_column in ds.table.filters && 
+                   ds.table.filters[ds.table.expansion_column] &&
+                   ds.table.filters[ds.table.expansion_column].operator == 'IS NULL',
           onclick: function(ev) {
-            config.show_all_levels = ev.target.checked
-            Grid.load(m.route.param())
+            var path = m.route.get()
+            var query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+
+            var key = ds.table.expansion_column + ' IS NULL'
+            if (ev.target.checked) {
+              query_params[key] = ''
+            } else { 
+              delete query_params[key]
+            }
+            m.route.set('/' + ds.base.name + '/data/' + ds.table.name + '?' + m.buildQueryString(query_params))
           }
         })
-      ], 'Show all levels')),
+      ], 'Show top level only')),
       (config.tab != 'diagram' ? null : m('label', {
         class: 'fr mr3',
         title: "Choose which relations to display"
