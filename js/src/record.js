@@ -409,9 +409,9 @@ var Record = {
         records: []
       }
       for (let idx in rel.records) {
-        subrec = rel.records[idx]
+        let subrec = rel.records[idx]
         if (!subrec.dirty) continue
-        subrec_changes = Record.get_changes(subrec, true)
+        let subrec_changes = Record.get_changes(subrec, true)
         changed_rel.records.push(subrec_changes)
       }
       changes.relations[alias] = changed_rel

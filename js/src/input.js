@@ -13,7 +13,7 @@ var Input = {
       var key = rec.table.fkeys[fk_name]
 
       if (key.constrained_columns.indexOf(field.name) > 0) {
-        last_fk_col = key.constrained_columns.slice(-1)
+        let last_fk_col = key.constrained_columns.slice(-1)
         if (
           last_fk_col != field.name &&
           rec.fields[last_fk_col].nullable == true

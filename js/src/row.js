@@ -14,7 +14,7 @@ var Row = {
         }
       }).then(function(result) {
         var indent = rec.indent ? rec.indent + 1 : 1
-        records = result.data.map(function(record, idx) {
+        var records = result.data.map(function(record, idx) {
           record.indent = indent
           record.path = rec.path
             ? rec.path + '.' + idx
