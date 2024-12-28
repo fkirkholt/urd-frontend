@@ -158,7 +158,7 @@ var Relation = {
               return
             }
             return m(Field, {
-              rec: rec, colname: key, label: label
+              rec: rec, colname: key, label: null
             })
           })
         ]

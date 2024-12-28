@@ -113,7 +113,7 @@ var Field = {
     var value = field.value
 
     if (field.text !== null && field.text !== undefined) {
-      value = field.text
+      value = field.text.trim()
     } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
       var icon = value == 0 ? 'fa-square-o' 
         : value == 1 ? 'fa-check-square-o'
@@ -318,14 +318,14 @@ var Field = {
     return [
       (
         (!config.edit_mode && config.hide_empty && field.value == null) ||
-          (field.fkey && field.expanded)
+          (field.fkey && field.expanded && label)
       ) ? '' : [
           m('label', {
             'data-expandable': field.expandable && field.value !== null,
             'data-field': rec.table.name + '.' + field.name,
-            class: 'db ml3 mt1'
+            class: label ? 'db ml3 mt1' : 'db ml2 mt1'
           }, [
-              m('b', { 
+              label ? m('b', { 
                 title: field.attrs.title,
                 class: [
                   'dib w4 v-top mr2',
@@ -339,7 +339,17 @@ var Field = {
                 }
               }, [
                 label,
-              ]),
+              ]) : m('i', {
+                class: [
+                  'fa fa-fw',
+                  field.expanded ? 'fa-angle-down' : 'fa-angle-right'
+                ].join(' '),
+                onclick: function() {
+                  if (field.fkey && field.expandable && field.value) {
+                    Field.toggle_fkey(rec, colname)
+                  } 
+                }
+              }),
               !field.use || !config.admin ? '' : m('span', {
                 class: 'ml2 light-silver'
               }, '(' + Field.get_percentage(field.use) + '%)'),
@@ -407,16 +417,19 @@ var Field = {
       // Expanded record
       !field.fkey || !field.expanded ? null : m('fieldset', {
         name: colname,
-        class: 'flex flex-column'
+        class: [
+          'flex flex-column',
+          label ? '' : 'bt-0 br-0 bb-0 bl-1 ml3'
+        ].join(' ')
       }, [
-        m('legend', {
+        !label ? null : m('legend', {
           class: 'b underline pointer',
           onclick: function() {
             Field.toggle_fkey(rec, colname)
           }
         }, label),
         m(Record, { record: field.relation })
-      ])
+      ]),
     ]
   }
 }
