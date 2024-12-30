@@ -4,6 +4,9 @@ var Export_dialog = {
 
   type: 'sql',
   cnxn_name: '',
+  msg: '',
+  progress: 0,
+  running: false,
 
   export_csv: function() {
     var param = {}
@@ -25,21 +28,29 @@ var Export_dialog = {
     param.dest = $('input[name=dest]:checked').val() || 'download'
     param.objects = JSON.stringify(objects)
 
-    if (param.dest == 'download') {
-      var params = Object.keys(param).map(function(k) {
-        return k + '=' + param[k]
-      }).join('&')
-      window.open('/export_tsv?' + params, '_blank')
-    } else {
-      m.request({
-        method: "get",
-        url: "export_tsv",
-        params: param
-      }).then(function(result) {
-        alert("Export finished")
-      })
-    }
+    var params = Object.keys(param).map(function(k) {
+      return k + '=' + param[k]
+    }).join('&')
+    let eventSource = new EventSource('/export_tsv?' + params);
 
+    eventSource.onmessage = function(event) {
+      var data = JSON.parse(event.data)
+      Export_dialog.msg = data.msg
+      Export_dialog.progress = data.progress
+      m.redraw()
+      if (data.msg == "done") {
+        eventSource.close();
+        Export_dialog.running = false
+        Export_dialog.msg = ''
+        $('div.curtain').hide()
+        $('#export-dialog').hide()
+
+        if (param.dest == 'download') {
+          var media_type = param.table ? 'text/tab-separated-values' : 'application/zip'
+          window.open('/download?path=' + data.path + '&media_type=' + media_type, '_blank')
+        }
+      }
+    }
   },
 
   export_sql: function(dialect, table_defs, no_fkeys, list_recs, data_recs, select_recs) {
@@ -55,20 +66,29 @@ var Export_dialog = {
     if (ds.table) {
       param.table = ds.table.name
     }
-    if (param.dest == 'download') {
-      var params = Object.keys(param).map(function(k) {
-        return k + '=' + param[k]
-      }).join('&')
-      window.open('/export_sql?' + params, '_blank')
-    } else {
-      m.request({
-        method: "get",
-        url: "export_sql",
-        params: param
-      }).then(function(result) {
-        alert("Export finished")
-      })
-    }
+    var params = Object.keys(param).map(function(k) {
+      return k + '=' + param[k]
+    }).join('&')
+    let eventSource = new EventSource('/export_sql?' + params);
+
+    eventSource.onmessage = function(event) {
+      var data = JSON.parse(event.data)
+      Export_dialog.msg = data.msg
+      Export_dialog.progress = data.progress
+      m.redraw()
+      if (data.msg == "done") {
+        eventSource.close();
+        Export_dialog.running = false
+        Export_dialog.msg = ''
+        $('div.curtain').hide()
+        $('#export-dialog').hide()
+
+        if (param.dest == 'download') {
+          var media_type = param.table ? 'text/tab-separated-values' : 'application/zip'
+          window.open('/download?path=' + data.path + '&media_type=' + media_type, '_blank')
+        }
+      }
+    };
   },
 
   view: function() {
@@ -199,10 +219,13 @@ var Export_dialog = {
         m('br')
       ]),
       m('div[name=buttons]', { class: "bottom-0 mt2" }, [
+        m('div', Export_dialog.msg),
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',
+          disabled: Export_dialog.running,
           onclick: function() {
+            Export_dialog.running = true
             if (this.type === 'tsv') {
               this.export_csv()
             } else {
@@ -213,26 +236,31 @@ var Export_dialog = {
               var no_fkeys = $('#export-dialog input[name="no_fkeys"]')
                 .prop('checked')
               var list_records = $('#export-dialog input[name="list-records"]')
-                .prop('checked')
+                .prop('checked') || false
               var data_records = $('#export-dialog input[name="data-records"]')
-                .prop('checked')
+                .prop('checked') || false
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
               Export_dialog.export_sql(dialect, table_defs, no_fkeys, list_records, 
                                        data_records, select_records)
             }
-            $('div.curtain').hide()
-            $('#export-dialog').hide()
           }.bind(this)
         }),
         m('input[type=button]', {
           value: 'Avbryt',
           class: 'fr',
+          disabled: Export_dialog.running,
           onclick: function() {
             $('div.curtain').hide()
             $('#export-dialog').hide()
           }
         }),
+        m('div', {class: 'fl'}, [
+          !Export_dialog.msg ? null : m('progress', {
+            value: Export_dialog.progress,
+            max: '100',
+          })
+        ])
       ])
     ])
   }
