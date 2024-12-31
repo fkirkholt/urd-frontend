@@ -4,27 +4,29 @@ var Import_dialog = {
 
   import_started: false,
   msg: '',
+  progress: 0,
 
   import_tsv: function() {
     var params = {}
     params.base = ds.base.name
     params.dir = $('input[name=dir]:checked').val()
-    m.request({
-      method: 'put',
-      url: 'import_tsv',
-      params: params
-    }).then(function(data) {
-      this.import_started = false
-      $('div.curtain').hide()
-      $('#import-dialog').hide()
-    }).catch(function(e) {
-      alert(e.response.detail)
-      Import_dialog.msg = e.response.detail
-      Import_dialog.import_started = false
+    var params = Object.keys(params).map(function(k) {
+      return k + '=' + params[k]
+    }).join('&')
+    let eventSource = new EventSource('/import_tsv?' + params);
+
+    eventSource.onmessage = function(event) {
+      var data = JSON.parse(event.data)
+      Import_dialog.msg = data.msg
+      Import_dialog.progress = data.progress
       m.redraw()
-      $('div.curtain').hide()
-      $('#import-dialog').hide()
-    })
+      if (data.msg == "done") {
+        eventSource.close()
+        Import_dialog.msg = ''
+        $('div.curtain').hide()
+        $('#import-dialog').hide()
+      }
+    }
   },
 
   view: function() {
@@ -53,6 +55,7 @@ var Import_dialog = {
         })], ' ' + ds.config.exportdir + '/' + Import_dialog.cnxn_name + '/' + ds.base.name + '/data/')
       ]),
       m('div[name=buttons]', { class: "bottom-0 mt2" }, [
+        m('div', Import_dialog.msg),
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',
@@ -72,7 +75,12 @@ var Import_dialog = {
             $('#import-dialog').hide()
           }
         }),
-        m('span', Import_dialog.msg)
+        m('div', {class: 'fl'}, [
+          !Import_dialog.msg ? null : m('progress', {
+            value: Import_dialog.progress,
+            max: '100',
+          })
+        ])
       ])
     ])
   } 
