@@ -113,7 +113,7 @@ var Field = {
     var value = field.value
 
     if (field.text !== null && field.text !== undefined) {
-      value = field.text.trim()
+      value = typeof(field.text) == 'string' ? field.text.trim() : field.text
     } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
       var icon = value == 0 ? 'fa-square-o' 
         : value == 1 ? 'fa-check-square-o'
