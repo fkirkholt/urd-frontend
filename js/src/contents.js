@@ -7,13 +7,6 @@ var Contents = {
 
   oninit: function() {
     $('#right_content').hide()
-
-    $('#progress [value="OK"]').on('click', function() {
-      $(this).hide()
-      $('#progress [name="message"]').text('')
-      $('#progress').hide()
-      $('.curtain').hide()
-    })
   },
 
   // Get display property for heading

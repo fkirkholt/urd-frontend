@@ -23,20 +23,6 @@ var Toolbar = {
     mousetrap.reset()
   },
 
-  track_progress: function() {
-    m.request({
-      method: "get",
-      url: "track_progress",
-      background: true
-    }).then(function(response) {
-      $('#progress [name="percent"]').text(response.progress + '%')
-      if (response.progress < 100) {
-        $('#progress [value="OK"]').hide()
-        setTimeout(Toolbar.track_progress, 1000)
-      }
-    })
-  },
-
   run_action: function(action) {
     var rec_idx = ds.table.selection
     var prim_key = ds.table.records[rec_idx].pkey
@@ -79,30 +65,9 @@ var Toolbar = {
             ds.table.records[rec_idx])
           m.redraw()
         }
-        if (result.msg) {
-          $('#progress').show().children('[name=message]').text(result.msg)
-          $btn = $('#progress [value="OK"]')
-          $btn.show("fast", function() {
-            $btn[0].trigger('focus')
-          })
-        }
-        if (result.warn && result.warn.length) {
-          txt = $('#progress').show().children('[name=message]').text()
-          txt += '<br><br><b>Advarsler:</b><ul class="tl"><li>'
-          txt += result.warn.join('</li><li>')
-          txt += '</li></ul>'
-          $('#progress').show().children('[name=message]').html(txt)
-        }
       }).catch(function(e) {
         alert(e.response ? e.response.detail : 'An error has occured.')
       })
-
-      // show progress bar
-      if (action.track_progress) {
-        $('div.curtain').show()
-        $('#progress').show().children('[name="percent"]').text('0%')
-        this.track_progress()
-      }
     } else if (communication == 'dialog') {
       m.request({
         url: address + '?version=1',
