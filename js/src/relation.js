@@ -184,7 +184,7 @@ var Relation = {
     var rel_table = ds.base.tables[rel_tbl_name]
     var rel_fkey = rel_table.fkeys[fkey_name]
 
-    // The foreign key columns of should not be part of other foreign keys
+    // The foreign key columns should not be part of other foreign keys
     // of the table if this is a direct descendant
     Object.values(rel_table.fkeys).map(function(fkey) {
       var res = rel_fkey.constrained_columns.every(function(col) {

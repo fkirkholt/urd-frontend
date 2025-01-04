@@ -203,7 +203,18 @@ var Contents = {
               } else {
                 subitem_name = subitem
               }
-              if (!config.show_all_descendants && !Relation.is_direct(rel.name, subitem_name)) {
+              var rel = get(ds.base, subitem_name, ds.base.tables[item]) 
+
+              // find the fkey defining the relation
+              var rel_fkey_name
+              Object.keys(rel.fkeys).map(function(fkey_name) {
+                var fkey = rel.fkeys[fkey_name]
+                if (fkey.referred_table == table.name) {
+                  rel_fkey_name = fkey_name
+                }
+              })
+
+              if (!config.show_all_descendants && !Relation.is_direct(rel.name, rel_fkey_name)) {
                 return
               }
               return Contents.draw_table_node(label, subitem)

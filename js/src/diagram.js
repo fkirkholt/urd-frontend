@@ -165,15 +165,6 @@ var Diagram = {
             }
           })
         }
-        // Removes relations that represents grand parents and up
-        if (config.simplified_hierarchy) {
-          Object.keys(fk_table.relations).map(function(name) {
-            var rel_fk = fk_table.relations[name]
-            if (fk_tables.includes(rel_fk.table)) {
-              skip = true
-            }
-          })
-        }
 
         if (skip) {
           return
