@@ -244,7 +244,7 @@ var Relation = {
     if (rel.show_if) {
       hidden = false
       Object.keys(rel.show_if).map(function(key) {
-        value = rel.show_if[key]
+        var value = rel.show_if[key]
         if (rec.fields[key].value != value) {
           hidden = true
         }

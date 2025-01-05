@@ -102,7 +102,7 @@ var Record = {
             rel.expanded = true
             rel.count_records = 1
           } else {
-            record = rec.relations[alias].records[0]
+            var record = rec.relations[alias].records[0]
             record.base_name = rec.base_name
             record.table = rel
             rel.records = [record]
@@ -171,7 +171,7 @@ var Record = {
         // Sets the value to filtered value if such filter exists
         if (!relation) {
           for (let idx in list.filters) {
-            filter = list.filters[idx]
+            var filter = list.filters[idx]
             var parts = filter.field.split('.')
             var table_name
             var field_name
