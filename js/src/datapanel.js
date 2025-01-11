@@ -68,11 +68,11 @@ var Datapanel = {
 
       !ds.table.records || (config.recordview && !hide_grid)
         ? '' : ds.table.search
-          ? m(Search) : m('div', {class: 'flex flex-column'}, [
+          ? m(Search) : m('div', {class: 'flex flex-auto flex-column'}, [
             config.recordview && hide_grid ? m(Toolbar) : null,
             m('form', {
               name: ds.table.name,
-              class: 'flex flex-column'
+              class: 'flex flex-wrap mw7 mr2'
             }, m(Record, {
               record: ds.table.records[selected_idx]
             })),

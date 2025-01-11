@@ -282,8 +282,8 @@ var Field = {
     var href = field.attrs['data-href']
 
     field.attrs = field.attrs || {}
-    if (field.size) {
-      field.attrs.class = 'mw6'
+    if (field.size && field.size > 64) {
+      field.attrs.class = 'w-100'
     }
 
     // Don't show fields used below threshold value
@@ -324,12 +324,16 @@ var Field = {
           m('label', {
             'data-expandable': field.expandable && field.value !== null,
             'data-field': rec.table.name + '.' + field.name,
-            class: label ? 'db ml3 mt1' : 'db ml2 mt1'
+            class: [
+              label ? 'dib ml3 mt1' : 'ml2 mt1',
+              field.element == 'textarea' ? 'w-100' : '', 
+            ].join(' ')
           }, [
               label ? m('b', { 
                 title: field.attrs.title,
+                'data-after': ':', 
                 class: [
-                  'dib w4 v-top mr2',
+                  'db v-top mr2',
                   field.expandable && field.value ? 'underline pointer' : ''
                 ].join(' '),
                 style: 'word-wrap: break-word; hyphens: auto',
@@ -382,7 +386,7 @@ var Field = {
                       ? Field.display_value(field, rec)
                       : m('data', {
                         class: [
-                          'dib mw6 v-top',
+                          'db mw6 v-top',
                           (field.expanded) ? '' : 'truncate',
                           (field.is_filepath) ? 'underline pointer blue' : ''
                         ].join(' '),
@@ -419,7 +423,7 @@ var Field = {
       !field.fkey || !field.expanded ? null : m('fieldset', {
         name: colname,
         class: [
-          'flex flex-column',
+          'flex flex-wrap w-100',
           label ? '' : 'bt-0 br-0 bb-0 bl-1 ml3'
         ].join(' ')
       }, [

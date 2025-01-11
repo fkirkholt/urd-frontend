@@ -291,7 +291,7 @@ var Relation = {
         [
           m('b', { 
             class: [
-              'dib mr2 w4 ',
+              'dib mr2 ',
               rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) ? ''
               : 'underline pointer' 
             ].join(''),
@@ -341,7 +341,7 @@ var Relation = {
         ? m('fieldset', { 
           'data-set': ref, 
           'data-expandable': true, 
-          class: 'flex flex-column' 
+          class: 'flex flex-column w-100' 
         }, [
           m('legend', {
             onclick: function() {

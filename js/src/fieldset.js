@@ -79,7 +79,7 @@ var Fieldset = {
           class: 'db ml3 mt1'
         }, [
             m('b', {
-              class: 'dib w4 v-top underline pointer mr2',
+              class: 'db v-top underline pointer mr2',
               style: 'word-wrap: break-word; hyphens: auto',
               onclick: function() {
                 if (set.expandable) {
@@ -98,7 +98,7 @@ var Fieldset = {
       // Draw fields if the field group is expanded
       !set.expanded ? null : m('fieldset', {
         'data-set': rec.table.name + '.' + set.name,
-        class: 'flex flex-column',
+        class: 'flex flex-wrap',
         'data-expandable': set.expandable
       }, [
           m('legend', {

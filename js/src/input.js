@@ -281,7 +281,7 @@ var Input = {
     } else if (field.element == 'textarea') {
       let text = field.value ? marked.parse(field.value) : ''
 
-      vnode.attrs.class = 'w5'
+      vnode.attrs.class = 'w-100'
       vnode.attrs.onchange = function(event) {
         Field.update(event.target.value, field.name, rec)
         Input.validate(event.target.value, field)
@@ -331,9 +331,9 @@ var Input = {
         Input.validate(value, field)
       }
       return m('input', {...vnode.attrs})
-    } else if (field.datatpe == 'int') {
+    } else if (field.datatype == 'int') {
       vnode.attrs.type = 'number'
-      vnode.attrs.class = 'mw4'
+      vnode.attrs.style = 'width: 70px'
       vnode.attrs.onchange = function(event) {
         var value = event.target.value
         Field.update(value, field.name, rec)
@@ -345,7 +345,7 @@ var Input = {
         ? field.value.replace(/\n/g, '\u21a9')
         : field.value
 
-      vnode.attrs.size = field.size ? field.size : null
+      vnode.attrs.size = field.size ? Math.round(field.size * 0.7) : null
       vnode.attrs.maxlength = field.size ? field.size : ''
       vnode.attrs.class = vnode.attrs.class + ' border-box truncate'
       vnode.attrs.onchange = function(event) {
