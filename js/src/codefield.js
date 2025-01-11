@@ -68,6 +68,8 @@ var Codefield = {
           lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
         } else if (vnode.attrs.lang == 'markdown') {
           lang = markdown.markdown()
+        } else {
+          lang = ''
         }
         editors[vnode.attrs.id] = {}
         if (vnode.attrs['data-pkey']) {
@@ -75,14 +77,10 @@ var Codefield = {
         }
 
         const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
-
-        editors[vnode.attrs.id].view = new cm.EditorView({
-          doc: vnode.attrs.value,
-          extensions: [
+        var extensions = [
             cm.basicSetup,
             foldingOnIndent,
             cm.EditorView.editable.of(vnode.attrs.editable),
-            lang,
             cm.EditorView.updateListener.of(function(view) {
               if ('onchange' in vnode.attrs && view.docChanged) {
                 var value = view.state.doc.toString()
@@ -91,7 +89,12 @@ var Codefield = {
                 $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
               }
             })
-          ],
+        ]
+        if (lang) extensions.push(lang)
+
+        editors[vnode.attrs.id].view = new cm.EditorView({
+          doc: vnode.attrs.value,
+          extensions: extensions,
           parent: vnode.dom,
         })
       })
@@ -121,23 +124,26 @@ var Codefield = {
         var id = vnode.attrs.id
 
         const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
+        var extensions = [
+            cm.basicSetup,
+            foldingOnIndent,
+            cm.EditorView.editable.of(vnode.attrs.editable),
+            cm.EditorView.updateListener.of(function(view) {
+              if ('onchange' in vnode.attrs && view.docChanged) {
+                var value = view.state.doc.toString()
+                vnode.attrs.onchange(value);
+                // Set classes manually to activate save button
+                $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
+              }
+            })
+        ]
+        if (lang) extensions.push(lang)
 
         if (vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != editors[id].pkey) {
           editors[id].pkey = vnode.attrs['data-pkey']
           editors[id].view.setState(state.EditorState.create({
             doc: vnode.attrs.value,
-            extensions: [
-              cm.basicSetup,
-              foldingOnIndent,
-              cm.EditorView.editable.of(vnode.attrs.editable),
-              lang,
-              cm.EditorView.updateListener.of(function(view) {
-                if ('onchange' in vnode.attrs && view.docChanged) {
-                  var value = view.state.doc.toString()
-                  vnode.attrs.onchange(value);
-                }
-              })
-            ],
+            extensions: extensions
           }))
         }
     })

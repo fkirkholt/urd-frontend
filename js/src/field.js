@@ -144,7 +144,8 @@ var Field = {
         value: yaml.dump(JSON.parse(field.value))
       })
     } else if (
-      get(field, 'attrs.data-format') == 'markdown' &&
+      (field.datatype == 'str' && !field.size ||
+      get(field, 'attrs.data-format') == 'markdown') &&
       field.expanded
     ) {
       value = m.trust(marked.parse(field.value))
