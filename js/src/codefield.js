@@ -1,5 +1,8 @@
 var editors = []
 
+import { keymap } from "@codemirror/view"
+import { indentWithTab } from "@codemirror/commands"
+
 var Codefield = {
 
   get_value: function(id) {
@@ -80,6 +83,7 @@ var Codefield = {
         var extensions = [
             cm.basicSetup,
             foldingOnIndent,
+            keymap.of([indentWithTab]),
             cm.EditorView.editable.of(vnode.attrs.editable),
             cm.EditorView.updateListener.of(function(view) {
               if ('onchange' in vnode.attrs && view.docChanged) {
