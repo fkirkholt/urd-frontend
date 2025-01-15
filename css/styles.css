@@ -158,3 +158,10 @@ ol {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+
+.indented-wrapped-line {
+    --correction: 0px;
+    margin-left: calc(var(--indented));
+    text-indent: calc(-1 * var(--indented));
+}

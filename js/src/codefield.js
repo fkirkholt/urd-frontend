@@ -1,5 +1,6 @@
 var editors = []
 
+import { indentedLineWrap } from './linewrap' 
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
@@ -84,6 +85,8 @@ var Codefield = {
             cm.basicSetup,
             foldingOnIndent,
             keymap.of([indentWithTab]),
+            cm.EditorView.lineWrapping,
+            indentedLineWrap,
             cm.EditorView.editable.of(vnode.attrs.editable),
             cm.EditorView.updateListener.of(function(view) {
               if ('onchange' in vnode.attrs && view.docChanged) {
