@@ -148,6 +148,10 @@ ul {
     padding-left: 15px
 }
 
+ul > li > p:first-child {
+    font-weight: bold
+}
+
 ol {
     padding-left: 15px
 }
@@ -159,9 +163,12 @@ ol {
   transform: translate(-50%, -50%);
 }
 
-
 .indented-wrapped-line {
     --correction: 0px;
     margin-left: calc(var(--indented));
     text-indent: calc(-1 * var(--indented));
 }
+
+.fold > p:first-child { display: block }
+.fold.close > * { display: none; }
+.fold.open > * { display: block; }

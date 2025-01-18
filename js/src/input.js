@@ -106,6 +106,7 @@ var Input = {
       vnode.attrs.placeholder = 'autoincr.'
     }
 
+    vnode.attrs.class += ' db'
     vnode.attrs.required = field.extra != 'auto_increment' && !field.nullable
     vnode.attrs.value = field.value
     vnode.attrs.disabled = !field.editable
@@ -170,7 +171,7 @@ var Input = {
       if (!field.text) field.text = field.value
 
       vnode.attrs.type = field.datatype == 'int' ? 'number' : 'text'
-      vnode.attrs.class = field.datatype == 'int' ? 'mw4' : 'mw5'
+      vnode.attrs.class += field.datatype == 'int' ? ' mw4' : ' mw5'
       vnode.attrs.item = field
       vnode.attrs.text = field.text
       vnode.attrs.unique = field.unique
@@ -274,8 +275,14 @@ var Input = {
       vnode.attrs.lang = null
       vnode.attrs.value = field.value
       vnode.attrs.onchange = function(value) {
+        if (!field.dirty) {
+          // Activates save button on change
+          m.redraw()
+        }
         Field.update(value, field.name, rec)
       }
+      // Make field get onclick handler for creating folds after editing finished
+      field.foldable = false
 
       return m(Codefield, {...vnode.attrs})
     } else if (field.element == 'textarea') {

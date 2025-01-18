@@ -1,5 +1,27 @@
 var Field = {
 
+  onupdate: function(vnode) {
+    var rec = vnode.attrs.rec
+    var colname = vnode.attrs.colname
+    var field = rec.fields[colname]
+
+    if (field.element == 'textarea' && field.expanded && !field.foldable) {
+      var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+
+      for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
+                                              selector + " .collapsible ul li p:first-child")) {
+        let t = i.parentElement
+        t.className = "fold open"
+        i.onclick = function(event) {
+          event.stopPropagation()
+          t.classList.toggle("open")
+          t.classList.toggle("close")
+        } 
+        field.foldable = true
+      }
+    }
+  },
+
   update: function(value, field_name, rec) {
 
     var field = rec.fields[field_name]
@@ -329,22 +351,59 @@ var Field = {
               field.element == 'textarea' ? 'w-100' : '', 
             ].join(' ')
           }, [
-              label ? m('b', { 
-                title: field.attrs.title,
-                'data-after': ':', 
-                class: [
-                  'db v-top mr2',
-                  field.expandable && field.value ? 'underline pointer' : ''
-                ].join(' '),
-                style: 'word-wrap: break-word; hyphens: auto',
-                onclick: function() {
-                  if (field.fkey && field.expandable && field.value) {
-                    Field.toggle_fkey(rec, colname)
-                  } 
-                }
-              }, [
-                label,
-              ]) : m('i', {
+              label ? [
+                m('b', { 
+                  title: field.attrs.title,
+                  'data-after': ':', 
+                  class: [
+                    'dib v-top mr2',
+                    field.expandable && field.value ? 'underline pointer' : '',
+                    field.element == 'textarea' ? 'underline pointer' : ''
+                  ].join(' '),
+                  style: 'word-wrap: break-word; hyphens: auto',
+                  onclick: function() {
+                    if (field.fkey && field.expandable && field.value) {
+                      Field.toggle_fkey(rec, colname)
+                    } 
+                    if (field.element == 'textarea') {
+                      field.expanded = !field.expanded
+                    }
+                    if (!field.expanded) {
+                      field.foldable = false
+                    }
+                  }
+                }, [
+                  label,
+                ]),
+                field.element == 'textarea' && field.expanded
+                ? [ 
+                  m('span', {
+                    class: 'moon-gray ml3 pointer link dim hover-blue',
+                    onclick: function() {
+                      var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+
+                      for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
+                                                              selector + " .collapsible ul li p:first-child")) {
+                        let t = i.parentElement
+                        t.className = "fold close"
+                      }
+                    }
+                  }, 'Collapse all'),
+                  m('span', {
+                    class: 'moon-gray ml3 pointer link dim hover-blue',
+                    onclick: function() {
+                      var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+
+                      for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
+                                                              selector + " .collapsible ul li p:first-child")) {
+                        let t = i.parentElement
+                        t.className = "fold open"
+                      }
+                    }
+                  }, 'Expand all'),
+                ]
+                : ''
+              ] : m('i', {
                 class: [
                   'fa fa-fw',
                   field.expanded ? 'fa-angle-down' : 'fa-angle-right'
@@ -380,21 +439,19 @@ var Field = {
                   }, Field.display_value(field, rec)) 
                   : field.datatype == 'date' || field.attrs['data-type'] == 'date'
                     ? m('time', {
-                      datetime: field.value
+                      datetime: field.value,
+                      class: 'db'
                     }, Field.display_value(field, rec))
                     : ['json', 'yaml'].includes(field.attrs['data-format'])
                       ? Field.display_value(field, rec)
                       : m('data', {
                         class: [
-                          'db mw6 v-top',
-                          (field.expanded) ? '' : 'truncate',
+                          'db v-top pr3 collapsible',
+                          (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
                           (field.is_filepath) ? 'underline pointer blue' : ''
                         ].join(' '),
                         value: field.value,
                         onclick: function() {
-                          if (field.element == 'textarea') {
-                            field.expanded = !field.expanded
-                          }
                           if (field.is_filepath) {
                             data = {}
                             data.base = rec.base_name;
