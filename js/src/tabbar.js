@@ -113,12 +113,12 @@ var Tabbar = {
         }, [
           m('li', {
             class: [
-              'list di pl1 pr1 bl bt br b--gray pointer br1 br--top',
+              'list di pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
               (!config.tab || config.tab == 'databases')
                 ? 'bg-white' : 'bg-near-white'
             ].join(' '),
             style: (!config.tab || config.tab == 'databases')
-              ? 'padding-bottom: 1px' : '',
+              ? 'padding-bottom: 2px' : '',
             onclick: function() {
               config.tab = 'databases'
             }
