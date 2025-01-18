@@ -450,7 +450,7 @@ var Field = {
                           (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
                           (field.is_filepath) ? 'underline pointer blue' : ''
                         ].join(' '),
-                        value: field.value,
+                        value: field.element == 'textarea' ? null : field.value,
                         onclick: function() {
                           if (field.is_filepath) {
                             data = {}
