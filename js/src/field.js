@@ -358,14 +358,14 @@ var Field = {
                   class: [
                     'dib v-top mr2',
                     field.expandable && field.value ? 'underline pointer' : '',
-                    field.element == 'textarea' ? 'underline pointer' : ''
+                    field.element == 'textarea' && !config.edit_mode ? 'underline pointer' : ''
                   ].join(' '),
                   style: 'word-wrap: break-word; hyphens: auto',
                   onclick: function() {
                     if (field.fkey && field.expandable && field.value) {
                       Field.toggle_fkey(rec, colname)
                     } 
-                    if (field.element == 'textarea') {
+                    if (field.element == 'textarea' && !config.edit_mode) {
                       field.expanded = !field.expanded
                     }
                     if (!field.expanded) {
@@ -375,7 +375,7 @@ var Field = {
                 }, [
                   label,
                 ]),
-                field.element == 'textarea' && field.expanded
+                field.element == 'textarea' && field.expanded && !config.edit_mode
                 ? [ 
                   m('span', {
                     class: 'moon-gray ml3 pointer link dim hover-blue',
