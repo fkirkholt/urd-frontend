@@ -17,6 +17,10 @@ var Toolbar = {
     mousetrap(document.body).bind('esc', function() {
       $('#urdgrid tr.focus').trigger('focus')
     })
+    mousetrap(document.body).bind('alt+-', function() {
+      const shy = String.fromCodePoint(0x00AD)
+      navigator.clipboard.writeText(shy)
+    })
   },
 
   onremove: function() {
