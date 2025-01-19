@@ -361,6 +361,9 @@ var Record = {
         }
         if (rec.invalid) {
           rel.invalid = true
+          if (rel.relationship == '1:1') {
+            record.messages = record.messages.concat(rec.messages)
+          }
         }
       }
 

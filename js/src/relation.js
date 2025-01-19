@@ -354,7 +354,13 @@ var Relation = {
                 checked: rel.count_records > 0 && rel.records[0].delete != true,
                 onchange: function(ev) {
                   if (!ev.target.checked) {
-                    Record.delete(rel.records[0])
+                    if (rel.records[0].new) {
+                      rel.records.splice(0, 1)
+                    } else {
+                      Record.delete(rel.records[0])
+                    }
+                    rel.expanded = false
+                    rel.count_records = 0
                   }
                 }
               })
