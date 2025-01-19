@@ -27,6 +27,9 @@ var Field = {
     var field = rec.fields[field_name]
 
     field.value = value
+    if (value == '') {
+      field.value = null
+    }
     field.invalid = false
     field.errormsg = ''
 
