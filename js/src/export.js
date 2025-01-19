@@ -53,7 +53,8 @@ var Export_dialog = {
     }
   },
 
-  export_sql: function(dialect, table_defs, no_fkeys, list_recs, data_recs, select_recs) {
+  export_sql: function(dialect, table_defs, no_fkeys, list_recs = false, 
+                       data_recs = false, select_recs) {
     var param = {}
     param.dest = $('input[name=dest]:checked').val() || 'download'
     param.dialect = dialect
