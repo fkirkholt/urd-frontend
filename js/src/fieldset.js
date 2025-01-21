@@ -20,12 +20,13 @@ var Fieldset = {
 
             field.attrs = field.attrs || {}
             field.attrs.placeholder = field.attrs.placeholder || field.label
+            field.attrs.class = 'dib'
             if (field.size) {
               let percent = (100/fieldset.size) * field.size
               if (percent >= 35) {
-                field.attrs.class = 'mw4'
+                field.attrs.class += ' mw4'
               } else {
-                field.attrs.class = 'mw3'
+                field.attrs.class += ' mw3'
               }
             }
 
