@@ -80,8 +80,10 @@ var Fieldset = {
           class: 'db ml3 mt1'
         }, [
             m('b', {
-              class: 'db v-top underline pointer mr2',
-              style: 'word-wrap: break-word; hyphens: auto',
+              class: [
+                'v-top nowrap underline pointer mr2',
+                set.inline ? 'db' : 'dib'
+              ].join(' '),
               onclick: function() {
                 if (set.expandable) {
                   set.expanded = !set.expanded
