@@ -144,7 +144,7 @@ var Grid = {
 
       // Show selected record
       if (ds.table.pkey) {
-        Record.select(ds.table, ds.table.selection || 0, true)
+        Record.select(ds.table, ds.table.selection || index, true)
       }
       $('#urdgrid tr.focus').trigger('focus')
     })

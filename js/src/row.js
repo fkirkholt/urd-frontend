@@ -109,7 +109,7 @@ var Row = {
         if (list.ismain) { // if in main grid
           e.redraw = false
           if (list.pkey) {
-            Record.select(list, idx)
+            Toolbar.set_url(idx)
           }
         } else {
           if (record.pkey == null) return
