@@ -307,8 +307,9 @@ var Field = {
     var href = field.attrs['data-href']
 
     field.attrs = field.attrs || {}
+    field.attrs.class = 'db'
     if (field.size && field.size > 64) {
-      field.attrs.class = 'w-100'
+      field.attrs.class += ' w-100'
     }
 
     // Don't show fields used below threshold value
@@ -359,11 +360,10 @@ var Field = {
                   title: field.attrs.title,
                   'data-after': ':', 
                   class: [
-                    'dib v-top mr2',
+                    'dib v-top mr2 nowrap',
                     field.expandable && field.value ? 'underline pointer' : '',
                     field.element == 'textarea' && !config.edit_mode ? 'underline pointer' : ''
                   ].join(' '),
-                  style: 'word-wrap: break-word; hyphens: auto',
                   onclick: function() {
                     if (field.fkey && field.expandable && field.value) {
                       Field.toggle_fkey(rec, colname)

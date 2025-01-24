@@ -58,29 +58,16 @@ var Cell = {
             field.element != 'select'
         )
           ? 'nowrap' : '',
+        compressed && value && value.length > 30 ? 'truncate' : 'overflow-wrap',
         compressed && value.length > 30 ? 'pt0 pb0' : '',
         vnode.attrs.border ? 'br b--light-gray' : '',
         ds.table.grid.sort_columns[colname] ? 'min-w3' : 'min-w2',
-        'f6 pl1 pr1',
-        get(field, 'attrs.class') ? field.attrs.class : ''
+        'f6 pl1 pr1'
       ].join(' '),
       title: compressed && value.length > 30 ? value : '',
       headers: colname,
       'data-value': value
-    }, [
-        !(value && value.length > 30 && compressed)
-          ? [m('div', [expansion ? icon : '', value])]
-          : m('table', {
-            class: 'w-100',
-            style: 'table-layout:fixed;'
-          }, [
-              m('tr', m('td.pa0', {
-                class: compressed ? 'truncate' : 'overflow-wrap'
-              }, [expansion ? icon : '', value]))
-            ]
-          ),
-      ]
-    )
+    }, [ expansion ? icon : '', value ])
   }
 }
 

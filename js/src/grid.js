@@ -3,85 +3,7 @@ var Grid = {
 
   url: '',
 
-  align_thead: function() {
-    var $table = $('#urdgrid')
-    var $head_cells = $table.find('thead tr').children()
-    var $body_cells = $table.find('tbody tr').first().children()
-    var $foot_cells = $table.find('tfoot tr').children()
-    var col_widths, head_col_widths, body_col_widths, foot_col_widths
-
-    // Remove existing width attributes
-    $head_cells.each(function(i, v) {
-      $(v).css('width', '')
-    })
-    $body_cells.each(function(i, v) {
-      $(v).children('div').css('width', '')
-    })
-    $foot_cells.each(function(i, v) {
-      $(v).css('width', '')
-    })
-
-    // Get column widths
-    head_col_widths = $head_cells.map(function() {
-      return $(this).width()
-    }).get()
-    body_col_widths = $body_cells.map(function() {
-      return $(this).width()
-    }).get()
-    foot_col_widths = $foot_cells.map(function() {
-      return $(this).width()
-    }).get()
-
-    var col_widths = []
-    // for (let idx in head_col_widths) {
-    if (!config.compressed || body_col_widths.length == 0) {
-      head_col_widths.forEach(function (value, idx) {
-        col_widths[idx] = Math.max(...[
-          value, 
-          body_col_widths[idx] || 0,
-          foot_col_widths[idx] || 0
-        ])
-      })
-    } else {
-      col_widths = body_col_widths
-    }
-
-    // Set width of tbody columns
-    if (!config.compressed) {
-      $.each(col_widths, function(idx, width) {
-        var $col = $table.find('tbody tr').first()
-          .find('td:nth-child(' + (idx + 1) + ') div').width(width)
-      })
-    }
-
-    // Set the width of thead columns
-    $table.find('thead tr').children().each(function(i, v) {
-      // Add 0,8 to th width because of margin width
-      if (col_widths[i] != head_col_widths[i]) {
-        $(v).width(col_widths[i] + 0.6)
-      }
-    })
-
-    // Set the width of tfoot columns
-    $table.find('tfoot tr').children().each(function(i, v) {
-      if (col_widths[i] != foot_col_widths[i])
-      $(v).width(col_widths[i] + 0.8)
-    })
-  },
-
-  oncreate: function() {
-    Grid.align_thead()
-    // Adjust the width of thead cells when window resizes
-    var align
-    window.onresize = function() {
-      clearTimeout(align)
-      align = setTimeout(Grid.align_thead, 100)
-    }
-  },
-
   onupdate: function() {
-    Grid.align_thead()
-
     // Ensure scrolling to bottom for new records
     if ((ds.table.selection + 1) == ds.table.records.length) {
       var height = $('#urdgrid tbody')[0].scrollHeight
@@ -144,7 +66,7 @@ var Grid = {
 
       // Show selected record
       if (ds.table.pkey) {
-        Record.select(ds.table, ds.table.selection || 0, true)
+        Record.select(ds.table, ds.table.selection || index, true)
       }
       $('#urdgrid tr.focus').trigger('focus')
     })
@@ -365,13 +287,13 @@ var Grid = {
     return [
       ds.table.tab == 'chart' ? '' : m('table#urdgrid.tbl', {
         'data-name': ds.table.name,
-        class: 'bt b--moon-gray flex flex-column overflow-auto collapse',
+        class: 'db bt b--moon-gray overflow-auto collapse',
         style: 'background: #f9f9f9',
       }, [
-          m('thead', { class: 'db' }, [
-            m('tr', { class: 'cursor-default bb b-moon-gray flex' }, [
+          m('thead', { class: '' }, [
+            m('tr', { class: 'cursor-default' }, [
               m('th', {
-                class: 'tl br b--moon-gray bg-light-gray normal f6 pa0'
+                class: 'tl bg-light-gray normal f6 pa0'
               }, ''),
               Object.keys(ds.table.grid.columns).map(function(label) {
                 var col = ds.table.grid.columns[label]
@@ -391,7 +313,7 @@ var Grid = {
                 return m('th', {
                   id: col,
                   class: [
-                    'tl br b--moon-gray bg-light-gray f6 pa1 pb0 nowrap dib',
+                    'tl bg-light-gray f6 pa1 pb0 nowrap',
                     config.compressed ? 'truncate' : '',
                   ].join(' '),
                   'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
@@ -413,7 +335,7 @@ var Grid = {
                 })
             ])
           ]),
-          m('tbody', { class: 'db overflow-y-auto overflow-x-hidden' }, [
+          m('tbody', { class: 'overflow-y-auto overflow-x-hidden' }, [
             ds.table.records.map(function(record, idx) {
               record.base_name = ds.base.name
               record.table_name = ds.table.name
@@ -432,7 +354,7 @@ var Grid = {
               Object.keys(ds.table.grid.columns).map(function(label) {
                 var col = ds.table.grid.columns[label]
                 return m('td', {
-                  class: 'tr bl bt b--moon-gray bg-white f6 pa1 pb0 nowrap dib'
+                  class: 'tr bl bt b--moon-gray bg-white f6 pa1 pb0 nowrap'
                 }, (col in ds.table.grid.sums)
                     ? m.trust(String(ds.table.grid.sums[col]))
                     : m.trust('&nbsp'))

@@ -106,7 +106,6 @@ var Input = {
       vnode.attrs.placeholder = 'autoincr.'
     }
 
-    vnode.attrs.class += ' db'
     vnode.attrs.required = field.extra != 'auto_increment' && !field.nullable
     vnode.attrs.value = field.value
     vnode.attrs.disabled = !field.editable
@@ -331,8 +330,8 @@ var Input = {
       return m('input[type=date]', {...vnode.attrs})
     } else if (field.datatype == 'float' || field.datatype == 'Decimal') {
       vnode.attrs.type = 'number'
-      vnode.attrs.class = field.precision < 5 
-        ? 'mw3' : 'mw4'
+      vnode.attrs.class += field.precision < 5 
+        ? ' mw3' : ' mw4'
       vnode.attrs.onchange = function(event) {
         var value = event.target.value
         Field.update(value, field.name, rec)
@@ -355,7 +354,7 @@ var Input = {
 
       vnode.attrs.size = field.size ? Math.round(field.size * 0.7) : null
       vnode.attrs.maxlength = field.size ? field.size : ''
-      vnode.attrs.class = vnode.attrs.class + ' border-box truncate'
+      vnode.attrs.class += ' border-box truncate'
       vnode.attrs.onchange = function(event) {
         var value = event.target.value.replace(/\u21a9/g, "\n")
         Field.update(value, field.name, rec)

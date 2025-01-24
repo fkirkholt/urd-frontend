@@ -2,9 +2,21 @@ html {
     line-height: normal;
 }
 
+table#urdgrid thead th {
+    position: sticky; 
+    position: -webkit-sticky; 
+    top: 0; 
+    z-index: 999;
+    background-clip: padding-box;
+    /* Make borders that stick when scrolling tbody */
+    outline: 1px solid lightgray; border:none; outline-offset: -0.5px;
+}
+
 tr {
     cursor: default;
 }
+
+td.truncate { overflow: hidden; text-overflow: ellipsis; width: 100%; max-width: 0;}
 
 tr:focus {
     outline: 0;
