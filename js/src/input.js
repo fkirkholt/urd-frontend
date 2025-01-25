@@ -237,8 +237,7 @@ var Input = {
 
       return m(Autocomplete, {...vnode.attrs})
     } else if (
-      (field.datatype == 'json' || get(field, 'attrs.data-type') == 'json') &&
-        get(field, 'attrs.data-format') == 'yaml'
+      field.datatype == 'json' && get(field, 'attrs.data-format') == 'yaml'
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey

@@ -36,7 +36,7 @@ var Fieldset = {
 
             return !display
             ? m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
-            : field.datatype == 'date' || field.attrs['data-type'] == 'date'
+            : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
               ? [separator, m('time', { datetime: field.value }, Field.display_value(field, rec))]
               : [separator, m('data', { value: field.value }, Field.display_value(field, rec))]
           case 'action':

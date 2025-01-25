@@ -144,6 +144,18 @@ var Field = {
         : value == 1 ? 'fa-check-square-o'
           : 'fa-minus-square-o'
       value = m('i', { class: 'fa ' + icon })
+    } else if (
+      field.datatype == 'json' &&
+      get(field, 'attrs.data-format') == 'yaml'
+    ) {
+      value = m(Codefield, {
+        id: 'yaml',
+        class: field.attrs.class || '',
+        'data-pkey': rec.pkey,
+        editable: false,
+        lang: 'yaml',
+        value: yaml.dump(JSON.parse(field.value))
+      })
     } else if (field.value && (
       field.datatype == 'json' ||
       get(field, 'attrs.data-format') == 'json'
@@ -155,18 +167,6 @@ var Field = {
         rec: rec,
         style: "width: 330px; height: 400px;",
         value: JSON.parse(field.value)
-      })
-    } else if (
-      (field.datatype == 'json' || get(field, 'attrs.data-type') == 'json') &&
-        get(field, 'attrs.data-format') == 'yaml'
-    ) {
-      value = m(Codefield, {
-        id: 'yaml',
-        class: field.attrs.class || '',
-        'data-pkey': rec.pkey,
-        editable: false,
-        lang: 'yaml',
-        value: yaml.dump(JSON.parse(field.value))
       })
     } else if (
       (field.datatype == 'str' && !field.size ||
@@ -440,7 +440,7 @@ var Field = {
                       }
                     }
                   }, Field.display_value(field, rec)) 
-                  : field.datatype == 'date' || field.attrs['data-type'] == 'date'
+                  : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
                     ? m('time', {
                       datetime: field.value,
                       class: 'db'

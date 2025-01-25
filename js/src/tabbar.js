@@ -2,12 +2,12 @@ var create_html_attributes =
 `
 create table html_attributes(
    selector varchar(100) not null,
-   attributes text not null,
+   attributes json not null,
    primary key (selector)
 );
 
 insert into html_attributes values
-('[data-field="html_attributes.attributes"]', '{"data-type": "json", "data-format": "yaml"}')
+('[data-field="html_attributes.attributes"]', '{"data-format": "yaml"}')
 `
 
 var create_usertables = 
