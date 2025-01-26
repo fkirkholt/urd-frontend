@@ -346,6 +346,14 @@ var Input = {
         Input.validate(value, field)
       }
       return m('input', {...vnode.attrs})
+    } else if (field.datatype = 'str' && get(field, 'attrs.data-format') == 'ISO 8601') {
+      vnode.attrs.pattern = '^[12]\\d{3}(?:(?:-(?:0[1-9]|1[0-2]))(?:-(?:0[1-9]|[12]\\d|3[01]))?)?$'
+      vnode.attrs.onchange = function(event) {
+        var value = event.target.value
+        Field.update(value, field.name, rec)
+        Input.validate(value, field)
+      }
+      return m('input', {...vnode.attrs})
     } else {
       vnode.attrs.value = typeof field.value === 'string'
         ? field.value.replace(/\n/g, '\u21a9')
