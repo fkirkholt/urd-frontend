@@ -112,6 +112,11 @@ var Input = {
     vnode.attrs.style = vnode.attrs.style || {}
     vnode.attrs['data-table'] = rec.table.name
     vnode.attrs['data-dirty'] = field.dirty
+    vnode.attrs.onchange = function(event) {
+      var value = event.target.value
+      Field.update(value, field.name, rec)
+      Input.validate(value, field)
+    }
 
     var has_idx = false
     $.each(rec.table.indexes, function(i, idx) {
@@ -331,28 +336,13 @@ var Input = {
       vnode.attrs.type = 'number'
       vnode.attrs.class += field.precision < 5 
         ? ' mw3' : ' mw4'
-      vnode.attrs.onchange = function(event) {
-        var value = event.target.value
-        Field.update(value, field.name, rec)
-        Input.validate(value, field)
-      }
       return m('input', {...vnode.attrs})
     } else if (field.datatype == 'int') {
       vnode.attrs.type = 'number'
       vnode.attrs.style = 'width: 70px'
-      vnode.attrs.onchange = function(event) {
-        var value = event.target.value
-        Field.update(value, field.name, rec)
-        Input.validate(value, field)
-      }
       return m('input', {...vnode.attrs})
     } else if (field.datatype = 'str' && get(field, 'attrs.data-format') == 'ISO 8601') {
       vnode.attrs.pattern = '^[12]\\d{3}(?:(?:-(?:0[1-9]|1[0-2]))(?:-(?:0[1-9]|[12]\\d|3[01]))?)?$'
-      vnode.attrs.onchange = function(event) {
-        var value = event.target.value
-        Field.update(value, field.name, rec)
-        Input.validate(value, field)
-      }
       return m('input', {...vnode.attrs})
     } else {
       vnode.attrs.value = typeof field.value === 'string'
