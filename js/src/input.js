@@ -118,10 +118,8 @@ var Input = {
       Input.validate(value, field)
     }
 
-    var has_idx = false
     $.each(rec.table.indexes, function(i, idx) {
       if (idx.columns[0] === field.name) {
-        has_idx = true
         if (idx.columns.length == 1 && idx.unique) {
           field.unique = true
         }
@@ -170,7 +168,7 @@ var Input = {
           disabled: true, value: option ? option.label : field.value
         })
         : m(Select, {...vnode.attrs})
-    } else if (field.element === 'select' || has_idx) {
+    } else if (field.element === 'input' && field.attrs.type == 'search') {
 
       if (!field.text) field.text = field.value
 

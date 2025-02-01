@@ -79,7 +79,7 @@ function Autocomplete() {
           id: vnode.attrs.id,
           name: vnode.attrs.fieldname,
           'data-table': vnode.attrs['data-table'],
-          type: vnode.attrs.type || 'text',
+          type: vnode.attrs.type || 'search',
           size: vnode.attrs.item.element == 'input' && vnode.attrs.item.size
             ? vnode.attrs.item.size
             : null,

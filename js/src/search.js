@@ -343,8 +343,7 @@ var Search = {
     } else if (
       (field.element === 'select' &&
         !['', 'LIKE', 'startswith', 'endswith', '>', '<'].includes(filter.operator)) ||
-      (field.element === 'input' && field.attrs.type == 'text' &&
-        has_idx &&
+      (field.element === 'input' && field.attrs.type == 'search' &&
         ['=', '!='].includes(filter.operator))
     ) {
       key = field.fkey ? field.fkey.referred_columns : [field.name]
