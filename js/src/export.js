@@ -70,7 +70,7 @@ var Export_dialog = {
     var params = Object.keys(param).map(function(k) {
       return k + '=' + param[k]
     }).join('&')
-    let eventSource = new EventSource('/export_sql?' + params);
+    let eventSource = new EventSource('/export_sql?' + params)
 
     eventSource.onmessage = function(event) {
       var data = JSON.parse(event.data)
@@ -89,7 +89,18 @@ var Export_dialog = {
           window.open('/download?path=' + data.path + '&media_type=' + media_type, '_blank')
         }
       }
-    };
+    }
+
+    eventSource.onerror = (error) => {
+      eventSource.close()
+      $('div.curtain').hide()
+      $('#export-dialog').hide()
+      alert('Export failed')
+      Export_dialog.running = false
+      Export_dialog.msg = ''
+    }
+
+
   },
 
   view: function() {
