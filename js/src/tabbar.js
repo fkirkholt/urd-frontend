@@ -125,12 +125,12 @@ var Tabbar = {
           }, 'Databases'),
           !ds.dblist || !ds.dblist.useradmin ? '' : m('li', {
             class: [
-              'list di ml2 pl1 pr1 bl bt br b--gray pointer br1 br--top',
+              'list di ml2 pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
               (config.tab == 'users')
                 ? 'bg-white' : 'bg-near-white'
             ].join(' '),
             style: (config.tab == 'users')
-              ? 'padding-bottom: 1px' : '',
+              ? 'padding-bottom: 2px' : '',
             onclick: function() {
               config.tab = 'users'
               if (!ds.users) {
