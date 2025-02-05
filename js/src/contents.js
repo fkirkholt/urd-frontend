@@ -289,8 +289,8 @@ var Contents = {
               class: 'mb2',
               onchange: function() {
                 var schema = $(this).val()
-                db_name = ds.base.name.split('.')[0]
-                adr = ['postgresql', 'mssql'].includes(ds.base.system)
+                var db_name = ds.base.name.split('.')[0]
+                var adr = ['postgresql', 'mssql'].includes(ds.base.system)
                   ? '/' + db_name + (['dbo', 'public'].includes(schema) ? '' : '.' + schema)
                   : '/' + schema
                 m.route.set(adr)
