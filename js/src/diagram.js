@@ -1,5 +1,6 @@
 var mermaid
 import config from './config.js'
+import Relation from './relation.js'
 import get from 'just-safe-get'
 
 var Diagram = {
@@ -126,14 +127,6 @@ var Diagram = {
       def.push('}')
     }
 
-    var fk_tables = []
-    Object.keys(table.fkeys).map(function(name) {
-      var fkey = table.fkeys[name]
-      if (fkey.referred_table != table.name) {
-        fk_tables.push(fkey.referred_table)
-      }
-    })
-
     // Draw belongs-to relations from foreign keys
     if (config.show_relations != 'subordinate') {
       Object.keys(table.fkeys).map(function(alias) {
@@ -146,27 +139,16 @@ var Diagram = {
         }
         var line = field && field.hidden ? '..' : '--'
         var symbol = field && field.nullable ? ' o|' : ' ||'
-        var skip = false
 
         if (fk_table.hidden) {
-          skip = true
+          return
         }
 
         if (field_name[0] == '_') {
-          skip = true
+          return
         }
 
-        // Removes relations that represents grand parents and up
-        if (!config.show_all_descendants) {
-          Object.keys(fk_table.relations).map(function(name) {
-            var rel_fk = fk_table.relations[name]
-            if (fk_tables.includes(rel_fk.table)) {
-              skip = true
-            }
-          })
-        }
-
-        if (skip) {
+        if (!config.show_all_descendants && !Relation.is_direct(table.name, alias)) {
           return
         }
 
@@ -199,29 +181,17 @@ var Diagram = {
     Object.keys(table.relations).map(function(alias) {
       var rel = table.relations[alias]
       var rel_table = ds.base.tables[rel.table_name]
-      var skip = false
 
       if (rel_table.hidden) {
-        skip = true
-      }
-
-      // Removes relations that represents grand children and down
-      if (!config.show_all_descendants) {
-        Object.keys(rel_table.fkeys).map(function(name) {
-          var rel_fk = rel_table.fkeys[name]
-          if (rel_tables.includes(rel_fk.referred_table)) {
-            skip = true
-          }
-        })
+        return
       }
 
       // Remove relations which are not used much
       if (rel.use && rel.use < config.threshold) {
-        skip = true
+        return
       }
 
-
-      if (skip) {
+      if (!config.show_all_descendants &&!Relation.is_direct(rel.table_name, alias)) {
         return
       }
 
