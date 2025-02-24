@@ -179,7 +179,7 @@ var Relation = {
   },
 
   /** Decide if the relation represents a direct descendant of the table */
-  is_direct: function(rel_tbl_name, fkey_name) {
+  is_direct: function(rel_tbl_name, fkey_name, in_contents = false) {
     var result = true
     var rel_table = ds.base.tables[rel_tbl_name]
     var rel_fkey = rel_table.fkeys[fkey_name]
@@ -190,6 +190,13 @@ var Relation = {
       var res = rel_fkey.constrained_columns.every(function(col) {
         return fkey.name != fkey_name && fkey.constrained_columns.indexOf(col) >= 0
       });
+
+      // If we check direct relation in contents, then the foreign key also
+      // has to be part of primary key. Only then does the table show up
+      // beneath the referred table
+      if (in_contents) {
+        res = res && fkey.constrained_columns.every(val => rel_table.pkey.columns.includes(val));
+      }
 
       if (res) {
         result = false

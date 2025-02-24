@@ -214,7 +214,7 @@ var Contents = {
                 }
               })
 
-              if (!config.show_all_descendants && !Relation.is_direct(rel.name, rel_fkey_name)) {
+              if (!config.show_all_descendants && !Relation.is_direct(rel.name, rel_fkey_name, true)) {
                 return
               }
               return Contents.draw_table_node(label, subitem)
