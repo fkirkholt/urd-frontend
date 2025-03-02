@@ -20,17 +20,13 @@ var Record = {
       return
     }
 
-    var pk = ('pkey' in table.records[idx])
-      ? JSON.stringify(table.records[idx].pkey)
-      : JSON.stringify(table.records[idx].columns)
-
     m.request({
       method: "GET",
       url: 'record',
       params: {
         base: m.route.param('base'),
         table: table.name,
-        pkey: pk
+        pkey: JSON.stringify(table.records[idx].pkey)
       }
     }).then(function(result) {
         var rec = $.extend(table.records[idx], result.data)
