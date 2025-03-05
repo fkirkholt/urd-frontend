@@ -106,8 +106,7 @@ var Toolbar = {
     var rec = ds.table.records[idx]
     var deletable = true
     $.each(rec.relations, function(idx, rel) {
-      var count_local = rel.count_records - rel.count_inherited
-      if (count_local && rel.options?.ondelete != "CASCADE") {
+      if (rel.count_records && rel.options?.ondelete != "CASCADE") {
         deletable = false
       }
     })

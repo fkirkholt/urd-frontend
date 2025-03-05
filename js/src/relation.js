@@ -90,7 +90,7 @@ var Relation = {
 
         if (rec.relations) {
           $.each(rec.relations, function(idx, rel) {
-            var count = rel.count_records - rel.count_inherited
+            var count = rel.count_records
             if (count && rel.options?.ondelete != "CASCADE") {
               rec.deletable = false
             }

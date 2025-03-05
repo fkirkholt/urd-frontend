@@ -458,8 +458,7 @@ var Record = {
 
     for (let idx in rec.relations) {
       let rel = rec.relations[idx]
-      var count_local = rel.count_records - rel.count_inherited
-      if (count_local && rel.options?.ondelete != "CASCADE") {
+      if (rel.count_records && rel.options?.ondelete != "CASCADE") {
         deletable = false
       }
     }
