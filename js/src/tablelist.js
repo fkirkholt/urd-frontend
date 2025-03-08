@@ -65,7 +65,24 @@ var Tablelist = {
               Codefield.set_value('query', sql)
               $('#tablelist-context').hide()
             }
-          }, 'Describe table')
+          }, 'Describe table'),
+          m('li', {
+            class: 'hover-blue',
+            onclick: function() {
+              var sql
+              if (ds.base.system == 'sqlite') {
+                sql = "select name, sql from sqlite_master "
+                sql += "where type = 'index' and "
+                sql += "tbl_name = '" + Tablelist.context_table + "';"
+              } else {
+                alert('Not implemented for this database yet')
+                $('#tablelist-context').hide()
+                return
+              }
+              Codefield.set_value('query', sql)
+              $('#tablelist-context').hide()
+            }
+          }, 'Show indexes')
         ]),
 
       m('div', { class: 'flex flex-column'}, [
