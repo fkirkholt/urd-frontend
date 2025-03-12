@@ -11,9 +11,8 @@ var Datapanel = {
         if (attr == 'style' && typeof(value) == 'object' && value !== null) {
           string_value = ''
           for (let key in value) {
-            string_value += key + ':' + value[key] + ';'
+            $(selector).css(key, value[key])
           }
-          $(selector).attr(attr, string_value)
         } else {
           $(selector).attr(attr, value)
         }
