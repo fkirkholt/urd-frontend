@@ -149,7 +149,7 @@ var Record = {
       table_name: list.name,
       table: list,
       columns: list.records[idx].columns,
-      fields: $.extend({}, list.fields),
+      fields: $.extend(true, {}, list.fields),
       pkey: {},
       groups: [] // TODO: This should be removed
     }
