@@ -134,6 +134,9 @@ var Codefield = {
         var extensions = [
             cm.basicSetup,
             foldingOnIndent,
+            keymap.of([indentWithTab]),
+            cm.EditorView.lineWrapping,
+            indentedLineWrap,
             cm.EditorView.editable.of(vnode.attrs.editable),
             cm.EditorView.updateListener.of(function(view) {
               if ('onchange' in vnode.attrs && view.docChanged) {
