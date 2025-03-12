@@ -2,7 +2,10 @@ var Datapanel = {
 
   set_attrs: function() {
     var string_value
-    for (let selector in ds.base.html_attrs) {
+    if (ds.base.html_attrs == undefined) {
+      return
+    }
+    Object.keys(ds.base.html_attrs).sort().forEach(function(selector, i) {
       for (let attr in ds.base.html_attrs[selector]) {
         let value = ds.base.html_attrs[selector][attr]
         if (attr == 'style' && typeof(value) == 'object' && value !== null) {
@@ -19,7 +22,7 @@ var Datapanel = {
           $(selector).text(value)
         }
       }
-    } 
+    }) 
   },
 
   onupdate: function() {
