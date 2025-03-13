@@ -33,6 +33,7 @@ var Grid = {
       filter: ds.table.query,
       sort: JSON.stringify(sort_cols),
       offset: list.offset,
+      limit: list.limit,
       compressed: config.compressed
     }
     this.get(data)
