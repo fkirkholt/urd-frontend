@@ -184,3 +184,9 @@ ol {
 .fold > p:first-child { display: block }
 .fold.close > * { display: none; }
 .fold.open > * { display: block; }
+
+code {
+    background-color: #eee;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
