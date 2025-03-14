@@ -322,7 +322,7 @@ var Grid = {
                 }, [
                 label, m('i', {
                   class: [
-                    'fr ml2',
+                    'ml2',
                     Grid.column_order(col) == 'asc' ? 'fa fa-angle-up'
                       : Grid.column_order(col) == 'desc' ? 'fa fa-angle-down'
                       : ''
