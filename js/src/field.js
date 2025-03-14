@@ -173,7 +173,14 @@ var Field = {
       get(field, 'attrs.data-format') == 'markdown') &&
       field.expanded
     ) {
-      value = m.trust(marked.parse(field.value))
+      let result = field.value.replace(/\:[\w+:]*\:/gi, function (x) {
+        return '<mark class="bg-light-gray">' + x + '</mark>';
+      });
+      result = result.replace(/\:todo:/gi, function (x) {
+        return '<mark>' + x + '</mark>';
+      });
+
+      value = m.trust(marked.parse(result))
     } else if (field.expanded) {
       if (typeof(value) == 'string') {
         value = m.trust(value.replace("\n", '<br>'))
