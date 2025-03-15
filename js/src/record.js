@@ -494,7 +494,7 @@ var Record = {
     return [
         !ds.table.edit && !ds.table.hide
           ? ''
-          : m('div', [
+          : m('div', { class: 'w-100 mb3' }, [
             config.recordview || !rec.root ? '' : m('input[type=button]', {
               value: 'Save and close',
               onclick: function() {
