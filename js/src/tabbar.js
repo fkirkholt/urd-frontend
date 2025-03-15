@@ -340,7 +340,10 @@ var Tabbar = {
                    ds.table.filters[ds.table.expansion_column].operator == 'IS NULL',
           onclick: function(ev) {
             var path = m.route.get()
-            var query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+            var query_params = {}
+            if (path.indexOf('?') > -1) {
+              query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
+            }
 
             var key = ds.table.expansion_column + ' IS NULL'
             if (ev.target.checked) {
