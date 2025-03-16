@@ -110,7 +110,7 @@ function Autocomplete() {
           },
         }),
         !options.length ? '' : m('ul.options', {
-          class: 'absolute list bg-white ma0 pa0 ba b--gray'
+          class: 'absolute list bg-white ma0 pa0 ba b--gray z-999'
         }, [
             options.map(function(row, i) {
               return m('li', {
