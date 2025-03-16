@@ -30,7 +30,6 @@ var Header = {
               m('li', {
                 onclick: function() {
                   $('#preferences').show()
-                  $('#preferences [name=autosave]').prop('checked', config.autosave)
                   $('div.curtain').show()
                 }
               }, 'Innstillinger'),

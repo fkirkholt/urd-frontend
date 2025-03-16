@@ -171,7 +171,7 @@ var Grid = {
       url: 'table',
       body: data
     }).then(function(result) {
-      $('#message').show().html('Saved')
+      $('#message').removeClass('bg-red').addClass('bg-light-green').show().html('Saved')
 
       setTimeout(function() {
         $('#message').hide()

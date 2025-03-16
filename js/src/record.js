@@ -292,10 +292,10 @@ var Record = {
     var changes = Record.get_changes(rec, false)
 
     var data = {
-      base_name: rec.base_name,
-      table_name: rec.table.name,
-      pkey: changes.prim_key,
-      values: changes.values
+      base: rec.base_name,
+      table: rec.table.name,
+      pkey: JSON.stringify(changes.prim_key),
+      values: JSON.stringify(changes.values)
     }
 
     m.request({
@@ -303,10 +303,11 @@ var Record = {
       params: data,
       url: 'record'
     }).then(function(data) {
-        for (let fieldname in changes.values) {
-          rec.fields[fieldname].dirty = false
-        }
-        rec.new = false
+      for (let fieldname in changes.values) {
+        rec.fields[fieldname].dirty = false
+      }
+      rec.new = false
+      if (data.values) {
         $.each(data.values, function(fieldname, value) {
           rec.fields[fieldname].value = value
 
@@ -316,12 +317,21 @@ var Record = {
           }
 
         })
-        if (rec.delete) {
-          var idx = rec.table.selection
-          rec.table.records.splice(idx, 1)
-          rec.table.selection = 0
-        }
-      })
+        rec.pkey = data.values
+      }
+      if (rec.delete) {
+        var idx = rec.table.selection
+        rec.table.records.splice(idx, 1)
+        Toolbar.set_url(0)
+      }
+    })
+    .catch(function(e) {
+      console.log('e', e)
+      $('#message').removeClass('bg-light-green').addClass('bg-red').show().html('Save failed')
+      setTimeout(function() {
+        $('#message').hide()
+      }, 2000)
+    })
   },
 
   validate: function(record) {
