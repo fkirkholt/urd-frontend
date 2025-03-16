@@ -190,3 +190,9 @@ code {
     padding: 2px 4px;
     border-radius: 3px;
 }
+
+pre {
+    background-color: #eee;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
