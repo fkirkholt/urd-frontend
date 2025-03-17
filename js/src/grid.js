@@ -245,7 +245,7 @@ var Grid = {
         unique_cols = idx.columns
       }
     }
-    if (!unique_cols && ds.table.pkey) {
+    if (!unique_cols && ds.table.pkey && ds.table.pkey[0] != 'rowid') {
       unique_cols = ds.table.pkey
     }
 
