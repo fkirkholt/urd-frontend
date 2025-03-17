@@ -196,3 +196,7 @@ pre {
     padding: 2px 4px;
     border-radius: 3px;
 }
+
+pre code {
+    padding: 2px 0px
+}
