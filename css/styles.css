@@ -6,7 +6,7 @@ table#urdgrid thead th {
     position: sticky; 
     position: -webkit-sticky; 
     top: 0; 
-    z-index: 999;
+    z-index: 10;
     background-clip: padding-box;
     /* Make borders that stick when scrolling tbody */
     outline: 1px solid lightgray; border:none; outline-offset: -0.5px;
