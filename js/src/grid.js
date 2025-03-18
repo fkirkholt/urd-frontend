@@ -65,11 +65,9 @@ var Grid = {
         ds.table.selection = data.index
       }
 
-      // Show selected record
-      if (ds.table.pkey) {
-        Record.select(ds.table, ds.table.selection || index, true)
-      }
-      $('#urdgrid tr.focus').trigger('focus')
+      ds.base.name = data.base
+
+      Toolbar.set_url(ds.table.selection || index)
     })
     .catch(function(e) {
       if (e.code === 401) {
@@ -379,3 +377,4 @@ import Record from './record.js'
 import Row from './row.js'
 import Chart from './chart.js'
 import config from './config.js'
+import Toolbar from './toolbar.js'
