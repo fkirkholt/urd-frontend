@@ -158,7 +158,7 @@ var Toolbar = {
     if (offset !== undefined) {
       query_params.offset = offset
     }
-    if (ds.table.grid.sort_columns) {
+    if (Object.keys(ds.table.grid.sort_columns).length > 0) {
       var sort = Object.values(ds.table.grid.sort_columns)[0]
       query_params.order = sort.col
       query_params.order += ' ' + sort.dir
