@@ -27,16 +27,8 @@ var Grid = {
       order = 'ASC'
     }
     sort_cols[col] = {col: col, dir: order, idx: 0}
-    var data = {
-      base: ds.base.name,
-      table: list.name,
-      filter: ds.table.query,
-      sort: JSON.stringify(sort_cols),
-      offset: list.offset,
-      limit: list.limit,
-      compressed: config.compressed
-    }
-    this.get(data)
+    ds.table.grid.sort_columns = sort_cols
+    Toolbar.set_url(0)
   },
 
   /**
@@ -91,6 +83,7 @@ var Grid = {
     delete param.index
     delete param.offset
     delete param.limit
+    delete param.order
     var search_params = []
     $.each(param, function(key, value) {
       var expr = value ? key + '=' + value : key
@@ -205,10 +198,17 @@ var Grid = {
     if ('index' in params) {
       index = params.index
     }
+
+    if ('order' in params) {
+      var sort = params.order.split(' ')
+      var sort_cols = {}
+      sort_cols[sort[0]] = {col: sort[0], dir: sort[1], idx: 0}
+    }
     
     Grid.get({
       base: params.base, table: params.table, filter: query, 
       limit: config.limit, offset: params.offset || 0, 
+      sort: JSON.stringify(sort_cols),
     }, index)
 
 

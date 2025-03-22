@@ -136,7 +136,7 @@ var Toolbar = {
     var param = m.route.param()
     search_params = []
     $.each(param, function(key, value) {
-      if (['base', 'table', 'index', 'offset'].indexOf(key) >= 0) return
+      if (['base', 'table', 'index', 'offset', 'order'].indexOf(key) >= 0) return
       var expr = value ? key + '=' + value : key 
       search_params.push(expr)
     })
@@ -157,6 +157,11 @@ var Toolbar = {
     }
     if (offset !== undefined) {
       query_params.offset = offset
+    }
+    if (ds.table.grid.sort_columns) {
+      var sort = Object.values(ds.table.grid.sort_columns)[0]
+      query_params.order = sort.col
+      query_params.order += ' ' + sort.dir
     }
     m.route.set('/' + ds.base.name + '/data/' + ds.table.name + '?' + m.buildQueryString(query_params))
   },
