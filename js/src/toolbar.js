@@ -234,7 +234,7 @@ var Toolbar = {
         onchange: function(event) {
           var value = event.target.value
           m.route.set('/' + ds.base.name + '/data/' + ds.table.name +
-            '?' + encodeURI(value.replace(/;\s*/g, '&')))
+            '?' + encodeURIComponent(value.replace(/;\s*/g, '&')))
         }
       }),
       // Button for creating new record
