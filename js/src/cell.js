@@ -22,11 +22,17 @@ var Cell = {
     var col = rec.columns[colname]
     if (field.hidden) return
 
+    if (get(field, 'attrs.data-format') == 'markdown') {
+      field.value = col.value
+      var val = Field.display_value(field, rec, true)
+    }
+
     var value = col.value == null && col.text == null ? ''
       // Show value if the table is displayed in compressed mode
+      : get(field, 'attrs.data-format') == 'markdown' ? val
       : compressed ? col.value
-        // else show the display text (that also shows in a select box)
-        : col.text
+      // else show the display text (that also shows in a select box)
+      : col.text
 
     if (field.element == 'input' && field.attrs.type == 'checkbox') {
       var icon = value == 0 

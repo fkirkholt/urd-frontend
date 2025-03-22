@@ -201,3 +201,10 @@ pre {
 pre code {
     padding: 2px 0px;
 }
+
+mark {
+    background-color: inherit;
+    padding: 2px 0px;
+    border-radius: 3px;
+}
+

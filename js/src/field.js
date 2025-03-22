@@ -133,7 +133,7 @@ var Field = {
     Record.save(rec)
   },
 
-  display_value: function(field, rec) {
+  display_value: function(field, rec, remove_p = true) {
     // field.value is not set for cells in grid
     var value = field.value
 
@@ -169,18 +169,22 @@ var Field = {
         value: JSON.parse(field.value)
       })
     } else if (
-      (field.datatype == 'str' && !field.size ||
-      get(field, 'attrs.data-format') == 'markdown') &&
-      field.expanded
+      (field.datatype == 'str' && !field.size && field.expanded) ||
+      get(field, 'attrs.data-format') == 'markdown'
     ) {
-      let result = field.value.replace(/\s\:[\w+:]*\:\s/gi, function (x) {
-        return '<mark class="bg-light-gray">' + x + '</mark>';
+      let result = field.value.replace(/(\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
+        return p1 + '<mark class="gray">' + p2 + '</mark>';
       });
       result = result.replace(/\:todo:/gi, function (x) {
-        return '<mark>' + x + '</mark>';
+        return '<mark class="gold">' + x + '</mark>';
       });
 
-      value = m.trust(marked.parse(result))
+      result = marked.parse(result)
+      if (remove_p) {
+        result = result.replace('<p>', '').replace('</p>', '')
+      }
+
+      value = m.trust(result)
     } else if (field.expanded) {
       if (typeof(value) == 'string') {
         value = m.trust(value.replace("\n", '<br>'))
