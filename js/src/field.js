@@ -179,9 +179,19 @@ var Field = {
         return '<mark class="gold">' + x + '</mark>';
       });
 
+      // Hack to make marked format first list item like the rest.
+      // There must be text in front of the list
+      if (!remove_p) {
+        result = 'tekst\n\n' + result
+      }
+
       result = marked.parse(result)
+
       if (remove_p) {
         result = result.replace('<p>', '').replace('</p>', '')
+      } else {
+        // Remove text inserted in hack above
+        result = result.replace(/^tekst\s/, '')
       }
 
       value = m.trust(result)
