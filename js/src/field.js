@@ -172,7 +172,7 @@ var Field = {
       (field.datatype == 'str' && !field.size && field.expanded) ||
       get(field, 'attrs.data-format') == 'markdown'
     ) {
-      let result = field.value.replace(/(\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
+      let result = field.value.replace(/(^|\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
         return p1 + '<mark class="gray">' + p2 + '</mark>';
       });
       result = result.replace(/\:todo:/gi, function (x) {
