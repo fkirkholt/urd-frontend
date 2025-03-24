@@ -371,7 +371,7 @@ var Field = {
                   title: field.attrs.title,
                   'data-after': ':', 
                   class: [
-                    'dib v-top mr2 nowrap',
+                    'db mr2 nowrap',
                     field.expandable && field.value ? 'underline pointer' : '',
                     field.element == 'textarea' && !config.edit_mode ? 'underline pointer' : ''
                   ].join(' '),
@@ -436,7 +436,7 @@ var Field = {
                 : (field.expandable && field.fkey) || field.attrs['data-format'] == 'link'
                   ? m('a', {
                     class: [
-                      'dib mw6 v-top',
+                      'dib mw6',
                       (field.expanded) ? '' : 'truncate'
                     ].join(' '),
                     'data-expandable': (field.element == 'textarea'),
@@ -460,7 +460,7 @@ var Field = {
                       ? Field.display_value(field, rec)
                       : m('data', {
                         class: [
-                          'db v-top pr3 collapsible',
+                          'db pr3 collapsible',
                           (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
                           (field.is_filepath) ? 'underline pointer blue' : ''
                         ].join(' '),
