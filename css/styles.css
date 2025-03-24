@@ -208,3 +208,11 @@ mark {
     border-radius: 3px;
 }
 
+li:has(> input[type=checkbox]) {
+    list-style-type: none;
+}
+
+ul:has(> li > input) {
+    padding-left: 0;
+}
+
