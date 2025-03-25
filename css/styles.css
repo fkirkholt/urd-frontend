@@ -157,7 +157,7 @@ label b:before {
 }
 
 ul {
-    padding-left: 15px
+    padding-left: 20px
 }
 
 ul > li > p:first-child {
@@ -165,7 +165,7 @@ ul > li > p:first-child {
 }
 
 ol {
-    padding-left: 15px
+    padding-left: 20px
 }
 
 .modal {
@@ -208,11 +208,46 @@ mark {
     border-radius: 3px;
 }
 
-li:has(> input[type=checkbox]) {
-    list-style-type: none;
+ul li:has(> p > input:not(:checked)) {
+    padding-left: 6px;
+    margin-left: -6px;
 }
 
-ul:has(> li > input) {
-    padding-left: 0;
+ul li:has(> p > input:checked) {
+    padding-left: 4px;
+    margin-left: -4px;
 }
 
+ul li:has(> input:checked) {
+    padding-left: 4px;
+    margin-left: -4px;
+}
+
+ul li:has(> input:not(:checked)) {
+    padding-left: 6px;
+    margin-left: -6px;
+}
+
+ul li:has(> p > input:checked)::marker {
+  content: "\f046"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+}
+
+ul li:has(> p > input:not(:checked))::marker {
+  content: "\f096"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+}
+
+ul li:has(> input:checked)::marker {
+  content: "\f046"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+}
+
+ul li:has(> input:not(:checked))::marker {
+  content: "\f096"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+}
+
+data input {
+    display: none;
+}
