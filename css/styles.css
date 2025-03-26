@@ -160,7 +160,7 @@ ul {
     padding-left: 20px
 }
 
-ul > li > p:first-child {
+ul > li.fold > p:first-child {
     font-weight: bold
 }
 

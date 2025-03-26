@@ -11,13 +11,15 @@ var Field = {
       for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
                                               selector + " .collapsible ul li p:first-child")) {
         let t = i.parentElement
-        t.className = "fold open"
-        i.onclick = function(event) {
-          event.stopPropagation()
-          t.classList.toggle("open")
-          t.classList.toggle("close")
-        } 
-        field.foldable = true
+        if (t.childElementCount > 1) {
+          t.className = "fold open"
+          i.onclick = function(event) {
+            event.stopPropagation()
+            t.classList.toggle("open")
+            t.classList.toggle("close")
+          } 
+          field.foldable = true
+        }
       }
     }
   },
