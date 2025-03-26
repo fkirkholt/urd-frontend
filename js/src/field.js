@@ -170,10 +170,10 @@ var Field = {
         style: "width: 330px; height: 400px;",
         value: JSON.parse(field.value)
       })
-    } else if (
+    } else if (field.value && (
       (field.datatype == 'str' && !field.size && field.expanded) ||
       get(field, 'attrs.data-format') == 'markdown'
-    ) {
+    )) {
       let result = field.value.replace(/(^|\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
         return p1 + '<mark class="gray">' + p2 + '</mark>';
       });
