@@ -117,8 +117,9 @@ m.route($('#main')[0], '/', {
         } else {
           // Load correct record when index parameter changes
           if ('index' in args) {
-            Record.select(ds.table, args.index)
-            ds.table.selection = args.index
+            let index = Number(args.index)
+            Record.select(ds.table, index)
+            ds.table.selection = index
           }
         }
 

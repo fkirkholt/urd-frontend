@@ -130,7 +130,7 @@ var Record = {
     }
 
     // Adds record to end of table
-    var idx = list.records.length
+    var idx = list.selection + 1
 
     // Create new record with column specifications
     // after selected record
