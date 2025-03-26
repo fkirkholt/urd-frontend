@@ -161,11 +161,12 @@ ul {
 }
 
 ul > li.fold > p:first-child {
-    font-weight: bold
+    text-decoration-line: underline;
+    cursor: pointer;
 }
 
 ol {
-    padding-left: 20px
+    padding-left: 20px;
 }
 
 .modal {
@@ -189,6 +190,7 @@ code {
     background-color: #eee;
     padding: 2px 2px;
     border-radius: 3px;
+    white-space: pre;
 }
 
 pre {
