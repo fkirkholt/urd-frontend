@@ -240,6 +240,11 @@ ul li:has(> p > input:not(:checked))::marker {
   font-family: FontAwesome;
 }
 
+ul li:has(> p > input:not(:checked)):has(li input:checked)::marker {
+  content: "\f147"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+}
+
 ul li:has(> input:checked)::marker {
   content: "\f046"; /* FontAwesome Unicode */
   font-family: FontAwesome;
@@ -247,6 +252,11 @@ ul li:has(> input:checked)::marker {
 
 ul li:has(> input:not(:checked))::marker {
   content: "\f096"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+}
+
+ul li:has(> input:not(:checked) input:checked)::marker {
+  content: "\f147"; /* FontAwesome Unicode */
   font-family: FontAwesome;
 }
 
