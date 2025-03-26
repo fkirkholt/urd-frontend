@@ -266,8 +266,7 @@ var Input = {
 
       return m(JSONed, {...vnode.attrs})
     } else if (
-      get(field, 'attrs.data-format') == 'markdown' ||
-      (field.datatype == 'str' && !field.size) 
+      field.datatype == 'str' && !field.size 
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
