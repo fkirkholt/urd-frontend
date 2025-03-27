@@ -144,7 +144,7 @@ var Toolbar = {
     return search_params.join('; ')
   },
 
-  set_url: function(index, offset) {
+  set_url: function(index, offset, replace=false) {
     // Set index in url
     var query_params = {}
     var path = m.route.get()
@@ -163,7 +163,7 @@ var Toolbar = {
       query_params.order = sort.col
       query_params.order += ' ' + sort.dir
     }
-    m.route.set('/' + ds.base.name + '/data/' + ds.table.name + '?' + m.buildQueryString(query_params))
+    m.route.set('/' + ds.base.name + '/data/' + ds.table.name, query_params, {replace: replace})
   },
 
   view: function(vnode) {

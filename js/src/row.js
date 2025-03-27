@@ -109,7 +109,7 @@ var Row = {
         if (list.ismain) { // if in main grid
           e.redraw = false
           if (list.pkey) {
-            Toolbar.set_url(idx)
+            Toolbar.set_url(idx, ds.table.offset, true)
           }
         } else {
           if (record.pkey == null) return
