@@ -330,7 +330,7 @@ var Field = {
     var href = field.attrs['data-href']
 
     field.attrs = field.attrs || {}
-    field.attrs.class = 'db'
+    field.attrs.class = 'dib'
     if (field.size && field.size > 64) {
       field.attrs.class += ' w-100'
     }

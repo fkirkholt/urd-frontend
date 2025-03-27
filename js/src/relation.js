@@ -348,7 +348,7 @@ var Relation = {
         ? m('fieldset', { 
           'data-set': ref, 
           'data-expandable': true, 
-          class: 'flex flex-wrap w-100' 
+          class: rel.relationship.includes(':M') ? 'w-100' : 'flex flex-wrap w-100' 
         }, [
           m('legend', {
             onclick: function() {
