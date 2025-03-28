@@ -155,6 +155,7 @@ var login = {
               params: param
             }).then(function(result) {
               if (param.database && param.database != ds.base.name) {
+                ds.dblist = null
                 m.route.set('/' + param.database)
                 $('div.curtain').hide();
                 $('#login').hide();
