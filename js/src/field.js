@@ -175,10 +175,7 @@ var Field = {
       get(field, 'attrs.data-format') == 'markdown'
     )) {
       let result = field.value.replace(/(^|\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
-        return p1 + '<mark class="gray">' + p2 + '</mark>';
-      });
-      result = result.replace(/\:todo:/gi, function (x) {
-        return '<mark class="gold">' + x + '</mark>';
+        return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>';
       });
 
       // Hack to make marked format first list item like the rest.
