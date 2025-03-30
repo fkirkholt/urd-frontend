@@ -107,8 +107,12 @@ var Row = {
       tabindex: 0,
       onclick: function(e) {
         if (list.ismain) { // if in main grid
-          e.redraw = false
-          if (list.pkey) {
+          if (!list.pkey) {
+            return
+          }
+          if (config.recordview) {
+            ds.table.selection = idx
+          } else {
             Toolbar.set_url(idx, ds.table.offset, true)
           }
         } else {

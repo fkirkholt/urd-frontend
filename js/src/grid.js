@@ -59,7 +59,11 @@ var Grid = {
 
       ds.base.name = data.base
 
-      Toolbar.set_url(ds.table.selection || index, ds.table.offset, true)
+      if (!config.recordview) {
+        Toolbar.set_url(ds.table.selection || index, ds.table.offset, true)
+      } else {
+        Toolbar.set_url(null, ds.table.offset)
+      }
     })
     .catch(function(e) {
       if (e.code === 401) {
