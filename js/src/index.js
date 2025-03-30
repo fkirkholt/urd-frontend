@@ -119,7 +119,6 @@ m.route($('#main')[0], '/', {
           if ('index' in args) {
             let index = Number(args.index)
             Record.select(ds.table, index)
-            ds.table.selection = index
           }
         }
 

@@ -10,12 +10,11 @@ var Record = {
   },
 
   select: function(table, idx, root) {
-    table.selection = idx
-
     if (table.records.length == 0) return
 
     // Don't load if already loaded
     if (table.records[idx].fields) {
+      table.selection = idx
       m.redraw()
       return
     }
@@ -50,6 +49,7 @@ var Record = {
 
         rec.columns = table.records[idx].columns
         Record.get_relations_count(rec)
+        table.selection = idx
       })
       .catch(function(e) {
         if (e.code === 401) {
