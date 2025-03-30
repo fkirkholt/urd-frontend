@@ -104,7 +104,7 @@ var login = {
         name: 'brukernavn',
         placeholder: 'Brukernavn',
         value: login.param.username,
-        disabled: login.param.name ? false : true,
+        disabled: login.param.name || ds.base.name == 'urdr' ? false : true,
         class: 'db w-100 mb1'
       }),
       login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=password]', {
@@ -112,7 +112,7 @@ var login = {
         name: 'passord',
         placeholder: 'Passord',
         value: login.param.password,
-        disabled: login.param.name ? false : true,
+        disabled: login.param.name || ds.base.name == 'urdr' ? false : true,
         class: 'db w-100 mb1',
         onkeypress: function(e) {
           if (e.which == 13) {
@@ -131,10 +131,10 @@ var login = {
       m('input[type=button]', {
         id: 'btn_login',
         value: login.param.server || !login.param.name ? 'Logg inn' : 'Delete',
-        disabled: !login.param.name,
+        disabled: !login.param.name && ds.base.name != 'urdr',
         class: 'db w-100',
         onclick: function() {
-          if (login.param.server) {
+          if (login.param.server || ds.base.name == 'urdr') {
             login.error = false
             login.create = false
             var param = {};
