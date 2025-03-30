@@ -70,7 +70,7 @@ var Datapanel = {
 
       !ds.table.records || (config.recordview && !hide_grid)
         ? '' : ds.table.search
-          ? m(Search) : m('div', {class: 'flex flex-auto flex-column'}, [
+          ? m(Search) : m('div', {class: 'flex flex-auto flex-column w-40'}, [
             config.recordview && hide_grid ? m(Toolbar) : null,
             m('form', {
               name: ds.table.name,
