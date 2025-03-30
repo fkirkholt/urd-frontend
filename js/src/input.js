@@ -244,7 +244,7 @@ var Input = {
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
-      vnode.attrs.class = vnode.attrs.class + ' ba b--light-silver'
+      vnode.attrs.class = vnode.attrs.class + ' ba b--light-silver w-100'
       vnode.attrs.editable = true
       vnode.attrs.lang = 'yaml'
       vnode.attrs.value = yaml.dump(JSON.parse(field.value))
@@ -271,7 +271,7 @@ var Input = {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
       vnode.attrs.class += (vnode.attrs.required && field.value == null) 
-        ? ' ba b--red bw1' : ' ba b--light-silver' 
+        ? ' ba b--red bw1 w-100' : ' ba b--light-silver w-100' 
       vnode.attrs.editable = true
       vnode.attrs.lang = null
       vnode.attrs.value = field.value
