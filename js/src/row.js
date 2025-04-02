@@ -244,7 +244,7 @@ var Row = {
         m('td'),
         m('td', {
           colspan: vnode.attrs.colspan,
-          class: 'bl b--moon-gray'
+          class: 'bl b--moon-gray mw4'
         }, [
             m(Record, { record: record })
           ])

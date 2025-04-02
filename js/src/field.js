@@ -505,7 +505,8 @@ var Field = {
         class: [
           'flex flex-wrap w-100',
           label ? '' : 'bt-0 br-0 bb-0 bl-1 ml3'
-        ].join(' ')
+        ].join(' '),
+        style: 'min-width: 0'
       }, [
         !label ? null : m('legend', {
           class: 'b underline pointer',

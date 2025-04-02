@@ -102,7 +102,8 @@ var Fieldset = {
       !set.expanded ? null : m('fieldset', {
         'data-set': rec.table.name + '.' + set.name,
         class: 'flex flex-wrap',
-        'data-expandable': set.expandable
+        'data-expandable': set.expandable,
+        style: 'min-width: 0'
       }, [
           m('legend', {
             onclick: function() {
