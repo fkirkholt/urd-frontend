@@ -135,7 +135,7 @@ var Field = {
     Record.save(rec)
   },
 
-  display_value: function(field, rec, remove_p = true) {
+  display_value: function(field, rec) {
     // field.value is not set for cells in grid
     var value = field.value
 
@@ -180,17 +180,17 @@ var Field = {
 
       // Hack to make marked format first list item like the rest.
       // There must be text in front of the list
-      if (!remove_p) {
+      if (!field.size) {
         result = 'tekst\n\n' + result
       }
 
       result = marked.parse(result)
 
-      if (remove_p) {
+      if (field.size) {
         result = result.replace('<p>', '').replace('</p>', '')
       } else {
         // Remove text inserted in hack above
-        result = result.replace(/^tekst\s/, '')
+        result = result.replace(/^<p>tekst<\/p>/, '')
       }
 
       value = m.trust(result)

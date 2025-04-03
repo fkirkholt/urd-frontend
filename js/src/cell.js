@@ -24,7 +24,7 @@ var Cell = {
 
     if (get(field, 'attrs.data-format') == 'markdown') {
       field.value = col.value
-      var val = Field.display_value(field, rec, true)
+      var val = Field.display_value(field, rec)
     }
 
     var value = col.value == null && col.text == null ? ''
