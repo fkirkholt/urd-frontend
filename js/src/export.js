@@ -211,7 +211,7 @@ var Export_dialog = {
           class: 'ml3'
         })], ' Exclude foreign keys'),
         m('br'),
-        ds.table && ds.table.type == 'data' ? '' : [
+        ds.table && ds.table.type != 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
             name: 'list-records'
           })], ds.table ? ' Export records' 
