@@ -2,6 +2,53 @@ html {
     line-height: normal;
 }
 
+a {
+    color: inherit;
+}
+
+.bg-dark input {
+    background-color: #111111;
+    border: 1px solid gray;
+    color: white;
+}
+
+.bg-dark textarea {
+    background-color: #111111;
+    border: 1px solid gray;
+    color: white;
+}
+
+input[type="checkbox"] { accent-color: #357EDD }
+
+.bg-dark input[type="checkbox"] { accent-color: black }
+
+.bg-dark input[type="checkbox"]:not(:checked) { filter: invert(80%) }
+
+.bg-dark input[type="date"]::-webkit-calendar-picker-indicator { 
+    filter: invert(100%); 
+}
+
+.bg-dark .cm-gutter {
+    background-color: #555555;
+    color: silver;
+}
+
+/* Style cursor in codefields */
+.cm-editor .cm-cursor { border-left-color: orange }
+
+.cm-editor .cm-activeLine {
+    background-color: inherit;
+}
+
+.cm-editor .cm-activeLineGutter {
+    background-color: inherit;
+    color: orange
+}
+
+.bg-dark .cm-editor .cm-gutters {
+    border-right: 1px solid gray
+}
+
 table#urdgrid thead th {
     position: sticky; 
     position: -webkit-sticky; 
@@ -20,16 +67,21 @@ td.truncate { overflow: hidden; text-overflow: ellipsis; width: 100%; max-width:
 
 tr:focus {
     outline: 0;
-    background-color: #F4F4F4;
-    border: 1px solid green;
+    border: 2px solid #357EDD;
+}
+
+.bg-dark tr[data-selected] {
+    background-color: #357EDD;
 }
 
 tr[data-selected] {
-    background-color: #96CCFF;
+    background-color: #357EDD;
+    color: white;
 }
 
+
 tr[data-selected]:focus {
-    background-color: #96CCFF;
+    border: 2px solid #357EDD;
 }
 
 div.field {
@@ -125,6 +177,10 @@ input:focus-visible {
   border: black solid 2px;
 }
 
+.bg-dark input:focus-visible {
+    border: lightgray solid 2px;
+}
+
 .cm-editor {max-height: 400px}
 .cm-wrap { height: 100% }
 .cm-scroller { overflow: auto }
@@ -186,15 +242,23 @@ ol {
 .fold.close > * { display: none; }
 .fold.open > * { display: block; }
 
+.bg-dark code {
+    background-color: #555555;
+}
+
 code {
-    background-color: #eee;
+    background-color: #FBF1A9;
     padding: 2px 2px;
     border-radius: 3px;
     white-space: pre;
 }
 
+.bg-dark pre {
+    background-color: #555555;
+}
+
 pre {
-    background-color: #eee;
+    background-color: #FBF1A9;
     padding: 2px 4px;
     border-radius: 3px;
     line-height: 1.3;

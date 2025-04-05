@@ -61,7 +61,8 @@ var Codefield = {
       import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
       import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
       import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
-    ]).then(([cm, sql, json, language, yaml, markdown]) => {
+      import(/* webpackChunkName: "highlight" */ '@lezer/highlight')
+    ]).then(([cm, sql, json, language, yaml, markdown, highlight]) => {
         var lang
         if (vnode.attrs.lang == 'sql') {
           lang = sql.sql()
@@ -80,8 +81,15 @@ var Codefield = {
           editors[vnode.attrs.id].pkey = vnode.attrs['data-pkey']
         }
 
+        const customHighlightStyle = language.HighlightStyle.define([
+          { tag: highlight.tags.keyword, color: "#FF4136" },
+          { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
+        ]);
+
         const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
         var extensions = [
+            language.syntaxHighlighting(customHighlightStyle), 
+            language.syntaxHighlighting(language.defaultHighlightStyle),
             cm.basicSetup,
             foldingOnIndent,
             keymap.of([indentWithTab]),
@@ -116,7 +124,8 @@ var Codefield = {
       import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
       import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
       import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
-    ]).then(([cm, state, sql, json, language, yaml, markdown]) => {
+      import(/* webpackChunkName: "highlight" */ '@lezer/highlight')
+    ]).then(([cm, state, sql, json, language, yaml, markdown, highlight]) => {
         var lang
         if (vnode.attrs.lang == 'sql') {
           lang = sql.sql()
@@ -130,8 +139,15 @@ var Codefield = {
         }
         var id = vnode.attrs.id
 
+        const customHighlightStyle = language.HighlightStyle.define([
+          { tag: highlight.tags.keyword, color: "#FF4136" },
+          { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
+        ]);
+
         const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
         var extensions = [
+            language.syntaxHighlighting(customHighlightStyle), 
+            language.syntaxHighlighting(language.defaultHighlightStyle),
             cm.basicSetup,
             foldingOnIndent,
             keymap.of([indentWithTab]),

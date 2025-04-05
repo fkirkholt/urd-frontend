@@ -151,17 +151,22 @@ var Row = {
       'data-selected': list.selection == idx,
       // classes for row
       class: [
-        'lh-copy cursor-default bg-white',
+        'lh-copy cursor-default',
+        config.dark_mode ? 'bg-black' : 'bg-near-white',
         record.class ? record.class : '',
-        !list.ismain ? '' : (idx < list.records.length - 1)
-          ? 'bb b--light-gray'
-          : 'bb b--moon-gray',
+        !list.ismain ? '' 
+        : (idx < list.records.length - 1) && config.dark_mode ? 'bb b--gray'
+        : (idx < list.records.length - 1) ? 'bb b--moon-gray'
+        : config.dark_mode ? 'bb b--gray'
+        : 'bb b--moon-gray',
       ].join(' ')
     }, [
         // Draw icons indicating if record is dirty, illegal, new etc.
         m('td', {
           align: 'right',
-          class: !list.ismain ? '' : 'pa0 br b--light-gray',
+          class: !list.ismain ? '' 
+          : config.dark_mode ? 'pa0 br b--gray'
+          :'pa0',
         }, [
             config.autosave ? m.trust('&nbsp;') : m('i', {
               class: [

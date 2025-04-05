@@ -312,7 +312,7 @@ var Toolbar = {
           m('i', {
             class: [
               'fa fa-save ml2 mr1',
-              ds.table.dirty ? 'dim pointer' : 'moon-gray'
+              ds.table.dirty ? 'dim pointer' : 'o-30'
             ].join(' '),
               title: 'Save',
             onclick: function() {
@@ -329,7 +329,7 @@ var Toolbar = {
             'fa fa-trash-o ml2 mr1',
             (ds.table.privilege.delete == true &&
               rec && Record.is_deletable(rec))
-              ? 'dim pointer' : 'moon-gray'
+              ? 'dim pointer' : 'o-30'
           ].join(' '),
           title: 'Delete',
           onclick: Toolbar.delete_record
@@ -354,7 +354,10 @@ var Toolbar = {
           }
         }),
         m('ul#actions', {
-          class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
+          class: [
+            'absolute left-0 list pa1 dn pointer z-999',
+            config.dark_mode ? 'bg-dark-gray ba b--gray' : 'bg-white shadow-5'
+          ].join(' ')
         }, [
             m('li', {
               class: 'nowrap hover-blue',

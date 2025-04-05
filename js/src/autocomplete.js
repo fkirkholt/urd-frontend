@@ -110,15 +110,19 @@ function Autocomplete() {
           },
         }),
         !options.length ? '' : m('ul.options', {
-          class: 'absolute list bg-white ma0 pa0 ba b--gray z-999'
+          class: [
+            'absolute list ma0 pa0 ba b--gray z-999',
+            config.dark_mode ? 'bg-near-black' : 'bg-white'
+          ].join(' ')
         }, [
             options.map(function(row, i) {
               return m('li', {
                 class: [
                   vnode.attrs.unique ? 'gray' : '',
                   'pl1 pr1',
-                  !vnode.attrs.unique && i == index ? 'bg-light-blue' 
-                  : 'bg-white'
+                  !vnode.attrs.unique && i == index && config.dark_mode ? 'bg-blue' 
+                  : !vnode.attrs.unique && i == index ? 'bg-light-blue'
+                  : ''
                 ].join(' ')
               }, row.label)
             })
@@ -127,5 +131,7 @@ function Autocomplete() {
     }
   }
 }
+
+import config from './config'
 
 export default Autocomplete

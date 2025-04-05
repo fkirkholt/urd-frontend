@@ -401,7 +401,10 @@ var Field = {
                 field.element == 'textarea' && field.expanded && !config.edit_mode
                 ? [ 
                   m('span', {
-                    class: 'moon-gray ml3 pointer link dim hover-blue',
+                    class: [
+                      'ml3 pointer link dim hover-blue',
+                      config.dark_mode ? 'gray' : 'moon-gray'
+                    ].join(' '),
                     onclick: function() {
                       var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
 
@@ -413,7 +416,10 @@ var Field = {
                     }
                   }, 'Collapse all'),
                   m('span', {
-                    class: 'moon-gray ml3 pointer link dim hover-blue',
+                    class: [
+                      'ml3 pointer link dim hover-blue',
+                      config.dark_mode ? 'gray' : 'moon-gray'
+                    ].join(' '),
                     onclick: function() {
                       var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
 

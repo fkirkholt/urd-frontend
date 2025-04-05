@@ -125,12 +125,17 @@ var Contents = {
     var icon = table.type && (table.type == 'list') 
       ? 'fa-list'
       : 'fa-table'
-    var icon_color = table.hidden ? 'moon-gray' : 'silver'
+    var icon_color = table.hidden && config.dark_mode ? 'silver'
+    : table.hidden ? 'moon-gray'
+    : config.dark_mode ? 'moon-gray'
+    : 'silver'
 
     return m('div', {
-      class: ds.table && ds.table.name == table.name
-        ? 'bg-light-gray nowrap'
-        : 'nowrap',
+      class: [
+        'nowrap',
+        ds.table && ds.table.name == table.name && config.dark_mode  ? 'bg-blue'
+        : ds.table && ds.table.name == table.name ? 'bg-blue white' : ''
+      ].join(' ')
     }, [
         // Draw expansion icon for tables having subordinate tables
         typeof node != 'object' ? '' : m('i', {
@@ -156,7 +161,7 @@ var Contents = {
         // Draw table name as link
         m('a', {
           class: [
-            'black underline-hover nowrap',
+            'color-inherit underline-hover nowrap',
             table.description ? 'dot' : 'link',
             table.type == 'view' ? 'i' : ''
           ].join(' '),
@@ -245,7 +250,10 @@ var Contents = {
           ]),
         // Context menu for single tables
         m('ul#context-table', {
-          class: 'absolute left-0 bg-white list pa1 shadow-5 dn pointer z-999'
+          class: [ 
+            'absolute left-0 list pa1 shadow-5 dn pointer z-999',
+            config.dark_mode ? 'bg-dark-gray' : 'bg-white'
+          ]
         }, [
             // Show links to this table
             config.tab == 'data' ? '' : m('li', {

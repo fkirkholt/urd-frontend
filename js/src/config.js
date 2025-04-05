@@ -8,6 +8,7 @@ var config = {
   compressed: Cookies.get('compressed') ? Cookies.get('compressed') : false,
   threshold: Cookies.get('threshold') ? Cookies.get('threshold') : 0,
   recordview: Cookies.get('recordview') === 'true' ? true : false,
+  dark_mode: Cookies.get('dark_mode') === 'true' ? true : false,
 
   admin: false,
   edit_mode: false,
@@ -25,6 +26,7 @@ var config = {
     var select = $('#preferences [name="select"]').val()
     var theme = $('#preferences [name="theme"]').val()
     var threshold = $('#preferences [name="threshold"]').val() / 100
+    var dark_mode = $('#preferences [name="dark_mode"]').prop('checked') 
     if (
       limit != config.limit
       || select != config.select
@@ -32,6 +34,7 @@ var config = {
       || theme != config.theme
       || threshold != config.threshold
       || recordview != config.recordview
+      || dark_mode != config.dark_mode
     ) {
       config.limit = limit ? limit : config.limit
       config.select = select
@@ -39,6 +42,7 @@ var config = {
       config.theme = theme
       config.threshold = threshold
       config.recordview = recordview
+      config.dark_mode = dark_mode
       // TODO: Update grid
     }
     $('#preferences').hide()
@@ -49,6 +53,7 @@ var config = {
     Cookies.set('theme', theme, { expires: 14 })
     Cookies.set('threshold', threshold, { expires: 14 })
     Cookies.set('recordview', recordview, { expires: 14 })
+    Cookies.set('dark_mode', dark_mode, { expires: 14})
     m.redraw()
   },
 
@@ -92,7 +97,16 @@ var config = {
               class: 'w3'
             }), ' %'
           ])
-        ])
+        ]),
+        m('tr', [
+          m('td', 'Dark mode'),
+          m('td', [
+            m('input[type=checkbox]', {
+              name: 'dark_mode',
+              checked: config.dark_mode,
+            })
+          ])
+        ]),
       ]),
       m('div', { class: 'pa2' }, [
         m('input[type=button]', {
@@ -102,7 +116,6 @@ var config = {
             config.save()
             $('#preferences').hide()
             $('div.curtain').hide()
-
           }
         }),
         m('input[type=button]', {

@@ -56,12 +56,10 @@ var Datapanel = {
       ds.table.search || ds.table.edit || hide_grid
         ? ''
         : m('div#gridpanel', {
-          class: 'flex flex-column ml2',
-          style: [
-            'background: #f9f9f9',
-            'border: 1px solid lightgray',
-            ds.table.hide ? 'display: none' : ''
-          ].join(';')
+          class: [
+            'flex flex-column ml2 ba',
+            config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'
+          ].join(' ')
         }, [
             m(Toolbar),
             m(Grid),

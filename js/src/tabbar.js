@@ -114,8 +114,10 @@ var Tabbar = {
           m('li', {
             class: [
               'list di pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
-              (!config.tab || config.tab == 'databases')
-                ? 'bg-white' : 'bg-near-white'
+              (!config.tab || config.tab == 'databases') && config.dark_mode ? 'bg-dark-gray'
+              : (!config.tab || config.tab == 'databases') ? 'bg-near-white'
+              : config.dark_mode ? 'bg-mid-gray'
+              : 'bg-light-gray'
             ].join(' '),
             style: (!config.tab || config.tab == 'databases')
               ? 'padding-bottom: 2px' : '',
@@ -126,8 +128,10 @@ var Tabbar = {
           !ds.dblist || !ds.dblist.useradmin ? '' : m('li', {
             class: [
               'list di ml2 pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
-              (config.tab == 'users')
-                ? 'bg-white' : 'bg-near-white'
+              config.tab == 'users' && config.dark_mode ? 'bg-dark-gray'
+              : config.tab == 'users' ? 'bg-near-white'
+              : config.dark_mode ? 'bg-near-black' 
+              : 'bg-light-gray'
             ].join(' '),
             style: (config.tab == 'users')
               ? 'padding-bottom: 2px' : '',
@@ -193,8 +197,10 @@ var Tabbar = {
           m('li', {
             class: [
               'list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
-              (!config.tab || config.tab == 'data')
-                ? 'bg-white' : 'bg-near-white'
+              (!config.tab || config.tab == 'data') && config.dark_mode ? 'bg-dark-gray'
+              : (!config.tab || config.tab == 'data') ? 'bg-near-white'
+              : config.dark_mode ? 'bg-near-black'
+              : 'bg-light-gray'
             ].join(' '),
             style: (!config.tab || config.tab == 'data')
               ? 'padding-bottom: 2px' : 'padding-bottom: 0px',
@@ -207,7 +213,10 @@ var Tabbar = {
             title: 'Entity Relationship Diagram',
             class: [
               'list ml2 pl2 pt0 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
-              config.tab == 'diagram' ? 'bg-white' : 'bg-near-white'
+              config.tab == 'diagram' && config.dark_mode ? 'bg-dark-gray'
+              : config.tab == 'diagram' ? 'bg-near-white'
+              : config.dark_mode ? 'bg-near-black' 
+              : 'bg-light-gray'
             ].join(' '),
             style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '0px'),
             onclick: function() {
@@ -220,7 +229,10 @@ var Tabbar = {
           m('li', {
             class: [
               'list ml2 pl2 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
-              config.tab == 'sql' ? 'bg-white' : 'bg-near-white'
+              config.tab == 'sql' && config.dark_mode ? 'bg-dark-gray'
+              : config.tab == 'sql' ? 'bg-near-white'
+              : config.dark_mode ? 'bg-near-black' 
+              : 'bg-light-gray'
             ].join(' '),
             style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '0px'),
             onclick: function() {

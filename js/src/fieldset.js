@@ -106,13 +106,14 @@ var Fieldset = {
         style: 'min-width: 0'
       }, [
           m('legend', {
-            onclick: function() {
-              if (set.expandable === false) return
-              set.expanded = !set.expanded
-            }
           }, [
               m('b', { 
-                class: set.expandable ? 'underline pointer' : ''
+                class: set.expandable ? 'underline pointer' : '',
+                onclick: function(event) {
+                  console.log('klikket 1')
+                  if (set.expandable === false) return
+                  set.expanded = !set.expanded
+                  event.stopPropagation(); }
               }, label),
           ]),
         Object.keys(set.items).map(function(label) {

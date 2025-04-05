@@ -8,6 +8,18 @@ var Header = {
     m.redraw()
   },
 
+  onupdate: function() {
+    if (config.dark_mode) {
+      $('body').addClass('bg-dark bg-dark-gray white')
+      $('body').removeClass('bg-white')
+      $('div.bg-moon-gray').removeClass('bg-moon-gray').addClass('bg-mid-gray')
+    } else {
+      $('body').addClass('bg-light-gray')
+      $('body').removeClass('bg-dark-gray white')
+      $('div.bg-mid-gray').removeClass('bg-mid-gray').addClass('bg-moon-gray')
+    }
+  },
+
   view: function(vnode) {
     return [
       m(Breadcrumb),

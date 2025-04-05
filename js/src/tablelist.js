@@ -6,8 +6,10 @@ var Tablelist = {
 
     return [
       m('ul#tablelist-context', {
-        class: 'absolute left-0 bg-white list pa1 shadow-5 dn '
-          + 'pointer z-999'
+        class: [
+        'absolute left-0 list pa1 shadow-5 dn pointer z-999',
+        config.dark_mode ? 'bg-dark-gray' : 'bg-white'
+        ].join(' ')
       }, [
           m('li', {
             class: 'hover-blue',
@@ -135,3 +137,4 @@ var Tablelist = {
 export default Tablelist
 
 import Codefield from './codefield.js'
+import config from './config.js'

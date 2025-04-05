@@ -5,7 +5,7 @@ var Select = {
     return [
       m('option', {
         value: option.value,
-        class: 'black',
+        class: config.dark_mode ? 'white' : 'black',
         selected: option.value == value
       }, m.trust(whitespace + option.label)),
       options.filter(function(opt) {
@@ -30,7 +30,8 @@ var Select = {
       // value: value,
       class: [
         vnode.attrs.class,
-        value === '' || value === null ? 'gray' : ''
+        config.dark_mode ? 'bg-near-black' : '',
+        (value === '' || value === null) ? 'gray' : ''
       ].join(' ')
     }, [
         vnode.attrs.required && value !== null && value !== ''
@@ -51,7 +52,7 @@ var Select = {
                 optgroup.options.map(function(option, idx) {
                   return m('option', {
                     value: option.value,
-                    class: 'black',
+                    class: config.dark_mode ? 'white' : 'black',
                     selected: option.value === value
                   }, option.label)
                 })
@@ -65,5 +66,7 @@ var Select = {
       ])
   }
 }
+
+import config from './config.js'
 
 export default Select

@@ -244,7 +244,7 @@ var Input = {
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
-      vnode.attrs.class = vnode.attrs.class + ' ba b--light-silver w-100'
+      vnode.attrs.class = vnode.attrs.class + ' ba b--gray w-100'
       vnode.attrs.editable = true
       vnode.attrs.lang = 'yaml'
       vnode.attrs.value = yaml.dump(JSON.parse(field.value))
@@ -270,8 +270,11 @@ var Input = {
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
-      vnode.attrs.class += (vnode.attrs.required && field.value == null) 
-        ? ' ba b--red bw1 w-100' : ' ba b--light-silver w-100' 
+      vnode.attrs.class += [
+        ' ba w-100', 
+        config.dark_mode ? 'bg-near-black' : '',
+        (vnode.attrs.required && field.value == null) ? 'bw1 b--red' : 'b--gray' 
+      ].join(' ')
       vnode.attrs.editable = true
       vnode.attrs.lang = null
       vnode.attrs.value = field.value
@@ -373,3 +376,4 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 import Codefield from './codefield'
 import yaml from 'js-yaml'
+import config from './config.js'

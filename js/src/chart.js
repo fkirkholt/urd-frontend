@@ -7,6 +7,8 @@ var Chart = {
     console.log('vnode.data', vnode.attrs.data)
     import(/* webpackChunkName: "chart" */ 'chart.js/auto').then(module => {
 
+      module.Chart.defaults.color = config.dark_mode ? 'lightgray' : 'gray';
+
       new module.Chart(vnode.dom, {
           type: 'bar',
           data: {
@@ -27,6 +29,13 @@ var Chart = {
               })
           },
           options: {
+            plugins: {
+              legend: {
+                labels: {
+                  color: config.dark_mode ? 'lightgray' : 'gray'
+                }
+              }
+            },
             scales: {
               y: {
                 beginAtZero: true
@@ -45,6 +54,8 @@ var Chart = {
   }
 
 }
+
+import config from './config.js'
 
 
 export default Chart

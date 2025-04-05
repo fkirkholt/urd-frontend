@@ -47,7 +47,8 @@ var Cell = {
       class: [
         'fa fa-fw',
         rec.expanded ? 'fa-angle-down' : 'fa-angle-right',
-        rec.count_children ? 'black' : 'moon-gray',
+        config.dark_mode ? 'white' : 'black',
+        rec.count_children ? '' : 'o-20',
       ].join(' '),
       style: 'margin-left: ' + (rec.indent * 15) + 'px;',
       onclick: function() {
@@ -66,7 +67,8 @@ var Cell = {
           ? 'nowrap' : '',
         compressed && value && value.length > 30 ? 'truncate' : 'overflow-wrap',
         compressed && value.length > 30 ? 'pt0 pb0' : '',
-        vnode.attrs.border ? 'br b--light-gray' : '',
+        vnode.attrs.border && config.dark_mode ? 'br b--gray'
+        : vnode.attrs.border ? 'br b--moon-gray' : '',
         ds.table.grid.sort_columns[colname] ? 'min-w3' : 'min-w2',
         'f6 pl1 pr1'
       ].join(' '),

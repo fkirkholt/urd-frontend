@@ -158,7 +158,9 @@ var SQLpanel = {
                     }, '')
                   }
 
-                  return m('tr.striped--light-gray', [
+                  return m('tr', {
+                    class: config.dark_mode ? 'bg-black stripe-dark' : 'striped--light-gray'
+                  }, [
                     is_link ? m('td', { class: 'pl1 pl2' }, [link]) : '', 
                     Object.keys(item).map(function(cell, i) {
                       var is_link = false

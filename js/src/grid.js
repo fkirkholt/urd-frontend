@@ -290,13 +290,18 @@ var Grid = {
     return [
       ds.table.tab == 'chart' ? '' : m('table#urdgrid.tbl', {
         'data-name': ds.table.name,
-        class: 'db bt b--moon-gray overflow-auto collapse',
-        style: 'background: #f9f9f9',
+        class: [
+          'db bt overflow-auto collapse',
+          config.dark_mode ? 'b-mid-gray b--gray' : 'b-light-gray b--moon-gray'
+        ].join(' '),
       }, [
           m('thead', { class: '' }, [
             m('tr', { class: 'cursor-default' }, [
               m('th', {
-                class: 'tl bg-light-gray normal f6 pa0'
+                class: [
+                  'tl normal f6 pa0',
+                  config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'
+                ].join(' ')
               }, ''),
               Object.keys(ds.table.grid.columns).map(function(label) {
                 var col = ds.table.grid.columns[label]
@@ -316,7 +321,8 @@ var Grid = {
                 return m('th', {
                   id: col,
                   class: [
-                    'tl bg-light-gray f6 pa1 pb0 nowrap',
+                    'tl f6 pa1 pb0 nowrap ba',
+                    config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray',
                     config.compressed ? 'truncate' : '',
                   ].join(' '),
                   'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
@@ -367,7 +373,10 @@ var Grid = {
       ]),
       !ds.table.tab || ds.table.tab == 'data' ? '' : m(Chart, { 
         data: chart_data,
-        class: 'bb bt b--moon-gray bg-white'
+        class: [
+          'bb bt b--gray',
+          config.dark_mode ? 'bg-near-black' : 'bg-white'
+        ].join(' ')
       })
     ]
   }
