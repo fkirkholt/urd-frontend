@@ -49,6 +49,10 @@ var Codefield = {
     // With this, the fold will not include the first line
     foldStart = line.to
 
+    if (line.text == '' || foldEnd == line.to + 1) {
+      return null
+    }
+
     // Return a fold that covers the entire indent level
     return { from: foldStart, to: foldEnd }
   },
