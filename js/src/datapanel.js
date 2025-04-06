@@ -68,7 +68,12 @@ var Datapanel = {
 
       !ds.table.records || (config.recordview && !hide_grid)
         ? '' : ds.table.search
-          ? m(Search) : m('div', {class: 'flex flex-auto flex-column w-40'}, [
+          ? m(Search) : m('div', {
+            class: [
+              'flex flex-auto flex-column w-40 bottom-0',
+              'overflow-x-hidden overflow-y-auto pb3'
+            ].join(' ')
+          }, [
             config.recordview && hide_grid ? m(Toolbar) : null,
             m('form', {
               name: ds.table.name,
