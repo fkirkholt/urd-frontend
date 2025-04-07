@@ -49,7 +49,9 @@ function Autocomplete() {
       url: attrs.ajax.url,
       params: attrs.ajax.data
     }).then(function(result) {
-      options = result
+      if (event.target === document.activeElement) {
+        options = result
+      }
     })
 
   }
