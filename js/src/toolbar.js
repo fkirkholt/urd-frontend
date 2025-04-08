@@ -114,7 +114,7 @@ var Toolbar = {
 
     var r = true
     if (config.autosave || !config.edit_mode) {
-      var r = confirm('Are you sure you want to delete the record?')
+      r = confirm('Are you sure you want to delete the record?')
     }
 
     if (r === true) {

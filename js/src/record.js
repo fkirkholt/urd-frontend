@@ -10,7 +10,10 @@ var Record = {
   },
 
   select: function(table, idx, root) {
-    if (table.records.length == 0) return
+    if (table.records.length == 0) {
+      table.selection = null
+      return
+    }
 
     // Don't load if already loaded
     if (table.records[idx].fields) {
