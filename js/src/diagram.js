@@ -120,7 +120,7 @@ var Diagram = {
             if (n > 10) {
               return
             }
-            def.push(field.datatype + ' "' + field.name + '"');
+            def.push(field.datatype + ' ' + field.name);
           }
         });
       }
