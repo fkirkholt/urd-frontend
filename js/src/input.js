@@ -334,6 +334,9 @@ var Input = {
       return m('input[type=date]', {...vnode.attrs})
     } else if (field.datatype == 'float' || field.datatype == 'Decimal') {
       vnode.attrs.type = 'number'
+      if (field.scale > 0) {
+        vnode.attrs.step = '.' + '0'.repeat(field.scale - 1) + '1'
+      }
       vnode.attrs.class += field.precision < 5 
         ? ' mw3' : ' mw4'
       return m('input', {...vnode.attrs})
