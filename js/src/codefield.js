@@ -6,6 +6,8 @@ import { indentWithTab } from "@codemirror/commands"
 
 var Codefield = {
 
+  timer: null,
+
   get_value: function(id) {
     return editors[id].view.state.doc.toString()
   },
@@ -102,8 +104,13 @@ var Codefield = {
             cm.EditorView.editable.of(vnode.attrs.editable),
             cm.EditorView.updateListener.of(function(view) {
               if ('onchange' in vnode.attrs && view.docChanged) {
-                var value = view.state.doc.toString()
-                vnode.attrs.onchange(value);
+                if (Codefield.timer) {
+                  clearTimeout(Codefield.timer)
+                }
+                Codefield.timer = setTimeout(function() { 
+                  var value = view.state.doc.toString()
+                  vnode.attrs.onchange(value);
+                }, 1000)
                 // Set classes manually to activate save button
                 $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
               }
