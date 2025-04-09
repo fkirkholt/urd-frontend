@@ -9,7 +9,7 @@ var Record = {
     }
   },
 
-  select: function(table, idx, root) {
+  select: function(table, idx) {
     if (table.records.length == 0) {
       table.selection = null
       return
@@ -33,7 +33,6 @@ var Record = {
     }).then(function(result) {
         var rec = $.extend(table.records[idx], result.data)
         rec.table = table
-        rec.root = root
 
         // Get virtual columns from table.fields.
         var field
@@ -221,9 +220,7 @@ var Record = {
 
     rec = $.extend(list.records[idx], rec)
 
-    if (!relation) {
-      rec.root = true
-    } else {
+    if (relation) {
       rec.fk = []
       rec.open = true
     }
@@ -249,7 +246,6 @@ var Record = {
     clone.table = ds.table
     clone.new = true
     clone.relations = []
-    clone.root = true
 
     var idx = ds.table.selection + 1
     ds.table.records.splice(idx, 0, clone)
@@ -487,12 +483,12 @@ var Record = {
     if (ds.table.edit && !rec.relations) {
       return
     }
-    if (ds.table.edit && rec.root && !ds.rec) {
+    if (ds.table.edit && !ds.rec) {
       if (!config.recordview) {
         rec = structuredClone(rec)
       }
       ds.rec = rec
-    } else if (ds.table.edit && rec.root) {
+    } else if (ds.table.edit) {
       rec = ds.rec
     }
 
@@ -508,7 +504,7 @@ var Record = {
         !ds.table.edit && !ds.table.hide
           ? ''
           : m('div', { class: 'w-100 mb3' }, [
-            config.recordview || !rec.root ? '' : m('input[type=button]', {
+            config.recordview ? '' : m('input[type=button]', {
               value: 'Save and close',
               onclick: function() {
                 var valid = $(this).parents('form')[0].reportValidity()
@@ -526,7 +522,7 @@ var Record = {
                 }
               }
             }),
-            config.recordview || !rec.root ? '' : m('input[type=button]', {
+            config.recordview ? '' : m('input[type=button]', {
               value: 'Cancel',
               onclick: function() {
                 ds.table.edit = false
@@ -535,7 +531,7 @@ var Record = {
                 if (rec.new) {
                   var idx = ds.table.selection
                   ds.table.records.splice(idx, 1)
-                  Record.select(ds.table, 0, true)
+                  Record.select(ds.table, 0)
                 }
               }
             })
