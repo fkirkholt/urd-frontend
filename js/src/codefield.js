@@ -59,7 +59,7 @@ var Codefield = {
     return { from: foldStart, to: foldEnd }
   },
 
-  oncreate: function(vnode) {
+  set_state: function(vnode, method) {
     Promise.all([
       import(/* webpackChunkName: "codemirror" */ 'codemirror'),
       import(/* webpackChunkName: "cm-lang-sql" */ '@codemirror/lang-sql'),
@@ -67,123 +67,86 @@ var Codefield = {
       import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
       import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
       import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
-      import(/* webpackChunkName: "highlight" */ '@lezer/highlight')
-    ]).then(([cm, sql, json, language, yaml, markdown, highlight]) => {
-        var lang
-        if (vnode.attrs.lang == 'sql') {
-          lang = sql.sql()
-        } else if (vnode.attrs.lang == 'json') {
-          lang = json.json()
-        } else if (vnode.attrs.lang == 'yaml') {
-          // Use legacy mode for yaml
-          lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
-        } else if (vnode.attrs.lang == 'markdown') {
-          lang = markdown.markdown()
-        } else {
-          lang = ''
-        }
-        editors[vnode.attrs.id] = {}
+      import(/* webpackChunkName: "highlight" */ '@lezer/highlight'),
+      import(/* webpackChunkName: "cm-state" */ '@codemirror/state')
+    ]).then(([cm, sql, json, language, yaml, markdown, highlight, state]) => {
+      var lang
+      if (vnode.attrs.lang == 'sql') {
+        lang = sql.sql()
+      } else if (vnode.attrs.lang == 'json') {
+        lang = json.json()
+      } else if (vnode.attrs.lang == 'yaml') {
+        // Use legacy mode for yaml
+        lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
+      } else if (vnode.attrs.lang == 'markdown') {
+        lang = markdown.markdown()
+      } else {
+        lang = ''
+      }
+
+      const customHighlightStyle = language.HighlightStyle.define([
+        { tag: highlight.tags.keyword, color: "#FF4136" },
+        { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
+      ]);
+
+      const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
+      var extensions = [
+        language.syntaxHighlighting(customHighlightStyle), 
+        language.syntaxHighlighting(language.defaultHighlightStyle),
+        cm.basicSetup,
+        foldingOnIndent,
+        keymap.of([indentWithTab]),
+        cm.EditorView.lineWrapping,
+        indentedLineWrap,
+        cm.EditorView.editable.of(vnode.attrs.editable),
+        cm.EditorView.updateListener.of(function(view) {
+          if ('onchange' in vnode.attrs && view.docChanged) {
+            if (Codefield.timer) {
+              clearTimeout(Codefield.timer)
+            }
+            Codefield.timer = setTimeout(function() { 
+              var value = view.state.doc.toString()
+              vnode.attrs.onchange(value);
+            }, 1000)
+            // Set classes manually to activate save button
+            $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
+          }
+        })
+      ]
+      if (lang) extensions.push(lang)
+
+      var id = vnode.attrs.id
+
+      if (method == 'update') {
+        editors[id].view.setState(state.EditorState.create({
+          doc: vnode.attrs.value,
+          extensions: extensions
+        }))
+      } else {
+        editors[id] = {}
         if (vnode.attrs['data-pkey']) {
           editors[vnode.attrs.id].pkey = vnode.attrs['data-pkey']
         }
-
-        const customHighlightStyle = language.HighlightStyle.define([
-          { tag: highlight.tags.keyword, color: "#FF4136" },
-          { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
-        ]);
-
-        const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
-        var extensions = [
-            language.syntaxHighlighting(customHighlightStyle), 
-            language.syntaxHighlighting(language.defaultHighlightStyle),
-            cm.basicSetup,
-            foldingOnIndent,
-            keymap.of([indentWithTab]),
-            cm.EditorView.lineWrapping,
-            indentedLineWrap,
-            cm.EditorView.editable.of(vnode.attrs.editable),
-            cm.EditorView.updateListener.of(function(view) {
-              if ('onchange' in vnode.attrs && view.docChanged) {
-                if (Codefield.timer) {
-                  clearTimeout(Codefield.timer)
-                }
-                Codefield.timer = setTimeout(function() { 
-                  var value = view.state.doc.toString()
-                  vnode.attrs.onchange(value);
-                }, 1000)
-                // Set classes manually to activate save button
-                $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
-              }
-            })
-        ]
-        if (lang) extensions.push(lang)
-
-        editors[vnode.attrs.id].view = new cm.EditorView({
+        editors[id].view = new cm.EditorView({
           doc: vnode.attrs.value,
           extensions: extensions,
           parent: vnode.dom,
         })
-      })
+      }
+    })
+  },
+
+  oncreate: function(vnode) {
+    Codefield.set_state(vnode, 'create')
   },
 
   onupdate: function(vnode) {
-    Promise.all([
-      import(/* webpackChunkName: "codemirror" */ 'codemirror'),
-      import(/* webpackChunkName: "cm-state" */ '@codemirror/state'),
-      import(/* webpackChunkName: "cm-lang-sql" */ '@codemirror/lang-sql'),
-      import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
-      import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
-      import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
-      import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
-      import(/* webpackChunkName: "highlight" */ '@lezer/highlight')
-    ]).then(([cm, state, sql, json, language, yaml, markdown, highlight]) => {
-        var lang
-        if (vnode.attrs.lang == 'sql') {
-          lang = sql.sql()
-        } else if (vnode.attrs.lang == 'json') {
-          lang = json.json()
-        } else if (vnode.attrs.lang == 'yaml') {
-          // Use legacy mode for yaml
-          lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
-        } else if (vnode.attrs.lang == 'markdown') {
-          lang = markdown.markdown()
-        }
-        var id = vnode.attrs.id
+    var id = vnode.attrs.id
 
-        const customHighlightStyle = language.HighlightStyle.define([
-          { tag: highlight.tags.keyword, color: "#FF4136" },
-          { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
-        ]);
-
-        const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
-        var extensions = [
-            language.syntaxHighlighting(customHighlightStyle), 
-            language.syntaxHighlighting(language.defaultHighlightStyle),
-            cm.basicSetup,
-            foldingOnIndent,
-            keymap.of([indentWithTab]),
-            cm.EditorView.lineWrapping,
-            indentedLineWrap,
-            cm.EditorView.editable.of(vnode.attrs.editable),
-            cm.EditorView.updateListener.of(function(view) {
-              if ('onchange' in vnode.attrs && view.docChanged) {
-                var value = view.state.doc.toString()
-                vnode.attrs.onchange(value);
-                // Set classes manually to activate save button
-                $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
-              }
-            })
-        ]
-        if (lang) extensions.push(lang)
-
-        if (vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != editors[id].pkey) {
-          editors[id].pkey = vnode.attrs['data-pkey']
-          editors[id].view.setState(state.EditorState.create({
-            doc: vnode.attrs.value,
-            extensions: extensions
-          }))
-        }
-    })
+    if (vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != editors[id].pkey) {
+      editors[id].pkey = vnode.attrs['data-pkey']
+      Codefield.set_state(vnode, 'update')
+    }
   },
 
   view: function(vnode) {
