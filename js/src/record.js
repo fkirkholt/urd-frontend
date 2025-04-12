@@ -156,6 +156,12 @@ var Record = {
       groups: [] // TODO: This should be removed
     }
 
+    rec.new = true
+    rec.dirty = true
+    rec.loaded = true
+
+    rec = $.extend(list.records[idx], rec)
+
     // set standard value of field, and sets editable from list
     $.each(rec.fields, function(name, field) {
       field.name = name
@@ -214,11 +220,6 @@ var Record = {
       }
     })
 
-    rec.new = true
-    rec.dirty = true
-    rec.loaded = true
-
-    rec = $.extend(list.records[idx], rec)
 
     if (relation) {
       rec.fk = []
@@ -285,14 +286,14 @@ var Record = {
   },
 
   /**
-   * Oppdaterer record ved autosave
+   * Saves record when autosave is activated
    */
   save: function(rec) {
     var changes = Record.get_changes(rec, false)
 
     var data = {
       base: rec.base_name,
-      table: rec.table.name,
+      table: rec.table_name,
       pkey: JSON.stringify(changes.prim_key),
       values: JSON.stringify(changes.values)
     }
@@ -306,6 +307,7 @@ var Record = {
         rec.fields[fieldname].dirty = false
       }
       rec.new = false
+      rec.dirty = false
       if (data.values) {
         $.each(data.values, function(fieldname, value) {
           rec.fields[fieldname].value = value
@@ -318,7 +320,7 @@ var Record = {
         })
         rec.pkey = data.values
       }
-      if (rec.delete) {
+      if (rec.delete && rec.table_name == ds.table.name) {
         var idx = rec.table.selection
         rec.table.records.splice(idx, 1)
         Toolbar.set_url(0)
