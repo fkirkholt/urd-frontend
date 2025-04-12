@@ -315,8 +315,7 @@ var Record = {
           // Update value in grid cell
           if (rec.columns && fieldname in rec.columns) {
             rec.columns[fieldname].value = value
-          }
-
+          } 
         })
         rec.pkey = data.values
       }
@@ -324,6 +323,9 @@ var Record = {
         var idx = rec.table.selection
         rec.table.records.splice(idx, 1)
         Toolbar.set_url(0)
+      } else if (rec.delete) {
+        rec.table.records.splice(rec.rowidx, 1)
+        rec.table.selection = null
       }
     })
     .catch(function(e) {

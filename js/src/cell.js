@@ -32,7 +32,7 @@ var Cell = {
       : get(field, 'attrs.data-format') == 'markdown' ? val
       : compressed ? col.value
       // else show the display text (that also shows in a select box)
-      : col.text
+      : col.text ? col.text : col.value
 
     if (field.element == 'input' && field.attrs.type == 'checkbox') {
       var icon = value == 0 

@@ -11,6 +11,8 @@ var Relation = {
     var rec = Record.create(rel, true)
     if (!rec) return
 
+    rel.count_records += 1
+
     // Focus first input field in new record
     setTimeout(function() {
       $('tr[data-name=' + rel.name + '] > td > table > tr')
