@@ -88,6 +88,7 @@ var Fieldset = {
                 if (set.expandable) {
                   set.expanded = !set.expanded
                 }
+                return false
               }
             }, label),
             set.inline ? '' : m('span', {
