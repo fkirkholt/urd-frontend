@@ -182,7 +182,7 @@ var Field = {
       // Hack to make marked format first list item like the rest.
       // There must be text in front of the list
       if (!field.size) {
-        result = 'tekst\n\n' + result
+        result = 'dummy-paragraph\n\n' + result
       }
 
       result = marked.parse(result)
@@ -191,7 +191,7 @@ var Field = {
         result = result.replace('<p>', '').replace('</p>', '')
       } else {
         // Remove text inserted in hack above
-        result = result.replace(/^<p>tekst<\/p>/, '')
+        result = result.replace('<p>dummy-paragraph</p>', '')
       }
 
       value = m.trust(result)
@@ -495,7 +495,7 @@ var Field = {
                             window.open('/file?' + params, '_blank')
                           }
                         }
-                      }, Field.display_value(field, rec)),
+                      }, Field.display_value(field, rec, field.element != 'textarea')),
               // Show trash bin for field from cross reference table
               rec.table.relationship != 'M:M' || !config.edit_mode
                 ? ''
