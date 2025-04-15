@@ -12,9 +12,12 @@ const getDecorations = (state) => {
     const line = state.doc.line(i + 1)
     const numberOfSpaces = getStartSpaces(line.text).length
 
-    if (numberOfSpaces === 0) continue
+    var offset = numberOfSpaces
+    if (/^[*+-] /.test(line.text.trim())) {
+      offset = offset + 2
+    }
 
-    const offset = numberOfSpaces
+    if (offset === 0) continue
 
     const linerwapper = Decoration.line({
       attributes: {
