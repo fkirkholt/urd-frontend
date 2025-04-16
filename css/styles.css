@@ -217,8 +217,11 @@ ul {
 }
 
 ul > li.fold > p:first-child {
-    text-decoration-line: underline;
     cursor: pointer;
+}
+
+ul > li.fold > p:first-child:first-line {
+    text-decoration-line: underline;
 }
 
 ol {
