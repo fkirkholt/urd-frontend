@@ -3,6 +3,7 @@ var editors = []
 import { indentedLineWrap } from './linewrap' 
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
+import { syntaxTree, syntaxTreeAvailable, foldable, foldEffect, unfoldAll } from "@codemirror/language"
 
 var Codefield = {
 
@@ -16,6 +17,32 @@ var Codefield = {
     editors[id].view.dispatch({
       changes: { from: 0, to: editors[id].view.state.doc.length, insert: value }
     })
+  },
+
+  unfold_all: function(id) {
+    var view = editors[id].view
+    unfoldAll(view)
+  },
+
+  // Function to fold all levels of code
+  fold_all_recursive: function(id) {
+    var view = editors[id].view
+    const state = view.state;
+
+    // Traverse the syntax tree and collect all foldable ranges
+    const foldRanges  = [];
+    syntaxTree(state).iterate({
+      enter(node) {
+        const isFoldable = foldable(state, node.from, node.to)
+        if (isFoldable) {
+          foldRanges.push({ from: isFoldable.from, to: isFoldable.to });
+        }
+      }
+    });
+
+    view.dispatch({
+      effects: foldRanges.map(range => foldEffect.of({ from: range.from, to: range.to }))
+    });
   },
 
   foldmethod: function(state, from, to) {
@@ -81,7 +108,7 @@ var Codefield = {
       } else if (vnode.attrs.lang == 'markdown') {
         lang = markdown.markdown()
       } else {
-        lang = ''
+        lang = markdown.markdown()
       }
 
       const customHighlightStyle = language.HighlightStyle.define([
