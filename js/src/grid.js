@@ -288,10 +288,12 @@ var Grid = {
     ds.table.is_chart = chart_data.length > 0
 
     return [
-      ds.table.tab == 'chart' ? '' : m('table#urdgrid.tbl', {
+      ds.table.tab == 'chart' ? '' : m('div', { 
+        class: 'bottom-0, overflow-y-auto'
+      }, [m('table#urdgrid.tbl', {
         'data-name': ds.table.name,
         class: [
-          'db bt overflow-auto collapse',
+          'bt overflow-auto collapse w-100',
           config.dark_mode ? 'b-mid-gray b--gray' : 'b-light-gray b--moon-gray'
         ].join(' '),
       }, [
@@ -377,7 +379,7 @@ var Grid = {
           'bb bt b--gray',
           config.dark_mode ? 'bg-near-black' : 'bg-white'
         ].join(' ')
-      })
+      })])
     ]
   }
 }
