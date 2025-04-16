@@ -372,7 +372,7 @@ var Field = {
             'data-expandable': field.expandable && field.value !== null,
             'data-field': rec.table.name + '.' + field.name,
             class: [
-              label ? 'dib ml3 mt1' : 'ml2 mt1',
+              label ? 'dib ml3 mt1' : 'db ml2 mt1',
               field.element == 'textarea' ? 'w-100' : '', 
             ].join(' ')
           }, [
