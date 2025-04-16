@@ -120,7 +120,7 @@ var Field = {
       if (
         field.invalid || (
           field.nullable === false &&
-          field.value === null &&
+          field.value == null &&
           field.extra !== 'auto_increment'
         )
       ) {
