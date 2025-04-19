@@ -392,7 +392,7 @@ var Tabbar = {
       }, [
         m('select', {
           onchange: function(ev) {
-            Codefield.set_value('query', ev.target.value)
+            SQLpanel.editor.set_value(ev.target.value)
             ev.target.value = 0
           }
         }, [
@@ -411,6 +411,6 @@ var Tabbar = {
 
 export default Tabbar
 
-import Codefield from './codefield.js'
+import SQLpanel from './sqlpanel.js'
 import Grid from './grid.js'
 import config from './config.js'

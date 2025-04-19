@@ -1,6 +1,7 @@
 var SQLpanel = {
 
   query: '',
+  editor: null,
 
   get_chart_data: function(data, table) {
     var chart_cols = Object.keys(data[0])
@@ -265,7 +266,10 @@ var SQLpanel = {
               class: 'ml3 ba b--light-silver mb2',
               editable: true,
               lang: 'sql',
-              value: SQLpanel.query
+              value: SQLpanel.query,
+              oncreate: function(vnode) {
+                SQLpanel.editor = vnode.state
+              }
             }),
             m('div', { class: 'ml3 h2' }, [
               !ds.result
@@ -275,8 +279,7 @@ var SQLpanel = {
                 id: 'run_sql',
                 class: 'fr pt0 pb0 fa fa-play',
                 onclick: function() {
-                  var sql = Codefield.get_value('query')
-                  SQLpanel.query = sql
+                  var sql = SQLpanel.editor.get_value()
                   var expressions = sql.split(';')
                   expressions.reverse()
                   ds.result = []

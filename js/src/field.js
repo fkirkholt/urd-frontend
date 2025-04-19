@@ -399,7 +399,7 @@ var Field = {
                 }, [
                   label,
                 ]),
-                field.element == 'textarea' && (field.expanded || config.edit_mode)
+                field.element == 'textarea' && field.expanded
                 ? [ 
                   m('span', {
                     class: [
@@ -407,17 +407,12 @@ var Field = {
                       config.dark_mode ? 'gray' : 'moon-gray'
                     ].join(' '),
                     onclick: function() {
-                      if (config.edit_mode) {
-                        Codefield.fold_all_recursive(field.name)
-                      }
-                      else {
-                        var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+                      var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
 
-                        for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
-                                                                selector + " .collapsible ul li p:first-child")) {
-                          let t = i.parentElement
-                          t.className = "fold close"
-                        }
+                      for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
+                                                              selector + " .collapsible ul li p:first-child")) {
+                        let t = i.parentElement
+                        t.className = "fold close"
                       }
                     }
                   }, 'Collapse all'),

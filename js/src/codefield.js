@@ -1,51 +1,19 @@
-var editors = []
-
-import { indentedLineWrap } from './linewrap' 
+import { basicSetup, EditorView } from 'codemirror'
 import { keymap } from "@codemirror/view"
+import { EditorState } from "@codemirror/state"
 import { indentWithTab } from "@codemirror/commands"
-import { syntaxTree, syntaxTreeAvailable, foldable, foldEffect, unfoldAll } from "@codemirror/language"
+import { indentedLineWrap } from './linewrap' 
+import { syntaxTree, syntaxTreeAvailable, foldable, foldEffect, unfoldAll,
+         foldCode, unfoldCode } from "@codemirror/language"
 
-var Codefield = {
 
-  timer: null,
+function Codefield() {
+  var editor
+  var pkey
+  var extensions
+  var onchange
 
-  get_value: function(id) {
-    return editors[id].view.state.doc.toString()
-  },
-
-  set_value: function(id, value) {
-    editors[id].view.dispatch({
-      changes: { from: 0, to: editors[id].view.state.doc.length, insert: value }
-    })
-  },
-
-  unfold_all: function(id) {
-    var view = editors[id].view
-    unfoldAll(view)
-  },
-
-  // Function to fold all levels of code
-  fold_all_recursive: function(id) {
-    var view = editors[id].view
-    const state = view.state;
-
-    // Traverse the syntax tree and collect all foldable ranges
-    const foldRanges  = [];
-    syntaxTree(state).iterate({
-      enter(node) {
-        const isFoldable = foldable(state, node.from, node.to)
-        if (isFoldable) {
-          foldRanges.push({ from: isFoldable.from, to: isFoldable.to });
-        }
-      }
-    });
-
-    view.dispatch({
-      effects: foldRanges.map(range => foldEffect.of({ from: range.from, to: range.to }))
-    });
-  },
-
-  foldmethod: function(state, from, to) {
+  function foldmethod(state, from, to) {
     // https://discuss.codemirror.net/t/add-folding-on-indent-levels-for-plain-text-and-yaml-language/5925
     const line = state.doc.lineAt(from) // First line
     const lines = state.doc.lines // Number of lines in the document
@@ -58,129 +26,144 @@ var Codefield = {
     // If it is not, go on with the foldEnd
     let nextLine = line
     while (nextLine.number < lines) {
-        nextLine = state.doc.line(nextLine.number + 1) // Next line
-        const nextIndent = nextLine.text.search(/\S|$/) // Indent level of the next line
+      nextLine = state.doc.line(nextLine.number + 1) // Next line
+      const nextIndent = nextLine.text.search(/\S|$/) // Indent level of the next line
 
-        // If the next line is on a deeper indent level, add it to the fold
-        if (nextIndent > indent || nextLine.text == '') {
-            foldEnd = nextLine.to // Set the fold end to the end of the next line
-        } else {
-            break // If the next line is not on a deeper indent level, stop
-        }
-    }
-
-    // If the fold is only one line, don't fold it
-    if (state.doc.lineAt(foldStart).number === state.doc.lineAt(foldEnd).number) {
-        return null
-    }
-
-    // Set the fold start to the end of the first line
-    // With this, the fold will not include the first line
-    foldStart = line.to
-
-    if (line.text == '' || foldEnd == line.to + 1) {
-      return null
-    }
-
-    // Return a fold that covers the entire indent level
-    return { from: foldStart, to: foldEnd }
-  },
-
-  set_state: function(vnode, method) {
-    Promise.all([
-      import(/* webpackChunkName: "codemirror" */ 'codemirror'),
-      import(/* webpackChunkName: "cm-lang-sql" */ '@codemirror/lang-sql'),
-      import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
-      import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
-      import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
-      import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
-      import(/* webpackChunkName: "highlight" */ '@lezer/highlight'),
-      import(/* webpackChunkName: "cm-state" */ '@codemirror/state')
-    ]).then(([cm, sql, json, language, yaml, markdown, highlight, state]) => {
-      var lang
-      if (vnode.attrs.lang == 'sql') {
-        lang = sql.sql()
-      } else if (vnode.attrs.lang == 'json') {
-        lang = json.json()
-      } else if (vnode.attrs.lang == 'yaml') {
-        // Use legacy mode for yaml
-        lang = new language.LanguageSupport(language.StreamLanguage.define(yaml.yaml));
-      } else if (vnode.attrs.lang == 'markdown') {
-        lang = markdown.markdown()
+      // If the next line is on a deeper indent level, add it to the fold
+      if (nextIndent > indent || nextLine.text == '') {
+        foldEnd = nextLine.to // Set the fold end to the end of the next line
       } else {
-        lang = markdown.markdown()
+        break // If the next line is not on a deeper indent level, stop
       }
+    }
+  }
 
-      const customHighlightStyle = language.HighlightStyle.define([
-        { tag: highlight.tags.keyword, color: "#FF4136" },
-        { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
-      ]);
+  // Function to fold all levels of code
+  function fold_all_recursive() {
+    const state = editor.state;
 
-      const foldingOnIndent = language.foldService.of(Codefield.foldmethod)
-      var extensions = [
-        language.syntaxHighlighting(customHighlightStyle), 
-        language.syntaxHighlighting(language.defaultHighlightStyle),
-        cm.basicSetup,
-        foldingOnIndent,
-        keymap.of([indentWithTab]),
-        cm.EditorView.lineWrapping,
-        indentedLineWrap,
-        cm.EditorView.editable.of(vnode.attrs.editable),
-        cm.EditorView.updateListener.of(function(view) {
-          if ('onchange' in vnode.attrs && view.docChanged) {
-            if (Codefield.timer) {
-              clearTimeout(Codefield.timer)
+    // Traverse the syntax tree and collect all foldable ranges
+    const foldRanges  = [];
+    syntaxTree(state).iterate({
+      enter(node) {
+        const isFoldable = foldable(state, node.from, node.to)
+        if (isFoldable) {
+          foldRanges.push({ from: isFoldable.from, to: isFoldable.to });
+        }
+      }
+    });
+
+    editor.dispatch({
+      effects: foldRanges.map(range => foldEffect.of({ from: range.from, to: range.to }))
+    });
+  }
+
+  function unfold_all() {
+    unfoldAll(editor)
+  }
+
+  return {
+    get_value: function(id) {
+      return editor.state.doc.toString()
+    },
+
+    set_value: function(value) {
+      editor.dispatch({
+        changes: { from: 0, to: editor.state.doc.length, insert: value }
+      })
+    },
+
+    oncreate: function(vnode) {
+      onchange = vnode.attrs.onchange
+      Promise.all([
+        import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
+        import(/* webpackChunkName: "cm-lang-sql" */ '@codemirror/lang-sql'),
+        import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
+        import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
+        import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
+        import(/* webpackChunkName: "highlight" */ '@lezer/highlight'),
+      ]).then(([language, sql, json, yaml, markdown, highlight]) => {
+        var lang
+        if (vnode.attrs.lang == 'sql') {
+          lang = sql.sql()
+        } else if (vnode.attrs.lang == 'json') {
+          lang = json.json()
+        } else if (vnode.attrs.lang == 'yaml') {
+          lang = yaml.yaml();
+        } else {
+          lang = markdown.markdown()
+        }
+
+        const customHighlightStyle = language.HighlightStyle.define([
+          { tag: highlight.tags.keyword, color: "#FF4136" },
+          { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
+        ])
+
+        extensions = [
+          language.syntaxHighlighting(customHighlightStyle), 
+          language.syntaxHighlighting(language.defaultHighlightStyle),
+          basicSetup,
+          language.foldService.of(foldmethod),
+          keymap.of([indentWithTab]),
+          EditorView.lineWrapping,
+          indentedLineWrap,
+          EditorView.editable.of(vnode.attrs.editable),
+          EditorView.updateListener.of(function(view) {
+            if (onchange && view.docChanged) {
+              if (Codefield.timer) {
+                clearTimeout(Codefield.timer)
+              }
+              Codefield.timer = setTimeout(function() { 
+                var value = view.state.doc.toString()
+                onchange(value);
+              }, 1000)
+              // Set classes manually to activate save button
+              $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
             }
-            Codefield.timer = setTimeout(function() { 
-              var value = view.state.doc.toString()
-              vnode.attrs.onchange(value);
-            }, 1000)
-            // Set classes manually to activate save button
-            $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
-          }
+          }),
+          EditorView.domEventHandlers({
+            keydown(e, view) {
+              if (e.key == '(' && e.ctrlKey) {
+                foldCode(editor)
+                return true
+              } else if (e.key == ')' && e.ctrlKey) {
+                unfoldCode(editor)
+                return true
+              } else if (e.key == '8' && e.altKey && e.ctrlKey) {
+                fold_all_recursive()
+                return true
+              } else if (e.key == '9' && e.altKey && e.ctrlKey) {
+                unfold_all()
+                return true
+              }
+            }
+          }),
+        ]
+        extensions.push(lang)
+
+        editor = new EditorView({
+          doc: vnode.attrs.value,
+          extensions: extensions,
+          parent: vnode.dom
         })
-      ]
-      if (lang) extensions.push(lang)
-
-      var id = vnode.attrs.id
-
-      if (method == 'update') {
-        editors[id].view.setState(state.EditorState.create({
+        if (vnode.attrs['data-pkey']) {
+          pkey = vnode.attrs['data-pkey']
+        }
+      })
+    },
+    onupdate: function(vnode) {
+      if (vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
+        pkey = vnode.attrs['data-pkey']
+        onchange = vnode.attrs.onchange
+        editor.setState(EditorState.create({
           doc: vnode.attrs.value,
           extensions: extensions
         }))
-      } else {
-        editors[id] = {}
-        if (vnode.attrs['data-pkey']) {
-          editors[vnode.attrs.id].pkey = vnode.attrs['data-pkey']
-        }
-        editors[id].view = new cm.EditorView({
-          doc: vnode.attrs.value,
-          extensions: extensions,
-          parent: vnode.dom,
-        })
       }
-    })
-  },
-
-  oncreate: function(vnode) {
-    Codefield.set_state(vnode, 'create')
-  },
-
-  onupdate: function(vnode) {
-    var id = vnode.attrs.id
-
-    if (vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != editors[id].pkey) {
-      editors[id].pkey = vnode.attrs['data-pkey']
-      Codefield.set_state(vnode, 'update')
+    },
+    view: function(vnode) {
+      return m('div', { class: vnode.attrs.class })
     }
-  },
-
-  view: function(vnode) {
-    return m('div', {
-      id: vnode.attrs.id,
-      class: vnode.attrs.class
-    })
   }
 }
 
