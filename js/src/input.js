@@ -283,6 +283,8 @@ var Input = {
           // Activates save button on change
           m.redraw()
         }
+        // Remove trailing space
+        value = value.replace(/ *\n/g, '\n')
         Field.update(value, field.name, rec)
       }
       // Make field get onclick handler for creating folds after editing finished
