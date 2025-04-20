@@ -228,6 +228,14 @@ ol {
     padding-left: 20px;
 }
 
+ol > li.fold > p:first-child {
+    cursor: pointer;
+}
+
+ol > li.fold > p:first-child:first-line {
+    text-decoration-line: underline;
+}
+
 .modal {
   position: fixed;
   top: 50%;
