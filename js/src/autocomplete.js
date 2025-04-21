@@ -31,6 +31,7 @@ function Autocomplete() {
       }
       index++
     } else if (event.keyCode == KEY_CODE_TAB) {
+      delete event.target.dataset.value
       return
     } else {
       if (timer) {
