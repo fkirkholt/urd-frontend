@@ -16,7 +16,7 @@ var Tablelist = {
             onclick: function() {
               var sql = 'alter table ' + Tablelist.context_table +
                 ' rename to new_table_name'
-              SQLpanel.editor.set_value('query', sql)
+              SQLpanel.editor.set_value(sql)
               $('#tablelist-context').hide()
             }
           }, 'Rename'),
@@ -25,7 +25,7 @@ var Tablelist = {
             onclick: function() {
               var sql = 'alter table ' + Tablelist.context_table +
                 ' add column column_def'
-              SQLpanel.editor.set_value('query', sql)
+              SQLpanel.editor.set_value(sql)
               $('#tablelist-context').hide()
             }
           }, 'Add column'),
@@ -34,7 +34,7 @@ var Tablelist = {
             onclick: function() {
               var sql = 'alter table ' + Tablelist.context_table +
                 ' drop column column_name'
-              SQLpanel.editor.set_value('query', sql)
+              SQLpanel.editor.set_value(sql)
               $('#tablelist-context').hide()
             }
           }, 'Drop column'),
@@ -43,7 +43,7 @@ var Tablelist = {
             onclick: function() {
               var sql = 'alter table ' + Tablelist.context_table +
                 ' rename column column_name to new_column_name'
-              SQLpanel.editor.set_value('query', sql)
+              SQLpanel.editor.set_value(sql)
               $('#tablelist-context').hide()
             }
           }, 'Rename column'),
@@ -64,7 +64,7 @@ var Tablelist = {
                 sql += "from INFORMATION_SCHEMA.COLUMNS\n"
                 sql += "where table_name = '" + Tablelist.context_table + "';"
               }
-              SQLpanel.editor.set_value('query', sql)
+              SQLpanel.editor.set_value(sql)
               $('#tablelist-context').hide()
             }
           }, 'Describe table'),
@@ -81,7 +81,7 @@ var Tablelist = {
                 $('#tablelist-context').hide()
                 return
               }
-              SQLpanel.editor.set_value('query', sql)
+              SQLpanel.editor.set_value(sql)
               $('#tablelist-context').hide()
             }
           }, 'Show indexes')
