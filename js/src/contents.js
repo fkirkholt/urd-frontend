@@ -253,7 +253,7 @@ var Contents = {
           class: [ 
             'absolute left-0 list pa1 shadow-5 dn pointer z-999',
             config.dark_mode ? 'bg-dark-gray' : 'bg-white'
-          ]
+          ].join(' ')
         }, [
             // Show links to this table
             config.tab == 'data' ? '' : m('li', {
