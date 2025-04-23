@@ -370,7 +370,7 @@ var Diagram = {
       return false
     }
 
-    shortest_path = found_paths[0]
+    var shortest_path = found_paths[0]
     $.each(found_paths, function(i, p) {
       if (p.length < shortest_path.length) {
         shortest_path = p
