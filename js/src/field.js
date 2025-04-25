@@ -185,11 +185,10 @@ var Field = {
         result = 'dummy-paragraph\n\n' + result
       }
 
-      result = marked.parse(result)
-
       if (field.size) {
-        result = result.replace('<p>', '').replace('</p>', '')
+        result = marked.parseInline(result)
       } else {
+        result = marked.parse(result)
         // Remove text inserted in hack above
         result = result.replace('<p>dummy-paragraph</p>', '')
       }
