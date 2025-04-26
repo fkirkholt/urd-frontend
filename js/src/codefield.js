@@ -152,7 +152,7 @@ function Codefield() {
       })
     },
     onupdate: function(vnode) {
-      if (vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
+      if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
         editor.setState(EditorState.create({
