@@ -79,7 +79,7 @@ function Codefield() {
         import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
         import(/* webpackChunkName: "cm-lang-sql" */ '@codemirror/lang-sql'),
         import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
-        import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/legacy-modes/mode/yaml'),
+        import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/lang-yaml'),
         import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
         import(/* webpackChunkName: "highlight" */ '@lezer/highlight'),
       ]).then(([language, sql, json, yaml, markdown, highlight]) => {
