@@ -351,13 +351,13 @@ var Diagram = {
         return
       }
 
+      new_path.push('"' + fk.referred_table + '"' + symbol + '--o{ "' + table.name +
+        '" : "' + fk_field_name + '"')
+
       if (fk.referred_table == Diagram.root) {
         found_paths.push(new_path)
       } else {
         if (fk_table.type == 'list') return
-
-        new_path.push('"' + fk.referred_table + '"' + symbol + '--o{ "' + table.name +
-          '" : "' + fk_field_name + '"')
 
         new_path = Diagram.get_path(fk_table, new_path)
         if (new_path) {
