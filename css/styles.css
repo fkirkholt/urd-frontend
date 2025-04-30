@@ -255,10 +255,12 @@ ol > li.fold > p:first-child:first-line {
 
 .bg-dark code {
     background-color: #555555;
+    color: white;
 }
 
 code {
-    background-color: #FBF1A9;
+    background-color: #CCCCCC;
+    color: black;
     padding: 2px 2px;
     border-radius: 3px;
     white-space: pre;
@@ -269,7 +271,7 @@ code {
 }
 
 pre {
-    background-color: #FBF1A9;
+    background-color: #CCCCCC;
     padding: 2px 4px;
     border-radius: 3px;
     line-height: 1.3;
