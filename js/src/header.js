@@ -11,11 +11,11 @@ var Header = {
   onupdate: function() {
     if (config.dark_mode) {
       $('body').addClass('bg-dark bg-dark-gray white')
-      $('body').removeClass('bg-white')
+      $('body').removeClass('bg-light-gray')
       $('div.bg-moon-gray').removeClass('bg-moon-gray').addClass('bg-mid-gray')
     } else {
       $('body').addClass('bg-light-gray')
-      $('body').removeClass('bg-dark-gray white')
+      $('body').removeClass('bg-dark bg-dark-gray white')
       $('div.bg-mid-gray').removeClass('bg-mid-gray').addClass('bg-moon-gray')
     }
   },
