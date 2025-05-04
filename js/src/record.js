@@ -294,13 +294,13 @@ var Record = {
     var data = {
       base: rec.base_name,
       table: rec.table_name,
-      pkey: JSON.stringify(changes.prim_key),
-      values: JSON.stringify(changes.values)
+      pkey: JSON.stringify(changes.prim_key)
     }
 
     m.request({
       method: changes.method,
       params: data,
+      body: JSON.stringify(changes.values),
       url: 'record'
     }).then(function(data) {
       for (let fieldname in changes.values) {
