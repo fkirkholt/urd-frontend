@@ -8,9 +8,10 @@ var Export_dialog = {
   progress: 0,
   running: false,
 
-  export_csv: function() {
+  export_csv: function(clobs_as_files) {
     var param = {}
     param.base = ds.base.name
+    param.clobs_as_files = clobs_as_files
 
     if (ds.table) {
       param.table = ds.table.name
@@ -147,6 +148,11 @@ var Export_dialog = {
       this.type !== 'tsv' ? '' : m('div[name=valg]', {
         class: 'mt2 max-h5 overflow-y-auto'
       }, [
+        m('label', [m('input[type=checkbox]', {
+          name: 'clobs_to_files',
+          class: 'mb3'
+        })], ' Export clobs to separate files'),
+        m('br'),
         ds.table ? 'Choose columns:' : 'Choose tables:',
         m('ul', { class: 'list' }, [
           m('li', { class: 'mb2' }, [
@@ -239,7 +245,9 @@ var Export_dialog = {
           onclick: function() {
             Export_dialog.running = true
             if (this.type === 'tsv') {
-              this.export_csv()
+              var clobs_as_files = $('#export-dialog input[name="clobs_to_files"]')
+                .prop('checked')
+              this.export_csv(clobs_as_files)
             } else {
               var dialect = $('#export-dialog input[name="dialect"]:checked')
                 .val()
@@ -254,7 +262,7 @@ var Export_dialog = {
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
               Export_dialog.export_sql(dialect, table_defs, no_fkeys, list_records, 
-                                       data_records, select_records)
+                                       data_records, select_records, clobs_as_files)
             }
           }.bind(this)
         }),
