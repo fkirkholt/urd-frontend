@@ -108,19 +108,6 @@ function Codefield() {
           EditorView.lineWrapping,
           indentedLineWrap,
           EditorView.editable.of(vnode.attrs.editable),
-          EditorView.updateListener.of(function(view) {
-            if (onchange && view.docChanged) {
-              if (Codefield.timer) {
-                clearTimeout(Codefield.timer)
-              }
-              Codefield.timer = setTimeout(function() { 
-                var value = view.state.doc.toString()
-                onchange(value);
-              }, 1000)
-              // Set classes manually to activate save button
-              $('#gridpanel [title=Save]').removeClass('moon-gray').addClass('dim pointer')
-            }
-          }),
           EditorView.domEventHandlers({
             keydown(e, view) {
               if (e.key == '(' && e.ctrlKey) {
@@ -136,7 +123,11 @@ function Codefield() {
                 unfold_all()
                 return true
               }
-            }
+            },
+            blur: function(e, view) {
+              var value = view.state.doc.toString()
+              onchange(value);
+            } 
           }),
         ]
         extensions.push(lang)
