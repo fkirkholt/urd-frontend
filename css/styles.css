@@ -287,52 +287,52 @@ mark {
     border-radius: 3px;
 }
 
-ul li:has(> p > input:not(:checked)) {
+.markdown ul li:has(> p > input:not(:checked)) {
     padding-left: 6px;
     margin-left: -6px;
 }
 
-ul li:has(> p > input:checked) {
+.markdown ul li:has(> p > input:checked) {
     padding-left: 4px;
     margin-left: -4px;
 }
 
-ul li:has(> input:checked) {
+.markdown ul li:has(> input:checked) {
     padding-left: 4px;
     margin-left: -4px;
 }
 
-ul li:has(> input:not(:checked)) {
+.markdown ul li:has(> input:not(:checked)) {
     padding-left: 6px;
     margin-left: -6px;
 }
 
-ul li:has(> p > input:checked)::marker {
+.markdown ul li:has(> p > input:checked)::marker {
   content: "\f046"; /* FontAwesome Unicode */
   font-family: FontAwesome;
 }
 
-ul li:has(> p > input:not(:checked))::marker {
+.markdown ul li:has(> p > input:not(:checked))::marker {
   content: "\f096"; /* FontAwesome Unicode */
   font-family: FontAwesome;
 }
 
-ul li:has(> p > input:not(:checked)):has(li input:checked)::marker {
+.markdown ul li:has(> p > input:not(:checked)):has(li input:checked)::marker {
   content: "\f147"; /* FontAwesome Unicode */
   font-family: FontAwesome;
 }
 
-ul li:has(> input:checked)::marker {
+.markdown ul li:has(> input:checked)::marker {
   content: "\f046"; /* FontAwesome Unicode */
   font-family: FontAwesome;
 }
 
-ul li:has(> input:not(:checked))::marker {
+.markdown ul li:has(> input:not(:checked))::marker {
   content: "\f096"; /* FontAwesome Unicode */
   font-family: FontAwesome;
 }
 
-ul li:has(> input:not(:checked) input:checked)::marker {
+.markdown ul li:has(> input:not(:checked) input:checked)::marker {
   content: "\f147"; /* FontAwesome Unicode */
   font-family: FontAwesome;
 }

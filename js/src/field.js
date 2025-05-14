@@ -481,7 +481,8 @@ var Field = {
                         class: [
                           'db pr3 collapsible',
                           (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
-                          (field.is_filepath) ? 'underline pointer blue' : ''
+                          (field.is_filepath) ? 'underline pointer blue' : '',
+                          field.element == 'textarea' ? 'markdown' : ''
                         ].join(' '),
                         value: field.element == 'textarea' ? null : field.value,
                         onclick: function() {
