@@ -79,7 +79,7 @@ var config = {
           ])
         ]),
         m('tr', [
-          m('td', 'Number records'),
+          m('td', 'Number of records'),
           m('td', [
             m('input#limit', {
               size: 4,

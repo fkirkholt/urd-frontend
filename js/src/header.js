@@ -33,7 +33,7 @@ var Header = {
             }
           }),
           m('ul', {
-            class: 'fixed right-0 list dn pa1 shadow-5 pointer '
+            class: 'fixed right-0 list dn pa1 shadow-5 pointer z-999 '
               + 'bg-white black mt0',
             onclick: function() {
               $('div#menu ul').hide()
@@ -44,7 +44,7 @@ var Header = {
                   $('#preferences').show()
                   $('div.curtain').show()
                 }
-              }, 'Innstillinger'),
+              }, 'Preferences'),
               m('li', {
                 class: 'dn',
                 onclick: function() {
@@ -57,7 +57,7 @@ var Header = {
                     $(this).html('Hide keyboard shortcuts')
                   }
                 }
-              }, 'Hurtigtaster'),
+              }, 'Keyboard shortcuts'),
               m('li', {
                 class: '',
                 onclick: function() {
