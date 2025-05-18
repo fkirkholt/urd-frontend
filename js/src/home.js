@@ -40,11 +40,46 @@ var home = {
 
     return m('div', [
       config.tab == 'users' ? null : m('ul', [
+        ds.dblist.subfolders.length == 0 ? null : m('li', [
+          m('a', {
+            class: 'no-underline hover-blue',
+            href: '#',
+            onclick: function() {
+              ds.dblist.subfolders.pop()
+              m.request({
+                method: 'get',
+                url: 'dblist',
+                params: {
+                  subfolder: ds.dblist.subfolders 
+                }
+              }).then(function(result) {
+                ds.dblist = result.data
+              })
+            }
+          }, '..')
+        ]),
         ds.dblist.records.map(function(post, i) {
           return m('li', [
             m('h4.mt1.mb1', [
-              m('a', {
+              post.columns.name.endsWith('.db') ? m('a', {
+                class: 'no-underline hover-blue',
                 href: '#/' + post.columns.name.replace(/\.db$/, '') + '/data'
+              }, post.columns.label)
+              : m('a', { 
+                class: 'no-underline green',
+                href: '#',
+                onclick: function() {
+                  ds.dblist.subfolders.push(post.columns.name)
+                  m.request({
+                    method: 'get',
+                    url: 'dblist',
+                    params: {
+                      subfolders: JSON.stringify(ds.dblist.subfolders)
+                    }
+                  }).then(function(result) {
+                    ds.dblist = result.data
+                  })
+                }
               }, post.columns.label),
             ]),
             m('p.mt1.mb1', post.columns.description)
