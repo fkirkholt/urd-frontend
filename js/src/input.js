@@ -285,7 +285,9 @@ var Input = {
         }
         // Remove trailing space
         value = value.replace(/ *\n/g, '\n')
-        Field.update(value, field.name, rec)
+        if (value != field.value) {
+          Field.update(value, field.name, rec)
+        }
       }
       // Make field get onclick handler for creating folds after editing finished
       field.foldable = false
