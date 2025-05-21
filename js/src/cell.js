@@ -41,7 +41,18 @@ var Cell = {
       value = m('i', { class: 'fa ' + icon })
     }
     
-    var expansion = list.ismain && list.expansion_column && colname == ds.table.grid.columns[0] 
+    var expansion = false
+
+    if (list.ismain && list.expansion_column) {
+      var expansion_col = null
+      for (const fieldname of ds.table.grid.columns) {
+        if (ds.table.fields[fieldname].datatype == 'str') {
+          expansion_col = fieldname
+          break
+        }
+      }
+      expansion = colname == expansion_col
+    }
 
     var icon = m('i', {
       class: [
