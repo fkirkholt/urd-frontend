@@ -98,7 +98,7 @@ var Cell = {
       ].join(' '),
       title: compressed && value.length > 30 ? value : '',
       headers: colname,
-      'data-value': value
+      'data-value': ('' + col.value).replace('\n', ' ').replace(/\s\s+/g, ' ').slice(0, 255)
     }, [ expansion ? icon : '', value ])
   }
 }
