@@ -323,7 +323,8 @@ var Grid = {
                 return m('th', {
                   id: col,
                   class: [
-                    'tl f6 pa1 pb0 nowrap ba',
+                    ['int', 'Decimal', 'float'].includes(field.datatype) ? 'tr' : 'tl',
+                    'f6 pa1 pb0 nowrap ba',
                     config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray',
                     config.compressed ? 'truncate' : '',
                   ].join(' '),
