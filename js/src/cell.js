@@ -45,10 +45,23 @@ var Cell = {
 
     if (list.ismain && list.expansion_column) {
       var expansion_col = null
-      for (const fieldname of ds.table.grid.columns) {
-        if (ds.table.fields[fieldname].datatype == 'str') {
-          expansion_col = fieldname
-          break
+      for (const indexname in ds.table.indexes) {
+        let index = ds.table.indexes[indexname]
+        if (index.unique && index.columns.join() != ds.table.pkey.join()) {
+          for (const fieldname of index.columns) {
+            if (ds.table.fields[fieldname].datatype == 'str') {
+              expansion_col = fieldname
+              break
+            }
+          }
+        }
+      }
+      if (!expansion_col) {
+        for (const fieldname of ds.table.grid.columns) {
+          if (ds.table.fields[fieldname].datatype == 'str') {
+            expansion_col = fieldname
+            break
+          }
         }
       }
       expansion = colname == expansion_col
