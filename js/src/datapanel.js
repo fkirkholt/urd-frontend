@@ -70,7 +70,7 @@ var Datapanel = {
         ? '' : ds.table.search
           ? m(Search) : m('div', {
             class: [
-              'flex flex-auto flex-column w-40 bottom-0',
+              'flex flex-auto flex-column min-w6 bottom-0',
               'overflow-x-hidden overflow-y-auto pb3'
             ].join(' ')
           }, [
