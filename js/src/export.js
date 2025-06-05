@@ -9,10 +9,13 @@ var Export_dialog = {
   running: false,
   view_as_table: false,
 
-  export_csv: function(clobs_as_files) {
+  export_csv: function(clobs_as_files, limit) {
     var param = {}
     param.base = ds.base.name
     param.clobs_as_files = clobs_as_files
+    if (limit) {
+      param.limit = limit
+    }
 
     if (ds.table) {
       param.table = ds.table.name
@@ -162,6 +165,15 @@ var Export_dialog = {
           }
         })], ' Export records from views'),
         m('br'),
+        m('label', [
+          'Limit',
+          m('input', {
+            type: 'number',
+            name: 'limit',
+            class: 'ml2 w3' 
+          })
+        ]),
+        m('br'),
         ds.table ? 'Choose columns:' : 'Choose tables:',
         m('ul', { class: 'list' }, [
           m('li', { class: 'mb2' }, [
@@ -261,7 +273,8 @@ var Export_dialog = {
             if (this.type === 'tsv') {
               var clobs_as_files = $('#export-dialog input[name="clobs_to_files"]')
                 .prop('checked')
-              this.export_csv(clobs_as_files)
+              var limit = $('#export-dialog input[name=limit]').val()
+              this.export_csv(clobs_as_files, limit)
             } else {
               var dialect = $('#export-dialog input[name="dialect"]:checked')
                 .val()
