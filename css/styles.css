@@ -127,9 +127,9 @@ div.field {
 
 .max-h1 {max-height: 1rem;}
 .max-h2 {max-height: 2rem;}
-.max-h3 {max-height: 3rem;}
-.max-h4 {max-height: 5rem;}
-.max-h5 {max-height: 8rem;}
+.max-h3 {max-height: 4rem;}
+.max-h4 {max-height: 8rem;}
+.max-h5 {max-height: 16rem;}
 
 .fast-spin {
   -webkit-animation: fa-spin 0.5s infinite linear;

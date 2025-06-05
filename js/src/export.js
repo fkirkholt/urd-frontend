@@ -7,6 +7,7 @@ var Export_dialog = {
   msg: '',
   progress: 0,
   running: false,
+  view_as_table: false,
 
   export_csv: function(clobs_as_files) {
     var param = {}
@@ -54,13 +55,14 @@ var Export_dialog = {
     }
   },
 
-  export_sql: function(dialect, table_defs, no_fkeys, list_recs = false, 
+  export_sql: function(dialect, table_defs, no_fkeys, view_as_table, list_recs = false, 
                        data_recs = false, select_recs) {
     var param = {}
     param.dest = $('input[name=dest]:checked').val() || 'download'
     param.dialect = dialect
     param.table_defs = table_defs
     param.no_fkeys = no_fkeys
+    param.view_as_table = view_as_table
     param.list_recs = list_recs
     param.data_recs = data_recs
     param.select_recs = select_recs
@@ -149,9 +151,16 @@ var Export_dialog = {
         class: 'mt2 max-h5 overflow-y-auto'
       }, [
         m('label', [m('input[type=checkbox]', {
-          name: 'clobs_to_files',
-          class: 'mb3'
+          name: 'clobs_to_files'
         })], ' Export clobs to separate files'),
+        m('br'),
+        m('label', [m('input[type=checkbox]', {
+          name: 'view-as-table',
+          checked: Export_dialog.view_as_table,
+          onchange: function() {
+            Export_dialog.view_as_table = $(this).prop('checked')
+          }
+        })], ' Export records from views'),
         m('br'),
         ds.table ? 'Choose columns:' : 'Choose tables:',
         m('ul', { class: 'list' }, [
@@ -177,8 +186,9 @@ var Export_dialog = {
             ])
           }),
           ds.table ? '' : Object.keys(ds.base.tables).sort().map(function(tblname, idx) {
+            var show_views = $('#export-dialog input[name=view-as-table]').prop('checked')
             var tbl = ds.base.tables[tblname]
-            return tbl.type == 'view' ? '' :  m('li', {}, [
+            return (tbl.type == 'view' && !show_views) ? '' :  m('li', {}, [
               m('input[type=checkbox]', {
                 name: 'object',
                 value: tblname
@@ -216,6 +226,10 @@ var Export_dialog = {
           name: 'no_fkeys',
           class: 'ml3'
         })], ' Exclude foreign keys'),
+        m('br'),
+        m('label', [m('input[type=checkbox]', {
+          name: 'view-as-table'
+        })], ' Export views as tables'),
         m('br'),
         ds.table && ds.table.type != 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
@@ -255,14 +269,17 @@ var Export_dialog = {
                 .prop('checked')
               var no_fkeys = $('#export-dialog input[name="no_fkeys"]')
                 .prop('checked')
+              var view_as_table = $('#export-dialog input[name=view-as-table]')
+                .prop('checked')
               var list_records = $('#export-dialog input[name="list-records"]')
                 .prop('checked') || false
               var data_records = $('#export-dialog input[name="data-records"]')
                 .prop('checked') || false
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
-              Export_dialog.export_sql(dialect, table_defs, no_fkeys, list_records, 
-                                       data_records, select_records, clobs_as_files)
+              Export_dialog.export_sql(dialect, table_defs, no_fkeys, view_as_table,
+                                       list_records, data_records, select_records, 
+                                       clobs_as_files)
             }
           }.bind(this)
         }),
