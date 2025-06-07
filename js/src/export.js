@@ -4,7 +4,7 @@ var Export_dialog = {
 
   type: 'sql',
   cnxn_name: '',
-  msg: '',
+  msg: 'Counting records ...',
   progress: 0,
   running: false,
   view_as_table: false,
@@ -17,26 +17,37 @@ var Export_dialog = {
       param.limit = limit
     }
 
+    var tables = []
     if (ds.table) {
-      param.table = ds.table.name
+      tables.push(ds.table.name)
       param.filter = ds.table.query
+      param.columns = []
+      $('input[name=object][type=checkbox]').each(function() {
+        if ($(this).prop('checked')) {
+          param.columns.push($(this).val())
+        }
+      })
+    } else {
+      $('input[name=object][type=checkbox]').each(function() {
+        if ($(this).prop('checked')) {
+          tables.push($(this).val())
+        }
+      })
     }
 
     param.folder = Export_dialog.cnxn_name
+    param.tables = JSON.stringify(tables)
+    if (param.columns) {
+      param.columns = JSON.stringify(param.columns)
+    }
 
     var objects = []
-    $('input[name=object][type=checkbox]').each(function() {
-      if ($(this).prop('checked')) {
-        objects.push($(this).val())
-      }
-    })
     param.dest = $('input[name=dest]:checked').val() || 'download'
-    param.objects = JSON.stringify(objects)
 
     var params = Object.keys(param).map(function(k) {
       return k + '=' + param[k]
     }).join('&')
-    let eventSource = new EventSource('/export_tsv?' + params);
+    let eventSource = new EventSource('/export_tsv?' + params)
 
     eventSource.onmessage = function(event) {
       var data = JSON.parse(event.data)
@@ -46,9 +57,7 @@ var Export_dialog = {
       if (data.msg == "done") {
         eventSource.close();
         Export_dialog.running = false
-        Export_dialog.msg = ''
-        $('div.curtain').hide()
-        $('#export-dialog').hide()
+        Export_dialog.msg = 'Export finished'
 
         if (param.dest == 'download') {
           var media_type = param.table ? 'text/tab-separated-values' : 'application/zip'
@@ -263,12 +272,20 @@ var Export_dialog = {
         m('br')
       ]),
       m('div[name=buttons]', { class: "bottom-0 mt2" }, [
-        m('div', Export_dialog.msg),
+        Export_dialog.progress == 0 && !Export_dialog.running ? '' 
+        : m('div', Export_dialog.progress + ' % | ' + Export_dialog.msg),
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',
           disabled: Export_dialog.running,
           onclick: function() {
+            if (Export_dialog.msg == 'Export finished') {
+              Export_dialog.progress = 0
+              Export_dialog.msg = 'Counting records ...'
+              $('div.curtain').hide()
+              $('#export-dialog').hide()
+              return
+            }
             Export_dialog.running = true
             if (this.type === 'tsv') {
               var clobs_as_files = $('#export-dialog input[name="clobs_to_files"]')
