@@ -259,6 +259,9 @@ var Grid = {
       if (unique_cols) {
         var values = []
         unique_cols.map(function(colname) {
+          if (!(colname in item.columns)) {
+            return false
+          }
           if (config.compressed) {
             values.push(item.columns[colname].value)
           } else {
