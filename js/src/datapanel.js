@@ -68,7 +68,7 @@ var Datapanel = {
 
       !ds.table.records || (config.recordview && !hide_grid)
         ? '' : ds.table.search
-          ? m(Search) : m('div', {
+          ? m(Search) : m('div#recpanel', {
             class: [
               'flex flex-auto flex-column min-w6 bottom-0',
               'overflow-x-hidden overflow-y-auto pb3'
