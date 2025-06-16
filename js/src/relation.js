@@ -223,7 +223,7 @@ var Relation = {
     } else {
       base_path = rel.schema_name
     }
-    url = '#/' + base_path + '/data/' + rel.name + '?'
+    url = '#/' + base_path + '/!data/' + rel.name + '?'
 
     conditions = []
     if (rel.conds) {

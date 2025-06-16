@@ -4,6 +4,8 @@ var Breadcrumb = {
   get_items: function() {
     var items = []
     var param = m.route.param()
+    var dirs
+    var path
     var systems = {
       mariadb: 'MariaDB',
       mysql: 'MySQL',
@@ -21,11 +23,32 @@ var Breadcrumb = {
       branch: ds.branch
     })
 
-    if (param.base) {
+    if (ds.path || param.base) {
+      dirs = param.base && !ds.file ? param.base.split('/').slice(0, -1) 
+        : ds.path ? ds.path.split('/')
+        : []
+      path = [] 
+      for (const dir of dirs) {
+        path.push(dir)
+        items.push({
+          icon: 'fa-folder',
+          text: dir,
+          addr: path.join('/')
+        })
+      }
+    }
+
+    if (ds.file && ds.file.type == 'file') {
+      items.push({
+        icon: "fa-file",
+        text: ds.file.name,
+        addr: ds.file.path
+      })
+    } else if (ds.base && ds.base.name && ds.type != 'file' && ds.type != 'dblist') {
       items.push({
         icon: "fa-database",
-        text: ds.base.label,
-        addr: ds.base.name + '/data'
+        text: ds.base.name.split('/').at(-1),
+        addr: ds.base.name + '/!data'
       })
     }
 
@@ -33,7 +56,7 @@ var Breadcrumb = {
       items.push({
         icon: ds.table.type == 'list' ? "fa-list" : "fa-table",
         text: ds.table.label,
-        addr: ds.base.name + '/data/' + ds.table.name
+        addr: ds.base.name + '/!data/' + ds.table.name
       })
     }
 

@@ -45,13 +45,19 @@ m.route($('#main')[0], '/', {
     onmatch: function(args, requestedPath) {
       ds.type = 'dblist'
       config.tab = 'databases'
+      if (ds.path) {
+        ds.path = null
+        home.load_databases()
+      }
+      ds.file = null
       return home
     }
   },
-  "/:base": {
+  "/:base.../!data": {
     onmatch: function(args, requestedPath) {
       Grid.url = ''
       var base_name = args.base
+      ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
       if (ds.table && ds.table.dirty) {
         if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
           m.route.set(Grid.url)
@@ -59,30 +65,13 @@ m.route($('#main')[0], '/', {
       }
 
       config.tab = 'data'
-      ds.type = 'contents'
+      ds.type = 'data'
       ds.load_database(base_name)
 
       return Contents
     }
   },
-  "/:base/data": {
-    onmatch: function(args, requestedPath) {
-      Grid.url = ''
-      var base_name = args.base
-      if (ds.table && ds.table.dirty) {
-        if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-          m.route.set(Grid.url)
-        }
-      }
-
-      config.tab = 'data'
-      ds.type = 'contents'
-      ds.load_database(base_name)
-
-      return Contents
-    }
-  },
-  "/:base/data/:table": {
+  "/:base.../!data/:table": {
     onmatch: function(args, path) {
       config.tab = 'data'
       ds.type = 'table'
@@ -126,7 +115,7 @@ m.route($('#main')[0], '/', {
       }
     }
   },
-  "/:base/diagram": {
+  "/:base.../!diagram": {
     onmatch: function(args, requestedPath) {
       config.tab = 'diagram'
       ds.type = 'diagram'
@@ -139,10 +128,11 @@ m.route($('#main')[0], '/', {
       return Diagrampanel
     }
   },
-  "/:base/diagram/:table": {
+  "/:base.../!diagram/:table": {
     onmatch: function(args, requestedPath) {
       var base_name = args.base
       config.tab = 'diagram'
+      ds.type = 'diagram'
       if (base_name != ds.base.name) {
         ds.load_database(base_name)
       }
@@ -152,15 +142,58 @@ m.route($('#main')[0], '/', {
       return Diagrampanel
     }
   },
-  "/:base/sql": {
+  "/:base.../!sql": {
     onmatch: function(args, requestedPath) {
       var base_name = args.base
       config.tab = 'sql'
+      ds.type = 'sql'
       ds.load_database(base_name)
       config.tab = 'sql'
       return SQLpanel
     }
-  }
+  },
+  "/:base...": {
+    onmatch: function(args, requestedPath) {
+      ds.type = 'file'
+      Grid.url = ''
+      var base_name = args.base
+      if (ds.table && ds.table.dirty) {
+        if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
+          m.route.set(Grid.url)
+        }
+      }
+
+      m.request({
+        method: 'get',
+        url: 'file',
+        params: {
+          cnxn: args.cnxn,
+          path: base_name,
+        }
+      }).then(function(result) {
+        if (result.type == 'dir') {
+          if (args.base != ds.path) {
+            ds.path = base_name
+            ds.file = result
+            home.load_databases()
+          }
+        } else {
+          if (ds.file && ds.file.dirty) {
+            alert('Ikke lagret')
+            return false
+          }
+          var dir = base_name.substring(0, base_name.lastIndexOf('/'))
+          if (ds.path != dir) {
+            ds.path = dir
+            home.load_databases()
+          }
+          ds.file = result
+        }
+      })
+
+      return home
+    }
+  },
 })
 
 window.onbeforeunload = function(event) {

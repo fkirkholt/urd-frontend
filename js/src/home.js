@@ -1,18 +1,28 @@
 import config from './config.js'
 import Datapanel from './datapanel.js'
 import Grid from './grid.js'
+import Codefield from './codefield.js'
 
 var home = {
+
+  editor: null,
 
   load_databases: function() {
 
     Grid.url = ''
 
+    var params = {}
+    if (ds.path) {
+      params.path = ds.path
+    }
+
     m.request({
       method: 'get',
-      url: 'dblist'
+      url: 'dblist',
+      params: params
     }).then(function(result) {
       ds.dblist = result.data
+      ds.path = result.data.path
       ds.base.system = result.data.system
     }).catch(function(e) {
       if (e.code === 401) {
@@ -38,49 +48,44 @@ var home = {
     if (!ds.dblist) return
     if (config.tab == 'users' && !ds.users) return
 
-    return m('div', [
-      config.tab == 'users' ? null : m('ul', [
-        ds.dblist.subfolders.length == 0 ? null : m('li', [
+    return [m('div#list', { class: 'overflow-y-auto' }, [
+      config.tab == 'users' ? null : m('ul', { class: 'fa-ul' }, [
+        !ds.path ? null : m('li', [
           m('a', {
             class: 'no-underline hover-blue',
-            href: '#',
-            onclick: function() {
-              ds.dblist.subfolders.pop()
-              m.request({
-                method: 'get',
-                url: 'dblist',
-                params: {
-                  subfolder: ds.dblist.subfolders 
-                }
-              }).then(function(result) {
-                ds.dblist = result.data
-              })
-            }
+            href: '#/' + (ds.path ? ds.path.substring(0, ds.path.lastIndexOf('/')) : ''),
           }, '..')
         ]),
         ds.dblist.records.map(function(post, i) {
           return m('li', [
             m('h4.mt1.mb1', [
-              post.columns.name.endsWith('.db') ? m('a', {
-                class: 'no-underline hover-blue',
-                href: '#/' + post.columns.name.replace(/\.db$/, '') + '/data'
-              }, post.columns.label)
-              : m('a', { 
-                class: 'no-underline green',
-                href: '#',
-                onclick: function() {
-                  ds.dblist.subfolders.push(post.columns.name)
-                  m.request({
-                    method: 'get',
-                    url: 'dblist',
-                    params: {
-                      subfolders: JSON.stringify(ds.dblist.subfolders)
-                    }
-                  }).then(function(result) {
-                    ds.dblist = result.data
-                  })
-                }
-              }, post.columns.label),
+              post.columns.type == 'database' ? [
+                m('span', { class: "fa-li" }, [
+                  m('i', { class: "fa fa-database" })
+                ]),
+                m('a', {
+                  class: 'no-underline hover-blue light-blue',
+                  href: '#/' + post.columns.name + '/!data'
+                }, ' ' + post.columns.label)
+              ]
+              : post.columns.type == 'dir' ?  [
+                m('span', { class: "fa-li" }, [
+                  m('i', { class: "fa fa-folder" })
+                ]),
+                m('a', { 
+                  class: 'no-underline blue',
+                  href: '#/' + post.columns.name,
+                }, ' ' + post.columns.label)
+              ]
+              : [
+                m('span', { class: "fa-li" }, [
+                  m('i', { class: "fa fa-file" })
+                ]),
+                m('a', {
+                  class: 'no-underline hover-blue',
+                  href: '#/' + post.columns.name,
+                }, ' ' + post.columns.label)
+              ]
             ]),
             m('p.mt1.mb1', post.columns.description)
           ])
@@ -183,7 +188,53 @@ var home = {
           }
         })
       ])
-    ])
+    ]),
+    m('div#file', { class: 'flex flex-column' }, [
+      !ds.file || ds.file.type == 'dir' ? '' : m('div', { class: 'ml3 mb2'}, [
+        m('i', { 
+          class: [
+            'fa fa-save ml2', 
+            ds.file.dirty ? 'dim pointer' : 'o-30'
+          ].join(' '),
+          onclick: function() {
+            m.request({
+              method: 'post',
+              url: 'file',
+              params: {
+                path: ds.file.path,
+                content: ds.file.content
+              }
+            })
+            .then(function(result) {
+              if (result) {
+                ds.file.dirty = false
+              }
+            })
+
+          }
+        })
+      ]),
+      !ds.file || ds.file.type == 'dir' ? '' : m(Codefield, {
+        id: 'file-content',
+        class: 'ml3 ba b--light-silver mb2 bottom-0 overflow-y-auto',
+        editable: true,
+        'data-pkey': ds.file.path,
+        lang: ds.file.path.endsWith('.sql') ? 'sql'
+          : ds.file.path.endsWith('.yml') ? 'yaml'
+          : ds.file.path.endsWith('.json') ? 'json'
+          : ds.file.path.endsWith('.md') ? 'md'
+          : 'text',
+        value: ds.file.content,
+        oncreate: function(vnode) {
+          home.editor = vnode.state
+        },
+        onchange: function(value) {
+          ds.file.content = value
+          ds.file.dirty = true
+          m.redraw()
+        }
+      })
+    ])]
   }
 }
 

@@ -206,7 +206,7 @@ var Tabbar = {
               ? 'padding-bottom: 2px' : 'padding-bottom: 0px',
             onclick: function() {
               config.tab = 'data'
-              m.route.set('/' + ds.base.name + '/data')
+              m.route.set('/' + ds.base.name + '/!data')
             }
           }, 'Data'),
           m('li', {
@@ -221,7 +221,7 @@ var Tabbar = {
             style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '0px'),
             onclick: function() {
               config.tab = 'diagram'
-              m.route.set('/' + ds.base.name + '/diagram')
+              m.route.set('/' + ds.base.name + '/!diagram')
             }
           }, [
               m('i', { class: 'fa fa-sitemap mt1' })
@@ -237,7 +237,7 @@ var Tabbar = {
             style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '0px'),
             onclick: function() {
               config.tab = 'sql'
-              m.route.set('/' + ds.base.name + '/sql')
+              m.route.set('/' + ds.base.name + '/!sql')
             }
           }, 'SQL')
         ]),
@@ -363,7 +363,7 @@ var Tabbar = {
             } else { 
               delete query_params[key]
             }
-            m.route.set('/' + ds.base.name + '/data/' + ds.table.name + '?' + m.buildQueryString(query_params))
+            m.route.set('/' + ds.base.name + '/!data/' + ds.table.name + '?' + m.buildQueryString(query_params))
           }
         })
       ], 'Show top level only')),

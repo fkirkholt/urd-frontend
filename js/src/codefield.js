@@ -11,7 +11,9 @@ function Codefield() {
   var editor
   var pkey
   var extensions
+  var langs = {}
   var onchange
+  var changed
 
   function foldmethod(state, from, to) {
     // https://discuss.codemirror.net/t/add-folding-on-indent-levels-for-plain-text-and-yaml-language/5925
@@ -84,15 +86,12 @@ function Codefield() {
         import(/* webpackChunkName: "highlight" */ '@lezer/highlight'),
       ]).then(([language, sql, json, yaml, markdown, highlight]) => {
         var lang
-        if (vnode.attrs.lang == 'sql') {
-          lang = sql.sql()
-        } else if (vnode.attrs.lang == 'json') {
-          lang = json.json()
-        } else if (vnode.attrs.lang == 'yaml') {
-          lang = yaml.yaml();
-        } else {
-          lang = markdown.markdown()
-        }
+        langs['sql'] = sql.sql()
+        langs['json'] = json.json()
+        langs['yaml'] = yaml.yaml()
+        langs['text'] = null
+        langs['md'] = markdown.markdown()
+        lang = langs[vnode.attrs.lang]
 
         const customHighlightStyle = language.HighlightStyle.define([
           { tag: highlight.tags.keyword, color: "#FF4136" },
@@ -108,6 +107,11 @@ function Codefield() {
           EditorView.lineWrapping,
           indentedLineWrap,
           EditorView.editable.of(vnode.attrs.editable),
+          EditorView.updateListener.of((update) => { 
+            if (update.docChanged) { 
+              changed = true 
+            } 
+          }),
           EditorView.domEventHandlers({
             keydown(e, view) {
               if (e.key == '(' && e.ctrlKey) {
@@ -125,16 +129,17 @@ function Codefield() {
               }
             },
             blur: function(e, view) {
-              var value = view.state.doc.toString()
-              onchange(value);
+              if (changed) {
+                var value = view.state.doc.toString()
+                onchange(value);
+              }
             } 
           }),
         ]
-        extensions.push(lang)
 
         editor = new EditorView({
           doc: vnode.attrs.value,
-          extensions: extensions,
+          extensions: lang ? extensions.concat([lang]) : extensions,
           parent: vnode.dom
         })
         if (vnode.attrs['data-pkey']) {
@@ -143,12 +148,14 @@ function Codefield() {
       })
     },
     onupdate: function(vnode) {
+      var lang
       if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
+        lang = langs[vnode.attrs.lang]
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
         editor.setState(EditorState.create({
           doc: vnode.attrs.value,
-          extensions: extensions
+          extensions: lang ? extensions.concat([lang]) : extensions
         }))
       }
     },

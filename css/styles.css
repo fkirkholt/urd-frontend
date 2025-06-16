@@ -181,7 +181,8 @@ input:focus-visible {
     border: lightgray solid 2px;
 }
 
-.cm-editor {max-height: 400px}
+#recpanel .cm-editor { max-height: 400px }
+#file .cm-editor { width: 1000px }
 .cm-wrap { height: 100% }
 .cm-scroller { overflow: auto }
 

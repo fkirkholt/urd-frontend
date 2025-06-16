@@ -166,7 +166,7 @@ var Contents = {
             table.type == 'view' ? 'i' : ''
           ].join(' '),
           title: table.description ? table.description : '',
-          href: '#/' + ds.base.name + '/' + (config.tab || 'data') +
+          href: '#/' + ds.base.name + '/!' + (config.tab || 'data') +
             '/' + table.name,
           onclick: function() {
             Diagram.type = 'table'

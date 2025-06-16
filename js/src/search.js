@@ -37,7 +37,7 @@ var Search = {
   search: function() {
     var search_criterias = Search.parse_search()
 
-    m.route.set('/' + ds.base.name + '/data/' + ds.table.name +
+    m.route.set('/' + ds.base.name + '/!data/' + ds.table.name +
       '?' + search_criterias.join('&'))
   },
 

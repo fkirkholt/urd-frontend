@@ -153,7 +153,7 @@ var SQLpanel = {
                   if (is_link) {
                     var link = m('a.link', {
                       class: 'icon-crosshairs light-blue hover-blue pointer v-mid',
-                      href: "#" + ds.base.name + '/data/'
+                      href: "#" + ds.base.name + '/!data/'
                         + table.name + '?'
                         + pk_values.join('&')
                     }, '')

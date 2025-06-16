@@ -141,8 +141,8 @@ var Export_dialog = {
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dest',
-          value: exportdir + '/' + ds.base.name
-        })], ' ' + exportdir + '/' + ds.base.name),
+          value: exportdir + '/' + ds.base.name.split('.')[0]
+        })], ' ' + exportdir + '/' + ds.base.name.split('.')[0]),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dest',

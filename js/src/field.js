@@ -288,7 +288,7 @@ var Field = {
       } else {
         base = field.fkey.referred_schema
       }
-      url = '#/' + base + '/data/' + field.fkey.referred_table + '?'
+      url = '#/' + base + '/!data/' + field.fkey.referred_table + '?'
       $.each(field.fkey.referred_columns, function(i, colname) {
         var fk_field = field.fkey.constrained_columns[i]
         url += colname + '=' + rec.fields[fk_field].value
