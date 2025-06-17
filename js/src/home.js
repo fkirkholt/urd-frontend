@@ -12,6 +12,7 @@ var home = {
     Grid.url = ''
 
     var params = {}
+    params.cnxn = ds.cnxn
     if (ds.path) {
       params.path = ds.path
     }
@@ -53,7 +54,7 @@ var home = {
         !ds.path ? null : m('li', [
           m('a', {
             class: 'no-underline hover-blue',
-            href: '#/' + (ds.path ? ds.path.substring(0, ds.path.lastIndexOf('/')) : ''),
+            href: '#/' + ds.cnxn + '/' + (ds.path ? ds.path.substring(0, ds.path.lastIndexOf('/')) : ''),
           }, '..')
         ]),
         ds.dblist.records.map(function(post, i) {
@@ -65,7 +66,7 @@ var home = {
                 ]),
                 m('a', {
                   class: 'no-underline hover-blue light-blue',
-                  href: '#/' + post.columns.name + '/!data'
+                  href: '#/' + ds.cnxn + '/' + post.columns.name + '/!data'
                 }, ' ' + post.columns.label)
               ]
               : post.columns.type == 'dir' ?  [
@@ -74,7 +75,7 @@ var home = {
                 ]),
                 m('a', { 
                   class: 'no-underline blue',
-                  href: '#/' + post.columns.name,
+                  href: '#/' + ds.cnxn + '/' + post.columns.name,
                 }, ' ' + post.columns.label)
               ]
               : [
@@ -83,7 +84,7 @@ var home = {
                 ]),
                 m('a', {
                   class: 'no-underline hover-blue',
-                  href: '#/' + post.columns.name,
+                  href: '#/' + ds.cnxn + '/' + post.columns.name,
                 }, ' ' + post.columns.label)
               ]
             ]),

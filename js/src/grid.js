@@ -82,6 +82,7 @@ var Grid = {
   get_filter: function(params) {
     var param = Object.assign({}, params)
     var filter = ''
+    delete param.cnxn
     delete param.base
     delete param.table
     delete param.index
@@ -210,6 +211,7 @@ var Grid = {
     }
     
     Grid.get({
+      cnxn: ds.cnxn,
       base: params.base, table: params.table, filter: query, 
       limit: config.limit, offset: params.offset || 0, 
       sort: JSON.stringify(sort_cols),

@@ -18,9 +18,15 @@ var Breadcrumb = {
 
     items.push({
       icon: "icon-crosshairs",
-      text: ds.base.system ? systems[ds.base.system] : "Urðr",
+      text: "Urðr",
       addr: '',
       branch: ds.branch
+    })
+
+    items.push({
+      icon: ['sqlite', 'duckdb'].includes(ds.base.system) ? "fa-folder" : "fa-server",
+      text: ds.cnxn,
+      addr: ds.cnxn
     })
 
     if (ds.path || param.base) {

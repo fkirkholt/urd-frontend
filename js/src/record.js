@@ -26,6 +26,7 @@ var Record = {
       method: "GET",
       url: 'record',
       params: {
+        cnxn: ds.cnxn,
         base: m.route.param('base'),
         table: table.name,
         pkey: JSON.stringify(table.records[idx].pkey)
@@ -70,6 +71,7 @@ var Record = {
       method: "get",
       url: "relations",
       params: {
+        cnxn: ds.cnxn,
         base: rec.base_name,
         table: rec.table_name || rec.table.name,
         pkey: JSON.stringify(rec.pkey),
@@ -86,6 +88,7 @@ var Record = {
       method: "GET",
       url: "relations",
       params: {
+        cnxn: ds.cnxn,
         base: rec.base_name,
         table: rec.table.name,
         pkey: JSON.stringify(rec.pkey),

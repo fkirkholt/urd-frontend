@@ -138,6 +138,7 @@ var login = {
             login.error = false
             login.create = false
             var param = {};
+            param.cnxn = login.param.name
             param.system = $('#system').val()
             param.server = $('#server').val().trim()
             param.username = $('#brukernavn').val()
@@ -156,11 +157,13 @@ var login = {
             }).then(function(result) {
               if (param.database && param.database != ds.base.name) {
                 ds.dblist = null
-                m.route.set('/' + param.database)
+                m.route.set('/' + param.cnxn + '/' + param.database)
                 $('div.curtain').hide();
                 $('#login').hide();
               } else {
-                window.location.reload()
+                m.route.set('/' + param.cnxn)
+                $('div.curtain').hide();
+                $('#login').hide();
               }
             }).catch(function(e) {
               if (e.code == 401) {

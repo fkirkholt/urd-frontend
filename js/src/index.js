@@ -43,18 +43,23 @@ m.route.prefix = "#"
 m.route($('#main')[0], '/', {
   "/": {
     onmatch: function(args, requestedPath) {
-      ds.type = 'dblist'
-      config.tab = 'databases'
-      if (ds.path) {
-        ds.path = null
-        home.load_databases()
-      }
-      ds.file = null
       return home
     }
   },
-  "/:base.../!data": {
+  "/:cnxn": {
     onmatch: function(args, requestedPath) {
+      ds.type = 'dblist'
+      ds.cnxn = args.cnxn
+      config.tab = 'databases'
+      ds.path = null
+      ds.file = null
+      home.load_databases()
+      return home
+    }
+  },
+  "/:cnxn/:base.../!data": {
+    onmatch: function(args, requestedPath) {
+      ds.cnxn = args.cnxn
       Grid.url = ''
       var base_name = args.base
       ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
@@ -71,8 +76,9 @@ m.route($('#main')[0], '/', {
       return Contents
     }
   },
-  "/:base.../!data/:table": {
+  "/:cnxn/:base.../!data/:table": {
     onmatch: function(args, path) {
+      ds.cnxn = args.cnxn
       config.tab = 'data'
       ds.type = 'table'
 
@@ -115,7 +121,7 @@ m.route($('#main')[0], '/', {
       }
     }
   },
-  "/:base.../!diagram": {
+  "/:cnxn/:base.../!diagram": {
     onmatch: function(args, requestedPath) {
       config.tab = 'diagram'
       ds.type = 'diagram'
@@ -128,7 +134,7 @@ m.route($('#main')[0], '/', {
       return Diagrampanel
     }
   },
-  "/:base.../!diagram/:table": {
+  "/:cnxn/:base.../!diagram/:table": {
     onmatch: function(args, requestedPath) {
       var base_name = args.base
       config.tab = 'diagram'
@@ -142,7 +148,7 @@ m.route($('#main')[0], '/', {
       return Diagrampanel
     }
   },
-  "/:base.../!sql": {
+  "/:cnxn/:base.../!sql": {
     onmatch: function(args, requestedPath) {
       var base_name = args.base
       config.tab = 'sql'
@@ -152,7 +158,7 @@ m.route($('#main')[0], '/', {
       return SQLpanel
     }
   },
-  "/:base...": {
+  "/:cnxn/:base...": {
     onmatch: function(args, requestedPath) {
       ds.type = 'file'
       Grid.url = ''

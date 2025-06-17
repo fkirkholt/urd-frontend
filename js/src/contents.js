@@ -166,7 +166,7 @@ var Contents = {
             table.type == 'view' ? 'i' : ''
           ].join(' '),
           title: table.description ? table.description : '',
-          href: '#/' + ds.base.name + '/!' + (config.tab || 'data') +
+          href: '#/' + ds.cnxn + '/' + ds.base.name + '/!' + (config.tab || 'data') +
             '/' + table.name,
           onclick: function() {
             Diagram.type = 'table'
@@ -299,8 +299,8 @@ var Contents = {
                 var schema = $(this).val()
                 var db_name = ds.base.name.split('.')[0]
                 var adr = ['postgresql', 'mssql'].includes(ds.base.system)
-                  ? '/' + db_name + (['dbo', 'public'].includes(schema) ? '' : '.' + schema)
-                  : '/' + schema
+                  ? '/' + ds.cnxn + '/' + db_name + (['dbo', 'public'].includes(schema) ? '' : '.' + schema)
+                  : '/' + ds.cnxn + '/' + schema
                 m.route.set(adr)
               }
             }, [

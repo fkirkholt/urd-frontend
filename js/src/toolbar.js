@@ -31,7 +31,7 @@ var Toolbar = {
     var rec_idx = ds.table.selection
     var prim_key = ds.table.records[rec_idx].pkey
     var prim_nokler_json = JSON.stringify(prim_key)
-    var address = ds.base.name +
+    var address = ds.cnxn + '/' + ds.base.name +
       (action.url[0] === '/' ? '' : '/') + action.url
     var communication = action.communication
 
@@ -163,7 +163,7 @@ var Toolbar = {
       query_params.order = sort.col
       query_params.order += ' ' + sort.dir
     }
-    m.route.set('/' + ds.base.name + '/!data/' + ds.table.name, query_params, {replace: replace})
+    m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!data/' + ds.table.name, query_params, {replace: replace})
   },
 
   view: function(vnode) {
@@ -233,7 +233,7 @@ var Toolbar = {
         },
         onchange: function(event) {
           var value = event.target.value
-          m.route.set('/' + ds.base.name + '/!data/' + ds.table.name +
+          m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!data/' + ds.table.name +
             '?' + encodeURIComponent(value.replace(/;\s*/g, '&')))
         }
       }),

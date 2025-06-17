@@ -86,7 +86,8 @@ var Header = {
               m('li', {
                 onclick: function() {
                   m.request({
-                    url: 'logout'
+                    url: 'logout',
+                    params: { cnxn: ds.cnxn }
                   }).then(function(result) {
                     ds.base.system = result.cnxn.system
                     ds.base.server = result.cnxn.host

@@ -15,7 +15,7 @@ var datastore = {
     return m.request({
       method: "GET",
       url: "database",
-      params: { base: base_name }
+      params: { cnxn: ds.cnxn, base: base_name }
     }).then(function(result) {
       var data = result.data
       datastore.base = data.base
