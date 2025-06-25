@@ -36,9 +36,9 @@ var Cell = {
 
     if (field.element == 'input' && field.attrs.type == 'checkbox') {
       var icon = value == 0 
-        ? 'fa-square-o' : value == 1 
-          ? 'fa-check-square-o' : 'fa-minus-square-o'
-      value = m('i', { class: 'fa ' + icon })
+        ? 'nf-fa-square_o' : value == 1 
+          ? 'nf-fa-check_square_o' : 'nf-fa-minus_square_o'
+      value = m('i', { class: 'nf ' + icon })
     }
     
     var expansion = false
@@ -69,8 +69,8 @@ var Cell = {
 
     var icon = m('i', {
       class: [
-        'fa fa-fw',
-        rec.expanded ? 'fa-angle-down' : 'fa-angle-right',
+        'nf nf-fw',
+        rec.expanded ? 'nf-fa-angle_down' : 'nf-fa-angle_right',
         config.dark_mode ? 'white' : 'black',
         rec.count_children ? '' : 'o-20',
       ].join(' '),

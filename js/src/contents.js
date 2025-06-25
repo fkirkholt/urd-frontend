@@ -47,8 +47,8 @@ var Contents = {
             m('i', {
               class: [
                 heading.expanded
-                  ? 'fa fa-angle-down'
-                  : 'fa fa-angle-right',
+                  ? 'nf nf-oct-chevron_down'
+                  : 'nf nf-oct-chevron_right',
                 heading.class_label,
                 'w1 tc',
                 'light-silver'
@@ -123,12 +123,12 @@ var Contents = {
       return
     }
     var icon = table.type && (table.type == 'list') 
-      ? 'fa-list'
-      : 'fa-table'
+      ? 'nf-fa-list'
+      : 'nf-md-table'
     var icon_color = table.hidden && config.dark_mode ? 'silver'
     : table.hidden ? 'moon-gray'
     : config.dark_mode ? 'moon-gray'
-    : 'silver'
+    : 'dark-gray'
 
     return m('div', {
       class: [
@@ -138,10 +138,10 @@ var Contents = {
       ].join(' ')
     }, [
         // Draw expansion icon for tables having subordinate tables
-        typeof node != 'object' ? '' : m('i', {
+        typeof node != 'object' ? m('i', { class: 'mr1 nf nf-oct-dot o-0' }) : m('i', {
           class: [
-            'w1 tc light-silver fa',
-            node.expanded ? 'fa-angle-down' : 'fa-angle-right',
+            'w1 mr1 tc light-silver nf',
+            node.expanded ? 'nf-oct-chevron_down' : 'nf-oct-chevron_right',
           ].join(' '),
           style: display_chevron == 'none' ? 'display: none' : '',
           onclick: function() {
@@ -151,11 +151,11 @@ var Contents = {
         // Draw icon indicating table type
         m('i', {
           class: [
-            icon_color + ' mr1 fa ' + icon,
+            icon_color + ' mr1 nf ' + icon,
             // Indent icon correctly when there is no expansjon icon
             (typeof node == 'object' && display_chevron == 'block')
               ? ''
-              : 'ml3'
+              : ''
           ].join(' '),
         }),
         // Draw table name as link

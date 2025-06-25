@@ -126,8 +126,8 @@ var Search = {
         m('tr', [
           // Draw expansion icon
           m('td', { class: 'tc' }, [
-            item.inline && !item.expandable ? '' : m('i.fa', {
-              class: item.expanded ? 'fa-angle-down' : 'fa-angle-right',
+            item.inline && !item.expandable ? '' : m('i.nf', {
+              class: item.expanded ? 'nf-fa-angle_down' : 'nf-fa-angle_right',
               onclick: function() {
                 if (item.expandable === false) return
 
@@ -198,10 +198,10 @@ var Search = {
           m('td', { class: 'tc v-top' }, [
             !field.fkey || !field.expandable || table.sublevel
               ? null
-              : m('i.fa', {
+              : m('i.nf', {
                 class: !field.expanded
-                  ? 'fa-angle-right'
-                  : field.expandable ? 'fa-angle-down' : '',
+                  ? 'nf-fa-angle_right'
+                  : field.expandable ? 'nf-fa-angle_down' : '',
                 onclick: function() {
                   Search.toggle_relation(field)
                 }

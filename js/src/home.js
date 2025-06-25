@@ -50,7 +50,7 @@ var home = {
     if (config.tab == 'users' && !ds.users) return
 
     return [m('div#list', { class: 'overflow-y-auto' }, [
-      config.tab == 'users' ? null : m('ul', { class: 'fa-ul' }, [
+      config.tab == 'users' ? null : m('ul', { class: 'nf-ul' }, [
         !ds.path ? null : m('li', [
           m('a', {
             class: 'no-underline hover-blue',
@@ -59,10 +59,10 @@ var home = {
         ]),
         ds.dblist.records.map(function(post, i) {
           return m('li', [
-            m('h4.mt1.mb1', [
+            m('mt1.mb1', [
               post.columns.type == 'database' ? [
-                m('span', { class: "fa-li" }, [
-                  m('i', { class: "fa fa-database" })
+                m('span', { class: "nf-li" }, [
+                  m('i', { class: "nf nf-oct-database" })
                 ]),
                 m('a', {
                   class: 'no-underline hover-blue light-blue',
@@ -70,8 +70,8 @@ var home = {
                 }, ' ' + post.columns.label)
               ]
               : post.columns.type == 'dir' ?  [
-                m('span', { class: "fa-li" }, [
-                  m('i', { class: "fa fa-folder" })
+                m('span', { class: "nf-li" }, [
+                  m('i', { class: "nf nf-md-folder_outline" })
                 ]),
                 m('a', { 
                   class: 'no-underline blue',
@@ -79,8 +79,8 @@ var home = {
                 }, ' ' + post.columns.label)
               ]
               : [
-                m('span', { class: "fa-li" }, [
-                  m('i', { class: "fa fa-file" })
+                m('span', { class: "nf-li" }, [
+                  m('i', { class: "nf nf-oct-file" })
                 ]),
                 m('a', {
                   class: 'no-underline hover-blue',
@@ -194,7 +194,7 @@ var home = {
       !ds.file || ds.file.type == 'dir' ? '' : m('div', { class: 'ml3 mb2'}, [
         m('i', { 
           class: [
-            'fa fa-save ml2', 
+            'nf nf-fa-save ml2', 
             ds.file.dirty ? 'dim pointer' : 'o-30'
           ].join(' '),
           onclick: function() {

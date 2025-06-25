@@ -27,7 +27,7 @@ var Header = {
         class: 'fr relative mt2'
       }, [
           m('div', {
-            class: 'fa fa-cog ml3 mr3',
+            class: 'nf nf-fa-cog ml3 mr3',
             onclick: function() {
               $('div#menu ul').toggle()
             }

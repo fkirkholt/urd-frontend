@@ -294,13 +294,13 @@ mark {
 }
 
 .markdown ul li:has(> p > input:checked) {
-    padding-left: 4px;
-    margin-left: -4px;
+    padding-left: 6px;
+    margin-left: -6px;
 }
 
 .markdown ul li:has(> input:checked) {
-    padding-left: 4px;
-    margin-left: -4px;
+    padding-left: 6px;
+    margin-left: -6px;
 }
 
 .markdown ul li:has(> input:not(:checked)) {
@@ -309,33 +309,33 @@ mark {
 }
 
 .markdown ul li:has(> p > input:checked)::marker {
-  content: "\f046"; /* FontAwesome Unicode */
-  font-family: FontAwesome;
+  content: "\f0135"; /* nf-md-checkbox_marked_outline */
+  font-family: 'NerdFontsSymbols Nerd Font';
 }
 
 .markdown ul li:has(> p > input:not(:checked))::marker {
-  content: "\f096"; /* FontAwesome Unicode */
-  font-family: FontAwesome;
+  content: "\f0131"; /* nf-md-checkbox_blank_outline */
+  font-family: 'NerdFontsSymbols Nerd Font';
 }
 
 .markdown ul li:has(> p > input:not(:checked)):has(li input:checked)::marker {
-  content: "\f147"; /* FontAwesome Unicode */
-  font-family: FontAwesome;
+  content: "\f147"; /* nf-fa-minus_square_o */
+  font-family: 'NerdFontsSymbols Nerd Font';
 }
 
 .markdown ul li:has(> input:checked)::marker {
-  content: "\f046"; /* FontAwesome Unicode */
-  font-family: FontAwesome;
+  content: "\f0135 "; /* nf-md-checkbox_marked_outline  */
+  font-family: 'NerdFontsSymbols Nerd Font';
 }
 
 .markdown ul li:has(> input:not(:checked))::marker {
-  content: "\f096"; /* FontAwesome Unicode */
-  font-family: FontAwesome;
+  content: "\f0131"; /* nf-md-checkbox_blank_outline  */
+  font-family: 'NerdFontsSymbols Nerd Font';
 }
 
-.markdown ul li:has(> input:not(:checked) input:checked)::marker {
-  content: "\f147"; /* FontAwesome Unicode */
-  font-family: FontAwesome;
+.markdown ul li:has(> input:not(:checked)):has(input:checked)::marker {
+  content: "\f147"; /* nf-fa-minus_square_o */
+  font-family: 'NerdFontsSymbols Nerd Font';
 }
 
 data input {

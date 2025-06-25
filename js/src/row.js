@@ -134,7 +134,7 @@ var Row = {
           e.redraw = false
           $(this).trigger('click')
           if (config.recordview) {
-            $(this).find('td.icon-crosshairs').trigger('click')
+            $(this).find('td.nf-md-crosshairs').trigger('click')
           } else {
             $('form[name=record]').find('input,textarea,select')
               .first().trigger('focus')
@@ -170,10 +170,10 @@ var Row = {
         }, [
             config.autosave ? m.trust('&nbsp;') : m('i', {
               class: [
-                record.delete ? 'fa fa-trash' :
-                  record.invalid ? 'fa fa-warning red' :
-                    record.new ? 'fa fa-plus-circle' :
-                      record.dirty ? 'fa fa-pencil light-gray' : ''
+                record.delete ? 'nf nf-fa-trash' :
+                  record.invalid ? 'nf nf-fa-warning red' :
+                    record.new ? 'nf nf-fa-plus_circle' :
+                      record.dirty ? 'nf nf-fa-pencil light-gray' : ''
               ],
               title: !record.messages ? null : record.messages.join(' ') 
             })
@@ -181,9 +181,9 @@ var Row = {
         // Draw expansion icon
         (list.ismain || // only records in relations should be expanded
           record.pkey == null
-        ) ? '' : m('td.fa', {
+        ) ? '' : m('td.nf', {
             class: [
-              record.open ? 'fa-angle-down' : 'fa-angle-right',
+              record.open ? 'nf-fa-angle_down' : 'nf-fa-angle_right',
               record.invalid ? 'invalid' : record.dirty ? 'dirty' : '',
             ].join(' ')
           }),
@@ -205,7 +205,7 @@ var Row = {
           !record.open || parent.readonly ? '' : m('i', {
             class: [
               list.privilege.delete && config.edit_mode
-                ? 'fa fa-trash-o pl1' : '',
+                ? 'nf nf-fa-trash_o pl1' : '',
               record.deletable ? 'light-blue' : 'moon-gray',
               record.deletable ? (
                 config.relation_view === 'column'
@@ -235,7 +235,7 @@ var Row = {
         // Only shows when record is not shown right of table
         !list.ismain || !config.recordview ? '' : m('td', {
           class: [
-            'icon-crosshairs light-blue hover-blue pointer',
+            'nf nf-md-crosshairs light-blue hover-blue pointer',
             'br b--moon-gray bb--light-gray'
           ].join(' '),
           onclick: function(e) {

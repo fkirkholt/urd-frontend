@@ -143,10 +143,10 @@ var Field = {
     if (field.text !== null && field.text !== undefined) {
       value = typeof(field.text) == 'string' ? field.text.trim() : field.text
     } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
-      var icon = value == 0 ? 'fa-square-o' 
-        : value == 1 ? 'fa-check-square-o'
-          : 'fa-minus-square-o'
-      value = m('i', { class: 'fa ' + icon })
+      var icon = value == 0 ? 'nf-fa-square_o' 
+        : value == 1 ? 'nf-fa-check-square_o'
+          : 'nf-fa-minus-square_o'
+      value = m('i', { class: 'nf ' + icon })
     } else if (
       field.datatype == 'json' &&
       get(field, 'attrs.data-format') == 'yaml'
@@ -438,8 +438,8 @@ var Field = {
                 : ''
               ] : m('i', {
                 class: [
-                  'fa fa-fw',
-                  field.expanded ? 'fa-angle-down' : 'fa-angle-right'
+                  'nf nf-fw',
+                  field.expanded ? 'nf-fa-angle_down' : 'nf-fa-angle_right'
                 ].join(' '),
                 onclick: function() {
                   if (field.fkey && field.expandable && field.value) {
@@ -504,7 +504,7 @@ var Field = {
               rec.table.relationship != 'M:M' || !config.edit_mode
                 ? ''
                 : m('i', {
-                  class: 'fa fa-trash-o light-blue pl1 hover-blue pointer',
+                  class: 'nf nf-fa-trash_o light-blue pl1 hover-blue pointer',
                   onclick: Record.delete.bind(this, rec)
                 }),
             ]),

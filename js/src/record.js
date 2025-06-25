@@ -83,7 +83,6 @@ var Record = {
   },
 
   get_relations: function(rec, alias) {
-    $('.icon-crosshairs').addClass('fast-spin')
     m.request({
       method: "GET",
       url: "relations",
@@ -110,7 +109,6 @@ var Record = {
             Record.get_relations_count(record)
           }
         }
-        $('.icon-crosshairs').removeClass('fast-spin')
         Object.assign(rec.relations[alias], rel)
       })
   },
@@ -295,6 +293,7 @@ var Record = {
     var changes = Record.get_changes(rec, false)
 
     var data = {
+      cnxn: ds.cnxn,
       base: rec.base_name,
       table: rec.table_name,
       pkey: JSON.stringify(changes.prim_key)
@@ -445,7 +444,7 @@ var Record = {
     }
 
     return action.disabled ? '' : m('i', {
-      class: 'fa fa-' + action.icon,
+      class: 'nf nf-fa-' + action.icon,
       title: action.label,
       onclick: function(e) {
         var data = {};

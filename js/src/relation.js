@@ -114,7 +114,7 @@ var Relation = {
           !rel.privilege.insert ? '' : m('a', {
             onclick: function(e) { Relation.add(e, rel) }
           }, m('i', {
-            class: 'fa fa-plus light-blue hover-blue pointer ml1'
+            class: 'nf nf-fa-plus light-blue hover-blue pointer ml1'
           }))
         ])
       ]),
@@ -173,7 +173,7 @@ var Relation = {
           !rel.privilege.insert ? '' : m('a', {
             onclick: function(e) { Relation.add(e, rel) }
           }, m('i', {
-            class: 'fa fa-plus light-blue hover-blue '
+            class: 'nf nf-fa-plus light-blue hover-blue '
               + 'pointer ml1'
           }))
         ]
@@ -315,7 +315,7 @@ var Relation = {
             }
           }, label),
           rel.dirty
-            ? m('i', { class: 'fa fa-pencil ml1 light-gray' })
+            ? m('i', { class: 'nf nf-fa-pencil ml1 light-gray' })
             : '',
           (config.edit_mode && rel.relationship == '1:1') ? m('input', {
             type: 'checkbox',

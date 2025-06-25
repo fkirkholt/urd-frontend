@@ -56,7 +56,7 @@ var Pagination = {
     return m('div', [
       !ds.table.is_chart ? '' : m('ul', {class: 'di fl mt1 pl0'}, [
         m('li', {
-          class: ['fa fa-table list di ml0 pl2 pr2 bb b--gray pointer br1 br--top f5 pt1',
+          class: ['nf nf-md-table list di ml0 pl2 pr2 bb b--gray pointer br1 br--top f5 pt1',
           (!ds.table.tab || ds.table.tab == 'data') && config.dark_mode ? 'bg-near-black br pb3'
           : (!ds.table.tab || ds.table.tab == 'data') ? 'bg-white br pb2'
           : config.dark_mode ? 'bg-dark-gray'
@@ -69,7 +69,7 @@ var Pagination = {
           }
         }),
         m('li', {
-          class: ['fa fa-bar-chart list di ml0 pl2 pr2 bb br b--gray pointer br1 br--top f5 pt1',
+          class: ['nf nf-md-chart_bar list di ml0 pl2 pr2 bb br b--gray pointer br1 br--top f5 pt1',
           (ds.table.tab == 'chart') && config.dark_mode ? 'bg-near-black'
           : ds.table.tab == 'chart' ? 'bg-white bl'
           : config.dark_mode ? 'bg-dark-gray'
@@ -90,7 +90,7 @@ var Pagination = {
       }, [
           m('button[name="first"]', {
             class: [
-              'icon fa fa-angle-double-left ba b--light-silver br0',
+              'icon nf nf-fa-angle_double_left ba b--light-silver br0',
               config.dark_mode ? 'bg-mid-gray' : 'bg-white',
               Pagination.disabled('first', table) ? 'silver' : 'color-inherit'
             ].join(' '),
@@ -98,7 +98,7 @@ var Pagination = {
           }),
           m('button[name=previous]', {
             class: [
-              'icon fa fa-angle-left bt br bl-0 bb b--light-silver br0',
+              'icon nf nf-fa-angle_left bt br bl-0 bb b--light-silver br0',
               config.dark_mode ? 'bg-mid-gray' : 'bg-white',
               Pagination.disabled('previous', table) ? 'silver' : 'color-inherit',
             ].join(' '),
@@ -106,7 +106,7 @@ var Pagination = {
           }),
           m('button[name=next]', {
             class: [
-              'icon fa fa-angle-right bt br bb bl-0 b--light-silver br0',
+              'icon nf nf-fa-angle_right bt br bb bl-0 b--light-silver br0',
               config.dark_mode ? 'bg-mid-gray' : 'bg-white',
               Pagination.disabled('next', table) ? 'silver' : 'color-inherit'
             ].join(' '),
@@ -114,7 +114,7 @@ var Pagination = {
           }),
           m('button[name=last]', {
             class: [
-              'icon fa fa-angle-double-right bt br bb bl-0',
+              'icon nf nf-fa-angle_double_right bt br bb bl-0',
               'b--light-silver br0',
               config.dark_mode ? 'bg-mid-gray' : 'bg-white',
               Pagination.disabled('last', table) ? 'silver' : 'color-inherit'

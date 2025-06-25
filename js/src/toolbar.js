@@ -207,8 +207,8 @@ var Toolbar = {
       // Button for expanding or compressing grid.
       // A compressed grid has no word wrap and shortens text
       ds.table.hidden ? '' : m('i', {
-        class: 'ml1 mr2 fa pointer '
-          + (config.compressed ? 'fa-expand' : 'fa-compress'),
+        class: 'ml1 mr2 nf pointer '
+          + (config.compressed ? 'nf-md-arrow_expand' : 'nf-md-arrow_collapse'),
         title: config.compressed ? 'Ekspander' : 'Komprimer',
         onclick: function() {
           config.compressed = !config.compressed
@@ -216,7 +216,7 @@ var Toolbar = {
       }),
       // Button for opening search
       ds.table.hidden ? '' : m('i', {
-        class: 'fa fa-search ml1 mr2 pointer dim',
+        class: 'nf nf-fa-search ml1 mr2 pointer dim',
         title: 'Søk',
         onclick: function() {
           ds.table.filters = Search.parse_query(ds.table.query)
@@ -241,7 +241,7 @@ var Toolbar = {
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'fa fa-file-o ml3 mr1',
+            'nf nf-fa-file_o ml3 mr1',
             ds.table.privilege.insert && !full
               ? 'dim pointer'
               : 'moon-gray'
@@ -276,7 +276,7 @@ var Toolbar = {
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'fa fa-copy ml2 mr1 f6',
+            'nf nf-fa-copy ml2 mr1 f6',
             ds.table.privilege.insert == true && !full
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
@@ -295,7 +295,7 @@ var Toolbar = {
       !config.edit_mode ? m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'fa fa-edit ml2 mr1 pointer f6',
+            'nf nf-fa-edit ml2 mr1 pointer f6',
             ds.table.privilege.update == true
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
@@ -311,7 +311,7 @@ var Toolbar = {
         config.autosave || !config.edit_mode ? '' : [
           m('i', {
             class: [
-              'fa fa-save ml2 mr1',
+              'nf nf-fa-save ml2 mr1',
               ds.table.dirty ? 'dim pointer' : 'o-30'
             ].join(' '),
               title: 'Save',
@@ -326,7 +326,7 @@ var Toolbar = {
       ds.table.hide ? '' : m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'fa fa-trash-o ml2 mr1',
+            'nf nf-fa-trash_o ml2 mr1',
             (ds.table.privilege.delete == true &&
               rec && Record.is_deletable(rec))
               ? 'dim pointer' : 'o-30'
@@ -338,7 +338,7 @@ var Toolbar = {
       // Button for printing page
       m('li', { class: 'dib' }, [
         m('i', {
-          class: 'fa fa-print ml1 mr2 pointer dim',
+          class: 'nf nf-fa-print ml1 mr2 pointer dim',
           onclick: function() {
             print()
           }
@@ -347,7 +347,7 @@ var Toolbar = {
       // Button for more actions
       m('li', { class: 'dib relative' }, [
         m('i', {
-          class: 'fa fa-cog ml2 mr1 pointer dim',
+          class: 'nf nf-fa-cog ml2 mr1 pointer dim',
           title: 'More actions',
           onclick: function() {
             $('ul#actions').toggle()
@@ -401,7 +401,7 @@ var Toolbar = {
       }, [
           m('button[name="first"]', {
             class: [
-              'icon fa fa-angle-double-left ba b--light-silver br0 bg-white',
+              'icon nf nf-fa-angle_double_left ba b--light-silver br0 bg-white',
               Toolbar.button.disabled('first') ? 'moon-gray' : '',
             ].join(' '),
             disabled: Toolbar.button.disabled('first'),
@@ -415,7 +415,7 @@ var Toolbar = {
           }),
           m('button[name=previous]', {
             class: [
-              'icon fa fa-angle-left bt br bl-0 bb b--light-silver br0 bg-white',
+              'icon nf nf-fa-angle_left bt br bl-0 bb b--light-silver br0 bg-white',
               Toolbar.button.disabled('previous') ? 'moon-gray' : ''
             ].join(' '),
             disabled: Toolbar.button.disabled('previous'),
@@ -431,7 +431,7 @@ var Toolbar = {
           }),
           m('button[name=next]', {
             class: [
-              'icon fa fa-angle-right bt br bb bl-0 b--light-silver br0 bg-white',
+              'icon nf nf-fa-angle_right bt br bb bl-0 b--light-silver br0 bg-white',
               Toolbar.button.disabled('next') ? 'moon-gray' : '',
             ].join(' '),
             disabled: Toolbar.button.disabled('next'),
@@ -447,7 +447,7 @@ var Toolbar = {
           }),
           m('button[name=last]', {
             class: [
-              'icon fa fa-angle-double-right bt br bb bl-0',
+              'icon nf nf-fa-angle_double_right bt br bb bl-0',
               'b--light-silver br0 bg-white',
               Toolbar.button.disabled('last') ? 'moon-gray' : '',
             ].join(' '),
@@ -461,7 +461,7 @@ var Toolbar = {
       /*
       !ds.table.help ? '' : m('i', {
           id: 'btn_help_table',
-          class: 'fa fa-question',
+          class: 'nf nf-fa-question',
           title: 'Hjelp',
           style: 'margin-left: 10px; cursor: pointer',
           onclick: function() {

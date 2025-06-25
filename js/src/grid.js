@@ -115,6 +115,7 @@ var Grid = {
       post.pkey = data.selected
     }
 
+    p.cnxn = ds.cnxn
     p.base = ds.base.name
     p.table = list.name
     p.filter = ds.table.query
@@ -165,6 +166,7 @@ var Grid = {
     m.request({
       method: 'put',
       url: 'table',
+      params: { cnxn: ds.cnxn },
       body: data
     }).then(function(result) {
       $('#message').removeClass('bg-red').addClass('bg-light-green').show().html('Saved')
@@ -339,8 +341,8 @@ var Grid = {
                 label, m('i', {
                   class: [
                     'ml2',
-                    Grid.column_order(col) == 'asc' ? 'fa fa-angle-up'
-                      : Grid.column_order(col) == 'desc' ? 'fa fa-angle-down'
+                    Grid.column_order(col) == 'asc' ? 'nf nf-fa-angle_up'
+                      : Grid.column_order(col) == 'desc' ? 'nf nf-fa-angle_down'
                       : ''
                   ].join(' ')
                 })])

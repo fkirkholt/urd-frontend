@@ -103,7 +103,7 @@ var SQLpanel = {
             class: 'di w-100 pl1'
           }, [
             m('li', {
-              class: ['fa fa-table mt1 list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
+              class: ['nf nf-md-table mt1 list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
               (!query.tab || query.tab == 'data')
                 ? 'bg-white' : 'bg-light-gray'
               ].join(' '),
@@ -114,7 +114,7 @@ var SQLpanel = {
               }
             }),
             m('li', {
-              class: ['fa fa-bar-chart mt1 list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
+              class: ['nf nf-md-chart_bar mt1 list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
               (query.tab == 'chart')
                 ? 'bg-white' : 'bg-light-gray'
               ].join(' '),
@@ -152,7 +152,7 @@ var SQLpanel = {
 
                   if (is_link) {
                     var link = m('a.link', {
-                      class: 'icon-crosshairs light-blue hover-blue pointer v-mid',
+                      class: 'nf nf-md-crosshairs light-blue hover-blue pointer v-mid',
                       href: "#" + ds.base.name + '/!data/'
                         + table.name + '?'
                         + pk_values.join('&')
@@ -230,6 +230,7 @@ var SQLpanel = {
     m.request({
       url: 'query',
       params: {
+        cnxn: ds.cnxn,
         base: ds.base.name,
         sql: sql,
         limit: $('input.limit').val()
@@ -277,7 +278,7 @@ var SQLpanel = {
                 : m('span', { class: 'fl' }, total_time + 's'),
               m('button', {
                 id: 'run_sql',
-                class: 'fr pt0 pb0 fa fa-play',
+                class: 'fr pt0 pb0 nf nf-fa-play',
                 onclick: function() {
                   var sql = SQLpanel.editor.get_value()
                   var expressions = sql.split(';')

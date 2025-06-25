@@ -17,14 +17,14 @@ var Breadcrumb = {
     }
 
     items.push({
-      icon: "icon-crosshairs",
-      text: "Urðr",
+      icon: "ml2",
+      text: " URÐR",
       addr: '',
       branch: ds.branch
     })
 
     items.push({
-      icon: ['sqlite', 'duckdb'].includes(ds.base.system) ? "fa-folder" : "fa-server",
+      icon: ['sqlite', 'duckdb'].includes(ds.base.system) ? "nf-md-folder_outline" : "nf-fa-server",
       text: ds.cnxn,
       addr: ds.cnxn
     })
@@ -37,7 +37,7 @@ var Breadcrumb = {
       for (const dir of dirs) {
         path.push(dir)
         items.push({
-          icon: 'fa-folder',
+          icon: 'nf-md-folder_outline',
           text: dir,
           addr: path.join('/')
         })
@@ -46,13 +46,13 @@ var Breadcrumb = {
 
     if (ds.file && ds.file.type == 'file') {
       items.push({
-        icon: "fa-file",
+        icon: "nf-fa-file",
         text: ds.file.name,
         addr: ds.file.path
       })
     } else if (ds.base && ds.base.name && ds.type != 'file' && ds.type != 'dblist') {
       items.push({
-        icon: "fa-database",
+        icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),
         addr: ds.base.name + '/!data'
       })
@@ -60,7 +60,7 @@ var Breadcrumb = {
 
     if (param.table && ds.table) {
       items.push({
-        icon: ds.table.type == 'list' ? "fa-list" : "fa-table",
+        icon: ds.table.type == 'list' ? "nf-fa-list" : "nf-md-table",
         text: ds.table.label,
         addr: ds.base.name + '/!data/' + ds.table.name
       })
@@ -83,7 +83,7 @@ var Breadcrumb = {
             class: 'fw3 white no-underline underline-hover f4'
           }, [m('i', {
             class: [
-              'relative fa ' + item.icon,
+              'relative nf ' + item.icon,
               idx === 0 ? 'f4 white' : 'f6 mr2 white',
             ].join(' '),
             style: item.icon !== 'table' ? 'bottom: 2px;' : ''
@@ -91,12 +91,12 @@ var Breadcrumb = {
           !item.branch || item.branch == 'master'
             ? ''
             : m('span', { class: 'light-silver' }, [
-              m('i', { class: 'fa fa-code-fork ml2' }),
+              m('i', { class: 'nf nf-fa-code_fork ml2' }),
               ds.branch,
             ]),
           idx == sti.length - 1
             ? ''
-            : m('i', { class: 'fa fa-angle-right f3 fw3 ml2 mr2' })
+            : m('i', { class: 'nf nf-oct-chevron_right f3 fw3 ml2 mr2' })
         ]
       }),
     ])

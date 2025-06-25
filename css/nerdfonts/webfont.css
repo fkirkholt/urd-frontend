@@ -1,0 +1,103 @@
+/*
+ *# [Nerd Fonts]  Website: https://www.nerdfonts.com
+ *# [Nerd Fonts]  Development Website: https://github.com/ryanoasis/nerd-fonts
+ *# [Nerd Fonts]  Version: 3.4.0
+ *# [Nerd Fonts]  The following is generated from the build script
+ */
+@font-face{
+    font-family:'NerdFontsSymbols Nerd Font';
+    /*font-family:'SymbolsNerdFont';*/
+    src:url("fonts/SymbolsNerdFontMono-Regular.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal
+}
+
+.nf,.nerd-font,.nerd-fonts{
+    font-family:'NerdFontsSymbols Nerd Font';
+    font-style:normal;
+    font-weight:normal;
+    font-variant:normal;
+    text-transform:none;
+    line-height:1;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+}
+.nf-fw {
+  width: 1.28571429em;
+  text-align: center;
+}
+.nf-ul {
+  padding-left: 0;
+  margin-left: 2.14285714em;
+  list-style-type: none;
+}
+.nf-ul > li {
+  position: relative;
+}
+.nf-li {
+  position: absolute;
+  left: -2.14285714em;
+  width: 2.14285714em;
+  top: 0.14285714em;
+  text-align: center;
+}
+.nf-rotate-45 { 
+  -webkit-transform: rotate(45deg); 
+  -moz-transform: rotate(45deg); 
+  -ms-transform: rotate(45deg); 
+  -o-transform: rotate(45deg); 
+  transform: rotate(45deg); 
+}
+
+.nf-md-table:before{content:"\f04eb"}
+.nf-md-vector_link:before{content:"\f0fe8"}
+.nf-md-folder:before{content:"\f024b"}
+.nf-md-database_outline:before{content:"\f1632"}
+.nf-fa-file:before{content:"\f15b"}
+.nf-fa-file_o:before{content:"\f016"}
+.nf-fa-save:before{content:"\f0c7"}
+.nf-fa-square_o:before{content:"\f096"}
+.nf-fa-check_square_o:before{content:"\f046"}
+.nf-fa-minus_square_o:before{content:"\f147"}
+.nf-fa-angle_down:before{content:"\f107"}
+.nf-fa-angle_right:before{content:"\f105"}
+.nf-fa-angle_up:before{content:"\f106"}
+.nf-fa-trash_o:before{content:"\f014"}
+.nf-fa-plus:before{content:"\f067"}
+.nf-fa-pencil:before{content:"\f040"}
+.nf-fa-cog:before{content:"\f013"}
+.nf-fa-warning:before{content:"\f071"}
+.nf-fa-plus_circle:before{content:"\f055"}
+.nf-md-chart_bar:before{content:"\f0128"}
+.nf-fa-angle_double_left:before{content:"\f100"}
+.nf-fa-angle_left:before{content:"\f104"}
+.nf-fa-angle_double_right:before{content:"\f101"}
+.nf-fa-play:before{content:"\f04b"}
+.nf-fa-list:before{content:"\f03a"}
+.nf-md-arrow_expand:before{content:"\f0616"}
+.nf-md-arrow_collapse:before{content:"\f0615"}
+.nf-fa-search:before{content:"\f002"}
+.nf-fa-copy:before{content:"\f0c5"}
+.nf-fa-edit:before{content:"\f044"}
+.nf-fa-print:before{content:"\f02f"}
+.nf-fa-question:before{content:"\f128"}
+.nf-fa-sitemap:before{content:"\f0e8"}
+.nf-md-database_import_outline:before{content:"\f162d"}
+.nf-md-database_export_outline:before{content:"\f162c"}
+.nf-md-file_export_outline:before{content:"\f102e"}
+.nf-md-crosshairs_gps:before{content:"\f01a4"}
+.nf-md-crosshairs:before{content:"\f01a3"}
+.nf-md-link:before{content:"\f0337"}
+.nf-cod-target:before{content:"\ebf8"}
+.nf-md-target:before{content:"\f04fe"}
+.nf-oct-cache:before{content:"\f49b"}
+.nf-fa-server:before{content:"\f233"}
+.nf-fa-code_fork:before{content:"\f126"}
+.nf-oct-database:before{content:"\f472"}
+.nf-oct-file:before{content:"\f4a5"}
+.nf-md-folder_outline:before{content:"\f0256"}
+.nf-oct-chevron_right:before{content:"\f460"}
+.nf-oct-chevron_down:before{content:"\f47c"}
+.nf-oct-table:before{content:"\f525"}
+.nf-oct-dot:before{content:"\f4c3"}
+.nf-fa-life_saver:before{content:"\f1cd"}

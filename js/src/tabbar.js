@@ -106,7 +106,7 @@ var Tabbar = {
   },
 
   view: function(vnode) {
-    if (ds.type == 'dblist') {
+    if (ds.type == 'dblist' || ds.type == 'file') {
       return [
         m('ul', {
           class: 'di w-100'
@@ -124,7 +124,7 @@ var Tabbar = {
             onclick: function() {
               config.tab = 'databases'
             }
-          }, 'Databases'),
+          }, ['sqlite', 'duckdb'].includes(ds.base.system) ? 'Files' : 'Databases'),
           !ds.dblist || !ds.dblist.useradmin ? '' : m('li', {
             class: [
               'list di ml2 pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
@@ -224,7 +224,7 @@ var Tabbar = {
               m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!diagram')
             }
           }, [
-              m('i', { class: 'fa fa-sitemap mt1' })
+              m('i', { class: 'nf nf-fa-sitemap mt1' })
             ]),
           m('li', {
             class: [
@@ -284,7 +284,7 @@ var Tabbar = {
           }), ' %',
         ]),
       ds.table || ds.base.system != 'sqlite' ? null : m('i', {
-        class: 'fa fa-sign-in fr mr3 pt1',
+        class: 'nf nf-md-database_import_outline fr mr3 f5',
         title: 'Import',
         onclick: function() {
           $('.curtain').show()
@@ -292,7 +292,7 @@ var Tabbar = {
         }
       }),
       ds.table ? null : m('i', {
-        class: 'fa fa-file-text-o fr mr3 pt1',
+        class: 'nf nf-md-database_export_outline fr mr3 f5',
         title: 'Export',
         onclick: function() {
           $('.curtain').show()
@@ -300,7 +300,7 @@ var Tabbar = {
         }
       }),
       !ds.user.admin || ds.table ? null : m('i', {
-        class: 'fa fa-file-code-o fr mr3 pt1',
+        class: 'nf nf-md-file_export_outline fr mr3 f5',
         title: 'Export to KDRS Search & View',
         onclick: function() {
           $('.curtain').show()
@@ -308,7 +308,7 @@ var Tabbar = {
         }
       }),
       (!ds.user.admin) || config.tab != 'diagram' ? null : m('i', {
-        class: 'fa fa-edit fr mr3 pt1',
+        class: 'nf nf-oct-cache fr mr3 f5',
         title: 'Update cache',
         onclick: function() {
           if (['oracle', 'mssql'].includes(ds.base.system)) {
