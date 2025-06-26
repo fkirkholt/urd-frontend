@@ -160,6 +160,7 @@ m.route($('#main')[0], '/', {
   },
   "/:cnxn/:base...": {
     onmatch: function(args, requestedPath) {
+      ds.cnxn = args.cnxn
       ds.type = 'file'
       Grid.url = ''
       var base_name = args.base

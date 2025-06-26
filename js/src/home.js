@@ -52,6 +52,9 @@ var home = {
     return [m('div#list', { class: 'overflow-y-auto' }, [
       config.tab == 'users' ? null : m('ul', { class: 'nf-ul' }, [
         !ds.path ? null : m('li', [
+          m('span', { class: "nf-li" }, [
+            m('i', { class: "nf nf-fa-level_up" })
+          ]),
           m('a', {
             class: 'no-underline hover-blue',
             href: '#/' + ds.cnxn + '/' + (ds.path ? ds.path.substring(0, ds.path.lastIndexOf('/')) : ''),

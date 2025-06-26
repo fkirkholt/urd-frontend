@@ -33,7 +33,7 @@ var Breadcrumb = {
       dirs = param.base && !ds.file ? param.base.split('/').slice(0, -1) 
         : ds.path ? ds.path.split('/')
         : []
-      path = [] 
+      path = [ds.cnxn] 
       for (const dir of dirs) {
         path.push(dir)
         items.push({
@@ -54,7 +54,7 @@ var Breadcrumb = {
       items.push({
         icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),
-        addr: ds.base.name + '/!data'
+        addr: ds.cnxn + '/' + ds.base.name + '/!data'
       })
     }
 
