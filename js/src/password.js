@@ -39,6 +39,7 @@ var Pwd_dialog = {
             method: 'put',
             url: 'change_password',
             params: {
+              cnxn: ds.cnxn,
               base: ds.base.name,
               old_pwd: $('#old_pwd').val(),
               new_pwd: $('#new_pwd').val()

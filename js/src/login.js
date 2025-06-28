@@ -157,7 +157,7 @@ var login = {
             }).then(function(result) {
               if (param.database && param.database != ds.base.name) {
                 ds.dblist = null
-                m.route.set('/' + param.cnxn + '/' + param.database)
+                m.route.set('/' + param.cnxn + '/' + param.database + '/!data')
                 $('div.curtain').hide();
                 $('#login').hide();
               } else {

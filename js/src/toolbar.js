@@ -136,7 +136,7 @@ var Toolbar = {
     var param = m.route.param()
     search_params = []
     $.each(param, function(key, value) {
-      if (['base', 'table', 'index', 'offset', 'order'].indexOf(key) >= 0) return
+      if (['cnxn', 'base', 'table', 'index', 'offset', 'order'].indexOf(key) >= 0) return
       var expr = value ? key + '=' + value : key 
       search_params.push(expr)
     })

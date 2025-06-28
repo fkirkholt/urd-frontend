@@ -106,7 +106,7 @@ var home = {
               m.request({
                 method: 'get',
                 url: 'user_roles',
-                params: {'user': user.name, 'host': user.host} 
+                params: {cnxn: ds.cnxn, user: user.name, host: user.host} 
               }).then(function(result) {
                 user.roles = result.data
               })
@@ -137,6 +137,7 @@ var home = {
                       method: 'put',
                       url: 'change_user_role',
                       params: {
+                        'cnxn': ds.cnxn,
                         'user': user.name, 
                         'host': user.host, 
                         'role': role, 
@@ -174,6 +175,7 @@ var home = {
               method: 'put',
               url: 'create_user',
               params: {
+                cnxn: ds.cnxn,
                 name: $('#uid').val(),
                 pwd: $('#pwd').val()
               }
@@ -211,6 +213,7 @@ var home = {
               method: 'post',
               url: 'file',
               params: {
+                cnxn: ds.cnxn,
                 path: ds.file.path,
                 content: ds.file.content
               }

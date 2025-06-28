@@ -11,6 +11,7 @@ var Export_dialog = {
 
   export_csv: function(clobs_as_files, limit) {
     var param = {}
+    param.cnxn = ds.cnxn
     param.base = ds.base.name
     param.clobs_as_files = clobs_as_files
     if (limit) {

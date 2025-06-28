@@ -140,6 +140,7 @@ var Tabbar = {
               if (!ds.users) {
                 m.request({
                   method: 'get',
+                  params: {cnxn: ds.cnxn},
                   url: 'userlist'
                 }).then(function(result) {
                   ds.users = result.data.users
@@ -158,6 +159,7 @@ var Tabbar = {
                 method: 'get',
                 url: 'dblist',
                 params: {
+                  cnxn: ds.cnxn,
                   role: $(this).val()
                 }
               }).then(function(result) {
@@ -317,6 +319,7 @@ var Tabbar = {
           }
           m.request({
             url: 'urd/dialog_cache?version=1',
+            params: {cnxn: ds.cnxn},
             responseType: "text",
           }).then(function(result) {
               $('#action-dialog').append(result)

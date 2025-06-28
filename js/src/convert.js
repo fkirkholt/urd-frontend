@@ -4,6 +4,7 @@ var Convert_dialog = {
 
   convert: function() {
     var param = {}
+    param.cnxn = ds.cnxn
     param.base = ds.base.name
     param.table = ds.table.name
     param.from_format = $('#from_format').val()

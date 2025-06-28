@@ -70,6 +70,7 @@ var Header = {
                   else {
                     m.request({
                       url: 'printable_table',
+                      params: { cnxn: ds.cnxn },
                       responseType: "text",
                     }).then(function(result) {
                         $('#print-view .content').append(result)

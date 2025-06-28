@@ -75,6 +75,7 @@ var Field = {
             params: {
               q: '',
               limit: 1000,
+              cnxn: ds.cnxn,
               schema: ds.base.schema,
               base: ds.base.name,
               table: rec.table.name,
@@ -232,6 +233,7 @@ var Field = {
       method: "GET",
       url: "table",
       params: {
+        cnxn: ds.cnxn,
         base: field.fkey.base || ds.base.name,
         schema: field.fkey.schema,
         table: field.fkey.referred_table,
@@ -247,6 +249,7 @@ var Field = {
         method: "GET",
         url: "record",
         params: {
+          cnxn: ds.cnxn,
           base: field.fkey.base || ds.base.name,
           schema: field.fkey.schema,
           table: field.fkey.referred_table,

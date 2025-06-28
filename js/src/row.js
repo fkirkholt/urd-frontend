@@ -8,6 +8,7 @@ var Row = {
         method: 'get',
         url: 'children',
         params: {
+          cnxn: ds.cnxn,
           base: ds.base.name,
           table: list.name,
           pkey: JSON.stringify(rec.pkey)
@@ -67,6 +68,7 @@ var Row = {
       method: "GET",
       url: "record",
       params: {
+        cnxn: ds.cnxn,
         base: rec.base_name ? rec.base_name : ds.base.name,
         table: tbl.name,
         pkey: JSON.stringify(rec.pkey)

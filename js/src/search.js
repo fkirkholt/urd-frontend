@@ -13,6 +13,7 @@ var Search = {
       method: "GET",
       url: "table",
       params: {
+        cnxn: ds.cnxn,
         base: field.fkey.base || ds.base.name,
         schema: field.fkey.schema,
         table: field.fkey.referred_table,
@@ -258,6 +259,7 @@ var Search = {
                   method: "get",
                   url: "table",
                   params: {
+                    cnxn: ds.cnxn,
                     base: ds.base.name,
                     table: rel.table_name,
                     limit: 0

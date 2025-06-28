@@ -203,6 +203,7 @@ var Input = {
 
         if (field.unique) {
           var data = {
+            cnxn: ds.cnxn,
             schema: ds.base.schema,
             base: ds.base.name,
             table: rec.table.name,

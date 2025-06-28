@@ -43,6 +43,7 @@ function Autocomplete() {
 
   function load(event, attrs) {
     var data = attrs.ajax.data
+    data.cnxn = ds.cnxn
     data.q = event.target.value
 
     m.request({
