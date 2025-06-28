@@ -86,7 +86,10 @@ var home = {
                   m('i', { class: "nf nf-oct-file" })
                 ]),
                 m('a', {
-                  class: 'no-underline hover-blue',
+                  class: [
+                    'no-underline hover-blue',
+                    (post.columns.size > 100000000) ? 'gray' : '',
+                  ].join(' '),
                   href: '#/' + ds.cnxn + '/' + post.columns.name,
                 }, ' ' + post.columns.label)
               ]
@@ -221,7 +224,9 @@ var home = {
           }
         })
       ]),
-      !ds.file || ds.file.type == 'dir' ? '' : m(Codefield, {
+      !ds.file || ds.file.type == 'dir' ? '' 
+      : ds.file.msg ? m('div', { class: 'ml3'}, ds.file.msg) 
+      : m(Codefield, {
         id: 'file-content',
         class: 'ml3 ba b--light-silver mb2 bottom-0 overflow-y-auto',
         editable: true,
