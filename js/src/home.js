@@ -193,7 +193,10 @@ var home = {
         })
       ])
     ]),
-    m('div#file', { class: 'flex flex-column' }, [
+    m('div#file', { 
+      class: 'flex flex-column mw7',
+      style: 'flex-grow: 1'
+    }, [
       !ds.file || ds.file.type == 'dir' ? '' : m('div', { class: 'ml3 mb2'}, [
         m('i', { 
           class: [
