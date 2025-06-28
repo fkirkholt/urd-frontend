@@ -129,9 +129,9 @@ var Export_dialog = {
     .replace('duckdb', '').replace('oracle', '').replace('pgsql', '').replace('--', '-')
     .replace(/-$/g, '')
     : ds.base.system
-    var exportdir = Export_dialog.cnxn_name
-    ? ds.config.exportdir + '/' + Export_dialog.cnxn_name
-    : ds.config.exportdir
+    var exportdir = Export_dialog.cnxn_name && ['sqlite', 'duckdb'].includes(ds.base.system)
+    ? ds.config.exportdir + '/' + ds.path
+    : ds.config.exportdir + '/' + Export_dialog.cnxn_name
     return m('div', [
       m('h3', 'Export ' + (!ds.table ? 'database' : 'table')),
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
@@ -139,8 +139,8 @@ var Export_dialog = {
           name: 'dest',
           value: exportdir
         })], ' ' + exportdir),
-        m('br'),
-        m('label', [m('input[type=radio]', {
+        ['sqlite', 'duckdb'].includes(ds.base.system) ? '' 
+        : m('label', [m('input[type=radio]', {
           name: 'dest',
           value: exportdir + '/' + ds.base.name.split('.')[0]
         })], ' ' + exportdir + '/' + ds.base.name.split('.')[0]),
