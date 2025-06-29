@@ -215,8 +215,8 @@ var home = {
               params: {
                 cnxn: ds.cnxn,
                 path: ds.file.path,
-                content: ds.file.content
-              }
+              },
+              body: ds.file.content
             })
             .then(function(result) {
               if (result) {
