@@ -499,7 +499,7 @@ var Field = {
                             params = Object.keys(data).map(function(k) {
                               return k + '=' + data[k]
                             }).join('&')
-                            window.open('/file?' + params, '_blank')
+                            window.open('/db_file?' + params, '_blank')
                           }
                         }
                       }, Field.display_value(field, rec, field.element != 'textarea')),
