@@ -18,7 +18,7 @@ var Breadcrumb = {
 
     items.push({
       icon: "ml2",
-      text: " URÐR",
+      text: '<img class="h1 v-mid" style="margin-bottom: 3px;" src="static/css/img/urdr.png">',
       addr: '',
       branch: ds.branch
     })
@@ -87,7 +87,7 @@ var Breadcrumb = {
               idx === 0 ? 'f4 white' : 'f6 mr2 white',
             ].join(' '),
             style: item.icon !== 'table' ? 'bottom: 2px;' : ''
-          }), item.text]),
+          }), m.trust(item.text)]),
           !item.branch || item.branch == 'master'
             ? ''
             : m('span', { class: 'light-silver' }, [
@@ -96,7 +96,7 @@ var Breadcrumb = {
             ]),
           idx == sti.length - 1
             ? ''
-            : m('i', { class: 'nf nf-oct-chevron_right f3 fw3 ml2 mr2' })
+            : m('i', { class: 'nf nf-oct-chevron_right f5 fw3 ml1 mr1' })
         ]
       }),
     ])
