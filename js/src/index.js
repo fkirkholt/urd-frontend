@@ -70,7 +70,7 @@ m.route($('#main')[0], '/', {
       }
 
       config.tab = 'data'
-      ds.type = 'data'
+      ds.type = 'database'
       ds.load_database(base_name)
 
       return Contents
