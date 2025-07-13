@@ -27,9 +27,13 @@ var home = {
       ds.base.system = result.data.system
     }).catch(function(e) {
       if (e.code === 401) {
-        ds.base.system = e.response.detail.system
-        ds.base.server = e.response.detail.host
-        ds.base.name = e.response.detail.database
+        if (typeof(e.response.detail) == 'string') {
+          alert(e.response.detail)
+        } else {
+          ds.base.system = e.response.detail.system
+          ds.base.server = e.response.detail.host
+          ds.base.name = e.response.detail.database
+        }
         $('div.curtain').show()
         $('#login').show()
         $('#brukernavn').trigger('focus')
