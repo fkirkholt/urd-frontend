@@ -7,6 +7,23 @@ var home = {
 
   editor: null,
 
+  save_file: function() {
+    m.request({
+      method: 'post',
+      url: 'file',
+      params: {
+        cnxn: ds.cnxn,
+        path: ds.file.path,
+      },
+      body: home.editor.get_value()
+    })
+    .then(function(result) {
+      if (result) {
+        ds.file.dirty = false
+      }
+    })
+  },
+
   load_databases: function() {
 
     Grid.url = ''
@@ -208,26 +225,13 @@ var home = {
     }, [
       !ds.file || ds.file.type == 'dir' ? '' : m('div', { class: 'ml3 mb2'}, [
         m('i', { 
+          id: 'save-file',
           class: [
             'nf nf-fa-save ml2', 
             ds.file.dirty ? 'dim pointer' : 'o-30'
           ].join(' '),
           onclick: function() {
-            m.request({
-              method: 'post',
-              url: 'file',
-              params: {
-                cnxn: ds.cnxn,
-                path: ds.file.path,
-              },
-              body: ds.file.content
-            })
-            .then(function(result) {
-              if (result) {
-                ds.file.dirty = false
-              }
-            })
-
+            home.save_file()
           }
         })
       ]),

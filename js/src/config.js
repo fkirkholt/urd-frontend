@@ -19,9 +19,6 @@ var config = {
   save: function() {
     var autosave = $('#preferences [name="autosave"]').prop('checked')
     var recordview = $('#preferences [name="recordview"]').prop('checked')
-    if (autosave) {
-      Grid.save()
-    }
     var limit = $('#limit').val()
     var select = $('#preferences [name="select"]').val()
     var theme = $('#preferences [name="theme"]').val()

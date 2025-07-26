@@ -164,9 +164,13 @@ m.route($('#main')[0], '/', {
       ds.type = 'file'
       Grid.url = ''
       var base_name = args.base
-      if (ds.table && ds.table.dirty) {
-        if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-          m.route.set(Grid.url)
+      if ((ds.table && ds.table.dirty) || (ds.file && ds.file.dirty)) {
+        if (config.autosave || confirm('Du har ulagrede data. Vil du lagre?')) {
+          if (ds.file && ds.file.dirty) {
+            home.save_file()
+          } else {
+            Grid.save()
+          }
         }
       }
 
@@ -185,10 +189,6 @@ m.route($('#main')[0], '/', {
             home.load_databases()
           }
         } else {
-          if (ds.file && ds.file.dirty) {
-            alert('Ikke lagret')
-            return false
-          }
           var dir = base_name.substring(0, base_name.lastIndexOf('/'))
           if (ds.path != dir) {
             ds.path = dir

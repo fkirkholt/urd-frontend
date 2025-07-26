@@ -110,6 +110,10 @@ function Codefield() {
           EditorView.updateListener.of((update) => { 
             if (update.docChanged) { 
               changed = true 
+              if (ds.file) {
+                $('#save-file').removeClass('o-30')
+                ds.file.dirty = true
+              }
             } 
           }),
           EditorView.domEventHandlers({
@@ -153,6 +157,7 @@ function Codefield() {
         lang = langs[vnode.attrs.lang]
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
+        changed = false
         editor.setState(EditorState.create({
           doc: vnode.attrs.value,
           extensions: lang ? extensions.concat([lang]) : extensions

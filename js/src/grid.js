@@ -230,7 +230,6 @@ var Grid = {
 
     ds.table.grid.columns.forEach(function(colname) {
       var field = ds.table.fields[colname]
-      var is_char
       if (
         ['int', 'float', 'Decimal'].includes(field.datatype) && 
         !field.fkey && ds.table.pkey && !ds.table.pkey.includes(colname)
