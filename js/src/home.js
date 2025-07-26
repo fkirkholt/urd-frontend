@@ -247,6 +247,7 @@ var home = {
           : ds.file.path.endsWith('.json') ? 'json'
           : ds.file.path.endsWith('.md') ? 'md'
           : ds.file.path.endsWith('.py') ? 'py'
+          : ds.file.path.endsWith('.js') ? 'js'
           : 'text',
         value: ds.file.content,
         oncreate: function(vnode) {

@@ -84,8 +84,9 @@ function Codefield() {
         import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/lang-yaml'),
         import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
         import(/* webpackChunkName: "cm-lang-python" */ '@codemirror/lang-python'),
+        import(/* webpackChunkName: "cm-lang-js" */ '@codemirror/lang-javascript'),
         import(/* webpackChunkName: "highlight" */ '@lezer/highlight'),
-      ]).then(([language, sql, json, yaml, markdown, python, highlight]) => {
+      ]).then(([language, sql, json, yaml, markdown, python, js, highlight]) => {
         var lang
         langs['sql'] = sql.sql()
         langs['json'] = json.json()
@@ -93,6 +94,7 @@ function Codefield() {
         langs['text'] = null
         langs['md'] = markdown.markdown()
         langs['py'] = python.python() 
+        langs['js'] = js.javascript()
         lang = langs[vnode.attrs.lang]
 
         const customHighlightStyle = language.HighlightStyle.define([
