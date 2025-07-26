@@ -172,10 +172,11 @@ var Row = {
         }, [
             config.autosave ? m.trust('&nbsp;') : m('i', {
               class: [
-                record.delete ? 'nf nf-fa-trash' :
-                  record.invalid ? 'nf nf-fa-warning red' :
-                    record.new ? 'nf nf-fa-plus_circle' :
-                      record.dirty ? 'nf nf-fa-pencil light-gray' : ''
+                record.delete ? 'nf nf-fa-trash_o' 
+                : record.invalid ? 'nf nf-fa-warning red' 
+                : record.new ? 'nf nf-fa-plus_circle' 
+                : record.dirty ? 'nf nf-fa-pencil light-gray' 
+                : ''
               ],
               title: !record.messages ? null : record.messages.join(' ') 
             })
