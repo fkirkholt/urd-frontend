@@ -448,7 +448,9 @@ var Record = {
       title: action.label,
       onclick: function(e) {
         var data = {};
+        var params
         if (action.communication === 'download') {
+          data.cnxn = ds.cnxn,
           data.base = rec.base_name;
           data.table = rec.table_name;
           data.pkey = JSON.stringify(rec.pkey);
