@@ -9,6 +9,28 @@ var Header = {
   },
 
   onupdate: function() {
+    var favicon
+    var title
+    if (ds.base.name && ds.type != 'dblist') {
+      title = ds.base.name
+    } else {
+      title = ds.cnxn
+    }
+    document.title = title
+    var link = document.querySelector("link[rel~='icon']")
+    if (!link) {
+        link = document.createElement('link')
+        link.rel = 'icon'
+        document.head.appendChild(link)
+    }
+    if (ds.type == 'file' || (ds.type == 'dblist') && ['sqlite', 'duckdb'].includes(ds.base.system)) {
+      favicon = 'folder.svg'
+    } else if (ds.type == 'dblist') {
+      favicon = 'host.svg'
+    } else {
+      favicon = 'database.svg'
+    }
+    link.href = '/static/css/img/' + favicon
     if (config.dark_mode) {
       $('body').addClass('bg-dark bg-dark-gray white')
       $('body').removeClass('bg-light-gray')
