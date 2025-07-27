@@ -95,7 +95,7 @@ function Codefield() {
         langs['md'] = markdown.markdown()
         langs['py'] = python.python() 
         langs['js'] = js.javascript()
-        lang = langs[vnode.attrs.lang]
+        lang = langs[vnode.attrs.lang] || markdown.markdown()
 
         const customHighlightStyle = language.HighlightStyle.define([
           { tag: highlight.tags.keyword, color: "#FF4136" },
