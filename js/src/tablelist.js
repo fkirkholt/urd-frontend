@@ -76,6 +76,8 @@ var Tablelist = {
                 sql = "select name, sql from sqlite_master "
                 sql += "where type = 'index' and "
                 sql += "tbl_name = '" + Tablelist.context_table + "';"
+              } else if (['mysql', 'mariadb'].includes(ds.base.system)) {
+                sql = "show index from " + Tablelist.context_table + ';'
               } else {
                 alert('Not implemented for this database yet')
                 $('#tablelist-context').hide()
