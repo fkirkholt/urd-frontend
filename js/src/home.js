@@ -89,7 +89,7 @@ var home = {
                   m('i', { class: "nf nf-oct-database" })
                 ]),
                 m('a', {
-                  class: 'no-underline hover-blue light-blue',
+                  class: 'no-underline hover-blue dark-pink',
                   href: '#/' + ds.cnxn + '/' + post.columns.name + '/!data'
                 }, ' ' + post.columns.label)
               ]
