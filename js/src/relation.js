@@ -223,7 +223,7 @@ var Relation = {
     } else {
       base_path = rel.schema_name
     }
-    url = '#/' + base_path + '/!data/' + rel.name + '?'
+    url = '/' + ds.cnxn + '/' + base_path + '/' + rel.name + '?'
 
     conditions = []
     if (rel.conds) {
@@ -338,9 +338,11 @@ var Relation = {
           : (rel.relationship == '1:1') ? m('span', {
             class: 'gray f7'
           }, rel.count_records ? '1:1' : '0:1')
-          : m('a', {
-              class: 'ml1 pr1 normal light-blue hover-blue f7 link',
-              href: url
+          : m('span', {
+              class: 'ml1 pr1 normal light-blue hover-blue f7 link pointer',
+              onclick: function() {
+                m.route.set(url)
+              }
             }, [
               rel.count_records,
             ])
@@ -375,9 +377,11 @@ var Relation = {
                 }
               })
               : (rel.relationship == '1:1') ? ''
-              : m('a', {
-                  class: 'ml1 pr1 normal light-blue hover-blue f7 link',
-                  href: url
+              : m('span', {
+                  class: 'ml1 pr1 normal light-blue hover-blue f7 link pointer',
+                  onclick: function() {
+                    m.route.set(url)
+                  }
                 }, [
                   rel.count_records,
                 ])

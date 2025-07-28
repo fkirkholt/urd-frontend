@@ -25,9 +25,6 @@ import header from './header.js'
 import home from './home.js'
 import Tabbar from './tabbar.js'
 import Datapanel from './datapanel.js'
-import Diagrampanel from './diagrampanel.js'
-import Diagram from './diagram'
-import SQLpanel from './sqlpanel'
 import KDRS_dialog from './kdrs.js'
 import Export_dialog from './export.js'
 import Import_dialog from './import.js'
@@ -39,10 +36,16 @@ import Grid from './grid.js'
 import Record from './record.js'
 
 
-m.route.prefix = "#"
+m.route.prefix = ""
 m.route($('#main')[0], '/', {
   "/": {
     onmatch: function(args, requestedPath) {
+      check_dirty()
+      ds.cnxn = null
+      ds.dblist = null
+      ds.table = null      
+      ds.file = null
+      $('#login').show()
       return home
     }
   },
@@ -57,113 +60,13 @@ m.route($('#main')[0], '/', {
       return home
     }
   },
-  "/:cnxn/:base.../!data": {
-    onmatch: function(args, requestedPath) {
-      ds.cnxn = args.cnxn
-      Grid.url = ''
-      var base_name = args.base
-      ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
-      if (ds.table && ds.table.dirty) {
-        if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
-          m.route.set(Grid.url)
-        }
-      }
-
-      config.tab = 'data'
-      ds.type = 'database'
-      ds.load_database(base_name)
-
-      return Contents
-    }
-  },
-  "/:cnxn/:base.../!data/:table": {
-    onmatch: function(args, path) {
-      ds.cnxn = args.cnxn
-      config.tab = 'data'
-      ds.type = 'table'
-
-      var grid_path = path
-      var query = m.parsePathname(path)
-
-      // remove `index` from grid_path so that grid is not
-      // reloaded because of change in url when another record is shown
-      if ('index' in query.params) {
-        delete query.params.index
-        grid_path = query.path
-        if (Object.keys(query.params).length) {
-          grid_path += '?' + m.buildQueryString(query.params)
-        }
-      }
-
-      if (
-        ds.table && ds.table.dirty && Grid.url !== grid_path &&
-        !confirm('You have unsaved data. Continue?')
-      ) {
-        m.route.set(Grid.url)
-      } else {
-        if (Grid.url != grid_path) {
-          if (ds.table) {
-            ds.table.records = []
-            ds.table.grid.columns = []
-            m.redraw()
-          }
-          Grid.load(args)
-          Grid.url = grid_path
-        } else {
-          // Load correct record when index parameter changes
-          if ('index' in args) {
-            let index = Number(args.index)
-            Record.select(ds.table, index)
-          }
-        }
-
-        return Datapanel
-      }
-    }
-  },
-  "/:cnxn/:base.../!diagram": {
-    onmatch: function(args, requestedPath) {
-      config.tab = 'diagram'
-      ds.type = 'diagram'
-      if (args.base != ds.base.name) {
-        ds.load_database(args.base)
-      }
-      delete ds.table
-      Diagram.def = ""
-
-      return Diagrampanel
-    }
-  },
-  "/:cnxn/:base.../!diagram/:table": {
-    onmatch: function(args, requestedPath) {
-      var base_name = args.base
-      config.tab = 'diagram'
-      ds.type = 'diagram'
-      if (base_name != ds.base.name) {
-        ds.load_database(base_name)
-      }
-      Diagram.def = ""
-      config.tab = 'diagram'
-
-      return Diagrampanel
-    }
-  },
-  "/:cnxn/:base.../!sql": {
-    onmatch: function(args, requestedPath) {
-      var base_name = args.base
-      config.tab = 'sql'
-      ds.type = 'sql'
-      ds.load_database(base_name)
-      config.tab = 'sql'
-      return SQLpanel
-    }
-  },
   "/:cnxn/:base...": {
-    onmatch: function(args, requestedPath) {
+    onmatch: function(args, path) {
+      var base_name = args.base
+      var query = m.parsePathname(path)
       ds.cnxn = args.cnxn
       ds.type = 'file'
-      Grid.url = ''
-      var base_name = args.base
+      // Grid.url = ''
       if ((ds.table && ds.table.dirty) || (ds.file && ds.file.dirty)) {
         if (config.autosave || confirm('Du har ulagrede data. Vil du lagre?')) {
           if (ds.file && ds.file.dirty) {
@@ -174,19 +77,82 @@ m.route($('#main')[0], '/', {
         }
       }
 
-      m.request({
+      if ('table' in query.params) {
+        config.tab = config.tab || 'data'
+        ds.type = 'table'
+
+        var grid_path = path
+        var query = m.parsePathname(path)
+
+        // remove `index` from grid_path so that grid is not
+        // reloaded because of change in url when another record is shown
+        if ('index' in query.params) {
+          delete query.params.index
+          grid_path = query.path
+          if (Object.keys(query.params).length) {
+            grid_path += '?' + m.buildQueryString(query.params)
+          }
+        }
+
+        if (
+          ds.table && ds.table.dirty && Grid.url !== grid_path &&
+          !confirm('You have unsaved data. Continue?')
+        ) {
+          m.route.set(Grid.url)
+        } else {
+          console.log('Grid.url', Grid.url)
+          console.log('grid_path', grid_path)
+          if (Grid.url != grid_path) {
+            if (ds.table) {
+              ds.table.records = []
+              ds.table.grid.columns = []
+              m.redraw()
+            }
+            Grid.load(args)
+            Grid.url = grid_path
+          } else {
+            // Load correct record when index parameter changes
+            if ('index' in args) {
+              let index = Number(args.index)
+              Record.select(ds.table, index)
+            }
+          }
+
+          return Datapanel
+        }
+      }
+
+      return m.request({
         method: 'get',
-        url: 'file',
+        url: '/file',
         params: {
           cnxn: args.cnxn,
           path: base_name,
         }
       }).then(function(result) {
-        if (result.type == 'dir') {
+        if (['sqlite', 'duckdb', 'server'].includes(result.type)) {
+          ds.cnxn = args.cnxn
+          Grid.url = ''
+          ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
+          if (ds.table && ds.table.dirty) {
+            if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
+              m.route.set(Grid.url)
+            }
+          }
+
+          config.tab = 'data'
+          ds.type = 'database'
+          ds.load_database(base_name)
+
+          return Contents
+
+        } else if (result.type == 'dir') {
           if (args.base != ds.path) {
             ds.path = base_name
             ds.file = result
             home.load_databases()
+
+            return home
           }
         } else {
           var dir = base_name.substring(0, base_name.lastIndexOf('/'))
@@ -195,10 +161,10 @@ m.route($('#main')[0], '/', {
             home.load_databases()
           }
           ds.file = result
+
+          return home
         }
       })
-
-      return home
     }
   },
 })

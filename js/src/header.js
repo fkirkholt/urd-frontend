@@ -91,7 +91,7 @@ var Header = {
                   }
                   else {
                     m.request({
-                      url: 'printable_table',
+                      url: '/printable_table',
                       params: { cnxn: ds.cnxn },
                       responseType: "text",
                     }).then(function(result) {
@@ -109,7 +109,7 @@ var Header = {
               m('li', {
                 onclick: function() {
                   m.request({
-                    url: 'logout',
+                    url: '/logout',
                     params: { cnxn: ds.cnxn }
                   }).then(function(result) {
                     ds.base.system = result.cnxn.system

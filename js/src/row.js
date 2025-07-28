@@ -6,7 +6,7 @@ var Row = {
     if (rec.expanded === undefined) {
       m.request({
         method: 'get',
-        url: 'children',
+        url: '/children',
         params: {
           cnxn: ds.cnxn,
           base: ds.base.name,
@@ -66,7 +66,7 @@ var Row = {
 
     m.request({
       method: "GET",
-      url: "record",
+      url: "/record",
       params: {
         cnxn: ds.cnxn,
         base: rec.base_name ? rec.base_name : ds.base.name,

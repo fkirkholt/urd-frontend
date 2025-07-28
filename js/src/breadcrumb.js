@@ -18,16 +18,18 @@ var Breadcrumb = {
 
     items.push({
       icon: "ml2",
-      text: '<img class="h1 v-mid" style="margin-bottom: 3px;" src="static/css/img/urdr.png">',
-      addr: '',
+      text: '<img class="h1 v-mid" style="margin-bottom: 3px;" src="/static/css/img/urdr.png">',
+      addr: '/',
       branch: ds.branch
     })
 
-    items.push({
-      icon: ['sqlite', 'duckdb'].includes(ds.base.system) ? "nf-md-folder_outline" : "nf-fa-server",
-      text: ds.cnxn,
-      addr: ds.cnxn
-    })
+    if (ds.cnxn) {
+      items.push({
+        icon: ['sqlite', 'duckdb'].includes(ds.base.system) ? "nf-md-folder_outline" : "nf-fa-server",
+        text: ds.cnxn,
+        addr: '/' + ds.cnxn
+      })
+    }
 
     if (ds.path || param.base) {
       dirs = param.base && !ds.file ? param.base.split('/').slice(0, -1) 
@@ -39,7 +41,7 @@ var Breadcrumb = {
         items.push({
           icon: 'nf-md-folder_outline',
           text: dir,
-          addr: path.join('/')
+          addr: '/' + path.join('/')
         })
       }
     }
@@ -48,13 +50,13 @@ var Breadcrumb = {
       items.push({
         icon: "nf-fa-file",
         text: ds.file.name,
-        addr: ds.file.path
+        addr: '/' + ds.file.path
       })
     } else if (ds.base && ds.base.name && ds.type != 'file' && ds.type != 'dblist') {
       items.push({
         icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),
-        addr: ds.cnxn + '/' + ds.base.name + '/!data'
+        addr: '/' + ds.cnxn + '/' + ds.base.name
       })
     }
 
@@ -62,7 +64,7 @@ var Breadcrumb = {
       items.push({
         icon: ds.table.type == 'list' ? "nf-fa-list" : "nf-md-table",
         text: ds.table.label,
-        addr: ds.base.name + '/!data/' + ds.table.name
+        addr: '/' + ds.cnxn + '/' + ds.base.name + '/' + ds.table.name
       })
     }
 
@@ -79,8 +81,12 @@ var Breadcrumb = {
       sti.map(function(item, idx) {
         return [
           m('a', {
-            href: "#/" + item.addr,
-            class: 'fw3 white no-underline underline-hover f4'
+            class: 'fw3 white no-underline underline-hover f4 pointer',
+            href: item.addr,
+            onclick: function(e) {
+              m.route.set(item.addr)
+              e.preventDefault
+            }
           }, [m('i', {
             class: [
               'relative nf ' + item.icon,

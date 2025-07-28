@@ -179,7 +179,7 @@ var Input = {
       vnode.attrs.unique = field.unique
       vnode.attrs.self_reference = field.element !== 'select'
       vnode.attrs.ajax = {
-        url: 'options',
+        url: '/options',
         data: {
           schema: ds.base.schema,
           base: ds.base.name,
@@ -214,7 +214,7 @@ var Input = {
 
           m.request({
             method: 'get',
-            url: 'options',
+            url: '/options',
             params: data
           }).then(function(result) {
             var options = result

@@ -163,7 +163,7 @@ var Toolbar = {
       query_params.order = sort.col
       query_params.order += ' ' + sort.dir
     }
-    m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!data/' + ds.table.name, query_params, {replace: replace})
+    m.route.set('/' + ds.cnxn + '/' + ds.base.name, query_params, {replace: replace})
   },
 
   view: function(vnode) {
@@ -233,8 +233,8 @@ var Toolbar = {
         },
         onchange: function(event) {
           var value = event.target.value
-          m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!data/' + ds.table.name +
-            '?' + encodeURIComponent(value.replace(/;\s*/g, '&')))
+          m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name +
+             (value ? '&' + encodeURIComponent(value.replace(/;\s*/g, '&')) : ''))
         }
       }),
       // Button for creating new record

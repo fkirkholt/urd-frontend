@@ -159,18 +159,17 @@ var Contents = {
           ].join(' '),
         }),
         // Draw table name as link
-        m('a', {
+        m('span', {
           class: [
-            'color-inherit underline-hover nowrap',
+            'color-inherit underline-hover nowrap pointer',
             table.description ? 'dot' : 'link',
             table.type == 'view' ? 'i' : ''
           ].join(' '),
           title: table.description ? table.description : '',
-          href: '#/' + ds.cnxn + '/' + ds.base.name + '/!' + (config.tab || 'data') +
-            '/' + table.name,
           onclick: function() {
             Diagram.type = 'table'
             Diagram.root = table.name
+            m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + table.name)
           },
           oncontextmenu: function(event) {
             Contents.context_table = table

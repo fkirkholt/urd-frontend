@@ -151,11 +151,15 @@ var SQLpanel = {
                   }
 
                   if (is_link) {
-                    var link = m('a.link', {
+                    var href = '/' + ds.cnxn + '/' + ds.base.name + '?table='
+                      + table.name + '&'
+                      + pk_values.join('&')
+                    var link = m('span.link', {
                       class: 'nf nf-md-crosshairs light-blue hover-blue pointer v-mid',
-                      href: "#" + ds.base.name + '/!data/'
-                        + table.name + '?'
-                        + pk_values.join('&')
+                      onclick: function() {
+                        config.tab = 'data'
+                        m.route.set(href)
+                      }
                     }, '')
                   }
 
@@ -228,7 +232,7 @@ var SQLpanel = {
       return
     }
     m.request({
-      url: 'query',
+      url: '/query',
       params: {
         cnxn: ds.cnxn,
         base: ds.base.name,

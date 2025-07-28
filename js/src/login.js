@@ -152,12 +152,12 @@ var login = {
 
             m.request({
               method: 'post',
-              url: 'login',
+              url: '/login',
               params: param
             }).then(function(result) {
               if (param.database && param.database != ds.base.name) {
                 ds.dblist = null
-                m.route.set('/' + param.cnxn + '/' + param.database + '/!data')
+                m.route.set('/' + param.cnxn + '/' + param.database)
                 $('div.curtain').hide();
                 $('#login').hide();
               } else {

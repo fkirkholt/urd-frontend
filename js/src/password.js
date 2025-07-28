@@ -37,7 +37,7 @@ var Pwd_dialog = {
           }
           m.request({
             method: 'put',
-            url: 'change_password',
+            url: '/change_password',
             params: {
               cnxn: ds.cnxn,
               base: ds.base.name,

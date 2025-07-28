@@ -14,7 +14,7 @@ var datastore = {
   load_database: function(base_name, callback) {
     return m.request({
       method: "GET",
-      url: "database",
+      url: '/database',
       params: { cnxn: ds.cnxn, base: base_name }
     }).then(function(result) {
       var data = result.data

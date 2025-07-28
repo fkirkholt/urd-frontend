@@ -10,7 +10,7 @@ var home = {
   save_file: function() {
     m.request({
       method: 'post',
-      url: 'file',
+      url: '/file',
       params: {
         cnxn: ds.cnxn,
         path: ds.file.path,
@@ -52,7 +52,7 @@ var home = {
 
     m.request({
       method: 'get',
-      url: 'dblist',
+      url: '/dblist',
       params: params
     }).then(function(result) {
       ds.dblist = result.data
@@ -76,10 +76,11 @@ var home = {
     })
   },
 
-  oninit: function() {
-    if (!ds.dblist) {
-      home.load_databases()
-    }
+  onupdate: function() {
+    $('a').not('[href^="http"]').off().on('click', function(e) {
+      m.route.set($(this).attr('href'))
+      e.preventDefault()
+    })
   },
 
   view: function(vnode) {
@@ -92,9 +93,11 @@ var home = {
           m('span', { class: "nf-li" }, [
             m('i', { class: "nf nf-fa-level_up" })
           ]),
-          m('a', {
-            class: 'no-underline hover-blue',
-            href: '#/' + ds.cnxn + '/' + (ds.path ? ds.path.substring(0, ds.path.lastIndexOf('/')) : ''),
+          m('span', {
+            class: 'no-underline hover-blue pointer',
+            onclick: function() {
+              m.route.set('/' + ds.cnxn + '/' + (ds.path ? ds.path.substring(0, ds.path.lastIndexOf('/')) : ''))
+            }
           }, '..')
         ]),
         ds.dblist.records.map(function(post, i) {
@@ -104,30 +107,36 @@ var home = {
                 m('span', { class: "nf-li" }, [
                   m('i', { class: "nf nf-oct-database" })
                 ]),
-                m('a', {
-                  class: 'no-underline hover-blue dark-pink',
-                  href: '#/' + ds.cnxn + '/' + post.columns.name + '/!data'
+                m('span', {
+                  class: 'no-underline hover-blue dark-pink pointer',
+                  onclick: function() {
+                    m.route.set('/' + ds.cnxn + '/' + post.columns.name)
+                  }
                 }, ' ' + post.columns.label)
               ]
               : post.columns.type == 'dir' ?  [
                 m('span', { class: "nf-li" }, [
                   m('i', { class: "nf nf-md-folder_outline" })
                 ]),
-                m('a', { 
-                  class: 'no-underline blue',
-                  href: '#/' + ds.cnxn + '/' + post.columns.name,
+                m('span', { 
+                  class: 'no-underline blue pointer',
+                  onclick: function() {
+                    m.route.set('/' + ds.cnxn + '/' + post.columns.name)
+                  }
                 }, ' ' + post.columns.label)
               ]
               : [
                 m('span', { class: "nf-li" }, [
                   m('i', { class: "nf nf-oct-file" })
                 ]),
-                m('a', {
+                m('span', {
                   class: [
-                    'no-underline hover-blue',
+                    'no-underline hover-blue pointer',
                     (post.columns.size > 100000000) ? 'gray' : '',
                   ].join(' '),
-                  href: '#/' + ds.cnxn + '/' + post.columns.name,
+                  onclick: function() {
+                    m.route.set('/' + ds.cnxn + '/' + post.columns.name)
+                  }
                 }, ' ' + post.columns.label)
               ]
             ]),
@@ -142,7 +151,7 @@ var home = {
             onclick: function() {
               m.request({
                 method: 'get',
-                url: 'user_roles',
+                url: '/user_roles',
                 params: {cnxn: ds.cnxn, user: user.name, host: user.host} 
               }).then(function(result) {
                 user.roles = result.data
@@ -172,7 +181,7 @@ var home = {
                     }
                     m.request({
                       method: 'put',
-                      url: 'change_user_role',
+                      url: '/change_user_role',
                       params: {
                         'cnxn': ds.cnxn,
                         'user': user.name, 
@@ -210,7 +219,7 @@ var home = {
           onclick: function() {
             m.request({
               method: 'put',
-              url: 'create_user',
+              url: '/create_user',
               params: {
                 cnxn: ds.cnxn,
                 name: $('#uid').val(),

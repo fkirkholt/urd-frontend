@@ -24,7 +24,7 @@ var Record = {
 
     m.request({
       method: "GET",
-      url: 'record',
+      url: '/record',
       params: {
         cnxn: ds.cnxn,
         base: m.route.param('base'),
@@ -69,7 +69,7 @@ var Record = {
   get_relations_count: function(rec) {
     m.request({
       method: "get",
-      url: "relations",
+      url: "/relations",
       params: {
         cnxn: ds.cnxn,
         base: rec.base_name,
@@ -85,7 +85,7 @@ var Record = {
   get_relations: function(rec, alias) {
     m.request({
       method: "GET",
-      url: "relations",
+      url: "/relations",
       params: {
         cnxn: ds.cnxn,
         base: rec.base_name,
@@ -303,7 +303,7 @@ var Record = {
       method: changes.method,
       params: data,
       body: JSON.stringify(changes.values),
-      url: 'record'
+      url: '/record'
     }).then(function(data) {
       for (let fieldname in changes.values) {
         rec.fields[fieldname].dirty = false

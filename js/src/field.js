@@ -71,7 +71,7 @@ var Field = {
           }
           m.request({
             method: 'GET',
-            url: 'options',
+            url: '/options',
             params: {
               q: '',
               limit: 1000,
@@ -231,7 +231,7 @@ var Field = {
 
     m.request({
       method: "GET",
-      url: "table",
+      url: "/table",
       params: {
         cnxn: ds.cnxn,
         base: field.fkey.base || ds.base.name,
@@ -247,7 +247,7 @@ var Field = {
       var pk = table.records[0].pkey
       m.request({
         method: "GET",
-        url: "record",
+        url: "/record",
         params: {
           cnxn: ds.cnxn,
           base: field.fkey.base || ds.base.name,
@@ -291,7 +291,7 @@ var Field = {
       } else {
         base = field.fkey.referred_schema
       }
-      url = '#/' + ds.cnxn + '/' + base + '/!data/' + field.fkey.referred_table + '?'
+      url = '/' + ds.cnxn + '/' + base + '/' + field.fkey.referred_table + '?'
       $.each(field.fkey.referred_columns, function(i, colname) {
         var fk_field = field.fkey.constrained_columns[i]
         url += colname + '=' + rec.fields[fk_field].value

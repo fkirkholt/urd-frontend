@@ -34,6 +34,17 @@ var Datapanel = {
 
     if (!ds.table) return
 
+    if (config.tab == 'diagram') {
+      return [
+        m(Contents),
+        m(Diagram)
+      ]
+    }
+
+    if (config.tab == 'sql') {
+      return m(SQLpanel)
+    }
+
     var selected_idx = ds.table.selection !== null ? ds.table.selection : 0
 
     var params = m.route.param()
@@ -95,3 +106,5 @@ import Grid from './grid.js'
 import Record from './record.js'
 import Search from './search.js'
 import config from './config.js'
+import Diagram from './diagram.js'
+import SQLpanel from './sqlpanel.js'

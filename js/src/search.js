@@ -11,7 +11,7 @@ var Search = {
 
     m.request({
       method: "GET",
-      url: "table",
+      url: "/table",
       params: {
         cnxn: ds.cnxn,
         base: field.fkey.base || ds.base.name,
@@ -38,8 +38,8 @@ var Search = {
   search: function() {
     var search_criterias = Search.parse_search()
 
-    m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!data/' + ds.table.name +
-      '?' + search_criterias.join('&'))
+    m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name +
+      (search_criterias.length ? '&' + search_criterias.join('&') : ''))
   },
 
   parse_search: function() {
@@ -257,7 +257,7 @@ var Search = {
               onclick: function() {
                 m.request({
                   method: "get",
-                  url: "table",
+                  url: "/table",
                   params: {
                     cnxn: ds.cnxn,
                     base: ds.base.name,
@@ -362,7 +362,7 @@ var Search = {
         class: 'w-100',
         style: 'flex: 2;',
         ajax: field.options ? null : {
-          url: 'options',
+          url: '/options',
           data: {
             schema: ds.base.schema,
             base: ds.base.name,

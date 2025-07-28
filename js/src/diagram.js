@@ -38,6 +38,7 @@ var Diagram = {
 
         Diagram.type = 'table'
         Diagram.root = table_name
+        m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + table_name)
 
         m.redraw()
       })

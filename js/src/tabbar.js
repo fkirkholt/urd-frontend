@@ -141,7 +141,7 @@ var Tabbar = {
                 m.request({
                   method: 'get',
                   params: {cnxn: ds.cnxn},
-                  url: 'userlist'
+                  url: '/userlist'
                 }).then(function(result) {
                   ds.users = result.data.users
                   ds.roles = result.data.roles
@@ -157,7 +157,7 @@ var Tabbar = {
             onchange: function() {
               m.request({
                 method: 'get',
-                url: 'dblist',
+                url: '/dblist',
                 params: {
                   cnxn: ds.cnxn,
                   role: $(this).val()
@@ -221,7 +221,6 @@ var Tabbar = {
               ? 'padding-bottom: 2px' : 'padding-bottom: 0px',
             onclick: function() {
               config.tab = 'data'
-              m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!data')
             }
           }, 'Data'),
           m('li', {
@@ -236,7 +235,6 @@ var Tabbar = {
             style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '0px'),
             onclick: function() {
               config.tab = 'diagram'
-              m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!diagram')
             }
           }, [
               m('i', { class: 'nf nf-fa-sitemap mt1' })
@@ -252,7 +250,6 @@ var Tabbar = {
             style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '0px'),
             onclick: function() {
               config.tab = 'sql'
-              m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!sql')
             }
           }, 'SQL')
         ]),
@@ -331,7 +328,7 @@ var Tabbar = {
             return
           }
           m.request({
-            url: 'urd/dialog_cache?version=1',
+            url: '/urd/dialog_cache?version=1',
             params: {cnxn: ds.cnxn},
             responseType: "text",
           }).then(function(result) {
@@ -379,7 +376,8 @@ var Tabbar = {
             } else { 
               delete query_params[key]
             }
-            m.route.set('/' + ds.cnxn + '/' + ds.base.name + '/!data/' + ds.table.name + '?' + m.buildQueryString(query_params))
+            m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name + 
+              (query_params.length ? '&' + m.buildQueryString(query_params) : ''))
           }
         })
       ], 'Show top level only')),

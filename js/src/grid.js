@@ -42,7 +42,7 @@ var Grid = {
 
     m.request({
       method: "get",
-      url: "table",
+      url: "/table",
       params: data
     }).then(function(result) {
       ds.table = result.data
@@ -59,7 +59,9 @@ var Grid = {
 
       ds.base.name = data.base
 
-      if (!config.recordview) {
+      if (config.tab != 'data') {
+        // do nothing
+      } else if (!config.recordview) {
         Toolbar.set_url(ds.table.selection || index, ds.table.offset, true)
       } else {
         Toolbar.set_url(null, ds.table.offset)
@@ -165,7 +167,7 @@ var Grid = {
 
     m.request({
       method: 'put',
-      url: 'table',
+      url: '/table',
       params: { cnxn: ds.cnxn },
       body: data
     }).then(function(result) {
