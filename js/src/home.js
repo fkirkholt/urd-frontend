@@ -86,7 +86,7 @@ var home = {
     if (!ds.dblist) return
     if (config.tab == 'users' && !ds.users) return
 
-    return [m('div#list', { class: 'overflow-y-auto' }, [
+    return [m('div#list', { class: 'overflow-y-auto', style: 'min-width:200px' }, [
       config.tab == 'users' ? null : m('ul', { class: 'nf-ul' }, [
         !ds.path ? null : m('li', [
           m('span', { class: "nf-li" }, [
