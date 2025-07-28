@@ -189,7 +189,20 @@ var Tabbar = {
               }, role)
             })
           ])
-        ])
+        ]),
+        m('label', {
+          class: 'fr mr3'
+        }, [
+            m('input#view_checkbox', {
+              class: 'mr1',
+              type: 'checkbox',
+              value: 1,
+              checked: config.edit_mode,
+              onclick: function(ev) {
+                Tabbar.set_view(ev.target.checked)
+              }
+            })
+          ], 'Edit mode')
       ]
     }
     return !m.route.param('base') ? '' : [

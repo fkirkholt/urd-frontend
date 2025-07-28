@@ -1,6 +1,7 @@
 import config from './config.js'
 import Grid from './grid.js'
 import Codefield from './codefield.js'
+import { marked } from 'marked'
 
 var home = {
 
@@ -21,6 +22,22 @@ var home = {
         ds.file.dirty = false
       }
     })
+  },
+
+  parsed_markdown: function(content) {
+    let result = content.replace(/(^|\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
+      return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>';
+    });
+
+    // Hack to make marked format first list item like the rest.
+    // There must be text in front of the list
+    result = 'dummy-paragraph\n\n' + result
+
+    result = marked.parse(result)
+    // Remove text inserted in hack above
+    result = result.replace('<p>dummy-paragraph</p>', '')
+
+    return m.trust(result)
   },
 
   load_databases: function() {
@@ -236,6 +253,9 @@ var home = {
       ]),
       !ds.file || ds.file.type == 'dir' ? '' 
       : ds.file.msg ? m('div', { class: 'ml3'}, ds.file.msg) 
+      : !config.edit_mode && ds.file.path.endsWith('.md') ? m('div', {
+        class: 'ml3'
+      }, home.parsed_markdown(ds.file.content))
       : m(Codefield, {
         id: 'file-content',
         class: 'ml3 ba b--light-silver mb2 bottom-0 overflow-y-auto',
