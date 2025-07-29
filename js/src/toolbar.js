@@ -39,7 +39,7 @@ var Toolbar = {
     $form.find('input[name="pkey"]').val(prim_nokler_json)
 
     if (ds.table.dirty) {
-      alert("Du må lagre før du kan utføre handling")
+      alert("You must save before you can run an action")
       return
     }
 
@@ -377,6 +377,10 @@ var Toolbar = {
             }, 'Convert fields ...'),
             Object.keys(ds.table.actions).map(function(label, idx) {
               var action = ds.table.actions[label]
+
+              if (action.communication == 'download') {
+                return
+              }
 
               var txt = action.communication != 'ajax'
                 ? action.label + ' ...'
