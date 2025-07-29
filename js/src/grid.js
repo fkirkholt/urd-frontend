@@ -381,14 +381,14 @@ var Grid = {
               })
             ])
           ])
-      ]),
+      ])]),
       !ds.table.tab || ds.table.tab == 'data' ? '' : m(Chart, { 
         data: chart_data,
         class: [
           'bb bt b--gray',
           config.dark_mode ? 'bg-near-black' : 'bg-white'
         ].join(' ')
-      })])
+      })
     ]
   }
 }
