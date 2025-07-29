@@ -3,9 +3,16 @@ import { keymap } from "@codemirror/view"
 import { EditorState } from "@codemirror/state"
 import { indentWithTab } from "@codemirror/commands"
 import { indentedLineWrap } from './linewrap' 
-import { syntaxTree, syntaxTreeAvailable, foldable, foldEffect, unfoldAll,
-         foldCode, unfoldCode } from "@codemirror/language"
-
+import { syntaxTree, foldable, foldEffect, unfoldAll, foldService, 
+         foldCode, unfoldCode, HighlightStyle, syntaxHighlighting,
+         defaultHighlightStyle} from "@codemirror/language"
+import { markdown } from "@codemirror/lang-markdown"
+import { sql } from "@codemirror/lang-sql"
+import { json } from "@codemirror/lang-json"
+import { yaml } from "@codemirror/lang-yaml"
+import { python } from "@codemirror/lang-python"
+import { javascript } from "@codemirror/lang-javascript"
+import { tags } from "@lezer/highlight"
 
 function Codefield() {
   var editor
@@ -77,83 +84,72 @@ function Codefield() {
 
     oncreate: function(vnode) {
       onchange = vnode.attrs.onchange
-      Promise.all([
-        import(/* webpackChunkName: "cm-lang" */ '@codemirror/language'),
-        import(/* webpackChunkName: "cm-lang-sql" */ '@codemirror/lang-sql'),
-        import(/* webpackChunkName: "cm-lang-json" */ '@codemirror/lang-json'),
-        import(/* webpackChunkName: "cm-lang-yaml" */ '@codemirror/lang-yaml'),
-        import(/* webpackChunkName: "cm-lang-markdown" */ '@codemirror/lang-markdown'),
-        import(/* webpackChunkName: "cm-lang-python" */ '@codemirror/lang-python'),
-        import(/* webpackChunkName: "cm-lang-js" */ '@codemirror/lang-javascript'),
-        import(/* webpackChunkName: "highlight" */ '@lezer/highlight'),
-      ]).then(([language, sql, json, yaml, markdown, python, js, highlight]) => {
-        var lang
-        langs['sql'] = sql.sql()
-        langs['json'] = json.json()
-        langs['yaml'] = yaml.yaml()
-        langs['text'] = null
-        langs['md'] = markdown.markdown()
-        langs['py'] = python.python() 
-        langs['js'] = js.javascript()
-        lang = langs[vnode.attrs.lang] || markdown.markdown()
+      var lang
+      langs['sql'] = sql()
+      langs['json'] = json()
+      langs['yaml'] = yaml()
+      langs['text'] = null
+      langs['md'] = markdown()
+      langs['py'] = python() 
+      langs['js'] = javascript()
+      lang = langs[vnode.attrs.lang] || markdown()
 
-        const customHighlightStyle = language.HighlightStyle.define([
-          { tag: highlight.tags.keyword, color: "#FF4136" },
-          { tag: highlight.tags.comment, color: "gray", fontStyle: "italic" }
-        ])
+      const customHighlightStyle = HighlightStyle.define([
+        { tag: tags.keyword, color: "#FF4136" },
+        { tag: tags.comment, color: "gray", fontStyle: "italic" }
+      ])
 
-        extensions = [
-          language.syntaxHighlighting(customHighlightStyle), 
-          language.syntaxHighlighting(language.defaultHighlightStyle),
-          basicSetup,
-          language.foldService.of(foldmethod),
-          keymap.of([indentWithTab]),
-          EditorView.lineWrapping,
-          indentedLineWrap,
-          EditorView.editable.of(vnode.attrs.editable),
-          EditorView.updateListener.of((update) => { 
-            if (update.docChanged) { 
-              changed = true 
-              if (ds.file) {
-                $('#save-file').removeClass('o-30')
-                ds.file.dirty = true
-              }
-            } 
-          }),
-          EditorView.domEventHandlers({
-            keydown(e, view) {
-              if (e.key == '(' && e.ctrlKey) {
-                foldCode(editor)
-                return true
-              } else if (e.key == ')' && e.ctrlKey) {
-                unfoldCode(editor)
-                return true
-              } else if (e.key == '8' && e.altKey && e.ctrlKey) {
-                fold_all_recursive()
-                return true
-              } else if (e.key == '9' && e.altKey && e.ctrlKey) {
-                unfold_all()
-                return true
-              }
-            },
-            blur: function(e, view) {
-              if (changed) {
-                var value = view.state.doc.toString()
-                onchange(value);
-              }
-            } 
-          }),
-        ]
+      extensions = [
+        syntaxHighlighting(customHighlightStyle), 
+        syntaxHighlighting(defaultHighlightStyle),
+        basicSetup,
+        foldService.of(foldmethod),
+        keymap.of([indentWithTab]),
+        EditorView.lineWrapping,
+        indentedLineWrap,
+        EditorView.editable.of(vnode.attrs.editable),
+        EditorView.updateListener.of((update) => { 
+          if (update.docChanged) { 
+            changed = true 
+            if (ds.file) {
+              $('#save-file').removeClass('o-30')
+              ds.file.dirty = true
+            }
+          } 
+        }),
+        EditorView.domEventHandlers({
+          keydown(e, view) {
+            if (e.key == '(' && e.ctrlKey) {
+              foldCode(editor)
+              return true
+            } else if (e.key == ')' && e.ctrlKey) {
+              unfoldCode(editor)
+              return true
+            } else if (e.key == '8' && e.altKey && e.ctrlKey) {
+              fold_all_recursive()
+              return true
+            } else if (e.key == '9' && e.altKey && e.ctrlKey) {
+              unfold_all()
+              return true
+            }
+          },
+          blur: function(e, view) {
+            if (changed) {
+              var value = view.state.doc.toString()
+              onchange(value);
+            }
+          } 
+        }),
+      ]
 
-        editor = new EditorView({
-          doc: vnode.attrs.value,
-          extensions: lang ? extensions.concat([lang]) : extensions,
-          parent: vnode.dom
-        })
-        if (vnode.attrs['data-pkey']) {
-          pkey = vnode.attrs['data-pkey']
-        }
+      editor = new EditorView({
+        doc: vnode.attrs.value,
+        extensions: lang ? extensions.concat([lang]) : extensions,
+        parent: vnode.dom
       })
+      if (vnode.attrs['data-pkey']) {
+        pkey = vnode.attrs['data-pkey']
+      }
     },
     onupdate: function(vnode) {
       var lang

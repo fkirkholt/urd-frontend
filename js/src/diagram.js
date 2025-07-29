@@ -29,7 +29,7 @@ var Diagram = {
   },
 
   oninit: function(vnode) {
-    import(/* webpackChunkName: "mermaid" */ 'mermaid').then(module => {
+    import('mermaid').then(module => {
       mermaid = module.default
 
       // Show diagram for table when clicking on table box

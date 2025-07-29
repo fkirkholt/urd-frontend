@@ -5,7 +5,7 @@ var Chart = {
     var labels = []
 
     console.log('vnode.data', vnode.attrs.data)
-    import(/* webpackChunkName: "chart" */ 'chart.js/auto').then(module => {
+    import('chart.js/auto').then(module => {
 
       module.Chart.defaults.color = config.dark_mode ? 'lightgray' : 'gray';
 
