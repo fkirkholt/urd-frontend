@@ -194,7 +194,8 @@ var home = {
                 }),
                 role
               ])
-            })
+            }),
+            ds.roles.length ? null : m('p', '(No roles)') 
           ])
         ]
       }),
@@ -203,14 +204,14 @@ var home = {
         onclick: function() {
           ds.new_user = true
         }
-      }, 'Opprett ny bruker'),
+      }, 'Create new user'),
       config.tab !== 'users' || !ds.new_user ? '' : m('fieldset', [
         m('legend', {
           class: 'pointer underline',
           onclick: function() {
             ds.new_user = false
           }
-        }, 'Opprett ny bruker '),
+        }, 'Create new user '),
         m('legend', [m('b', { class: 'db' }, 'brukernavn'), m('input#uid')]),
         m('legend', [m('b', { class: 'db' }, 'passord'), m('input#pwd')]),
         m('input[type=button]', { 
