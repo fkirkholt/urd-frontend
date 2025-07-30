@@ -137,6 +137,8 @@ var Relation = {
         if (rec.fields === undefined) {
           rec.fields = JSON.parse(JSON.stringify(rel.fields))
         }
+        rec.base_name = ds.base.name
+        rec.table_name = rel.name
         rec.table = rel
         rec.loaded = true
         rec.relations = {}
