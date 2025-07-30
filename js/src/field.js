@@ -437,12 +437,15 @@ var Field = {
                       }
                     }
                   }, 'Expand all'),
+                  m('br')
                 ]
                 : ''
               ] : m('i', {
                 class: [
                   'nf nf-fw',
-                  field.expanded ? 'nf-fa-angle_down' : 'nf-fa-angle_right'
+                  !field.expandable ? 'nf-oct-dot v-mid'
+                  : field.expanded ? 'nf-fa-angle_down' 
+                  : 'nf-fa-angle_right'
                 ].join(' '),
                 onclick: function() {
                   if (field.fkey && field.expandable && field.value) {
@@ -482,7 +485,7 @@ var Field = {
                       ? Field.display_value(field, rec)
                       : m('data', {
                         class: [
-                          'db pr3 collapsible',
+                          'dib pr3 collapsible',
                           (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
                           (field.is_filepath) ? 'underline pointer blue' : '',
                           field.element == 'textarea' ? 'markdown' : ''
