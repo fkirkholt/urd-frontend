@@ -81,7 +81,8 @@ var Header = {
                 }
               }, 'Keyboard shortcuts'),
               m('li', {
-                class: '',
+                // Don't display til it's working again
+                class: 'dn',
                 onclick: function() {
                   if ($('div.print-view').is(':visible')) {
                     $('div.print-view').hide()
