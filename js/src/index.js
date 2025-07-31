@@ -51,6 +51,7 @@ m.route($('#main')[0], '/', {
   },
   "/:cnxn": {
     onmatch: function(args, requestedPath) {
+      check_dirty()
       ds.type = 'dblist'
       ds.cnxn = args.cnxn
       config.tab = 'databases'
@@ -67,15 +68,7 @@ m.route($('#main')[0], '/', {
       ds.cnxn = args.cnxn
       ds.type = 'file'
       // Grid.url = ''
-      if ((ds.table && ds.table.dirty) || (ds.file && ds.file.dirty)) {
-        if (config.autosave || confirm('Du har ulagrede data. Vil du lagre?')) {
-          if (ds.file && ds.file.dirty) {
-            home.save_file()
-          } else {
-            Grid.save()
-          }
-        }
-      }
+      check_dirty()
 
       if ('table' in query.params) {
         config.tab = config.tab || 'data'
@@ -168,6 +161,18 @@ m.route($('#main')[0], '/', {
     }
   },
 })
+
+function check_dirty() {
+  if ((ds.table && ds.table.dirty) || (ds.file && ds.file.dirty)) {
+    if (config.autosave || confirm('Du har ulagrede data. Vil du lagre?')) {
+      if (ds.file && ds.file.dirty) {
+        home.save_file()
+      } else {
+        Grid.save()
+      }
+    }
+  }
+}
 
 window.onbeforeunload = function(event) {
   if (ds.table && ds.table.dirty) {

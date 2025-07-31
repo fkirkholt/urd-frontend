@@ -18,7 +18,7 @@ var home = {
       body: home.editor.get_value()
     })
     .then(function(result) {
-      if (result) {
+      if (result && ds.file) {
         ds.file.dirty = false
       }
     })
