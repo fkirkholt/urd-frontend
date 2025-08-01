@@ -269,7 +269,7 @@ var home = {
       : m(Codefield, {
         id: 'file-content',
         class: 'ml3 ba b--light-silver mb2 bottom-0 overflow-y-auto',
-        editable: true,
+        editable: config.edit_mode,
         'data-pkey': ds.file.path,
         lang: ds.file.path.endsWith('.sql') ? 'sql'
           : ds.file.path.endsWith('.yml') ? 'yaml'

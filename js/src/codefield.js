@@ -1,6 +1,6 @@
 import { basicSetup, EditorView } from 'codemirror'
 import { keymap } from "@codemirror/view"
-import { EditorState } from "@codemirror/state"
+import { EditorState, Compartment } from "@codemirror/state"
 import { indentWithTab } from "@codemirror/commands"
 import { indentedLineWrap } from './linewrap' 
 import { syntaxTree, foldable, foldEffect, unfoldAll, foldService, 
@@ -17,10 +17,10 @@ import { tags } from "@lezer/highlight"
 function Codefield() {
   var editor
   var pkey
-  var extensions
   var langs = {}
   var onchange
   var changed
+  var editable = new Compartment
 
   function foldmethod(state, from, to) {
     // https://discuss.codemirror.net/t/add-folding-on-indent-levels-for-plain-text-and-yaml-language/5925
@@ -71,6 +71,68 @@ function Codefield() {
     unfoldAll(editor)
   }
 
+  function get_extensions(attrs) {
+    var lang
+    langs['sql'] = sql()
+    langs['json'] = json()
+    langs['yaml'] = yaml()
+    langs['text'] = null
+    langs['md'] = markdown()
+    langs['py'] = python() 
+    langs['js'] = javascript()
+    lang = langs[attrs.lang] || markdown()
+
+    const customHighlightStyle = HighlightStyle.define([
+      { tag: tags.keyword, color: "#FF4136" },
+      { tag: tags.comment, color: "gray", fontStyle: "italic" }
+    ])
+
+    return [
+      syntaxHighlighting(customHighlightStyle), 
+      syntaxHighlighting(defaultHighlightStyle),
+      basicSetup,
+      foldService.of(foldmethod),
+      keymap.of([indentWithTab]),
+      EditorView.lineWrapping,
+      indentedLineWrap,
+      editable.of(EditorView.editable.of(attrs.editable)),
+      EditorView.updateListener.of((update) => { 
+        if (update.docChanged) { 
+          changed = true 
+          if (ds.file) {
+            $('#save-file').removeClass('o-30')
+            ds.file.dirty = true
+          }
+        } 
+      }),
+      EditorView.domEventHandlers({
+        keydown(e, view) {
+          if (e.key == '(' && e.ctrlKey) {
+            foldCode(editor)
+            return true
+          } else if (e.key == ')' && e.ctrlKey) {
+            unfoldCode(editor)
+            return true
+          } else if (e.key == '8' && e.altKey && e.ctrlKey) {
+            fold_all_recursive()
+            return true
+          } else if (e.key == '9' && e.altKey && e.ctrlKey) {
+            unfold_all()
+            return true
+          }
+        },
+        blur: function(e, view) {
+          if (changed) {
+            var value = view.state.doc.toString()
+            onchange(value);
+          }
+        } 
+      }),
+      lang
+    ]
+
+  }
+
   return {
     get_value: function(id) {
       return editor.state.doc.toString()
@@ -84,67 +146,10 @@ function Codefield() {
 
     oncreate: function(vnode) {
       onchange = vnode.attrs.onchange
-      var lang
-      langs['sql'] = sql()
-      langs['json'] = json()
-      langs['yaml'] = yaml()
-      langs['text'] = null
-      langs['md'] = markdown()
-      langs['py'] = python() 
-      langs['js'] = javascript()
-      lang = langs[vnode.attrs.lang] || markdown()
-
-      const customHighlightStyle = HighlightStyle.define([
-        { tag: tags.keyword, color: "#FF4136" },
-        { tag: tags.comment, color: "gray", fontStyle: "italic" }
-      ])
-
-      extensions = [
-        syntaxHighlighting(customHighlightStyle), 
-        syntaxHighlighting(defaultHighlightStyle),
-        basicSetup,
-        foldService.of(foldmethod),
-        keymap.of([indentWithTab]),
-        EditorView.lineWrapping,
-        indentedLineWrap,
-        EditorView.editable.of(vnode.attrs.editable),
-        EditorView.updateListener.of((update) => { 
-          if (update.docChanged) { 
-            changed = true 
-            if (ds.file) {
-              $('#save-file').removeClass('o-30')
-              ds.file.dirty = true
-            }
-          } 
-        }),
-        EditorView.domEventHandlers({
-          keydown(e, view) {
-            if (e.key == '(' && e.ctrlKey) {
-              foldCode(editor)
-              return true
-            } else if (e.key == ')' && e.ctrlKey) {
-              unfoldCode(editor)
-              return true
-            } else if (e.key == '8' && e.altKey && e.ctrlKey) {
-              fold_all_recursive()
-              return true
-            } else if (e.key == '9' && e.altKey && e.ctrlKey) {
-              unfold_all()
-              return true
-            }
-          },
-          blur: function(e, view) {
-            if (changed) {
-              var value = view.state.doc.toString()
-              onchange(value);
-            }
-          } 
-        }),
-      ]
 
       editor = new EditorView({
         doc: vnode.attrs.value,
-        extensions: lang ? extensions.concat([lang]) : extensions,
+        extensions: get_extensions(vnode.attrs),
         parent: vnode.dom
       })
       if (vnode.attrs['data-pkey']) {
@@ -152,17 +157,18 @@ function Codefield() {
       }
     },
     onupdate: function(vnode) {
-      var lang
       if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
-        lang = langs[vnode.attrs.lang]
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
         changed = false
         editor.setState(EditorState.create({
           doc: vnode.attrs.value,
-          extensions: lang ? extensions.concat([lang]) : extensions
+          extensions: get_extensions(vnode.attrs)
         }))
       }
+      editor.dispatch({ 
+        effects: editable.reconfigure(EditorView.editable.of(vnode.attrs.editable)) 
+      })
     },
     view: function(vnode) {
       return m('div', { class: vnode.attrs.class })
