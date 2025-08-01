@@ -3,19 +3,21 @@ import Grid from './grid.js'
 import Codefield from './codefield.js'
 import { marked } from 'marked'
 
+const KEY_CODE_ENTER = 13
+
 var home = {
 
   editor: null,
 
-  save_file: function() {
+  save_file: function(filepath, content) {
     m.request({
       method: 'post',
       url: '/file',
       params: {
         cnxn: ds.cnxn,
-        path: ds.file.path,
+        path: filepath,
       },
-      body: home.editor.get_value()
+      body: content
     })
     .then(function(result) {
       if (result && ds.file) {
@@ -88,6 +90,38 @@ var home = {
     if (config.tab == 'users' && !ds.users) return
 
     return [m('div#list', { class: 'overflow-y-auto', style: 'min-width:200px' }, [
+      m('input', {
+        id: 'filter_files',
+        style: 'width:190px',
+        placeholder: 'filter files',
+        onkeydown: function(event) {
+          var val = event.target.value
+          var file
+          if (event.keyCode == KEY_CODE_ENTER) {
+            if (!event.shiftKey) {
+              return
+            }
+            file = {
+              columns: {
+                description: null,
+                label: val,
+                name: (ds.dblist.path ? ds.dblist.path : '') + '/' + val,
+                size: 0,
+                type: 'file'
+              }
+            }
+            home.save_file(file.columns.label, '')
+            for (const index in ds.dblist.records) {
+              if (val < ds.dblist.records[index].columns.label) {
+                ds.dblist.records.splice(index, 0, file)
+                break
+              }
+            }
+            m.route.set('/' + ds.cnxn + '/' + file.columns.name)
+          }
+          return
+        }
+      }),
       config.tab == 'users' ? null : m('ul', { class: 'nf-ul' }, [
         !ds.path ? null : m('li', [
           m('span', { class: "nf-li" }, [
@@ -96,12 +130,16 @@ var home = {
           m('span', {
             class: 'no-underline hover-blue pointer',
             onclick: function() {
-              m.route.set('/' + ds.cnxn + '/' + (ds.path ? ds.path.substring(0, ds.path.lastIndexOf('/')) : ''))
+              m.route.set('/' + ds.cnxn + '/' + ds.path.substring(0, ds.path.lastIndexOf('/')))
             }
           }, '..')
         ]),
         ds.dblist.records.map(function(post, i) {
-          return m('li', [
+          var filter = $('#filter_files').val()
+          return (
+            filter !== undefined && 
+            !post.columns.label.toLowerCase().includes(filter.toLowerCase())
+          ) ? '' : m('li', [
             m('mt1.mb1', [
               post.columns.type == 'database' ? [
                 m('span', { class: "nf-li" }, [
@@ -257,7 +295,7 @@ var home = {
             ds.file.dirty ? 'dim pointer' : 'o-30'
           ].join(' '),
           onclick: function() {
-            home.save_file()
+            home.save_file(ds.file.path, home.editor.get_value())
           }
         })
       ]),
