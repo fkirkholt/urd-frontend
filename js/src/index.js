@@ -140,6 +140,7 @@ m.route($('#main')[0], '/', {
           return Contents
 
         } else if (result.type == 'dir') {
+          config.tab = 'databases'
           if (args.base != ds.path) {
             ds.path = base_name
             ds.file = result
@@ -148,6 +149,7 @@ m.route($('#main')[0], '/', {
             return home
           }
         } else {
+          config.tab = 'databases'
           var dir = base_name.substring(0, base_name.lastIndexOf('/'))
           if (ds.path != dir) {
             ds.path = dir
