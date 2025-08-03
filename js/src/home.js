@@ -287,7 +287,8 @@ var home = {
       class: 'flex flex-column',
       style: 'flex-grow: 1'
     }, [
-      !ds.file || ds.file.type == 'dir' ? '' : m('div', { class: 'ml3 mb2'}, [
+      !ds.file || ds.file.type == 'dir' || !config.edit_mode ? '' 
+      : m('div', { class: 'ml3 mb2'}, [
         m('i', { 
           id: 'save-file',
           class: [
