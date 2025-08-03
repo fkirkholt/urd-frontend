@@ -13,6 +13,8 @@ var Header = {
     var title
     if (ds.base.name && ds.type != 'dblist') {
       title = ds.base.name
+    } else if (ds.type == 'file') {
+      title = ds.file.name
     } else {
       title = ds.cnxn
     }
@@ -23,7 +25,9 @@ var Header = {
         link.rel = 'icon'
         document.head.appendChild(link)
     }
-    if (ds.type == 'file' || (ds.type == 'dblist') && ['sqlite', 'duckdb'].includes(ds.base.system)) {
+    if (ds.type == 'file') {
+      favicon = 'file.svg'
+    } else if (ds.type == 'dblist' && ['sqlite', 'duckdb'].includes(ds.base.system)) {
       favicon = 'folder.svg'
     } else if (ds.type == 'dblist') {
       favicon = 'host.svg'
