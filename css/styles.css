@@ -6,6 +6,15 @@ a {
     color: inherit;
 }
 
+img[alt$=">"] {
+  float: right;
+  margin-left: 10px;
+}
+
+img[alt$="<"] {
+  float: left;
+}
+
 .bg-dark input {
     background-color: #111111;
     border: 1px solid gray;
