@@ -327,7 +327,24 @@ var home = {
           m.redraw()
         }
       })
-    ])]
+    ]),
+    !ds.file || !ds.file.path.endsWith('.md') ? '' : m('div#backlinks', {
+      class: 'flex flex-column ml3',
+      style: 'min-width:200px'
+    }, [
+      m('h3', { class: 'mb0' }, 'Backlinks'),
+      m('ul', [
+        !ds.file.backlinks ? '' : ds.file.backlinks.map(function(link, i) {
+          return m('li', {
+            class: 'pointer hover-blue',
+            onclick: function(ev) {
+              m.route.set('/' + ds.cnxn + '/' + link)
+            }
+          }, link)
+        })
+      ])
+    ])
+    ]
   }
 }
 

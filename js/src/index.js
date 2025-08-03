@@ -171,6 +171,19 @@ m.route($('#main')[0], '/', {
             home.load_databases()
           }
 
+          if (ds.file.path.endsWith('.md')) {
+            m.request({
+              method: 'get',
+              url: '/backlinks',
+              params: {
+                cnxn: args.cnxn,
+                path: ds.file.path,
+              }
+            }).then(function(result) {
+              ds.file.backlinks = result
+            })
+          }
+
           return home
         }
       })
