@@ -149,13 +149,27 @@ m.route($('#main')[0], '/', {
             return home
           }
         } else {
+          if (result.type == null) {
+            if (confirm("File doesn't exist. Create it?")) {
+              home.save_file(base_name, '')
+              ds.file = {
+                path: base_name,
+                name: base_name.substring(base_name.lastIndexOf('/')),
+                content: '',
+                type: 'file'
+              }
+            } else {
+              history.back();
+            }
+          } else {
+            ds.file = result
+          }
           config.tab = 'databases'
           var dir = base_name.substring(0, base_name.lastIndexOf('/'))
           if (ds.path != dir) {
             ds.path = dir
             home.load_databases()
           }
-          ds.file = result
 
           return home
         }
