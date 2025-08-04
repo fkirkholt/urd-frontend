@@ -141,7 +141,7 @@ m.route($('#main')[0], '/', {
 
         } else if (result.type == 'dir') {
           config.tab = 'databases'
-          if (args.base != ds.path) {
+          if (args.base != ds.path || ds.dblist.grep) {
             ds.path = base_name
             ds.file = result
             home.load_databases()
@@ -166,7 +166,7 @@ m.route($('#main')[0], '/', {
           }
           config.tab = 'databases'
           var dir = base_name.substring(0, base_name.lastIndexOf('/'))
-          if (ds.path != dir) {
+          if (!ds.dblist || ((ds.path || '') != dir)) {
             ds.path = dir
             home.load_databases()
           }

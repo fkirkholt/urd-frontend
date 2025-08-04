@@ -30,6 +30,7 @@
     "@codemirror/stream-parser": "^0.19.9",
     "@mdi/js": "^7.4.47",
     "@mdi/svg": "^7.4.47",
+    "ansi-to-html": "^0.7.2",
     "cash-dom": "^8.1.5",
     "chart.js": "^4.4.6",
     "codemirror": "^6.0.1",

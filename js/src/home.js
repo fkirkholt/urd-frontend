@@ -2,6 +2,7 @@ import config from './config.js'
 import Grid from './grid.js'
 import Codefield from './codefield.js'
 import { marked } from 'marked'
+import Convert from 'ansi-to-html'
 
 const KEY_CODE_ENTER = 13
 
@@ -98,7 +99,16 @@ var home = {
           var val = event.target.value
           var file
           if (event.keyCode == KEY_CODE_ENTER) {
-            if (!event.shiftKey) {
+            if (event.target.value.startsWith(':rg')) {
+              m.request({
+                method: 'get',
+                url: '/ripgrep',
+                params: {cnxn: ds.cnxn, path: ds.path, cmd: event.target.value.substring(1)} 
+              }).then(function(result) {
+                event.target.value = ''
+                ds.dblist = result.data
+              })
+            } else if (!event.shiftKey) {
               return
             }
             file = {
@@ -136,6 +146,13 @@ var home = {
         ]),
         ds.dblist.records.map(function(post, i) {
           var filter = $('#filter_files').val()
+          var convert = new Convert()
+          // output from ripgrep has ansi codes
+          post.columns.name = convert.toHtml(post.columns.name)
+          post.columns.label = convert.toHtml(post.columns.label)
+          if (post.columns.description) {
+            var desc = convert.toHtml(post.columns.description)
+          }
           return (
             filter !== undefined && 
             !post.columns.label.toLowerCase().includes(filter.toLowerCase())
@@ -175,10 +192,10 @@ var home = {
                   onclick: function() {
                     m.route.set('/' + ds.cnxn + '/' + post.columns.name)
                   }
-                }, ' ' + post.columns.label)
+                }, [' ', post.columns.label])
               ]
             ]),
-            m('p.mt1.mb1', post.columns.description)
+            m('p.mt1.mb1', m.trust(desc))
           ])
         })
       ]),
