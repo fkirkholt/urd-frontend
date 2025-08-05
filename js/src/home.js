@@ -115,7 +115,7 @@ var home = {
               columns: {
                 description: null,
                 label: val,
-                name: (ds.dblist.path ? ds.dblist.path : '') + '/' + val,
+                name: (ds.dblist.path ? ds.dblist.path + '/' : '') + val,
                 size: 0,
                 type: 'file'
               }

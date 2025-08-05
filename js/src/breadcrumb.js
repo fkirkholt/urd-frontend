@@ -50,7 +50,7 @@ var Breadcrumb = {
       items.push({
         icon: "nf-fa-file",
         text: ds.file.name,
-        addr: '/' + ds.file.path
+        addr: '/' + ds.cnxn + '/' + ds.file.path
       })
     } else if (ds.base && ds.base.name && ds.type != 'file' && ds.type != 'dblist') {
       items.push({
