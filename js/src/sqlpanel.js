@@ -155,7 +155,7 @@ var SQLpanel = {
                       + table.name + '&'
                       + pk_values.join('&')
                     var link = m('span.link', {
-                      class: 'nf nf-md-crosshairs light-blue hover-blue pointer v-mid',
+                      class: 'nf nf-md-crosshairs_gps light-blue hover-blue pointer v-mid',
                       onclick: function() {
                         config.tab = 'data'
                         m.route.set(href)

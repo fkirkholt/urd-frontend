@@ -136,7 +136,7 @@ var Row = {
           e.redraw = false
           $(this).trigger('click')
           if (config.recordview) {
-            $(this).find('td.nf-md-crosshairs').trigger('click')
+            $(this).find('td.nf-md-crosshairs_gps').trigger('click')
           } else {
             $('form[name=record]').find('input,textarea,select')
               .first().trigger('focus')
@@ -238,7 +238,7 @@ var Row = {
         // Only shows when record is not shown right of table
         !list.ismain || !config.recordview ? '' : m('td', {
           class: [
-            'nf nf-md-crosshairs light-blue hover-blue pointer',
+            'nf nf-md-crosshairs_gps light-blue hover-blue pointer',
             'br b--moon-gray bb--light-gray'
           ].join(' '),
           onclick: function(e) {
