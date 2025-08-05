@@ -196,7 +196,9 @@ function check_dirty() {
   if ((ds.table && ds.table.dirty) || (ds.file && ds.file.dirty)) {
     if (config.autosave || confirm('Du har ulagrede data. Vil du lagre?')) {
       if (ds.file && ds.file.dirty) {
-        home.save_file(ds.file.path, home.editor.get_value())
+        if (home.editor) {
+          home.save_file(ds.file.path, home.editor.get_value())
+        }
       } else {
         Grid.save()
       }
