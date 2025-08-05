@@ -17,8 +17,8 @@ var Breadcrumb = {
     }
 
     items.push({
-      icon: "ml2",
-      text: '<img class="h1 v-mid" style="margin-bottom: 3px;" src="/static/css/img/urdr.png">',
+      icon: "nf-md-crosshairs_gps",
+      text: '<img class="h1 v-mid" style="margin-left: -3px; margin-bottom: 3px;" src="/static/css/img/urdr.png">',
       addr: '/',
       branch: ds.branch
     })
@@ -84,7 +84,8 @@ var Breadcrumb = {
               'relative nf ' + item.icon,
               idx === 0 ? 'f4 white' : 'f6 mr2 white',
             ].join(' '),
-            style: item.icon !== 'table' ? 'bottom: 2px;' : ''
+            style: item.icon == 'nf-md-crosshairs_gps' ? 'bottom: 0.75px'
+              : item.icon !== 'table' ? 'bottom: 2px;' : ''
           }), m.trust(item.text)]),
           !item.branch || item.branch == 'master'
             ? ''

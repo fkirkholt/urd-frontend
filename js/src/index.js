@@ -45,6 +45,7 @@ m.route($('#main')[0], '/', {
       ds.dblist = null
       ds.table = null      
       ds.file = null
+      ds.type = 'login'
       $('#login').show()
       return home
     }

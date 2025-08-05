@@ -25,7 +25,9 @@ var Header = {
         link.rel = 'icon'
         document.head.appendChild(link)
     }
-    if (ds.type == 'file') {
+    if (ds.type == 'login') {
+      favicon = 'location.svg'
+    } else if (ds.type == 'file') {
       favicon = 'file.svg'
     } else if (ds.type == 'dblist' && ['sqlite', 'duckdb'].includes(ds.base.system)) {
       favicon = 'folder.svg'
