@@ -19,7 +19,7 @@ var Export_dialog = {
     }
 
     var tables = []
-    if (ds.table) {
+    if (config.tab == 'data') {
       tables.push(ds.table.name)
       param.filter = ds.table.query
       param.columns = []
@@ -80,7 +80,8 @@ var Export_dialog = {
     param.data_recs = data_recs
     param.select_recs = select_recs
     param.base = ds.base.name
-    if (ds.table) {
+    param.cnxn = ds.cnxn
+    if (config.tab == 'data') {
       param.table = ds.table.name
     }
     var params = Object.keys(param).map(function(k) {
@@ -133,7 +134,7 @@ var Export_dialog = {
     ? ds.config.exportdir + '/' + ds.path
     : ds.config.exportdir + '/' + Export_dialog.cnxn_name
     return m('div', [
-      m('h3', 'Export ' + (!ds.table ? 'database' : 'table')),
+      m('h3', 'Export ' + (config.tab != 'data' ? 'database' : 'table')),
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dest',
@@ -184,7 +185,7 @@ var Export_dialog = {
           })
         ]),
         m('br'),
-        ds.table ? 'Choose columns:' : 'Choose tables:',
+        config.tab == 'data' ? 'Choose columns:' : 'Choose tables:',
         m('ul', { class: 'list' }, [
           m('li', { class: 'mb2' }, [
             m('input[type=checkbox]', {
@@ -195,7 +196,7 @@ var Export_dialog = {
               }
             }), ' (All)',
           ]),
-          !ds.table ? '' : Object.keys(ds.table.fields).map(function(fieldname, idx) {
+          config.tab != 'data' ? '' : Object.keys(ds.table.fields).map(function(fieldname, idx) {
             var field = ds.table.fields[fieldname]
             if (field.virtual) {
               return
@@ -207,7 +208,7 @@ var Export_dialog = {
               }), ' ', field.label
             ])
           }),
-          ds.table ? '' : Object.keys(ds.base.tables).sort().map(function(tblname, idx) {
+          config.tab == 'data' ? '' : Object.keys(ds.base.tables).sort().map(function(tblname, idx) {
             var show_views = $('#export-dialog input[name=view-as-table]').prop('checked')
             var tbl = ds.base.tables[tblname]
             return (tbl.type == 'view' && !show_views) ? '' :  m('li', {}, [
@@ -253,17 +254,17 @@ var Export_dialog = {
           name: 'view-as-table'
         })], ' Export views as tables'),
         m('br'),
-        ds.table && ds.table.type != 'list' ? '' : [
+        config.tab == 'data' && ds.table.type != 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
             name: 'list-records'
-          })], ds.table ? ' Export records' 
+          })], config.tab == 'data' ? ' Export records' 
           : ' Export records from lookup tables'),
           m('br'),
         ],
-        ds.table && ds.table.type == 'list' ? '' : [
+        config.tab == 'data' && ds.table.type == 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
             name: 'data-records'
-          })], ds.table ? ' Export records'
+          })], config.tab == 'data' ? ' Export records'
           : ' Export records from data tables'),
           m('br'),
         ],
@@ -337,3 +338,4 @@ var Export_dialog = {
 export default Export_dialog
 
 import Login from './login.js'
+import config from './config.js'

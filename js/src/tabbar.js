@@ -295,7 +295,7 @@ var Tabbar = {
             }
           }), ' %',
         ]),
-      ds.table || ds.base.system != 'sqlite' ? null : m('i', {
+      config.tab == 'data' || ds.base.system != 'sqlite' ? null : m('i', {
         class: 'nf nf-md-database_import_outline fr mr3 f5',
         title: 'Import',
         onclick: function() {
@@ -303,7 +303,7 @@ var Tabbar = {
           $('#import-dialog').show()
         }
       }),
-      ds.table ? null : m('i', {
+      config.tab == 'data' ? null : m('i', {
         class: 'nf nf-md-database_export_outline fr mr3 f5',
         title: 'Export',
         onclick: function() {

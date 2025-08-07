@@ -8,6 +8,7 @@ var Import_dialog = {
 
   import_tsv: function() {
     var params = {}
+    params.cnxn = ds.cnxn
     params.base = ds.base.name
     params.dir = $('input[name=dir]:checked').val()
     var params = Object.keys(params).map(function(k) {
