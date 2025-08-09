@@ -46,7 +46,7 @@ var Breadcrumb = {
       }
     }
 
-    if (ds.file && ds.file.type == 'file') {
+    if (ds.file && ds.file.type != 'dir') {
       items.push({
         icon: "nf-fa-file",
         text: ds.file.name,

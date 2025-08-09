@@ -94,8 +94,6 @@ m.route($('#main')[0], '/', {
         ) {
           m.route.set(Grid.url)
         } else {
-          console.log('Grid.url', Grid.url)
-          console.log('grid_path', grid_path)
           if (Grid.url != grid_path) {
             if (ds.table) {
               ds.table.records = []

@@ -11,14 +11,6 @@ var Header = {
   onupdate: function() {
     var favicon
     var title
-    if (ds.base.name && ds.type != 'dblist') {
-      title = ds.base.name
-    } else if (ds.type == 'file') {
-      title = ds.file.name
-    } else {
-      title = ds.cnxn
-    }
-    document.title = title
     var link = document.querySelector("link[rel~='icon']")
     if (!link) {
         link = document.createElement('link')
@@ -27,15 +19,24 @@ var Header = {
     }
     if (ds.type == 'login') {
       favicon = 'location.svg'
-    } else if (ds.type == 'file') {
+      title = 'login'
+    } else if (ds.type == 'file' && ds.file.type != 'dir') {
       favicon = 'file.svg'
+      title = ds.file.name
+    } else if (ds.type == 'file' && ds.file.type == 'dir') {
+      favicon = 'folder.svg'
+      title = ds.file.path
     } else if (ds.type == 'dblist' && ['sqlite', 'duckdb'].includes(ds.base.system)) {
       favicon = 'folder.svg'
+      title = ds.cnxn
     } else if (ds.type == 'dblist') {
       favicon = 'host.svg'
+      title = ds.cnxn
     } else {
       favicon = 'database.svg'
+      title = ds.base.name
     }
+    document.title = title
     link.href = '/static/css/img/' + favicon
     if (config.dark_mode) {
       $('body').addClass('bg-dark bg-dark-gray white')

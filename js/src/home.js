@@ -319,6 +319,9 @@ var home = {
       ]),
       !ds.file || ds.file.type == 'dir' ? '' 
       : ds.file.msg ? m('div', { class: 'ml3'}, ds.file.msg) 
+      : ds.file.type.startsWith('image/') ? m('div', m('img', { 
+        src: ds.file.path.substring(ds.path.length + 1)
+      }))
       : !config.edit_mode && ds.file.path.endsWith('.md') ? m('div', {
         class: 'ml3'
       }, home.parsed_markdown(ds.file.content))
