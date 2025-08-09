@@ -62,7 +62,7 @@ var Export_dialog = {
 
         if (param.dest == 'download') {
           var media_type = param.table ? 'text/tab-separated-values' : 'application/zip'
-          window.open('/download?path=' + data.path + '&media_type=' + media_type, '_blank')
+          window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + '&media_type=' + media_type, '_blank')
         }
       }
     }
@@ -103,7 +103,7 @@ var Export_dialog = {
 
         if (param.dest == 'download') {
           var media_type = param.table ? 'text/tab-separated-values' : 'application/zip'
-          window.open('/download?path=' + data.path + '&media_type=' + media_type, '_blank')
+          window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + '&media_type=' + media_type, '_blank')
         }
       }
     }
