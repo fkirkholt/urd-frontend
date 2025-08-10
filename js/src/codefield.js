@@ -12,6 +12,7 @@ import { json } from "@codemirror/lang-json"
 import { yaml } from "@codemirror/lang-yaml"
 import { python } from "@codemirror/lang-python"
 import { javascript } from "@codemirror/lang-javascript"
+import { css } from "@codemirror/lang-css"
 import { LSPClient, languageServerSupport } from "@codemirror/lsp-client"
 import { tags } from "@lezer/highlight"
 
@@ -97,6 +98,7 @@ function Codefield() {
     langs['md'] = markdown()
     langs['py'] = python() 
     langs['js'] = javascript()
+    langs['css'] = css()
     lang = langs[attrs.lang] || markdown()
 
     const customHighlightStyle = HighlightStyle.define([

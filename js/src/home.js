@@ -337,6 +337,7 @@ var home = {
           : ds.file.path.endsWith('.md') ? 'md'
           : ds.file.path.endsWith('.py') ? 'py'
           : ds.file.path.endsWith('.js') ? 'js'
+          : ds.file.path.endsWith('.css') ? 'css'
           : 'text',
         value: ds.file.content,
         oncreate: function(vnode) {
