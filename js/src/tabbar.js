@@ -311,7 +311,7 @@ var Tabbar = {
           $('#export-dialog').show()
         }
       }),
-      !ds.user.admin || ds.table ? null : m('i', {
+      config.tab == 'data' ? null : m('i', {
         class: 'nf nf-md-file_export_outline fr mr3 f5',
         title: 'Export to KDRS Search & View',
         onclick: function() {
@@ -319,7 +319,7 @@ var Tabbar = {
           $('#kdrs-dialog').show()
         }
       }),
-      (!ds.user.admin) || config.tab != 'diagram' ? null : m('i', {
+      config.tab == 'data' ? null : m('i', {
         class: 'nf nf-oct-cache fr mr3 f5',
         title: 'Update cache',
         onclick: function() {
