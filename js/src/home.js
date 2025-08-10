@@ -108,7 +108,8 @@ var home = {
                 event.target.value = ''
                 ds.dblist = result.data
               })
-            } else if (!event.shiftKey) {
+            }
+            if (!event.shiftKey) {
               return
             }
             file = {
