@@ -254,14 +254,14 @@ var Export_dialog = {
           name: 'view-as-table'
         })], ' Export views as tables'),
         m('br'),
-        config.tab == 'data' && ds.table.type != 'list' ? '' : [
+        config.tab == 'data' && ds.table && ds.table.type != 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
             name: 'list-records'
           })], config.tab == 'data' ? ' Export records' 
           : ' Export records from lookup tables'),
           m('br'),
         ],
-        config.tab == 'data' && ds.table.type == 'list' ? '' : [
+        config.tab == 'data' && ds.table && ds.table.type == 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
             name: 'data-records'
           })], config.tab == 'data' ? ' Export records'
