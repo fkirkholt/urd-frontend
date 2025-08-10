@@ -12,7 +12,22 @@ import { json } from "@codemirror/lang-json"
 import { yaml } from "@codemirror/lang-yaml"
 import { python } from "@codemirror/lang-python"
 import { javascript } from "@codemirror/lang-javascript"
+import { LSPClient, languageServerSupport } from "@codemirror/lsp-client"
 import { tags } from "@lezer/highlight"
+
+function createWebSocketTransport(uri) {
+  let handlers = []
+  let sock = new WebSocket(uri)
+  sock.onmessage = e => { for (let h of handlers) h(e.data.toString()) }
+  return new Promise(resolve => {
+    sock.onopen = () => resolve({
+      send(message) { sock.send(message) },
+      subscribe(handler) { handlers.push(handler) },
+      unsubscribe(handler) { handlers = handlers.filter(h => h != handler) }
+    })
+  })
+}
+
 
 function Codefield() {
   var editor
@@ -21,6 +36,7 @@ function Codefield() {
   var onchange
   var changed
   var editable = new Compartment
+  var client
 
   function foldmethod(state, from, to) {
     // https://discuss.codemirror.net/t/add-folding-on-indent-levels-for-plain-text-and-yaml-language/5925
@@ -73,6 +89,7 @@ function Codefield() {
 
   function get_extensions(attrs) {
     var lang
+    var extensions
     langs['sql'] = sql()
     langs['json'] = json()
     langs['yaml'] = yaml()
@@ -87,7 +104,7 @@ function Codefield() {
       { tag: tags.comment, color: "gray", fontStyle: "italic" }
     ])
 
-    return [
+    extensions = [
       syntaxHighlighting(customHighlightStyle), 
       syntaxHighlighting(defaultHighlightStyle),
       basicSetup,
@@ -130,6 +147,11 @@ function Codefield() {
       }),
       lang
     ]
+    if (ds.file && ds.file.websocket) {
+      extensions.push(languageServerSupport(client, "file://" + ds.file.abspath))
+    }
+
+    return extensions
 
   }
 
@@ -144,7 +166,12 @@ function Codefield() {
       })
     },
 
-    oncreate: function(vnode) {
+    oncreate: async function(vnode) {
+      if (ds.type == 'file' && ds.file.websocket) {
+        const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
+
+        client = new LSPClient().connect(transport)
+      }
       onchange = vnode.attrs.onchange
 
       editor = new EditorView({
@@ -156,8 +183,13 @@ function Codefield() {
         pkey = vnode.attrs['data-pkey']
       }
     },
-    onupdate: function(vnode) {
+    onupdate: async function(vnode) {
       if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
+        if (ds.type == 'file' && ds.file.websocket) {
+          const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
+
+          client = new LSPClient().connect(transport)
+        }
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
         changed = false
