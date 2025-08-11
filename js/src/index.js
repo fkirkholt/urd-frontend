@@ -127,7 +127,7 @@ m.route($('#main')[0], '/', {
           Grid.url = ''
           ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
           if (ds.table && ds.table.dirty) {
-            if (!confirm('Du har ulagrede data. Vil du fortsette?')) {
+            if (!confirm('You have unsaved data. Continue?')) {
               m.route.set(Grid.url)
             }
           }
@@ -151,6 +151,7 @@ m.route($('#main')[0], '/', {
           if (result.type == null) {
             if (confirm("File doesn't exist. Create it?")) {
               home.save_file(base_name, '')
+              config.edit_mode = true
               ds.file = {
                 path: base_name,
                 name: base_name.substring(base_name.lastIndexOf('/')),
