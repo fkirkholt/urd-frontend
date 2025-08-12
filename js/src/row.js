@@ -221,7 +221,7 @@ var Row = {
           })
         ]),
         // Draw icons for actions in main grid
-        !list.ismain || list.grid.actions.length == 0 ? '' : m('td', {
+        list.grid.actions.length == 0 ? '' : m('td', {
           class: [
             'br b--moon-gray bb--light-gray f6 tr',
             list.grid.actions.length ? 'pr2 pl2' : 'pa0'

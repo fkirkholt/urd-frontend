@@ -451,7 +451,7 @@ var Record = {
         var params
         if (action.communication === 'download') {
           data.cnxn = ds.cnxn,
-          data.base = rec.base_name;
+          data.base = rec.base_name || ds.base.name;
           data.table = rec.table_name;
           data.pkey = JSON.stringify(rec.pkey);
 
