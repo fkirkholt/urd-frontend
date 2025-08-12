@@ -225,7 +225,7 @@ var Relation = {
     } else {
       base_path = rel.schema_name
     }
-    url = '/' + ds.cnxn + '/' + base_path + '/' + rel.name + '?'
+    url = '/' + ds.cnxn + '/' + base_path + '?table=' + rel.name
 
     conditions = []
     if (rel.conds) {
@@ -237,7 +237,7 @@ var Relation = {
     if (conditions.length == 0) conditions = rel.conditions
 
     if (conditions) {
-      url += conditions.join('&')
+      url += '&' + conditions.join('&')
     }
 
     return url

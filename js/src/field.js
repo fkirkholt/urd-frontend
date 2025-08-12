@@ -291,11 +291,10 @@ var Field = {
       } else {
         base = field.fkey.referred_schema
       }
-      url = '/' + ds.cnxn + '/' + base + '/' + field.fkey.referred_table + '?'
+      url = '/' + ds.cnxn + '/' + base + '?table=' + field.fkey.referred_table
       $.each(field.fkey.referred_columns, function(i, colname) {
         var fk_field = field.fkey.constrained_columns[i]
-        url += colname + '=' + rec.fields[fk_field].value
-        if (i !== field.fkey.referred_columns.length - 1) url += '&'
+        url += '&' + colname + '=' + rec.fields[fk_field].value
       })
     }
 
