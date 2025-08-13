@@ -2,6 +2,7 @@ var SQLpanel = {
 
   query: '',
   editor: null,
+  running: false,
 
   get_chart_data: function(data, table) {
     var chart_cols = Object.keys(data[0])
@@ -240,6 +241,7 @@ var SQLpanel = {
         limit: $('input.limit').val()
       }
     }).then(function(data) {
+        SQLpanel.running = false
         ds.result.push(data.result)
         if (expressions.length) {
           SQLpanel.run_query(expressions)
@@ -277,15 +279,17 @@ var SQLpanel = {
               }
             }),
             m('div', { class: 'ml3 h2' }, [
-              !ds.result
-                ? null
-                : m('span', { class: 'fl' }, total_time + 's'),
+              SQLpanel.running ? 'Running...'
+              : !ds.result ? null
+              : m('span', { class: 'fl' }, total_time + 's'),
               m('button', {
                 id: 'run_sql',
                 class: 'fr pt0 pb0 nf nf-fa-play',
+                disabled: SQLpanel.running,
                 onclick: function() {
                   var sql = SQLpanel.editor.get_value()
                   var expressions = sql.split(';')
+                  SQLpanel.running = true
                   expressions.reverse()
                   ds.result = []
                   SQLpanel.run_query(expressions)
