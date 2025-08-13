@@ -10,7 +10,7 @@ var home = {
 
   editor: null,
 
-  save_file: function(filepath, content) {
+  save_file: function(filepath, content, load_files=false) {
     m.request({
       method: 'post',
       url: '/file',
@@ -23,6 +23,9 @@ var home = {
     .then(function(result) {
       if (result && ds.file) {
         ds.file.dirty = false
+      }
+      if (load_files) {
+        home.load_databases()
       }
     })
   },
@@ -112,23 +115,8 @@ var home = {
             if (!event.shiftKey) {
               return
             }
-            file = {
-              columns: {
-                description: null,
-                label: val,
-                name: (ds.dblist.path ? ds.dblist.path + '/' : '') + val,
-                size: 0,
-                type: 'file'
-              }
-            }
-            home.save_file(file.columns.label, '')
-            for (const index in ds.dblist.records) {
-              if (val < ds.dblist.records[index].columns.label) {
-                ds.dblist.records.splice(index, 0, file)
-                break
-              }
-            }
-            m.route.set('/' + ds.cnxn + '/' + file.columns.name)
+            file = (ds.dblist.path ? ds.dblist.path + '/' : '') + val
+            m.route.set('/' + ds.cnxn + '/' + file)
           }
           return
         }

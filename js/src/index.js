@@ -149,7 +149,7 @@ m.route($('#main')[0], '/', {
         } else {
           if (result.type == null) {
             if (confirm("File doesn't exist. Create it?")) {
-              home.save_file(base_name, '')
+              home.save_file(base_name, '', true)
               config.edit_mode = true
               ds.file = {
                 path: base_name,

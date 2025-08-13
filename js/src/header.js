@@ -20,10 +20,10 @@ var Header = {
     if (ds.type == 'login') {
       favicon = 'location.svg'
       title = 'login'
-    } else if (ds.type == 'file' && ds.file.type != 'dir') {
+    } else if (ds.type == 'file' && ds.file && ds.file.type != 'dir') {
       favicon = 'file.svg'
       title = ds.file.name
-    } else if (ds.type == 'file' && ds.file.type == 'dir') {
+    } else if (ds.type == 'file' && ds.file && ds.file.type == 'dir') {
       favicon = 'folder.svg'
       title = ds.file.path
     } else if (ds.type == 'dblist' && ['sqlite', 'duckdb'].includes(ds.base.system)) {
