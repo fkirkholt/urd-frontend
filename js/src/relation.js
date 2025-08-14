@@ -114,7 +114,7 @@ var Relation = {
           !rel.privilege.insert ? '' : m('a', {
             onclick: function(e) { Relation.add(e, rel) }
           }, m('i', {
-            class: 'nf nf-fa-plus light-blue hover-blue pointer ml1'
+            class: 'nf nf-md-text_box_plus_outline light-blue hover-blue pointer ml1'
           }))
         ])
       ]),
@@ -175,7 +175,7 @@ var Relation = {
           !rel.privilege.insert ? '' : m('a', {
             onclick: function(e) { Relation.add(e, rel) }
           }, m('i', {
-            class: 'nf nf-fa-plus light-blue hover-blue '
+            class: 'nf nf-md-text_box_plus_outline light-blue hover-blue '
               + 'pointer ml1'
           }))
         ]

@@ -241,7 +241,7 @@ var Toolbar = {
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf nf-fa-file_o ml3 mr1',
+            'nf nf-md-text_box_plus_outline ml3 mr1',
             ds.table.privilege.insert && !full
               ? 'dim pointer'
               : 'moon-gray'
@@ -276,7 +276,7 @@ var Toolbar = {
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf nf-fa-copy ml2 mr1 f6',
+            'nf nf-md-text_box_multiple_outline ml2 mr1 f6',
             ds.table.privilege.insert == true && !full
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
@@ -295,7 +295,7 @@ var Toolbar = {
       !config.edit_mode ? m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf nf-fa-edit ml2 mr1 pointer f6',
+            'nf nf-md-text_box_edit_outline ml2 mr1 pointer f6',
             ds.table.privilege.update == true
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),

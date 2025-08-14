@@ -174,7 +174,7 @@ var Row = {
               class: [
                 record.delete ? 'nf nf-fa-trash_o' 
                 : record.invalid ? 'nf nf-fa-warning red' 
-                : record.new ? 'nf nf-fa-plus_circle' 
+                : record.new ? 'nf nf-md-text_box_plus_outline gray' 
                 : record.dirty ? 'nf nf-fa-pencil light-gray' 
                 : ''
               ],
