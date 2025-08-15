@@ -109,7 +109,14 @@ var Tablelist = {
               ) ? '' : m('li', {
                 class: 'pointer',
                 onclick: function(ev) {
-                  SQLpanel.editor.set_value('select * from ' + item)
+                  var sql = 'select * from ' + item
+                  if (['oracle', 'sqlserver'].includes(ds.base.system)) {
+                    sql += ' fetch next ' +  config.limit + ' rows only'
+                  } else {
+                    sql += ' limit ' + config.limit
+                  }
+
+                  SQLpanel.editor.set_value(sql)
                   $('#run_sql').trigger('click')
                 },
                 oncontextmenu: function(event) {
