@@ -323,6 +323,12 @@ var home = {
       : ds.file.type.startsWith('image/') ? m('div', m('img', { 
         src: ds.file.path.substring(ds.path.length + 1)
       }))
+      : ds.file.type == 'application/pdf' ? m('embed', {
+        src: ds.file.path,
+        type: ds.file.type,
+        height: '100%',
+        width: '100%'
+      })
       : !config.edit_mode && ds.file.path.endsWith('.md') ? m('div', {
         class: 'ml3'
       }, home.parsed_markdown(ds.file.content))
