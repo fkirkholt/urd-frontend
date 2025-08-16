@@ -173,7 +173,8 @@ var Input = {
       if (!field.text) field.text = field.value
 
       vnode.attrs.type = field.datatype == 'int' ? 'number' : 'text'
-      vnode.attrs.class += field.datatype == 'int' ? ' mw4' : ' mw5'
+      vnode.attrs.class += field.datatype == 'int' ? ' mw4' : ''
+      vnode.attrs.size = field.size ? Math.round(field.size * 0.7) : null
       vnode.attrs.item = field
       vnode.attrs.text = field.text
       vnode.attrs.unique = field.unique

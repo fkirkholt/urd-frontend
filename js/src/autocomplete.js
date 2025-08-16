@@ -9,7 +9,6 @@ function Autocomplete() {
   var option = {}
   var index = 0
   var timer = null
-  var fieldname = ''
 
   function keydown(event, attrs) {
     if (event.keyCode == KEY_CODE_ENTER && !attrs.unique) {
@@ -61,7 +60,7 @@ function Autocomplete() {
   return {
 
     onupdate: function(vnode) {
-      if (fieldname == vnode.attrs.fieldname) {
+      if ($(document.activeElement).attr('name') == vnode.attrs.fieldname) {
         var input_width = $(vnode.dom).outerWidth()
         var offset = $(vnode.dom).offset()
         $('ul.options').css('min-width', input_width)
@@ -100,7 +99,6 @@ function Autocomplete() {
           required: vnode.attrs.required,
           oninput: function(event) {
             option.label = event.target.value
-            fieldname = vnode.attrs.fieldname
           },
           onkeydown: function(event) {
             keydown(event, vnode.attrs)
