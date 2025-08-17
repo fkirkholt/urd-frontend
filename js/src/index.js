@@ -144,9 +144,8 @@ m.route($('#main')[0], '/', {
             ds.path = base_name
             ds.file = result
             home.load_databases()
-
-            return home
           }
+          return home
         } else {
           if (result.type == null) {
             if (confirm("File doesn't exist. Create it?")) {
