@@ -312,7 +312,7 @@ var home = {
         src: ds.file.path.substring(ds.path.length + 1)
       }))
       : ds.file.type == 'application/pdf' ? m('embed', {
-        src: ds.file.path,
+        src: ds.file.name,
         type: ds.file.type,
         height: '100%',
         width: '100%'
