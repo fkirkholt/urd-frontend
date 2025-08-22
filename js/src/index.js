@@ -154,7 +154,7 @@ m.route($('#main')[0], '/', {
               config.edit_mode = true
               ds.file = {
                 path: base_name,
-                name: base_name.substring(base_name.lastIndexOf('/')),
+                name: base_name.split('/').slice(-1)[0],
                 content: '',
                 type: 'file'
               }
