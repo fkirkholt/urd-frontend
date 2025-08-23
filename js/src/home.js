@@ -31,6 +31,9 @@ var home = {
   },
 
   parsed_markdown: function(content) {
+    if (!content) {
+      return content
+    }
     let result = content.replace(/(^|\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
       return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>';
     });
