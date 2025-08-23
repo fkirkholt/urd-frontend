@@ -97,6 +97,20 @@ var home = {
     if (config.tab == 'users' && !ds.users) return
 
     return [m('div#list', { class: 'overflow-y-auto', style: 'min-width:200px' }, [
+      m('ul#filelist-context', {
+        class: [
+        'absolute left-0 list pa1 shadow-5 dn pointer z-999',
+        config.dark_mode ? 'bg-dark-gray' : 'bg-white'
+        ].join(' ')
+      }, [
+          m('li', {
+            class: 'hover-blue',
+            onclick: function() {
+              home.context_file.rename = true
+              $('#filelist-context').hide()
+            }
+          }, 'Rename'),
+      ]),
       m('input', {
         id: 'filter_files',
         style: 'width:190px',
@@ -176,13 +190,53 @@ var home = {
                 m('span', { class: "nf-li" }, [
                   m('i', { class: "nf nf-oct-file" })
                 ]),
-                m('span', {
+                post.rename ? m('input', {
+                  value: post.columns.label,
+                  onchange: function(event) {
+                    var from = post.columns.name
+                    var to = from.replace(post.columns.label, '') + event.target.value
+                    post.rename = false
+                    m.request({
+                      method: 'put',
+                      url: '/file_rename',
+                      params: {
+                        cnxn: ds.cnxn,
+                        src: from,
+                        dst: to
+                      },
+                    })
+                    .then(function(result) {
+                      post.columns.label = event.target.value
+                      post.columns.name = to
+                      if (result.success && ds.file && ds.file.path == from) {
+                        m.route.set('/' + ds.cnxn + '/' +  to)
+                      }
+                    })
+                  }
+                })
+                : m('span', {
                   class: [
                     'no-underline hover-blue pointer',
                     (post.columns.size > 100000000) ? 'gray' : '',
                   ].join(' '),
                   onclick: function() {
                     m.route.set('/' + ds.cnxn + '/' + post.columns.name)
+                  },
+                  oncontextmenu: function(event) {
+                    var top
+                    $('#filelist-context').toggle()
+                    var height = $('#filelist-context').height()
+                    home.context_file = post
+                    if (window.innerHeight - event.clientY < height) {
+                      top = event.clientY - 20 - height
+                    } else {
+                      top = event.clientY - 20
+                      }
+                    $('ul#filelist-context').css({
+                      top: top,
+                      left: event.clientX
+                    })
+                    return false
                   }
                 }, [' ', post.columns.label])
               ]
