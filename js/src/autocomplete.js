@@ -54,7 +54,6 @@ function Autocomplete() {
         options = result
       }
     })
-
   }
 
   return {
@@ -71,6 +70,7 @@ function Autocomplete() {
     },
 
     view: function(vnode) {
+      var item = vnode.attrs.item
       if (vnode.attrs.value != option.value) {
         option = {
           value: vnode.attrs.value,
@@ -83,11 +83,11 @@ function Autocomplete() {
           name: vnode.attrs.fieldname,
           'data-table': vnode.attrs['data-table'],
           type: vnode.attrs.type || 'search',
-          size: vnode.attrs.item.element == 'input' && vnode.attrs.item.size
-            ? vnode.attrs.item.size
+          size: item.element == 'input' && item.size && !item.view
+            ? item.size
             : null,
-          maxlength: vnode.attrs.item.element == 'input'
-            ? vnode.attrs.item.size
+          maxlength: item.element == 'input' && item.size && !item.view
+            ? item.size
             : null,
           class: vnode.attrs.class,
           value: option.label,
