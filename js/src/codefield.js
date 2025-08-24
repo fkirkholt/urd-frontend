@@ -141,7 +141,7 @@ function Codefield() {
           }
         },
         blur: function(e, view) {
-          if (changed) {
+          if (changed && onchange) {
             var value = view.state.doc.toString()
             onchange(value);
           }
