@@ -116,8 +116,12 @@ function Codefield() {
       indentedLineWrap,
       editable.of(EditorView.editable.of(attrs.editable)),
       EditorView.updateListener.of((update) => { 
-        if (update.docChanged) { 
+        if (update.docChanged && !changed) { 
           changed = true 
+          if (onchange) {
+            ds.table.dirty = true
+            m.redraw()
+          }
           if (ds.file) {
             $('#save-file').removeClass('o-30')
             ds.file.dirty = true
@@ -144,6 +148,7 @@ function Codefield() {
           if (changed && onchange) {
             var value = view.state.doc.toString()
             onchange(value);
+            changed = false
           }
         } 
       }),

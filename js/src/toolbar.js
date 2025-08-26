@@ -308,13 +308,13 @@ var Toolbar = {
       ]) : '',
       // Button for saving all changes
       m('li', { class: 'dib' }, [
-        config.autosave || !config.edit_mode ? '' : [
+        !config.edit_mode ? '' : [
           m('i', {
             class: [
               'nf nf-fa-save ml2 mr1',
               ds.table.dirty ? 'dim pointer' : 'o-30'
             ].join(' '),
-              title: 'Save',
+            title: 'Save',
             onclick: function() {
               if (!ds.table.dirty) return
               Grid.save()
