@@ -83,6 +83,7 @@ var Export_dialog = {
     param.cnxn = ds.cnxn
     if (config.tab == 'data') {
       param.table = ds.table.name
+      param.filter = ds.table.query
     }
     var params = Object.keys(param).map(function(k) {
       return k + '=' + param[k]
