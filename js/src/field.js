@@ -484,7 +484,7 @@ var Field = {
                       ? Field.display_value(field, rec)
                       : m('data', {
                         class: [
-                          'dib pr3 collapsible',
+                          'db pr3 collapsible',
                           (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
                           (field.is_filepath) ? 'underline pointer blue' : '',
                           field.element == 'textarea' ? 'markdown' : ''
