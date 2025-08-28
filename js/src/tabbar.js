@@ -376,8 +376,8 @@ var Tabbar = {
             } else { 
               delete query_params[key]
             }
-            m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name + 
-              (query_params.length ? '&' + m.buildQueryString(query_params) : ''))
+            m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?' +
+              m.buildQueryString(query_params))
           }
         })
       ], 'Show top level only')),
