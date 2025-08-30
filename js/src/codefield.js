@@ -6,7 +6,7 @@ import { indentedLineWrap } from './linewrap'
 import { syntaxTree, foldable, foldEffect, unfoldAll, foldService, 
          foldCode, unfoldCode, HighlightStyle, syntaxHighlighting,
          defaultHighlightStyle} from "@codemirror/language"
-import { markdown } from "@codemirror/lang-markdown"
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 import { sql } from "@codemirror/lang-sql"
 import { json } from "@codemirror/lang-json"
 import { yaml } from "@codemirror/lang-yaml"
@@ -15,6 +15,7 @@ import { javascript } from "@codemirror/lang-javascript"
 import { css } from "@codemirror/lang-css"
 import { LSPClient, languageServerSupport } from "@codemirror/lsp-client"
 import { tags } from "@lezer/highlight"
+import { languages } from '@codemirror/language-data';
 
 function createWebSocketTransport(uri) {
   let handlers = []
@@ -95,11 +96,14 @@ function Codefield() {
     langs['json'] = json()
     langs['yaml'] = yaml()
     langs['text'] = null
-    langs['md'] = markdown()
+    langs['md'] = markdown({
+      base: markdownLanguage,
+      codeLanguages: languages, // This enables syntax highlighting for fenced code blocks
+    })
     langs['py'] = python() 
     langs['js'] = javascript()
     langs['css'] = css()
-    lang = langs[attrs.lang] || markdown()
+    lang = langs[attrs.lang] || langs['md'] 
 
     const customHighlightStyle = HighlightStyle.define([
       { tag: tags.keyword, color: "#FF4136" },

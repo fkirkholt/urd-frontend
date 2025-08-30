@@ -1,7 +1,9 @@
 import config from './config.js'
 import Grid from './grid.js'
 import Codefield from './codefield.js'
-import { marked } from 'marked'
+import { Marked } from 'marked'
+import { markedHighlight } from "marked-highlight";
+import hljs from 'highlight.js';
 import Convert from 'ansi-to-html'
 
 const KEY_CODE_ENTER = 13
@@ -41,6 +43,17 @@ var home = {
     // Hack to make marked format first list item like the rest.
     // There must be text in front of the list
     result = 'dummy-paragraph\n\n' + result
+
+    const marked = new Marked(
+      markedHighlight({
+        emptyLangClass: 'hljs',
+        langPrefix: 'hljs language-',
+        highlight(code, lang, info) {
+          const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+          return hljs.highlight(code, { language }).value;
+        }
+      })
+    );
 
     result = marked.parse(result)
     // Remove text inserted in hack above

@@ -186,6 +186,17 @@ var Field = {
         result = 'dummy-paragraph\n\n' + result
       }
 
+      const marked = new Marked(
+        markedHighlight({
+          emptyLangClass: 'hljs',
+          langPrefix: 'hljs language-',
+          highlight(code, lang, info) {
+            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            return hljs.highlight(code, { language }).value;
+          }
+        })
+      );
+
       if (field.size) {
         result = marked.parseInline(result)
       } else {
@@ -539,7 +550,9 @@ var Field = {
 export default Field
 
 import config from './config.js'
-import { marked } from 'marked'
+import { Marked } from 'marked'
+import { markedHighlight } from "marked-highlight";
+import hljs from 'highlight.js';
 import yaml from 'js-yaml'
 import Input from './input.js'
 import Record from './record.js'
