@@ -346,6 +346,6 @@ mark {
   font-family: 'NerdFontsSymbols Nerd Font';
 }
 
-data input {
+.markdown input {
     display: none;
 }

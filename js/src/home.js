@@ -388,7 +388,7 @@ var home = {
         width: '100%'
       })
       : !config.edit_mode && ds.file.path.endsWith('.md') ? m('div', {
-        class: 'ml3 overflow-y-auto'
+        class: 'ml3 overflow-y-auto markdown'
       }, home.parsed_markdown(ds.file.content))
       : m(Codefield, {
         id: 'file-content',
