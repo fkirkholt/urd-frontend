@@ -6,15 +6,7 @@ var Breadcrumb = {
     var param = m.route.param()
     var dirs
     var path
-    var systems = {
-      mariadb: 'MariaDB',
-      mysql: 'MySQL',
-      mssql: 'SQL Server',
-      oracle: 'Oracle',
-      postgresql: 'PostgreSQL',
-      sqlite: 'SQLite',
-      duckdb: 'DuckDB'
-    }
+    var system = ds.dblist ? ds.dblist.system : ds.base.system
 
     items.push({
       icon: "nf-md-crosshairs_gps",
@@ -25,7 +17,7 @@ var Breadcrumb = {
 
     if (ds.cnxn) {
       items.push({
-        icon: ['sqlite', 'duckdb'].includes(ds.base.system) ? "nf-md-folder_outline" : "nf-fa-server",
+        icon: ['sqlite', 'duckdb'].includes(system) ? "nf-md-folder_outline" : "nf-fa-server",
         text: ds.cnxn,
         addr: '/' + ds.cnxn
       })
@@ -46,13 +38,23 @@ var Breadcrumb = {
       }
     }
 
+    if (ds.dblist && ds.dblist.grep) {
+      items.push({
+        icon: "nf-fa-search",
+        text: ds.dblist.grep,
+        addr: '/' + ds.cnxn + (ds.path ? '/' + ds.path : '') + '?grep=' + ds.dblist.grep
+      })
+    }
+
     if (ds.file && ds.file.type != 'dir') {
       items.push({
         icon: "nf-fa-file",
         text: ds.file.name,
         addr: '/' + ds.cnxn + '/' + ds.file.path
       })
-    } else if (ds.base && ds.base.name && ds.type != 'file' && ds.type != 'dblist') {
+    }
+    
+    if (ds.base && ds.base.name && ds.type != 'file' && ds.type != 'dblist') {
       items.push({
         icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),

@@ -109,7 +109,19 @@ var home = {
     if (!ds.dblist) return
     if (config.tab == 'users' && !ds.users) return
 
-    return [m('div#list', { class: 'overflow-y-auto', style: 'min-width:200px' }, [
+    var filtered_recs = ds.dblist.records.filter(function(post, i) {
+      var filter = $('#filter_files').val()
+      return !(
+        (!ds.dblist.grep || !ds.dblist.grep.includes(filter)) && (filter !== undefined && 
+        !post.columns.label.toLowerCase().includes(filter.toLowerCase())) &&
+        (!post.columns.description || !post.columns.description.includes(filter))
+      )
+    })
+
+    return [m('div#list', { 
+      class: 'overflow-y-auto', 
+      style: (ds.file && ds.file.type != 'dir') ? 'min-width: 200px; width:200px' : ''
+    }, [
       m('ul#filelist-context', {
         class: [
         'absolute left-0 list pa1 shadow-5 dn pointer z-999',
@@ -132,25 +144,17 @@ var home = {
           var val = event.target.value
           var file
           if (event.keyCode == KEY_CODE_ENTER) {
-            if (event.target.value.startsWith(':rg')) {
-              m.request({
-                method: 'get',
-                url: '/ripgrep',
-                params: {cnxn: ds.cnxn, path: ds.path, cmd: event.target.value.substring(1)} 
-              }).then(function(result) {
-                event.target.value = ''
-                ds.dblist = result.data
-              })
+            if (event.shiftKey) {
+              file = (ds.dblist.path ? ds.dblist.path + '/' : '') + val
+              m.route.set('/' + ds.cnxn + '/' + file)
+            } else {
+              m.route.set('/' + ds.cnxn + (ds.dblist.path ? ('/' + ds.dblist.path) : '') + (val ? '?grep=' + val : ''))
             }
-            if (!event.shiftKey) {
-              return
-            }
-            file = (ds.dblist.path ? ds.dblist.path + '/' : '') + val
-            m.route.set('/' + ds.cnxn + '/' + file)
           }
           return
         }
       }),
+      m('div', { style: 'width:190px'}, m('span', { class: 'fr gray' }, filtered_recs.length)),
       config.tab == 'users' ? null : m('ul', { class: 'nf-ul' }, [
         !ds.path ? null : m('li', [
           m('span', { class: "nf-li" }, [
@@ -163,7 +167,7 @@ var home = {
             }
           }, '..')
         ]),
-        ds.dblist.records.map(function(post, i) {
+        filtered_recs.map(function(post, i) {
           var filter = $('#filter_files').val()
           var convert = new Convert()
           // output from ripgrep has ansi codes
@@ -172,11 +176,8 @@ var home = {
           if (post.columns.description) {
             var desc = convert.toHtml(post.columns.description)
           }
-          return (
-            filter !== undefined && 
-            !post.columns.label.toLowerCase().includes(filter.toLowerCase())
-          ) ? '' : m('li', [
-            m('mt1.mb1', [
+          return m('li', [
+            m('span.mt1.mb1', [
               post.columns.type == 'database' ? [
                 m('span', { class: "nf-li" }, [
                   m('i', { class: "nf nf-oct-database" })
@@ -254,7 +255,7 @@ var home = {
                 }, [' ', post.columns.label])
               ]
             ]),
-            m('p.mt1.mb1', m.trust(desc))
+            (ds.file && ds.file.type != 'dir') ? '' : m('p.mt1.mb1', m.trust(desc))
           ])
         })
       ]),
@@ -416,7 +417,7 @@ var home = {
     ]),
     !ds.file || !ds.file.path.endsWith('.md') ? '' : m('div#backlinks', {
       class: 'flex flex-column ml3',
-      style: 'min-width:200px'
+      style: 'min-width:210px'
     }, [
       m('h3', { class: 'mb0' }, 'Backlinks'),
       m('ul', [

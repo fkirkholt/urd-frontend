@@ -51,14 +51,26 @@ m.route($('#main')[0], '/', {
     }
   },
   "/:cnxn": {
-    onmatch: function(args, requestedPath) {
+    onmatch: function(args, path) {
       check_dirty()
       ds.type = 'dblist'
       ds.cnxn = args.cnxn
       config.tab = 'databases'
       ds.path = null
       ds.file = null
-      home.load_databases()
+      var query = m.parsePathname(path)
+      if ('grep' in query.params) {
+        console.log('query.params.grep', query.params.grep)
+        m.request({
+          method: 'get',
+          url: '/ripgrep',
+          params: {cnxn: ds.cnxn, path: ds.path, pattern: query.params.grep} 
+        }).then(function(result) {
+          ds.dblist = result.data
+        })
+      } else {
+        home.load_databases()
+      }
       return home
     }
   },
@@ -74,7 +86,6 @@ m.route($('#main')[0], '/', {
         ds.type = 'table'
 
         var grid_path = path
-        var query = m.parsePathname(path)
 
         // remove `index` from grid_path so that grid is not
         // reloaded because of change in url when another record is shown
@@ -141,10 +152,19 @@ m.route($('#main')[0], '/', {
 
         } else if (result.type == 'dir') {
           config.tab = 'databases'
-          if (args.base != ds.path || ds.dblist.grep) {
+          if (args.base != ds.path || ds.dblist.grep != query.path.grep) {
             ds.path = base_name
             ds.file = result
             home.load_databases()
+          }
+          if ('grep' in query.params) {
+            m.request({
+              method: 'get',
+              url: '/ripgrep',
+              params: {cnxn: ds.cnxn, path: ds.path, pattern: query.params.grep} 
+            }).then(function(result) {
+              ds.dblist = result.data
+            })
           }
           return home
         } else {
@@ -166,7 +186,7 @@ m.route($('#main')[0], '/', {
           }
           config.tab = 'databases'
           var dir = base_name.substring(0, base_name.lastIndexOf('/'))
-          if (!ds.dblist || ((ds.path || '') != dir)) {
+          if (!ds.dblist || ((ds.path || '') != dir) && !ds.dblist.grep) {
             ds.path = dir
             home.load_databases()
           }
