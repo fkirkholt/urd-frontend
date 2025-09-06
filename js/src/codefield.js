@@ -122,11 +122,10 @@ function Codefield() {
       EditorView.updateListener.of((update) => { 
         if (update.docChanged && !changed) { 
           changed = true 
-          if (onchange) {
+          if (ds.table && onchange) {
             ds.table.dirty = true
             m.redraw()
-          }
-          if (ds.file) {
+          } else if (ds.file) {
             $('#save-file').removeClass('o-30')
             ds.file.dirty = true
           }
