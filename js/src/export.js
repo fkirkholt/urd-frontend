@@ -131,23 +131,18 @@ var Export_dialog = {
     .replace('duckdb', '').replace('oracle', '').replace('pgsql', '').replace('--', '-')
     .replace(/-$/g, '')
     : ds.base.system
+    console.log('ds', ds)
     var exportdir = Export_dialog.cnxn_name && ['sqlite', 'duckdb'].includes(ds.base.system)
-    ? ds.config.exportdir + '/' + ds.path
+    ? './' + (ds.path ? ds.path : '')
     : ds.config.exportdir + '/' + Export_dialog.cnxn_name
-    return m('div', [
+    return m('form', [
       m('h3', 'Export ' + (config.tab != 'data' ? 'database' : 'table')),
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
-        m('label', [m('input[type=radio]', {
+        m('label', { class: 'db' }, [m('input[type=radio]', {
           name: 'dest',
           value: exportdir
         })], ' ' + exportdir),
-        ['sqlite', 'duckdb'].includes(ds.base.system) ? '' 
-        : m('label', [m('input[type=radio]', {
-          name: 'dest',
-          value: exportdir + '/' + ds.base.name.split('.')[0]
-        })], ' ' + exportdir + '/' + ds.base.name.split('.')[0]),
-        m('br'),
-        m('label', [m('input[type=radio]', {
+        m('label', { class: 'db' }, [m('input[type=radio]', {
           name: 'dest',
           value: 'download'
         })], ' Download')

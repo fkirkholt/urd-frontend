@@ -80,6 +80,7 @@ m.route($('#main')[0], '/', {
       var query = m.parsePathname(path)
       ds.cnxn = args.cnxn
       ds.type = 'file'
+      ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
 
       if ('table' in query.params) {
         config.tab = config.tab || 'data'
