@@ -128,13 +128,33 @@ var home = {
         config.dark_mode ? 'bg-dark-gray' : 'bg-white'
         ].join(' ')
       }, [
-          m('li', {
-            class: 'hover-blue',
-            onclick: function() {
-              home.context_file.rename = true
-              $('#filelist-context').hide()
-            }
-          }, 'Rename'),
+        m('li', {
+          class: 'hover-blue',
+          onclick: function() {
+            home.context_file.rename = true
+            $('#filelist-context').hide()
+          }
+        }, 'Rename'),
+        m('li', {
+          class: 'hover-blue',
+          onclick: function() {
+            var filename = home.context_file.columns.name
+            $('#filelist-context').hide()
+            m.request({
+              method: 'put',
+              url: '/file_delete',
+              params: {
+                cnxn: ds.cnxn,
+                filename: filename
+              },
+            })
+            .then(function(result) {
+              if (result.success && ds.file && ds.file.path == filename) {
+                m.route.set('/' + ds.cnxn + (ds.path ? '/' + ds.path : ''))
+              }
+            })
+          }
+        }, 'Delete')
       ]),
       m('input', {
         id: 'filter_files',
