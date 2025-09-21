@@ -103,6 +103,20 @@ var home = {
       m.route.set($(this).attr('href'))
       e.preventDefault()
     })
+
+    var selector = 'div.markdown'
+    for (let i of document.querySelectorAll(selector + " ol, "  + 
+                                            selector + " ul li p:first-child")) {
+      let t = i.parentElement
+      if (t.childElementCount > 1 && !t.className.includes('fold')) {
+        t.className = "fold open"
+        i.onclick = function(event) {
+          event.stopPropagation()
+          t.classList.toggle("open")
+          t.classList.toggle("close")
+        } 
+      }
+    }
   },
 
   view: function(vnode) {
@@ -384,18 +398,38 @@ var home = {
       class: 'flex flex-column',
       style: 'flex-grow: 1'
     }, [
-      !ds.file || ds.file.type == 'dir' || !config.edit_mode ? '' 
+      !ds.file || ds.file.type == 'dir' ? '' 
       : m('div', { class: 'ml3 mb2'}, [
         m('i', { 
           id: 'save-file',
           class: [
             'nf nf-fa-save ml2', 
-            ds.file.dirty ? 'dim pointer' : 'o-30'
+            ds.file.dirty ? 'dim pointer' : 'o-30',
+            config.edit_mode ? '' : 'dn'
           ].join(' '),
           onclick: function() {
             home.save_file(ds.file.path, home.editor.get_value())
           }
-        })
+        }),
+        m('i', {
+          id: 'fold-list',
+          class: [
+            'nf ml2',
+            ds.file.folded ? 'nf-oct-unfold' : 'nf-oct-fold',
+            config.edit_mode ? 'dn' : ''
+          ].join(' '),
+          title: 'Fold all lists',
+          onclick: function() {
+            var selector = 'div.markdown'
+
+            for (let i of document.querySelectorAll(selector + " ol, "  + 
+                                                    selector + " ul li p:first-child")) {
+              let t = i.parentElement
+              t.className = ds.file.folded ? "fold open" : "fold close"
+            }
+            ds.file.folded = !ds.file.folded
+          }
+        }),
       ]),
       !ds.file || ds.file.type == 'dir' ? '' 
       : ds.file.msg ? m('div', { class: 'ml3'}, ds.file.msg) 

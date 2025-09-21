@@ -108,3 +108,5 @@
 .nf-md-text_box_edit_outline:before{content:"\f1a7d"}
 .nf-md-plus_box_outline:before{content:"\f0704"}
 .nf-md-plus_box_multiple_outline:before{content:"\f1143"}
+.nf-oct-fold:before{content:"\f48c"}
+.nf-oct-unfold:before{content:"\f42d"}
