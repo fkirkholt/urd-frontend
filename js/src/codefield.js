@@ -13,10 +13,11 @@ import { yaml } from "@codemirror/lang-yaml"
 import { python } from "@codemirror/lang-python"
 import { javascript } from "@codemirror/lang-javascript"
 import { css } from "@codemirror/lang-css"
-import { LSPClient, languageServerSupport } from "@codemirror/lsp-client"
+import { LSPClient, languageServerExtensions } from "@codemirror/lsp-client"
 import { tags } from "@lezer/highlight"
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
+import { linter, lintKeymap, lintGutter } from '@codemirror/lint'
 
 function createWebSocketTransport(uri) {
   let handlers = []
@@ -199,7 +200,8 @@ function Codefield() {
       autocompletion({ override: [completions] })
     ]
     if (ds.file && ds.file.websocket) {
-      extensions.push(languageServerSupport(client, "file://" + ds.file.abspath))
+      extensions.push(client.plugin("file://" + ds.file.abspath))
+      extensions.push(lintGutter())
     }
 
     return extensions
@@ -221,7 +223,7 @@ function Codefield() {
       if (ds.type == 'file' && ds.file.websocket) {
         const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
 
-        client = new LSPClient().connect(transport)
+        client = new LSPClient({extensions: languageServerExtensions()}).connect(transport)
       }
       onchange = vnode.attrs.onchange
 
@@ -239,7 +241,7 @@ function Codefield() {
         if (ds.type == 'file' && ds.file.websocket) {
           const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
 
-          client = new LSPClient().connect(transport)
+          client = new LSPClient({extensions: languageServerExtensions()}).connect(transport)
         }
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
