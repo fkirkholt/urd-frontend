@@ -68,13 +68,14 @@ var Export_dialog = {
     }
   },
 
-  export_sql: function(dialect, table_defs, no_fkeys, view_as_table, list_recs = false, 
-                       data_recs = false, select_recs) {
+  export_sql: function(dialect, table_defs, no_fkeys, no_empty, view_as_table, 
+                       list_recs = false, data_recs = false, select_recs) {
     var param = {}
     param.dest = $('input[name=dest]:checked').val() || 'download'
     param.dialect = dialect
     param.table_defs = table_defs
     param.no_fkeys = no_fkeys
+    param.no_empty = no_empty
     param.view_as_table = view_as_table
     param.list_recs = list_recs
     param.data_recs = data_recs
@@ -247,6 +248,11 @@ var Export_dialog = {
         })], ' Exclude foreign keys'),
         m('br'),
         m('label', [m('input[type=checkbox]', {
+          name: 'no_empty',
+          class: 'ml3'
+        })], ' Exclude empty tables'),
+        m('br'),
+        m('label', [m('input[type=checkbox]', {
           name: 'view-as-table'
         })], ' Export views as tables'),
         m('br'),
@@ -297,6 +303,8 @@ var Export_dialog = {
                 .prop('checked')
               var no_fkeys = $('#export-dialog input[name="no_fkeys"]')
                 .prop('checked')
+              var no_empty = $('#export-dialog input[name="no_empty"]')
+                .prop('checked')
               var view_as_table = $('#export-dialog input[name=view-as-table]')
                 .prop('checked')
               var list_records = $('#export-dialog input[name="list-records"]')
@@ -305,9 +313,9 @@ var Export_dialog = {
                 .prop('checked') || false
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
-              Export_dialog.export_sql(dialect, table_defs, no_fkeys, view_as_table,
-                                       list_records, data_records, select_records, 
-                                       clobs_as_files)
+              Export_dialog.export_sql(dialect, table_defs, no_fkeys, no_empty,
+                                       view_as_table, list_records, data_records, 
+                                       select_records, clobs_as_files)
             }
           }.bind(this)
         }),
