@@ -38,7 +38,7 @@ var KDRS_dialog = {
         }
       }),
       m('input[type=button]', {
-        value: 'Avbryt',
+        value: 'Cancel',
         class: 'fr',
         onclick: function() {
           $('div.curtain').hide() // gjemme

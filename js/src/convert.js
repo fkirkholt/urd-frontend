@@ -87,7 +87,7 @@ var Convert_dialog = {
           }.bind(this)
         }),
         m('input[type=button]', {
-          value: 'Avbryt',
+          value: 'Cancel',
           class: 'fr',
           onclick: function() {
             $('div.curtain').hide()

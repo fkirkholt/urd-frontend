@@ -59,7 +59,7 @@ var Pwd_dialog = {
       }),
       m('input[type=button]', {
         class: 'fr mt2',
-        value: 'Avbryt',
+        value: 'Cancel',
         onclick: function() {
           $('div.curtain').hide()
           $('#pwd-dialog').hide()

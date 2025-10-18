@@ -117,7 +117,7 @@ var config = {
         }),
         m('input[type=button]', {
           class: 'fr',
-          value: 'Avbryt',
+          value: 'Cancel',
           onclick: function() {
             $('#preferences').hide()
             $('div.curtain').hide()

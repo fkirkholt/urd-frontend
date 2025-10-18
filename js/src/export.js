@@ -319,7 +319,7 @@ var Export_dialog = {
           }.bind(this)
         }),
         m('input[type=button]', {
-          value: 'Avbryt',
+          value: 'Cancel',
           class: 'fr',
           disabled: Export_dialog.running,
           onclick: function() {

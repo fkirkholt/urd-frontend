@@ -63,7 +63,7 @@ var Import_dialog = {
           }
         }),
         m('input[type=button]', {
-          value: 'Avbryt',
+          value: 'Cancel',
           class: 'fr',
           disabled: Import_dialog.import_started,
           onclick: function() {
