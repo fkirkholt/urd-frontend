@@ -7,10 +7,13 @@ var Breadcrumb = {
     var dirs
     var path
     var system = ds.dblist ? ds.dblist.system : ds.base.system
+    var plug_img = ds.cnxn ? 'plug-connected.png' : 'plug-connect.png'
+    var urdr_img = ds.cnxn ? 'urdr-glow-blue.png' : 'urdr.png'
+    var urdr_class = ds.cnxn ? '' : 'invert-03' 
 
     items.push({
-      icon: "nf-md-crosshairs_gps",
-      text: '<img class="h1 v-mid" style="margin-left: -3px; margin-bottom: 3px;" src="/static/css/img/urdr.png">',
+      icon: "",
+      text: '<img class="invert-03" width="29px" style="margin-bottom: -3.9px" src="/static/css/img/' + plug_img + '"><img class="v-mid ' + urdr_class + '" style="margin-left: -5px; margin-bottom: 3px; height: 1.2em" src="/static/css/img/' + urdr_img + '">',
       addr: '/',
       branch: ds.branch
     })

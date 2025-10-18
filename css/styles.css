@@ -349,3 +349,7 @@ mark {
 .markdown input {
     display: none;
 }
+
+.invert-03 {
+    filter: invert(0.3);
+}
