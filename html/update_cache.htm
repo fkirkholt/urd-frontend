@@ -42,6 +42,7 @@ var cache_dialog = {
                         var config = ds.cache.config
                         var config_json = JSON.stringify(config)
                         var params = {
+                            cnxn: ds.cnxn,
                             base: ds.base.name,
                             config: config_json
                         }
