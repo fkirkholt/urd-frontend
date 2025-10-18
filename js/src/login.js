@@ -16,10 +16,12 @@ var login = {
       value: name.replace('urdr-cnxn-', '')
     }))
 
+    var header = ds.base.name == 'urdr' ? 'Log in' : 'Connect' 
+
     return m('form', [
-      m('div', { class: 'f4 mb2' }, 'Logg inn'),
+      m('div', { class: 'f4 mb2' }, header),
       !login.error
-        ? '' : m('div', { class: 'red' }, login.msg || 'Logg inn'),
+        ? '' : m('div', { class: 'red' }, login.msg || header),
       this.create ? '' : m(Select, {
         value: login.param.cnxn,
         onchange: function() {
@@ -131,7 +133,7 @@ var login = {
       }),
       m('input[type=button]', {
         id: 'btn_login',
-        value: login.param.server || !login.param.cnxn ? 'Logg inn' : 'Delete',
+        value: login.param.server || !login.param.cnxn ? header : 'Delete',
         disabled: !login.param.cnxn && ds.base.name != 'urdr',
         class: 'db w-100',
         onclick: function() {
