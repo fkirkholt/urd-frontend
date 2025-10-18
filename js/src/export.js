@@ -126,13 +126,12 @@ var Export_dialog = {
     if (!ds.config) {
       return
     }
-    Export_dialog.cnxn_name = Cookies.get('urdr-cnxn') 
-    ? Cookies.get('urdr-cnxn').toLowerCase().replace('urdr-cnxn-', '').replace(' ', '-')
+    Export_dialog.cnxn_name = ds.cnxn 
+    ? ds.cnxn.toLowerCase().replace(' ', '-')
     .replace('sqlite', '').replace('mysql', '').replace('mssql', '')
     .replace('duckdb', '').replace('oracle', '').replace('pgsql', '').replace('--', '-')
     .replace(/-$/g, '')
     : ds.base.system
-    console.log('ds', ds)
     var exportdir = Export_dialog.cnxn_name && ['sqlite', 'duckdb'].includes(ds.base.system)
     ? './' + (ds.path ? ds.path : '')
     : ds.config.exportdir + '/' + Export_dialog.cnxn_name
