@@ -155,7 +155,7 @@ var Toolbar = {
     if (index !== null) {
       query_params.index = index
     }
-    if (offset !== undefined) {
+    if (offset !== undefined && offset !== 0) {
       query_params.offset = offset
     }
     if (Object.keys(ds.table.grid.sort_columns).length > 0) {
