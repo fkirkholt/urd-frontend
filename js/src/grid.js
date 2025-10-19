@@ -183,19 +183,6 @@ var Grid = {
     return true
   },
 
-  check_dirty: function() {
-    var txt = "Er du sikker på at du vil oppdatere innhold på siden?\n\n"
-    var r // Skal holde returverdi
-    if (ds.table.dirty) {
-      txt += "Du har foretatt endringer i listen. "
-      txt += "Endringene vil ikke bli lagret hvis du fortsetter.\n\n"
-      txt += "Trykk OK for å fortsette, eller Avbryt for å bli stående."
-      r = confirm(txt)
-      return r
-    }
-    else return true
-  },
-
   load: function(params) {
     var index = 0
     var query = Grid.get_filter(params)

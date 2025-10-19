@@ -41,13 +41,6 @@
   top: 0.14285714em;
   text-align: center;
 }
-.nf-rotate-45 { 
-  -webkit-transform: rotate(45deg); 
-  -moz-transform: rotate(45deg); 
-  -ms-transform: rotate(45deg); 
-  -o-transform: rotate(45deg); 
-  transform: rotate(45deg); 
-}
 
 .nf-md-table:before{content:"\f04eb"}
 .nf-md-vector_link:before{content:"\f0fe8"}
