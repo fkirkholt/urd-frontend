@@ -226,12 +226,6 @@ function check_dirty() {
   }
 }
 
-window.onbeforeunload = function(event) {
-  if (ds.table && ds.table.dirty) {
-    event.returnValue = "You have unsaved data in table"
-  }
-}
-
 var $header = $('#header')
 m.mount($header[0], header)
 
