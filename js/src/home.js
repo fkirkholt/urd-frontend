@@ -199,7 +199,14 @@ var home = {
           return
         }
       }),
-      m('div', { style: 'width:190px'}, m('span', { class: 'fr gray' }, filtered_recs.length)),
+      m('div', { 
+        style: 'width:190px'
+      }, m('span', { 
+        class: 'fr gray' 
+      }, (
+        filtered_recs.length == ds.dblist.records.length) ? filtered_recs.length
+        : filtered_recs.length + '/' + ds.dblist.records.length
+      )),
       config.tab == 'users' ? null : m('ul', { class: 'nf-ul' }, [
         !ds.path ? null : m('li', [
           m('span', { class: "nf-li" }, [
