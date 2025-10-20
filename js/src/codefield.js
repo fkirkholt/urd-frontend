@@ -223,7 +223,10 @@ function Codefield() {
       if (ds.type == 'file' && ds.file.websocket) {
         const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
 
-        client = new LSPClient({extensions: languageServerExtensions()}).connect(transport)
+        client = new LSPClient({
+          timeout: 20000, // 20 seconds
+          extensions: languageServerExtensions()
+        }).connect(transport)
       }
       onchange = vnode.attrs.onchange
 
@@ -241,7 +244,10 @@ function Codefield() {
         if (ds.type == 'file' && ds.file.websocket) {
           const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
 
-          client = new LSPClient({extensions: languageServerExtensions()}).connect(transport)
+          client = new LSPClient({
+            timeout: 20000, // 20 seconds
+            extensions: languageServerExtensions()
+          }).connect(transport)
         }
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
