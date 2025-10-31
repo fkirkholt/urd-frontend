@@ -13,7 +13,7 @@ var Breadcrumb = {
 
     items.push({
       icon: "",
-      text: '<img class="invert-03" width="29px" style="margin-bottom: -3.9px" src="/static/css/img/' + plug_img + '"><img class="v-mid ' + urdr_class + '" style="margin-left: -5px; margin-bottom: 3px; height: 1.2em" src="/static/css/img/' + urdr_img + '">',
+      text: '<img class="invert-03" width="29px" style="margin-bottom: -3.9px" src="/static/css/img/' + plug_img + '"><img class="v-mid ' + urdr_class + '" style="margin-left: -5px; margin-bottom: 3px; height: 1.25em" src="/static/css/img/' + urdr_img + '">',
       addr: '/',
       branch: ds.branch
     })
