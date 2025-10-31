@@ -133,7 +133,7 @@ var Export_dialog = {
     .replace(/-$/g, '')
     : ds.base.system
     var exportdir = Export_dialog.cnxn_name && ['sqlite', 'duckdb'].includes(ds.base.system)
-    ? './' + (ds.path ? ds.path : '')
+    ? './'
     : ds.config.exportdir + '/' + Export_dialog.cnxn_name
     return m('form', [
       m('h3', 'Export ' + (config.tab != 'data' ? 'database' : 'table')),
@@ -141,7 +141,7 @@ var Export_dialog = {
         m('label', { class: 'db' }, [m('input[type=radio]', {
           name: 'dest',
           value: exportdir
-        })], ' ' + exportdir),
+        })], ' ' + (exportdir == './' ? 'Aktiv mappe' : exportdir)),
         m('label', { class: 'db' }, [m('input[type=radio]', {
           name: 'dest',
           value: 'download'
