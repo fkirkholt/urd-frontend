@@ -41,6 +41,9 @@ var datastore = {
         $('div.curtain').show()
         $('#login').show()
         $('#brukernavn').trigger('focus')
+        if (e.response && typeof e.response.detail == 'string') {
+          alert(e.response.detail)
+        }
       } else {
         alert(e.response ? e.response.detail : 'An error has occurred.')
       }
