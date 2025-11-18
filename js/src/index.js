@@ -149,7 +149,7 @@ m.route($('#main')[0], '/', {
           ds.type = 'database'
           ds.load_database(base_name)
 
-          return Contents
+          return Datapanel
 
         } else if (result.type == 'dir') {
           config.tab = 'databases'

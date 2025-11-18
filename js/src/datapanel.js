@@ -32,8 +32,6 @@ var Datapanel = {
 
   view: function(vnode) {
 
-    if (!ds.table) return
-
     if (config.tab == 'diagram') {
       return [
         m(Contents),
@@ -43,6 +41,10 @@ var Datapanel = {
 
     if (config.tab == 'sql') {
       return m(SQLpanel)
+    }
+
+    if (!ds.table) {
+      return m(Contents)
     }
 
     var selected_idx = ds.table.selection !== null ? ds.table.selection : 0
