@@ -142,6 +142,11 @@ var Export_dialog = {
           name: 'dest',
           value: exportdir
         })], ' ' + (exportdir == './' ? 'Aktiv mappe' : exportdir)),
+        exportdir == './' ? '' 
+        : m('label', { class: 'db' }, [m('input[type=radio]', {
+          name: 'dest',
+          value: exportdir + '/' + ds.base.schema
+        })], ' ' + exportdir + '/' + ds.base.schema),
         m('label', { class: 'db' }, [m('input[type=radio]', {
           name: 'dest',
           value: 'download'
