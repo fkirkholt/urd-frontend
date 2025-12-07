@@ -128,9 +128,7 @@ var Export_dialog = {
     }
     Export_dialog.cnxn_name = ds.cnxn 
     ? ds.cnxn.toLowerCase().replace(' ', '-')
-    .replace('sqlite', '').replace('mysql', '').replace('mssql', '')
-    .replace('duckdb', '').replace('oracle', '').replace('pgsql', '').replace('--', '-')
-    .replace(/-$/g, '')
+    .replace('--', '-').replace(/-$/g, '')
     : ds.base.system
     var exportdir = Export_dialog.cnxn_name && ['sqlite', 'duckdb'].includes(ds.base.system)
     ? './'
