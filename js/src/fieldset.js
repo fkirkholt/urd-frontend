@@ -102,7 +102,6 @@ var Fieldset = {
       // Draw fields if the field group is expanded
       !set.expanded ? null : m('fieldset', {
         'data-set': rec.table.name + '.' + set.name,
-        class: 'flex flex-wrap',
         'data-expandable': set.expandable,
         style: 'min-width: 0'
       }, [
@@ -125,7 +124,7 @@ var Fieldset = {
             })
           } else {
             return m(Field, {
-              rec: rec, colname: subitem, label: label
+              rec: rec, colname: subitem, label: label, label_left: true
             })
           }
         })

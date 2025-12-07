@@ -336,6 +336,7 @@ var Field = {
     var rec = vnode.attrs.rec
     var colname = vnode.attrs.colname
     var label = vnode.attrs.label
+    var label_left = vnode.attrs.label_left || false
     var field = rec.fields[colname]
     var href = field.attrs['data-href']
 
@@ -384,7 +385,7 @@ var Field = {
             'data-expandable': field.expandable && field.value !== null,
             'data-field': rec.table.name + '.' + field.name,
             class: [
-              label ? 'dib ml3 mt1' : 'db ml2 mt1',
+              (label && !label_left) ? 'dib ml3 mt1' : 'db ml2 mt1',
               field.element == 'textarea' ? 'w-100' : '', 
             ].join(' ')
           }, [
@@ -393,7 +394,7 @@ var Field = {
                   title: field.attrs.title,
                   'data-after': ':', 
                   class: [
-                    'db mr2 nowrap',
+                    label_left ? 'mr2 nowrap' : 'db mr2 nowrap',
                     field.expandable && field.value ? 'underline pointer' : '',
                     field.element == 'textarea' && !config.edit_mode ? 'underline pointer' : ''
                   ].join(' '),
@@ -495,7 +496,9 @@ var Field = {
                       ? Field.display_value(field, rec)
                       : m('data', {
                         class: [
-                          'db pr3 collapsible',
+                          'pr3 collapsible',
+                          label_left ? '' : 'db',
+                          label_left && ['int', 'float'].includes(field.datatype) ? 'fr' : '',
                           (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
                           (field.is_filepath) ? 'underline pointer blue' : '',
                           field.element == 'textarea' ? 'markdown' : ''
