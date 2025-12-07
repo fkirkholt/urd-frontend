@@ -79,7 +79,7 @@ var Datapanel = {
             m(Pagination)
           ]),
 
-      !ds.table.records || (config.recordview && !hide_grid)
+      !ds.table.records || (config.recordview && !hide_grid && !ds.table.search)
         ? '' : ds.table.search
           ? m(Search) : m('div#recpanel', {
             class: [
