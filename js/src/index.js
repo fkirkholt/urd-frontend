@@ -76,6 +76,7 @@ m.route($('#main')[0], '/', {
   },
   "/:cnxn/:base...": {
     onmatch: function(args, path) {
+      check_dirty()
       var base_name = args.base
       var query = m.parsePathname(path)
       ds.cnxn = args.cnxn
@@ -98,34 +99,24 @@ m.route($('#main')[0], '/', {
           }
         }
 
-        if (
-          ds.table && ds.table.dirty && Grid.url !== grid_path &&
-          !confirm('You have unsaved data. Continue?')
-        ) {
-          m.route.set(Grid.url)
-          return
-        } else {
-          if (Grid.url != grid_path) {
-            if (ds.table) {
-              ds.table.records = []
-              ds.table.grid.columns = []
-              m.redraw()
-            }
-            Grid.load(args)
-            Grid.url = grid_path
-          } else {
-            // Load correct record when index parameter changes
-            if ('index' in args) {
-              let index = Number(args.index)
-              Record.select(ds.table, index)
-            }
+        if (Grid.url != grid_path) {
+          if (ds.table) {
+            ds.table.records = []
+            ds.table.grid.columns = []
+            m.redraw()
           }
-
-          return Datapanel
+          Grid.load(args)
+          Grid.url = grid_path
+        } else {
+          // Load correct record when index parameter changes
+          if ('index' in args) {
+            let index = Number(args.index)
+            Record.select(ds.table, index)
+          }
         }
-      }
 
-      check_dirty()
+        return Datapanel
+      }
 
       return m.request({
         method: 'get',
@@ -219,6 +210,8 @@ function check_dirty() {
         if (home.editor) {
           home.save_file(ds.file.path, home.editor.get_value())
         }
+      } else if (ds.table && (ds.table.edit || ds.table.hide)) {
+        $('#save-and-close').trigger('click')
       } else {
         Grid.save()
       }

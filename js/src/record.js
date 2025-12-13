@@ -513,6 +513,7 @@ var Record = {
           ? ''
           : m('div', { class: 'w-100 mb3' }, [
             config.recordview ? '' : m('input[type=button]', {
+              id: 'save-and-close',
               value: 'Save and close',
               onclick: function() {
                 var valid = $(this).parents('form')[0].reportValidity()
