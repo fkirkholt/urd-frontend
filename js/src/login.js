@@ -116,12 +116,7 @@ var login = {
         placeholder: 'Passord',
         value: login.param.password,
         disabled: login.param.cnxn || ds.base.name == 'urdr' ? false : true,
-        class: 'db w-100 mb1',
-        onkeypress: function(e) {
-          if (e.which == 13) {
-            $('#btn_login').trigger('click');
-          }
-        }
+        class: 'db w-100 mb1'
       }),
       m('input[type=text]', {
         id: 'database',
