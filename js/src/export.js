@@ -8,6 +8,7 @@ var Export_dialog = {
   progress: 0,
   running: false,
   view_as_table: false,
+  dialect: null,
 
   export_csv: function(clobs_as_files, limit) {
     var param = {}
@@ -68,14 +69,15 @@ var Export_dialog = {
     }
   },
 
-  export_sql: function(dialect, table_defs, no_fkeys, no_empty, view_as_table, 
-                       list_recs = false, data_recs = false, select_recs) {
+  export_sql: function(dialect, table_defs, no_fkeys, no_empty, view_defs,
+                       view_as_table, list_recs = false, data_recs = false, select_recs) {
     var param = {}
     param.dest = $('input[name=dest]:checked').val() || 'download'
     param.dialect = dialect
     param.table_defs = table_defs
     param.no_fkeys = no_fkeys
     param.no_empty = no_empty
+    param.view_defs = view_defs
     param.view_as_table = view_as_table
     param.list_recs = list_recs
     param.data_recs = data_recs
@@ -100,6 +102,7 @@ var Export_dialog = {
         eventSource.close();
         Export_dialog.running = false
         Export_dialog.msg = ''
+        Export_dialog.progress = 0
         $('div.curtain').hide()
         $('#export-dialog').hide()
 
@@ -222,23 +225,58 @@ var Export_dialog = {
       this.type == 'tsv' ? '' : m('div[name=valg]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dialect',
-          value: 'mysql'
+          value: 'mysql',
+          onchange: function(event) {
+            Export_dialog.dialect = 'mysql'
+            if (ds.base.system != 'mysql') {
+              Export_dialog.view_defs = false
+            }
+          }
         })], ' MySQL'),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dialect',
-          value: 'oracle'
+          value: 'oracle',
+          onchange: function(event) {
+            Export_dialog.dialect = 'oracle'
+            if (ds.base.system != 'oracle') {
+              Export_dialog.view_defs = false
+            }
+          }
         })], ' Oracle'),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dialect',
-          value: 'postgresql'
+          value: 'postgresql',
+          onchange: function(event) {
+            Export_dialog.dialect = 'postgresql'
+            if (ds.base.system != 'postgresql') {
+              Export_dialog.view_defs = false
+            }
+          }
         })], ' PostgreSQL'),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dialect',
-          value: 'sqlite'
+          value: 'sqlite',
+          onchange: function(event) {
+            Export_dialog.dialect = 'sqlite'
+            if (ds.base.system != 'sqlite') {
+              Export_dialog.view_defs = false
+            }
+          }
         })], ' SQLite'),
+        m('br'),
+        m('label', [m('input[type=radio]', {
+          name: 'dialect',
+          value: 'mssql',
+          onchange: function(event) {
+            Export_dialog.dialect = 'mssql'
+            if (ds.base.system != 'mssql') {
+              Export_dialog.view_defs = false
+            }
+          }
+        })], ' MS SQL'),
         m('br'), m('br'),
         m('label', [m('input[type=checkbox]', {
           name: 'table-defs'
@@ -253,6 +291,19 @@ var Export_dialog = {
           name: 'no_empty',
           class: 'ml3'
         })], ' Exclude empty tables'),
+        m('br'),
+        m('label', {
+          class: Export_dialog.dialect != ds.base.system ? 'gray' : '',
+          title: Export_dialog.dialect != ds.base.system 
+          ? 'Only accessible when exporting to same database system' : null
+        }, [m('input[type=checkbox]', {
+          name: 'view-defs',
+          disabled: Export_dialog.dialect != ds.base.system,
+          checked: Export_dialog.view_defs,
+          onchange: function(event) {
+            Export_dialog.view_defs = event.target.checked
+          }
+        })], ' Export view definitions'),
         m('br'),
         m('label', [m('input[type=checkbox]', {
           name: 'view-as-table'
@@ -307,6 +358,8 @@ var Export_dialog = {
                 .prop('checked')
               var no_empty = $('#export-dialog input[name="no_empty"]')
                 .prop('checked')
+              var view_defs = $('#export-dialog input[name="view-defs"]')
+                .prop('checked')
               var view_as_table = $('#export-dialog input[name=view-as-table]')
                 .prop('checked')
               var list_records = $('#export-dialog input[name="list-records"]')
@@ -316,8 +369,8 @@ var Export_dialog = {
               var select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
               Export_dialog.export_sql(dialect, table_defs, no_fkeys, no_empty,
-                                       view_as_table, list_records, data_records, 
-                                       select_records, clobs_as_files)
+                                       view_defs, view_as_table, list_records, 
+                                       data_records, select_records, clobs_as_files)
             }
           }.bind(this)
         }),
