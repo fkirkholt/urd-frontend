@@ -155,10 +155,10 @@ var Toolbar = {
     if (index !== null) {
       query_params.index = index
     }
-    if (offset !== undefined && offset !== 0) {
+    if (offset !== undefined) {
       query_params.offset = offset
     }
-    if (Object.keys(ds.table.grid.sort_columns).length > 0) {
+    if (!replace && Object.keys(ds.table.grid.sort_columns).length > 0) {
       var sort = Object.values(ds.table.grid.sort_columns)[0]
       query_params.order = sort.col
       query_params.order += ' ' + sort.dir
@@ -252,7 +252,7 @@ var Toolbar = {
             Record.create(ds.table)
 
             if (config.recordview) {
-              Toolbar.set_url(ds.table.selection)
+              Toolbar.set_url(ds.table.selection, undefined, true)
             } else {
               Record.select(ds.table, ds.table.selection)
             }

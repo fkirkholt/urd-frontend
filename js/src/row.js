@@ -242,7 +242,7 @@ var Row = {
             'br b--moon-gray bb--light-gray'
           ].join(' '),
           onclick: function(e) {
-            Toolbar.set_url(idx)
+            Toolbar.set_url(idx, undefined, true)
             e.stopPropagation()
           }
         })
