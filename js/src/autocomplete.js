@@ -106,6 +106,17 @@ function Autocomplete() {
           onblur: function(event) {
             if (vnode.attrs.self_reference) {
               vnode.attrs.onchange(event)
+            } else {
+              option = options[index]
+              if (option) {
+                event.target.value = option.label
+                event.target.dataset.value = JSON.stringify(option.value)
+                vnode.attrs.onchange(event)
+              } else {
+                event.target.value = ''
+                event.target.dataset.value = ''
+                vnode.attrs.onchange(event)
+              }
             }
             option = {}
             options = []
