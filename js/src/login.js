@@ -12,7 +12,7 @@ var login = {
 
     var cnxn_options = [{label: 'New connection ...', value: 'new'}]
     cnxn_names.forEach(name => cnxn_options.push({
-      label: JSON.parse(Cookies.get(name)).name || name.replace('urdr-cnxn-', ''), 
+      label: name.replace('urdr-cnxn-', ''), 
       value: name.replace('urdr-cnxn-', '')
     }))
 
@@ -156,7 +156,7 @@ var login = {
               url: '/login',
               params: param
             }).then(function(result) {
-              if (param.database && param.database != ds.base.name) {
+              if (param.database) {
                 ds.dblist = null
                 m.route.set('/' + param.cnxn + '/' + param.database)
                 $('div.curtain').hide();

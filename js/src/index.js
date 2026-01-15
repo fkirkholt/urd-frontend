@@ -43,7 +43,11 @@ m.route($('#main')[0], '/', {
       check_dirty()
       ds.cnxn = null
       ds.dblist = null
+      if (ds.base) {
+        ds.base.name = ''
+      }
       ds.table = null      
+      ds.path = null
       ds.file = null
       ds.type = 'login'
       $('#login').show()
