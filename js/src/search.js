@@ -39,7 +39,7 @@ var Search = {
     var search_criterias = Search.parse_search()
 
     m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name +
-      (search_criterias.length ? '&' + search_criterias.join('&') : ''))
+      (search_criterias.length ? '&' + encodeURIComponent(search_criterias.join('&')) : ''))
   },
 
   parse_search: function() {
