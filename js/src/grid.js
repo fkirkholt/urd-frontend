@@ -62,9 +62,7 @@ var Grid = {
       if (config.tab != 'data') {
         // do nothing
       } else if (!config.recordview) {
-        Toolbar.set_url(ds.table.selection || index, ds.table.offset, true)
-      } else {
-        Toolbar.set_url(null, ds.table.offset, true)
+        Toolbar.set_url(ds.table.selection || index, ds.table.offset || undefined, true)
       }
     })
     .catch(function(e) {
