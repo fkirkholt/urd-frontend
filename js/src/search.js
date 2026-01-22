@@ -54,13 +54,14 @@ var Search = {
         var value = filter.value
         var operator = filter.operator
         if (filter.operator === 'LIKE' || filter.operator === 'NOT LIKE') {
+          operator = filter.operator === 'LIKE' ? '=' : '!='
           value = '*' + value + '*'
         } else if (filter.operator === 'startswith') {
           value = value + '*'
-          operator = 'LIKE'
+          operator = '='
         } else if (filter.operator === 'endswith') {
           value = '*' + value
-          operator = 'LIKE'
+          operator = '='
         }
         search_criterias
           .push((filter.field + ' ' + operator + ' ' + (value || ''))
