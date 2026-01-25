@@ -21,7 +21,7 @@ var Pagination = {
         break
     }
 
-    Toolbar.set_url(selection, offset)
+    Toolbar.set_url({index: selection, offset: offset})
   },
 
   to: function() {

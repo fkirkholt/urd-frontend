@@ -310,6 +310,7 @@ var Record = {
       }
       rec.new = false
       rec.dirty = false
+      ds.table.dirty = false
       if (data.values) {
         $.each(data.values, function(fieldname, value) {
           rec.fields[fieldname].value = value
@@ -324,7 +325,7 @@ var Record = {
       if (rec.delete && rec.table_name == ds.table.name) {
         var idx = rec.table.selection
         rec.table.records.splice(idx, 1)
-        Toolbar.set_url(0)
+        Toolbar.set_url({index: 0})
       } else if (rec.delete) {
         rec.table.records.splice(rec.rowidx, 1)
         rec.table.selection = null

@@ -26,9 +26,8 @@ var Grid = {
     } else {
       order = 'ASC'
     }
-    sort_cols[col] = {col: col, dir: order, idx: 0}
-    ds.table.grid.sort_columns = sort_cols
-    Toolbar.set_url(0)
+    var sortcol = {col: col, dir: order, idx: 0}
+    Toolbar.set_url({sort: sortcol})
   },
 
   /**
@@ -62,7 +61,7 @@ var Grid = {
       if (config.tab != 'data') {
         // do nothing
       } else if (!config.recordview) {
-        Toolbar.set_url(ds.table.selection || index, ds.table.offset || undefined, true)
+        Toolbar.set_url({index: ds.table.selection || index, replace: true})
       }
     })
     .catch(function(e) {

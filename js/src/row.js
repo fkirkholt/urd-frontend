@@ -115,7 +115,7 @@ var Row = {
           if (config.recordview) {
             ds.table.selection = idx
           } else {
-            Toolbar.set_url(idx, ds.table.offset, true)
+            Toolbar.set_url({index: idx, replace: true})
           }
         } else {
           if (record.pkey == null) return
@@ -242,7 +242,7 @@ var Row = {
             'br b--moon-gray bb--light-gray'
           ].join(' '),
           onclick: function(e) {
-            Toolbar.set_url(idx, undefined)
+            Toolbar.set_url({index: idx})
             e.stopPropagation()
           }
         })

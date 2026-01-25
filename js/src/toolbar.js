@@ -144,7 +144,7 @@ var Toolbar = {
     return search_params.join('; ')
   },
 
-  set_url: function(index, offset, replace=false) {
+  set_url: function({index, offset, sort, replace=false}) {
     // Set index in url
     var query_params = {}
     var path = m.route.get()
@@ -152,14 +152,13 @@ var Toolbar = {
       query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
       delete query_params.index
     }
-    if (index !== null) {
+    if (index !== undefined) {
       query_params.index = index
     }
     if (offset !== undefined) {
       query_params.offset = offset
     }
-    if (!replace && Object.keys(ds.table.grid.sort_columns).length > 0) {
-      var sort = Object.values(ds.table.grid.sort_columns)[0]
+    if (sort) {
       query_params.order = sort.col
       query_params.order += ' ' + sort.dir
     }
@@ -252,7 +251,8 @@ var Toolbar = {
             Record.create(ds.table)
 
             if (config.recordview) {
-              Toolbar.set_url(ds.table.selection, undefined, true)
+              config.edit_mode = true
+              Toolbar.set_url({index: ds.table.selection, replace: true})
             } else {
               Record.select(ds.table, ds.table.selection)
             }
@@ -411,7 +411,7 @@ var Toolbar = {
             disabled: Toolbar.button.disabled('first'),
             onclick: function() {
               if (ds.table.offset == 0) {
-                Toolbar.set_url(0, 0)
+                Toolbar.set_url({index: 0, offset: 0})
               } else {
                 Pagination.navigate('first', true)
               }
@@ -429,7 +429,7 @@ var Toolbar = {
               if (prev == -1) {
                 Pagination.navigate('previous', true)
               } else {
-                Toolbar.set_url(prev)
+                Toolbar.set_url({index: prev})
               }
             }
           }),
@@ -445,7 +445,7 @@ var Toolbar = {
               if (next == ds.table.records.length) {
                 Pagination.navigate('next', true)
               } else {
-                Toolbar.set_url(next)
+                Toolbar.set_url({index: next})
               }
             }
           }),
