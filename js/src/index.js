@@ -80,7 +80,6 @@ m.route($('#main')[0], '/', {
   },
   "/:cnxn/:base...": {
     onmatch: function(args, path) {
-      check_dirty()
       var base_name = args.base
       var query = m.parsePathname(path)
       ds.cnxn = args.cnxn
@@ -104,6 +103,7 @@ m.route($('#main')[0], '/', {
         }
 
         if (Grid.url != grid_path) {
+          check_dirty()
           if (ds.table) {
             ds.table.records = []
             ds.table.grid.columns = []
