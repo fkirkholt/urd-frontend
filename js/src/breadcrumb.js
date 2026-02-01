@@ -87,7 +87,6 @@ var Breadcrumb = {
         return [
           m('a', {
             class: 'fw3 white no-underline underline-hover f4 pointer',
-            href: item.addr,
             onclick: function(e) {
               m.route.set(item.addr)
               e.preventDefault
