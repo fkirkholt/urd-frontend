@@ -152,7 +152,7 @@ var Toolbar = {
       query_params = m.parseQueryString(path.slice(path.indexOf('?') + 1))
       delete query_params.index
     }
-    if (index !== undefined) {
+    if (index !== undefined && index != null) {
       query_params.index = index
     }
     if (offset !== undefined) {
