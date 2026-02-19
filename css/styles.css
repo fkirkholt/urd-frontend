@@ -79,6 +79,14 @@ tr:focus {
     border: 2px solid #357EDD;
 }
 
+tr td.icon {
+    padding-left: 3px;
+}
+
+tr:focus td.icon {
+    padding-left: 2px;
+}
+
 .bg-dark tr[data-selected] {
     background-color: #357EDD;
 }

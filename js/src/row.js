@@ -156,27 +156,23 @@ var Row = {
         'lh-copy cursor-default',
         config.dark_mode ? 'bg-black' : 'bg-near-white',
         record.class ? record.class : '',
-        !list.ismain ? '' 
-        : (idx < list.records.length - 1) && config.dark_mode ? 'bb b--gray'
-        : (idx < list.records.length - 1) ? 'bb b--moon-gray'
-        : config.dark_mode ? 'bb b--gray'
-        : 'bb b--moon-gray',
       ].join(' ')
     }, [
         // Draw icons indicating if record is dirty, illegal, new etc.
-        m('td', {
-          align: 'right',
+        m('td.icon', {
+          align: 'center',
           class: !list.ismain ? '' 
-          : config.dark_mode ? 'pa0 br b--gray'
-          :'pa0',
+          : config.dark_mode ? 'min-w1 pr1 ba b--gray'
+          :'min-w1 pl1 pr1 ba b--moon-gray',
         }, [
-            config.autosave ? m.trust('&nbsp;') : m('i', {
+            m('i', {
               class: [
-                record.delete ? 'nf nf-fa-trash_o' 
+                config.autosave && !(record.invalid) ? 'nf nf-md-text_box_outline gray'
                 : record.invalid ? 'nf nf-fa-warning red' 
-                : record.new ? 'nf nf-md-text_box_plus_outline gray' 
-                : record.dirty ? 'nf nf-fa-pencil light-gray' 
-                : ''
+                : record.delete ? 'nf nf-md-text_box_remove_outline' 
+                : record.new ? 'nf nf-md-text_box_plus_outline' 
+                : record.dirty ? 'nf nf-md-text_box_edit_outline' 
+                : 'nf nf-md-text_box_outline gray'
               ],
               title: !record.messages ? null : record.messages.join(' ') 
             })

@@ -285,13 +285,13 @@ var Grid = {
       }, [m('table#urdgrid.tbl', {
         'data-name': ds.table.name,
         class: [
-          'bt overflow-auto collapse w-100',
-          config.dark_mode ? 'b-mid-gray b--gray' : 'b-light-gray b--moon-gray'
+          'overflow-auto collapse w-100',
+          config.dark_mode ? 'br b-mid-gray b--gray' : 'br b-light-gray b--moon-gray'
         ].join(' '),
       }, [
           m('thead', { class: '' }, [
             m('tr', { class: 'cursor-default' }, [
-              m('th', {
+              m('th.icon', {
                 class: [
                   'tl normal f6 pa0',
                   config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'

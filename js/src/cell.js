@@ -82,6 +82,7 @@ var Cell = {
 
     return m('td', {
       class: [
+        'bb',
         Cell.align(list, colname) === 'right' ? 'tr' : 'tl',
         compressed || (value && value.length < 30) || (
           field.datatype !== 'str' &&
@@ -91,8 +92,8 @@ var Cell = {
           ? 'nowrap' : '',
         compressed && value && value.length > 30 ? 'truncate' : 'overflow-wrap',
         compressed && value.length > 30 ? 'pt0 pb0' : '',
-        vnode.attrs.border && config.dark_mode ? 'br b--gray'
-        : vnode.attrs.border ? 'br b--moon-gray' : '',
+        vnode.attrs.border && config.dark_mode ? 'bl b--gray'
+        : vnode.attrs.border ? 'bl b--moon-gray' : '',
         ds.table.grid.sort_columns[colname] ? 'min-w3' : 'min-w2',
         'f6 pl1 pr1'
       ].join(' '),
