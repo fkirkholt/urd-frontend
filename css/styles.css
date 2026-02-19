@@ -43,7 +43,11 @@ input[type="checkbox"] { accent-color: #357EDD }
 }
 
 /* Style cursor in codefields */
-.cm-editor .cm-cursor { border-left-color: orange }
+.cm-editor .cm-cursor { 
+    border-left: 2px solid;
+    margin-left: -1px; /* Adjust margin to keep it centered */
+    border-left-color: orange
+}
 
 .cm-editor .cm-activeLine {
     background-color: inherit;
