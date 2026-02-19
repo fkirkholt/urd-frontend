@@ -80,7 +80,20 @@ table#urdgrid td.truncate { overflow: hidden; text-overflow: ellipsis; width: 10
 
 tr:focus {
     outline: 0;
-    border: 2px solid #357EDD;
+    border-top: 2px solid orange;
+    border-bottom: 2px solid orange;
+    border-left: 2px solid orange;
+    border-right: 1px solid orange;
+}
+
+tr:focus td {
+    padding-top: 1px;
+    padding-bottom: 0;
+}
+
+tr td {
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 tr td.icon {
@@ -98,11 +111,6 @@ tr:focus td.icon {
 tr[data-selected] {
     background-color: #357EDD;
     color: white;
-}
-
-
-tr[data-selected]:focus {
-    border: 2px solid #357EDD;
 }
 
 div.field {
