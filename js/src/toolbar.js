@@ -186,7 +186,11 @@ var Toolbar = {
     ds.table.hidden = config.recordview &&
       (params.index !== undefined || is_pkey)
 
-    return m('ul', { id: 'toolbar', target: '_blank', class: 'flex f6 list pl1 mt1 mb1' }, [
+    return m('ul', { 
+      id: 'toolbar', 
+      target: '_blank', 
+      class: 'flex f6 list pl1 mt0 pt2 mb0 ba b--moon-gray' 
+    }, [
       // Make form to use with submit action
       m('li', [
         m('form#action', [
@@ -226,6 +230,7 @@ var Toolbar = {
       ds.table.hidden ? '' : m('input[type=search]', {
         placeholder: ds.table.fts ? "Full-text search" : "Search all text fields",
         value: Toolbar.get_search(),
+        class: 'mb1',
         style: 'flex: 1',
         onfocus: function(event) {
           event.target.select()
