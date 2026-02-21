@@ -37,7 +37,7 @@ var Grid = {
    *                                  sort, filter, prim_key
    *
    */
-  get: function(data, index=0) {
+  get: function(data, index) {
 
     m.request({
       method: "get",
@@ -52,15 +52,9 @@ var Grid = {
 
       ds.table.filters = Search.parse_query(data.filter)
 
-      if (data.index) {
-        ds.table.selection = data.index
-      }
-
       ds.base.name = data.base
 
-      if (config.tab != 'data') {
-        // do nothing
-      } else if (!config.recordview) {
+      if (config.tab == 'data' && index !== undefined) {
         Toolbar.set_url({index: ds.table.selection || index, replace: true})
       }
     })
@@ -181,7 +175,7 @@ var Grid = {
   },
 
   load: function(params) {
-    var index = 0
+    var index
     var query = Grid.get_filter(params)
 
     if (ds.base.name != params.base) {
@@ -190,6 +184,8 @@ var Grid = {
 
     if ('index' in params) {
       index = params.index
+    } else if (!config.recordview) {
+      index = 0
     }
 
     if ('order' in params) {
