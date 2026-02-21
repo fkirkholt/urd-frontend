@@ -42,13 +42,13 @@ var Import_dialog = {
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dir',
-          value: ds.config.exportdir + '/' + ds.path + '/data'
-        })], ' ' + ds.config.exportdir + '/' + ds.path + '/data'),
+          value: ds.config.exportdir + '/' + ds.path + '/data/'
+        })], ' ' + ds.config.exportdir + '/' + ds.path + '/data/'),
         m('br'),
         m('label', [m('input[type=radio]', {
           name: 'dir',
-          value: ds.config.exportdir + '/' + ds.path + '/' + basename + '-data/'
-        })], ' ' + ds.config.exportdir + '/' + ds.path + '/' + basename + '-data/')
+          value: ds.config.exportdir + '/' +  basename + '-data/'
+        })], ' ' + ds.config.exportdir + '/' + basename + '-data/')
       ]),
       m('div[name=buttons]', { class: "bottom-0 mt2" }, [
         m('div', Import_dialog.msg),
