@@ -71,7 +71,7 @@ var Datapanel = {
         : m('div#gridpanel', {
           class: [
             'flex flex-column ml2 ba',
-            config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'
+            config.dark_mode ? 'bg-black b--gray' : 'bg-near-white b--light-gray',
           ].join(' ')
         }, [
             m(Toolbar),
