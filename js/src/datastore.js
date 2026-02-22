@@ -42,7 +42,8 @@ var datastore = {
         $('#login').show()
         $('#brukernavn').trigger('focus')
         if (e.response && typeof e.response.detail == 'string') {
-          alert(e.response.detail)
+          $('#message').removeClass('bg-light-green').addClass('bg-red')
+            .html(e.response.detail).show()
         }
       } else {
         alert(e.response ? e.response.detail : 'An error has occurred.')

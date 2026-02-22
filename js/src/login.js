@@ -132,6 +132,7 @@ var login = {
         disabled: !login.param.cnxn && ds.base.name != 'urdr',
         class: 'db w-100',
         onclick: function() {
+          $('#message').hide()
           if (login.param.server || ds.base.name == 'urdr') {
             login.error = false
             login.create = false
