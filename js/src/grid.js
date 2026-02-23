@@ -47,15 +47,13 @@ var Grid = {
       ds.table = result.data
       ds.table.dirty = false
       ds.table.ismain = true // represents main grid, and not relations
-
       ds.table.query = data.filter
-
       ds.table.filters = Search.parse_query(data.filter)
-
       ds.base.name = data.base
+      index = ds.table.selection || index
 
       if (config.tab == 'data' && index !== undefined) {
-        Toolbar.set_url({index: ds.table.selection || index, replace: true})
+        Toolbar.set_url({index: index, replace: true})
       }
     })
     .catch(function(e) {
