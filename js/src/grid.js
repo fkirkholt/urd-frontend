@@ -52,6 +52,17 @@ var Grid = {
       ds.base.name = data.base
       index = ds.table.selection || index
 
+      var is_pkey = true
+      for (let idx in ds.table.pkey) {
+        let key = ds.table.pkey[idx]
+        if (ds.table.filters[key] === undefined) {
+          is_pkey = false
+        }
+      }
+      if (is_pkey) {
+        Record.select(ds.table, 0)
+      }
+
       if (config.tab == 'data' && index !== undefined) {
         Toolbar.set_url({index: index, replace: true})
       }
