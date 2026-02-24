@@ -325,7 +325,6 @@ var Record = {
       if (rec.delete && rec.table_name == ds.table.name) {
         var idx = rec.table.selection
         rec.table.records.splice(idx, 1)
-        Toolbar.set_url({index: 0})
       } else if (rec.delete) {
         rec.table.records.splice(rec.rowidx, 1)
         rec.table.selection = null
