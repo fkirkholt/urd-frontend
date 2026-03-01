@@ -359,7 +359,9 @@ var Input = {
         : field.value
 
       vnode.attrs.size = field.size ? Math.round(field.size * 0.7) : null
-      vnode.attrs.maxlength = field.size ? field.size : ''
+      if (!['sqlite', 'duckdb'].includes(ds.base.system)) {
+        vnode.attrs.maxlength = field.size ? field.size : ''
+      }
       vnode.attrs.class += ' border-box truncate'
       vnode.attrs.onchange = function(event) {
         var value = event.target.value.replace(/\u21a9/g, "\n")
