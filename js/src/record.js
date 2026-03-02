@@ -321,8 +321,14 @@ var Record = {
           } 
         })
         rec.pkey = data.values
-      }
-      if (rec.delete && rec.table_name == ds.table.name) {
+      } else if (rec.delete && data.result != 'success') {
+        $('#message').removeClass('bg-light-green').addClass('bg-red')
+        .show().html(data.result)
+        setTimeout(function() {
+          $('#message').hide()
+        }, 4000)
+        rec.delete = false
+      } else if (rec.delete && rec.table_name == ds.table.name) {
         var idx = rec.table.selection
         rec.table.records.splice(idx, 1)
       } else if (rec.delete) {
@@ -394,6 +400,10 @@ var Record = {
     var changes = {}
     changes.prim_key = rec.pkey
     changes.relations = {}
+    changes.method = rec.delete ? 'delete' :
+      rec.new ? 'post' : 'put'
+
+    if (changes.method == 'delete' || !traverse) return changes
 
     var values = {}
     $.each(rec.fields, function(name, field) {
@@ -405,11 +415,6 @@ var Record = {
     if (Object.keys(values).length) {
       changes.values = values
     }
-
-    changes.method = rec.delete ? 'delete' :
-      rec.new ? 'post' : 'put'
-
-    if (changes.action == 'delete' || !traverse) return changes
 
     $.each(rec.relations, function(alias, rel) {
       if (!rel.dirty) return
@@ -471,11 +476,11 @@ var Record = {
   },
 
   is_deletable: function(rec) {
-    var deletable = rec.relations ? true : false
+    var deletable = true
 
     for (let idx in rec.relations) {
       let rel = rec.relations[idx]
-      if (rel.count_records && rel.options?.ondelete != "CASCADE") {
+      if (rel.count_records && rel.delete_rule == "RESTRICT") {
         deletable = false
       }
     }

@@ -171,6 +171,9 @@ var Grid = {
       params: { cnxn: ds.cnxn },
       body: data
     }).then(function(result) {
+      if (result.data.msg) {
+        alert(result.data.msg)
+      }
       $('#message').removeClass('bg-red').addClass('bg-light-green').show().html('Saved')
 
       setTimeout(function() {

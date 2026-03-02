@@ -93,7 +93,7 @@ var Relation = {
         if (rec.relations) {
           $.each(rec.relations, function(idx, rel) {
             var count = rel.count_records
-            if (count && rel.options?.ondelete != "CASCADE") {
+            if (count && rel.delete_rule == "RESTRICT") {
               rec.deletable = false
             }
           })

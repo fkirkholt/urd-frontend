@@ -104,13 +104,6 @@ var Toolbar = {
   delete_record: function() {
     var idx = ds.table.selection
     var rec = ds.table.records[idx]
-    var deletable = true
-    $.each(rec.relations, function(idx, rel) {
-      if (rel.count_records && rel.options?.ondelete != "CASCADE") {
-        deletable = false
-      }
-    })
-    if (ds.table.privilege.delete != true || !deletable) return
 
     var r = true
     if (config.autosave || !config.edit_mode) {
@@ -124,7 +117,7 @@ var Toolbar = {
         Record.delete(rec)
       }
 
-      if (!config.edit_mode) {
+      if (!config.edit_mode && !config.autosave) {
         Grid.save()
       }
     }
