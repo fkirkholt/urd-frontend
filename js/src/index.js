@@ -62,6 +62,7 @@ m.route($('#main')[0], '/', {
       config.tab = 'databases'
       ds.path = null
       ds.file = null
+      ds.table = null
       var query = m.parsePathname(path)
       if ('grep' in query.params) {
         console.log('query.params.grep', query.params.grep)
@@ -121,6 +122,8 @@ m.route($('#main')[0], '/', {
 
         return Datapanel
       }
+
+      ds.table = null
 
       return m.request({
         method: 'get',
