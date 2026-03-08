@@ -5,6 +5,7 @@ var login = {
 
   create: false,
   param: {},
+  drivers: {},
 
   view: function() {
     var cnxn_names = Object.keys(Cookies.get())
@@ -31,6 +32,17 @@ var login = {
           } else if (this.value) {
             login.param = JSON.parse(Cookies.get('urdr-cnxn-' + this.value))
             login.param.cnxn = this.value
+
+            m.request({
+              method: 'get',
+              url: '/drivers',
+              params: {system: login.param.system}
+            }).then(function(result) {
+              login.drivers = result
+              if (!login.param.driver) {
+                login.param.driver = Object.keys(login.drivers)[0]
+              }
+            })
           }
         },
         class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
@@ -56,6 +68,16 @@ var login = {
         disabled: login.param.cnxn ? false : true,
         onchange: function() {
           login.param.system = this.value
+
+          m.request({
+            method: 'get',
+            url: '/drivers',
+            params: {system: login.param.system}
+          }).then(function(result) {
+            console.log('result', result)
+            login.drivers = result
+            login.param.driver = Object.keys(login.drivers)[0]
+          })
         },
         options: [
         
@@ -126,6 +148,17 @@ var login = {
         disabled: login.param.cnxn ? false : true,
         class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1'
       }),
+      Object.keys(login.drivers).map(function(key, idx) {
+        return m('label', {
+          class: 'mr2 nowrap',
+          title: 'Select driver'
+        }, [m('input[type=radio]', {
+          name: 'driver',
+          value: key,
+          checked: (!login.param.driver && idx == 0) || login.param.driver === key,
+          onchange: () => login.param.driver = key
+        })], ' ' + key)
+      }),
       m('input[type=button]', {
         id: 'btn_login',
         value: login.param.server || !login.param.cnxn ? header : 'Delete',
@@ -136,34 +169,24 @@ var login = {
           if (login.param.server || ds.base.name == 'urdr') {
             login.error = false
             login.create = false
-            var param = {};
-            param.cnxn = login.param.cnxn.toLowerCase().replace(' ', '-')
-            param.name = login.param.name || login.param.cnxn
-            console.log('param.name', param.name)
-            console.log('param.cnx', param.cnxn)
-            param.system = $('#system').val()
-            param.server = $('#server').val().trim()
-            param.username = $('#brukernavn').val()
-            param.password = $('#passord').val()
-            param.database = $('#database').val().trim()
 
             if (login.param.cnxn) {
-              Cookies.set('urdr-cnxn-' + login.param.cnxn, JSON.stringify(param), { expires: 365 })
+              Cookies.set('urdr-cnxn-' + login.param.cnxn, JSON.stringify(login.param), { expires: 365 })
               Cookies.set('urdr-cnxn', login.param.cnxn, { expires: 1 })
             } 
 
             m.request({
               method: 'post',
               url: '/login',
-              params: param
+              params: login.param
             }).then(function(result) {
-              if (param.database) {
+              if (login.param.database) {
                 ds.dblist = null
-                m.route.set('/' + param.cnxn + '/' + param.database)
+                m.route.set('/' + login.param.cnxn + '/' + login.param.database)
                 $('div.curtain').hide();
                 $('#login').hide();
               } else {
-                m.route.set('/' + param.cnxn)
+                m.route.set('/' + login.param.cnxn)
                 $('div.curtain').hide();
                 $('#login').hide();
               }
