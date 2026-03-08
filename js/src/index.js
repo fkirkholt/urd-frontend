@@ -123,6 +123,7 @@ m.route($('#main')[0], '/', {
         return Datapanel
       }
 
+      check_dirty()
       ds.table = null
 
       return m.request({
@@ -137,11 +138,6 @@ m.route($('#main')[0], '/', {
           ds.cnxn = args.cnxn
           Grid.url = ''
           ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
-          if (ds.table && ds.table.dirty) {
-            if (!confirm('You have unsaved data. Continue?')) {
-              m.route.set(Grid.url)
-            }
-          }
 
           config.tab = 'data'
           ds.type = 'database'
