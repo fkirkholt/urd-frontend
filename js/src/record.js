@@ -403,7 +403,7 @@ var Record = {
     changes.method = rec.delete ? 'delete' :
       rec.new ? 'post' : 'put'
 
-    if (changes.method == 'delete' || !traverse) return changes
+    if (changes.method == 'delete') return changes
 
     var values = {}
     $.each(rec.fields, function(name, field) {
@@ -415,6 +415,8 @@ var Record = {
     if (Object.keys(values).length) {
       changes.values = values
     }
+
+    if (!traverse) return changes
 
     $.each(rec.relations, function(alias, rel) {
       if (!rel.dirty) return
