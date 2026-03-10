@@ -11,8 +11,11 @@ var Datapanel = {
         if (attr == 'style' && typeof(value) == 'object' && value !== null) {
           string_value = ''
           for (let key in value) {
+            var values = value[key].split(' ')
             $(selector).css(key, value[key])
           }
+        } else if (typeof value == 'boolean') {
+          $(selector).prop(attr, value)
         } else {
           $(selector).attr(attr, value)
         }
