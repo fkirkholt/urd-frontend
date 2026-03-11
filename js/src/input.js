@@ -268,7 +268,7 @@ var Input = {
 
       return m(JSONed, {...vnode.attrs})
     } else if (
-      field.datatype == 'str' && !field.size 
+      field.datatype == 'str' && (!field.size || field.size > 1000) 
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
