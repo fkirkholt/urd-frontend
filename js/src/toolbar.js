@@ -247,13 +247,7 @@ var Toolbar = {
           onclick: function() {
             if (ds.table.privilege.insert != true || full) return
             Record.create(ds.table)
-
-            if (config.recordview) {
-              config.edit_mode = true
-              Toolbar.set_url({index: ds.table.selection, replace: true})
-            } else {
-              Record.select(ds.table, ds.table.selection)
-            }
+            Toolbar.set_url({index: ds.table.selection, replace: true})
 
             // Focus first input in new record
             setTimeout(function() {
