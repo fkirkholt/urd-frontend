@@ -128,8 +128,10 @@ var Grid = {
       p.prim_key = JSON.stringify(post.pkey)
     } else {
       p.prim_key = null
+      idx = 0
     }
-    Grid.get(p)
+
+    Grid.get(p, idx)
   },
 
   save: function() {
