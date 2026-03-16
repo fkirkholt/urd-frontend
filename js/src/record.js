@@ -564,6 +564,14 @@ var Record = {
             }
 
             if (typeof item == 'object') {
+              Object.values(item.items).map(function(subitem) {
+                if (subitem in rec.table.fields && rec.table.fields[subitem].defines_relation) {
+                  item.defines_relation = true
+                } 
+              })
+              if (item.defines_relation) {
+                return
+              }
               return m(Fieldset, {
                 rec: rec,
                 fieldset: item,
