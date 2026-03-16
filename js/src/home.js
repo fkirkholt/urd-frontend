@@ -132,6 +132,17 @@ var home = {
       )
     })
 
+    let filecompletions = []
+    for (const i in ds.dblist.records) {
+      let rec = ds.dblist.records[i]
+      let option = {
+        label: rec.columns.label,
+        type: 'keyword'
+      }
+      filecompletions.push(option)
+    }
+    ds.dblist.autocomplete['filecompletions'] = filecompletions
+
     return [m('div#list', { 
       class: 'overflow-y-auto', 
       style: (ds.file && ds.file.type != 'dir') ? 'min-width: 200px; width:200px' : ''

@@ -15,7 +15,8 @@ import { javascript } from "@codemirror/lang-javascript"
 import { css } from "@codemirror/lang-css"
 import { LSPClient, languageServerSupport } from "@codemirror/lsp-client"
 import { tags } from "@lezer/highlight"
-import { languages } from '@codemirror/language-data';
+import { languages } from '@codemirror/language-data'
+import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
 
 function createWebSocketTransport(uri) {
   let handlers = []
@@ -30,6 +31,38 @@ function createWebSocketTransport(uri) {
   })
 }
 
+function completions(context) {
+  let word = context.matchBefore(/[\p{L}\p{N}_-]*/u)
+  let uppercase = word.text.charAt(0) == word.text.charAt(0).toUpperCase()
+  if (!word || (word.to - word.from < 3 && !context.explicit))
+    return null
+  let all_options = []
+  Object.values(ds.dblist.autocomplete).forEach(options => {
+    all_options = all_options.concat(options)
+  });
+  return {
+    from: word.from,
+    options: all_options.map(opt => {
+      // Use uppercase for first character if written
+      let new_text = null 
+      if (opt.apply) {
+        new_text = uppercase 
+          ? opt.apply.charAt(0).toUpperCase() + opt.apply.slice(1) 
+          : opt.apply
+      }
+
+      let new_label = uppercase 
+        ? opt.label.charAt(0).toUpperCase() + opt.label.slice(1) 
+        : opt.label
+
+      return {
+        ...opt,
+        label: new_label,
+        apply: new_text
+      }
+    })
+  }
+}
 
 function Codefield() {
   var editor
@@ -115,7 +148,14 @@ function Codefield() {
       syntaxHighlighting(defaultHighlightStyle),
       basicSetup,
       foldService.of(foldmethod),
-      keymap.of([indentWithTab]),
+      keymap.of([
+        {
+          key: "Tab",
+          run: moveCompletionSelection(true), // Tab moves down in list
+          shift: moveCompletionSelection(false) // Shift-Tab moves up in list
+        },
+        indentWithTab,
+      ]),
       EditorView.lineWrapping,
       indentedLineWrap,
       editable.of(EditorView.editable.of(attrs.editable)),
@@ -155,7 +195,8 @@ function Codefield() {
           }
         } 
       }),
-      lang
+      lang,
+      autocompletion({ override: [completions] })
     ]
     if (ds.file && ds.file.websocket) {
       extensions.push(languageServerSupport(client, "file://" + ds.file.abspath))
