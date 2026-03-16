@@ -331,6 +331,12 @@ var Record = {
       } else if (rec.delete && rec.table_name == ds.table.name) {
         var idx = rec.table.selection
         rec.table.records.splice(idx, 1)
+        if (ds.table.records.length > idx) {
+          console.log('setter index til ', idx)
+          Toolbar.set_url({index: idx})
+        } else {
+          Toolbar.set_url({index: idx - 1})
+        }
       } else if (rec.delete) {
         rec.table.records.splice(rec.rowidx, 1)
         rec.table.selection = null
