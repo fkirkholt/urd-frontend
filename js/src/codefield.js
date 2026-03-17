@@ -35,6 +35,8 @@ function createWebSocketTransport(uri) {
 function completions(context) {
   let word = context.matchBefore(/[\p{L}\p{N}_-]*/u)
   let uppercase = word.text.charAt(0) == word.text.charAt(0).toUpperCase()
+  let before = context.state.doc.sliceString(Math.max(0, word.from - 2), word.from)
+  let is_link = before == '](' ? true : false
   if (!word || (word.to - word.from < 3 && !context.explicit))
     return null
   let all_options = []
@@ -55,6 +57,10 @@ function completions(context) {
       let new_label = uppercase 
         ? opt.label.charAt(0).toUpperCase() + opt.label.slice(1) 
         : opt.label
+
+      if (!is_link) {
+        new_label = new_label.replaceAll('-', ' ').replace(/\.[^.]+$/, '')
+      }
 
       return {
         ...opt,
