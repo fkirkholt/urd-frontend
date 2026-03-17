@@ -69,7 +69,7 @@ var Datapanel = {
 
     return !ds.table.records ? m('div', 'laster ...') : [
       m(Contents),
-      ds.table.search || ds.table.edit || hide_grid
+      ds.table.search || hide_grid
         ? ''
         : m('div#gridpanel', {
           class: [

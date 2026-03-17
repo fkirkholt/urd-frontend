@@ -499,20 +499,6 @@ var Record = {
   view: function(vnode) {
     var rec = vnode.attrs.record
 
-    // Clone record so the registration can be cancelled easily
-    // This requires that relations is loaded before cloning
-    if (ds.table.edit && !rec.relations) {
-      return
-    }
-    if (ds.table.edit && !ds.rec) {
-      if (!config.recordview) {
-        rec = structuredClone(rec)
-      }
-      ds.rec = rec
-    } else if (ds.table.edit) {
-      rec = ds.rec
-    }
-
     if (!rec || !rec.table) {
       return m('form[name="record"]')
     }
@@ -522,76 +508,40 @@ var Record = {
     rec.dirty = rec.dirty == undefined ? false : rec.dirty
 
     return [
-        !ds.table.edit && !ds.table.hide
-          ? ''
-          : m('div', { class: 'w-100 mb3' }, [
-            config.recordview ? '' : m('input[type=button]', {
-              id: 'save-and-close',
-              value: 'Save and close',
-              onclick: function() {
-                var valid = $(this).parents('form')[0].reportValidity()
-                if (valid) {
-                    var saved = true
-                    if (ds.table.dirty) {
-                      vnode.attrs.record = merge(vnode.attrs.record, rec)
-                      delete ds.rec
-                      saved = Grid.save()
-                    }
-                    if (saved) {
-                      ds.table.edit = false
-                      config.edit_mode = false
-                    }
-                }
-              }
-            }),
-            config.recordview ? '' : m('input[type=button]', {
-              value: 'Cancel',
-              onclick: function() {
-                ds.table.edit = false
-                config.edit_mode = false
-                delete ds.rec
-                if (rec.new) {
-                  var idx = ds.table.selection
-                  ds.table.records.splice(idx, 1)
-                  Record.select(ds.table, 0)
-                }
-              }
-            })
-          ]),
-          Object.keys(rec.table.form.items).map(function(label) {
-            var item = rec.table.form.items[label]
+      Object.keys(rec.table.form.items).map(function(label) {
+        var item = rec.table.form.items[label]
 
-            if (
-              typeof item !== 'object' &&
-                item.indexOf('.') === -1 &&
-                rec.table.fields[item].defines_relation
-            ) {
-              return
-            }
+        if (
+          typeof item !== 'object' &&
+            item.indexOf('.') === -1 &&
+            rec.table.fields[item].defines_relation
+        ) {
+          return
+        }
 
-            if (typeof item == 'object') {
-              Object.values(item.items).map(function(subitem) {
-                if (subitem in rec.table.fields && rec.table.fields[subitem].defines_relation) {
-                  item.defines_relation = true
-                } 
-              })
-              if (item.defines_relation) {
-                return
-              }
-              return m(Fieldset, {
-                rec: rec,
-                fieldset: item,
-                label: label
-              })
-            } else if (typeof item == "string" && item.includes('relation')) {
-              return m(Relation, { rec: rec, ref: item, label: label })
-            } else if (typeof item == "string" && item.includes('action')) {
-              // TODO
-            } else {
-              return m(Field, { rec: rec, colname: item, label: label })
-            }
+        if (typeof item == 'object') {
+          Object.values(item.items).map(function(subitem) {
+            if (subitem in rec.table.fields && rec.table.fields[subitem].defines_relation) {
+              item.defines_relation = true
+            } 
           })
-     ]
+          if (item.defines_relation) {
+            return
+          }
+          return m(Fieldset, {
+            rec: rec,
+            fieldset: item,
+            label: label
+          })
+        } else if (typeof item == "string" && item.includes('relation')) {
+          return m(Relation, { rec: rec, ref: item, label: label })
+        } else if (typeof item == "string" && item.includes('action')) {
+          // TODO
+        } else {
+          return m(Field, { rec: rec, colname: item, label: label })
+        }
+      })
+    ]
   }
 }
 

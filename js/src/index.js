@@ -203,7 +203,7 @@ function check_dirty() {
         if (home.editor) {
           home.save_file(ds.file.path, home.editor.get_value())
         }
-      } else if (ds.table && (ds.table.edit || ds.table.hide)) {
+      } else if (ds.table && ds.table.hide) {
         $('#save-and-close').trigger('click')
       } else {
         Grid.save()

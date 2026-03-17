@@ -258,7 +258,6 @@ var Toolbar = {
             }, 100)
 
             if (!config.edit_mode) {
-              ds.table.edit = true
               config.edit_mode = true
             }
           }

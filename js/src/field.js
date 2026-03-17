@@ -108,8 +108,8 @@ var Field = {
       })
     }
 
-    // don't save if not autosave is on or edit takes place in own window 
-    if (config.autosave == false || ds.table.edit) {
+    // don't save if not autosave is on 
+    if (config.autosave == false) {
       return
     }
 
