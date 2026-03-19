@@ -209,64 +209,50 @@ var Tabbar = {
       !ds.user.admin ? '' : m('ul', {
         class: 'di w-100'
       }, [
-          m('li', {
-            class: [
-              'list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
-              (!config.tab || config.tab == 'data') && config.dark_mode ? 'bg-dark-gray'
-              : (!config.tab || config.tab == 'data') ? 'bg-near-white'
-              : config.dark_mode ? 'bg-near-black'
-              : 'bg-light-gray'
-            ].join(' '),
-            style: (!config.tab || config.tab == 'data')
-              ? 'padding-bottom: 2px' : 'padding-bottom: 0px',
-            onclick: function() {
-              config.tab = 'data'
-            }
-          }, 'Data'),
-          m('li', {
-            title: 'Entity Relationship Diagram',
-            class: [
-              'list ml2 pl2 pt0 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
-              config.tab == 'diagram' && config.dark_mode ? 'bg-dark-gray'
-              : config.tab == 'diagram' ? 'bg-near-white'
-              : config.dark_mode ? 'bg-near-black' 
-              : 'bg-light-gray'
-            ].join(' '),
-            style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '0px'),
-            onclick: function() {
-              config.tab = 'diagram'
-            }
-          }, [
-              m('i', { class: 'nf nf-fa-sitemap mt1' })
-            ]),
-          m('li', {
-            class: [
-              'list ml2 pl2 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
-              config.tab == 'sql' && config.dark_mode ? 'bg-dark-gray'
-              : config.tab == 'sql' ? 'bg-near-white'
-              : config.dark_mode ? 'bg-near-black' 
-              : 'bg-light-gray'
-            ].join(' '),
-            style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '0px'),
-            onclick: function() {
-              config.tab = 'sql'
-            }
-          }, 'SQL')
+        m('li', {
+          class: [
+            'list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
+            (!config.tab || config.tab == 'data') && config.dark_mode ? 'bg-dark-gray'
+            : (!config.tab || config.tab == 'data') ? 'bg-near-white'
+            : config.dark_mode ? 'bg-near-black'
+            : 'bg-light-gray'
+          ].join(' '),
+          style: (!config.tab || config.tab == 'data')
+            ? 'padding-bottom: 2px' : 'padding-bottom: 0px',
+          onclick: function() {
+            config.tab = 'data'
+          }
+        }, 'Data'),
+        m('li', {
+          title: 'Entity Relationship Diagram',
+          class: [
+            'list ml2 pl2 pt0 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
+            config.tab == 'diagram' && config.dark_mode ? 'bg-dark-gray'
+            : config.tab == 'diagram' ? 'bg-near-white'
+            : config.dark_mode ? 'bg-near-black' 
+            : 'bg-light-gray'
+          ].join(' '),
+          style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '0px'),
+          onclick: function() {
+            config.tab = 'diagram'
+          }
+        }, [
+          m('i', { class: 'nf nf-fa-sitemap mt1' })
         ]),
-      !ds.table || !(config.tab == 'data') || 
-      !ds.table.privilege.update ? '' : m('label', {
-        class: 'fr mr3'
-      }, [
-          m('input#view_checkbox', {
-            class: 'mr1',
-            type: 'checkbox',
-            value: 1,
-            checked: config.edit_mode,
-            onclick: function(ev) {
-              Tabbar.set_view(ev.target.checked)
-            }
-          })
-        ], 'Edit mode'),
+        m('li', {
+          class: [
+            'list ml2 pl2 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
+            config.tab == 'sql' && config.dark_mode ? 'bg-dark-gray'
+            : config.tab == 'sql' ? 'bg-near-white'
+            : config.dark_mode ? 'bg-near-black' 
+            : 'bg-light-gray'
+          ].join(' '),
+          style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '0px'),
+          onclick: function() {
+            config.tab = 'sql'
+          }
+        }, 'SQL')
+      ]),
       !ds.table || !(config.tab == 'data') ? '' : m('label', {
         class: 'fr mr3'
       }, [

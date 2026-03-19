@@ -96,7 +96,14 @@
 .nf-fa-life_saver:before{content:"\f1cd"}
 .nf-fa-level_up:before{content:"\f148"}
 .nf-fa-external_link:before{content:"\f08e"}
+.nf-md-text_box:before{content:"\f021a"}
+.nf-md-text_box_check:before{content:"\f0ea6"}
+.nf-md-text_box_edit:before{content:"\f1a7c"}
+.nf-md-text_box_multiple:before{content:"\f0ab7"}
+.nf-md-text_box_plus:before{content:"\f0eaa"}
+.nf-md-text_box_remove:before{content:"\f0eac"}
 .nf-md-text_box_outline:before{content:"\f09ed"}
+.nf-md-text_box_check_outline:before{content:"\f0ea7"}
 .nf-md-text_box_plus_outline:before{content:"\f0eab"}
 .nf-md-text_box_multiple_outline:before{content:"\f0ab8"}
 .nf-md-text_box_edit_outline:before{content:"\f1a7d"}

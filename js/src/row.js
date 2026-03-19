@@ -136,7 +136,7 @@ var Row = {
           e.redraw = false
           $(this).trigger('click')
           if (config.recordview) {
-            $(this).find('td.nf-md-crosshairs_gps').trigger('click')
+            Toolbar.set_url({index: idx})
           } else {
             $('form[name=record]').find('input,textarea,select')
               .first().trigger('focus')
@@ -164,16 +164,21 @@ var Row = {
           class: !list.ismain ? '' 
           : config.dark_mode ? 'min-w1 pr1 ba b--gray'
           :'min-w1 pl1 pr1 ba b--moon-gray',
+          onclick: function(e) {
+            Toolbar.set_url({index: idx})
+            e.stopPropagation()
+          }
         }, [
             m('i', {
               class: [
-                config.autosave && !(record.invalid) ? 'nf nf-md-text_box_outline gray'
-                : record.invalid ? 'nf nf-fa-warning red' 
-                : record.delete ? 'nf nf-md-text_box_remove_outline' 
-                : record.new ? 'nf nf-md-text_box_plus_outline' 
-                : record.dirty ? 'nf nf-md-text_box_edit_outline' 
-                : 'nf nf-md-text_box_outline gray'
-              ],
+                config.autosave && !(record.invalid) ? 'nf nf-md-text_box'
+                : record.invalid ? 'nf nf-fa-warning red ' 
+                : record.delete ? 'nf nf-md-text_box_remove' 
+                : record.new ? 'nf nf-md-text_box_plus' 
+                : record.dirty ? 'nf nf-md-text_box_edit' 
+                : 'nf nf-md-text_box',
+                list.ismain &&config.recordview ? ' white pointer dim' : '_outline gray'
+              ].join(''),
               title: !record.messages ? null : record.messages.join(' ') 
             })
           ]),
@@ -223,25 +228,13 @@ var Row = {
             list.grid.actions.length ? 'pr2 pl2' : 'pa0'
           ].join(' ')
         }, [
-            list.grid.actions.map(function(name) {
-              var action = list.actions[name]
-              action.name = name
+          list.grid.actions.map(function(name) {
+            var action = list.actions[name]
+            action.name = name
 
-              return Record.action_button(record, action)
-            })
-          ]),
-        // Draw crosshairs symbol for navigate to record view
-        // Only shows when record is not shown right of table
-        !list.ismain || !config.recordview ? '' : m('td', {
-          class: [
-            'nf nf-md-crosshairs_gps light-blue hover-blue pointer',
-            'br b--moon-gray bb--light-gray'
-          ].join(' '),
-          onclick: function(e) {
-            Toolbar.set_url({index: idx})
-            e.stopPropagation()
-          }
-        })
+            return Record.action_button(record, action)
+          })
+        ]),
       ]),
       !record.open ? null : m('tr', [
         m('td'),

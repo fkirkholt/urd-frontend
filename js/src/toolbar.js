@@ -234,11 +234,39 @@ var Toolbar = {
              (value ? '&' + encodeURI(value.replace(/;\s*/g, '&')).replace(':', '%3A') : ''))
         }
       }),
+      // Button for editing selected record
+      m('li', { class: 'dib' }, [
+        m('i', {
+          class: [
+            'nf ml3 mr1 pointer f6',
+            config.edit_mode && ds.table.dirty ? 'nf-md-text_box_check' 
+            : config.edit_mode ? 'nf-md-text_box' 
+            : 'nf-md-text_box_edit',
+            ds.table.privilege.update == true
+              ? 'dim pointer' : 'moon-gray'
+          ].join(' '),
+          title: config.edit_mode && config.autosave ? 'Finish edit' 
+          : config.edit_mode && ds.table.dirty ? 'Finish edit and save' 
+          : config.edit_mode ? 'Finish edit'
+          : idx == undefined ? 'Edit mode' 
+          : 'Edit record',
+          onclick: function(e) {
+            config.edit_mode = !config.edit_mode
+            if (config.edit_mode) {
+              let idx = ds.table.selection
+              Toolbar.set_url({index: idx})
+              e.stopPropagation()
+            }
+            if (!ds.table.dirty) return
+            Grid.save()
+          }
+        })
+      ]),
       // Button for creating new record
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf nf-md-text_box_plus_outline ml3 mr1',
+            'nf nf-md-text_box_plus ml2 mr1',
             ds.table.privilege.insert && !full
               ? 'dim pointer'
               : 'moon-gray'
@@ -267,7 +295,7 @@ var Toolbar = {
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf nf-md-text_box_multiple_outline ml2 mr1 f6',
+            'nf nf-md-text_box_multiple ml2 mr1 f6',
             ds.table.privilege.insert == true && !full
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
@@ -276,52 +304,20 @@ var Toolbar = {
             if (ds.table.privilege.insert != true || full) return
             Record.copy()
             if (!config.edit_mode) {
-              ds.table.edit = true
               config.edit_mode = true
             }
           }
         })
       ]),
-      // Button for editing selected record
-      !config.edit_mode ? m('li', { class: 'dib' }, [
-        m('i', {
-          class: [
-            'nf nf-md-text_box_edit_outline ml2 mr1 pointer f6',
-            ds.table.privilege.update == true
-              ? 'dim pointer' : 'moon-gray'
-          ].join(' '),
-          title: 'Edit record',
-          onclick: function() {
-            ds.table.edit = true
-            config.edit_mode = true
-          }
-        })
-      ]) : '',
-      // Button for saving all changes
-      m('li', { class: 'dib' }, [
-        !config.edit_mode ? '' : [
-          m('i', {
-            class: [
-              'nf nf-fa-save ml2 mr1',
-              ds.table.dirty ? 'dim pointer' : 'o-30'
-            ].join(' '),
-            title: 'Save',
-            onclick: function() {
-              if (!ds.table.dirty) return
-              Grid.save()
-            }
-          })
-        ]
-      ]),
       // Button for deleting selected record
       ds.table.hide ? '' : m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf nf-fa-trash_o ml2 mr1',
+            'nf ml2 mr1 nf-md-text_box_remove',
             (ds.table.privilege.delete == true &&
               rec && Record.is_deletable(rec))
-              ? 'dim pointer' : 'o-30'
-          ].join(' '),
+              ? ' dim pointer' : '_outline o-30'
+          ].join(''),
           title: 'Delete',
           onclick: Toolbar.delete_record
         })
@@ -329,7 +325,7 @@ var Toolbar = {
       // Button for printing page
       m('li', { class: 'dib' }, [
         m('i', {
-          class: 'nf nf-fa-print ml1 mr2 pointer dim',
+          class: 'nf nf-fa-print ml2 mr2 pointer dim',
           onclick: function() {
             print()
           }
