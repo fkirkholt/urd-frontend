@@ -77,10 +77,10 @@ var Search = {
    * Returns an object with field, operator and value from where expression
    */
   parse_query: function(expr) {
-    var conditions = expr !== null ? expr.split(' AND ') : []
+    var conditions = expr !== null ? expr.split(';') : []
     var search = {}
     $.each(conditions, function(i, cond) {
-      var parts = cond.split(/\s*([=<>]|!=|IN|LIKE|NOT LIKE|IS NULL|IS NOT NULL)\s*/)
+      var parts = cond.trim().split(/\s*([=<>]|!=|IN|LIKE|NOT LIKE|IS NULL|IS NOT NULL)\s*/)
       if (parts.length > 1) {
         var val = parts[2].replace(/(^'\*)|(^')|(\*'$)|('$)/g, '')
         var operator = parts[1]

@@ -52,6 +52,7 @@ var Grid = {
       ds.base.name = data.base
       index = ds.table.selection || index
 
+      // Shows record if filter represents a primary key
       var is_pkey = true
       for (let idx in ds.table.pkey) {
         let key = ds.table.pkey[idx]
