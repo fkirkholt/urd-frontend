@@ -60,7 +60,6 @@ m.route($('#main')[0], '/', {
       ds.type = 'dblist'
       ds.cnxn = args.cnxn
       config.tab = 'databases'
-      ds.path = null
       ds.file = null
       ds.table = null
       var query = m.parsePathname(path)
@@ -71,9 +70,11 @@ m.route($('#main')[0], '/', {
           url: '/ripgrep',
           params: {cnxn: ds.cnxn, path: ds.path, pattern: query.params.grep} 
         }).then(function(result) {
-          ds.dblist = result.data
+          ds.dblist.records = result.data
+          ds.dblist.grep = query.params.grep
         })
       } else {
+        ds.path = null
         home.load_databases()
       }
       return home
