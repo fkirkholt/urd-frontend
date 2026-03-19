@@ -130,7 +130,10 @@ var login = {
         placeholder: 'Brukernavn',
         value: login.param.username,
         disabled: login.param.cnxn || ds.base.name == 'urdr' ? false : true,
-        class: 'db w-100 mb1'
+        class: 'db w-100 mb1',
+        onchange: function() {
+          login.param.username = this.value
+        }
       }),
       login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=password]', {
         id: 'passord',
@@ -138,7 +141,10 @@ var login = {
         placeholder: 'Passord',
         value: login.param.password,
         disabled: login.param.cnxn || ds.base.name == 'urdr' ? false : true,
-        class: 'db w-100 mb1'
+        class: 'db w-100 mb1',
+        onchange: function() {
+          login.param.password = this.value
+        }
       }),
       m('input[type=text]', {
         id: 'database',
@@ -146,7 +152,10 @@ var login = {
         placeholder: 'Database',
         value: login.param.database,
         disabled: login.param.cnxn ? false : true,
-        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1'
+        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
+        onchange: function() {
+          login.param.database = this.value
+        }
       }),
       Object.keys(login.drivers).map(function(key, idx) {
         return m('label', {
