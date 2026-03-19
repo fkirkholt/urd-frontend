@@ -156,7 +156,10 @@ var login = {
           name: 'driver',
           value: key,
           checked: (!login.param.driver && idx == 0) || login.param.driver === key,
-          onchange: () => login.param.driver = key
+          onchange: function(e) {
+            e.redraw = false
+            login.param.driver = key
+          }
         })], ' ' + key)
       }),
       m('input[type=button]', {
