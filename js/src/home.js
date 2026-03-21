@@ -225,6 +225,16 @@ var home = {
           }, '..')
         ]),
         filtered_recs.map(function(post, i) {
+          if (i == 100 && ds.dblist.trunc !== false) {
+            return m('a', {
+              href: '#',
+              onclick: function() {
+                ds.dblist.trunc = false
+              }
+            }, 'Show all')
+          } else if (i > 100 && ds.dblist.trunc !== false) {
+            return
+          }
           var filter = $('#filter_files').val()
           var convert = new Convert()
           // output from ripgrep has ansi codes
