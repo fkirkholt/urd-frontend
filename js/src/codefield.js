@@ -45,6 +45,7 @@ function completions(context) {
   });
   return {
     from: word.from,
+    filter: false,
     options: all_options.map(opt => {
       // Use uppercase for first character if written
       let new_text = null 
@@ -67,7 +68,7 @@ function completions(context) {
         label: new_label,
         apply: new_text
       }
-    })
+    }).filter(option => option.label.toLowerCase().includes(word.text.toLowerCase()))
   }
 }
 
@@ -203,7 +204,7 @@ function Codefield() {
         } 
       }),
       lang,
-      autocompletion({ override: [completions] })
+      autocompletion({ override: [completions], selectOnOpen: false })
     ]
     if (ds.file && ds.file.websocket) {
       extensions.push(client.plugin("file://" + ds.file.abspath))
