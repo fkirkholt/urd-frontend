@@ -63,20 +63,7 @@ m.route($('#main')[0], '/', {
       ds.file = null
       ds.table = null
       var query = m.parsePathname(path)
-      if ('grep' in query.params) {
-        console.log('query.params.grep', query.params.grep)
-        m.request({
-          method: 'get',
-          url: '/ripgrep',
-          params: {cnxn: ds.cnxn, path: ds.path, pattern: query.params.grep} 
-        }).then(function(result) {
-          ds.dblist.records = result.data
-          ds.dblist.grep = query.params.grep
-        })
-      } else {
-        ds.path = null
-        home.load_databases()
-      }
+      home.load_databases(query.params.grep)
       return home
     }
   },
@@ -156,10 +143,11 @@ m.route($('#main')[0], '/', {
           if ('grep' in query.params) {
             m.request({
               method: 'get',
-              url: '/ripgrep',
+              url: '/dblist',
               params: {cnxn: ds.cnxn, path: ds.path, pattern: query.params.grep} 
             }).then(function(result) {
               ds.dblist = result.data
+              ds.dblist.grep = query.params.grep
             })
           }
           return home

@@ -62,15 +62,14 @@ var home = {
     return m.trust(result)
   },
 
-  load_databases: function() {
+  load_databases: function(grep=null) {
 
     Grid.url = ''
 
     var params = {}
     params.cnxn = ds.cnxn
-    if (ds.path) {
-      params.path = ds.path
-    }
+    params.pattern = grep
+    params.path = ds.path
 
     m.request({
       method: 'get',
@@ -80,7 +79,11 @@ var home = {
       ds.dblist = result.data
       ds.path = result.data.path
       ds.base.system = result.data.system
-    }).catch(function(e) {
+      if (grep) {
+        ds.dblist.grep = grep
+      }
+    })
+    .catch(function(e) {
       if (e.code === 401) {
         if (typeof(e.response.detail) == 'string') {
           alert(e.response.detail)
