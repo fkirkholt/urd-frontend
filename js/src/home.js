@@ -123,14 +123,19 @@ var home = {
     if (!ds.dblist) return
     if (config.tab == 'users' && !ds.users) return
 
-    var filtered_recs = ds.dblist.records.filter(function(post, i) {
-      var filter = $('#filter_files').val()
+    var filtered_recs = ds.dblist.records ? ds.dblist.records.filter(function(post, i) {
+      const filter = $('#filter_files').val()?.toLowerCase()
+      const label = post.columns.label.toLowerCase()
+      const descr = post.columns.description?.toLowerCase();
+
       return !(
         (!ds.dblist.grep || !ds.dblist.grep.includes(filter)) && (filter !== undefined && 
-        !post.columns.label.toLowerCase().includes(filter.toLowerCase())) &&
-        (!post.columns.description || !post.columns.description.includes(filter))
+        !(label.includes(filter) ||
+         (filter.at(0) == '^' && label.startsWith(filter.substring(1)) ||
+         (filter.at(-1) == '$' && label.endsWith(filter.replace('$', '')))))) &&
+        (!descr || !descr.includes(filter))
       )
-    })
+    }) : []
 
     let filecompletions = []
     for (const i in ds.dblist.records) {
