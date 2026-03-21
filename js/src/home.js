@@ -506,7 +506,7 @@ var home = {
       class: 'flex flex-column ml3',
       style: 'min-width:210px'
     }, [
-      m('h3', { class: 'mb0' }, 'Backlinks'),
+      m('h3', { class: 'mb0' }, 'Backlinks (' + (ds.file.backlinks ? ds.file.backlinks.length : '0')  + ')'),
       m('ul', [
         !ds.file.backlinks ? '' : ds.file.backlinks.map(function(link, i) {
           return m('li', {
