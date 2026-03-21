@@ -242,7 +242,7 @@ var Input = {
 
       return m(Autocomplete, {...vnode.attrs})
     } else if (
-      field.datatype == 'json' && get(field, 'attrs.data-format') == 'yaml'
+      field.datatype == 'json'
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
@@ -256,17 +256,6 @@ var Input = {
       }
 
       return m(Codefield, {...vnode.attrs})
-
-    } else if (field.datatype == 'json' || get(field, 'attrs.data-format') == 'json') {
-
-      vnode.attrs.field = field
-      vnode.attrs.rec = rec
-      vnode.attrs.value = JSON.parse(field.value)
-      vnode.attrs.onchange = function(value) {
-        Field.update(value, field.name, rec)
-      }
-
-      return m(JSONed, {...vnode.attrs})
     } else if (
       field.datatype == 'str' && (!field.size || field.size > 1000) 
     ) {
@@ -378,7 +367,6 @@ export default Input
 
 import Select from './select.js'
 import Autocomplete from './autocomplete.js'
-import JSONed from './jsoned.js'
 import Field from './field.js'
 import get from 'just-safe-get'
 import { marked } from 'marked'

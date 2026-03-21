@@ -164,13 +164,13 @@ var Field = {
       field.datatype == 'json' ||
       get(field, 'attrs.data-format') == 'json'
     )) {
-      value = m(JSONed, {
-        name: field.name,
-        mode: 'view',
-        field: field,
-        rec: rec,
-        style: "width: 330px; height: 400px;",
-        value: JSON.parse(field.value)
+      value = m(Codefield, {
+        id: 'yaml',
+        class: field.attrs.class || '',
+        'data-pkey': rec.pkey,
+        editable: false,
+        lang: 'yaml',
+        value: yaml.dump(JSON.parse(field.value))
       })
     } else if (field.value && (
       (field.datatype == 'str' && !field.size && field.expanded) ||
@@ -560,5 +560,4 @@ import yaml from 'js-yaml'
 import Input from './input.js'
 import Record from './record.js'
 import get from 'just-safe-get'
-import JSONed from './jsoned.js'
 import Codefield from './codefield.js'
