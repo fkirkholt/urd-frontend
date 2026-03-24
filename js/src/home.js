@@ -152,7 +152,7 @@ var home = {
     ds.dblist.autocomplete['filecompletions'] = filecompletions
 
     return [m('div#list', { 
-      class: 'overflow-y-auto', 
+      class: 'overflow-y-auto overflow-x-hidden', 
       style: (ds.file && ds.file.type != 'dir') ? 'min-width: 200px; width:200px' : ''
     }, [
       m('ul#filelist-context', {
@@ -240,14 +240,17 @@ var home = {
           }
           var filter = $('#filter_files').val()
           var convert = new Convert()
+          var desc = null
           // output from ripgrep has ansi codes
           post.columns.name = convert.toHtml(post.columns.name)
           post.columns.label = convert.toHtml(post.columns.label)
           if (post.columns.description) {
-            var desc = convert.toHtml(post.columns.description)
+            desc = convert.toHtml(post.columns.description)
           }
-          return m('li', [
-            m('span.mt1.mb1', [
+          return m('li', {
+            class: desc ? '' : "flex",
+            style: desc ? '' : "width: 180px"
+          }, [
               post.columns.type == 'database' ? [
                 m('span', { class: "nf-li" }, [
                   m('i', { class: "nf nf-oct-database" })
@@ -264,7 +267,7 @@ var home = {
                   m('i', { class: "nf nf-md-folder_outline" })
                 ]),
                 m('span', { 
-                  class: 'no-underline blue pointer',
+                  class: 'no-underline blue pointer truncate',
                   onclick: function() {
                     m.route.set('/' + ds.cnxn + '/' + post.columns.name)
                   }
@@ -272,7 +275,8 @@ var home = {
               ]
               : [
                 m('span', { class: "nf-li" }, [
-                  m('i', { class: "nf nf-oct-file" })
+                  m('i', { class: "nf nf-oct-file" }),
+                  m.trust('&nbsp;')
                 ]),
                 post.rename ? m('input', {
                   value: post.columns.label,
@@ -300,7 +304,7 @@ var home = {
                 })
                 : m('span', {
                   class: [
-                    'no-underline hover-blue pointer',
+                    'no-underline hover-blue pointer truncate ws-normal',
                     (post.columns.size > 100000000) ? 'gray' : '',
                   ].join(' '),
                   onclick: function() {
@@ -323,9 +327,8 @@ var home = {
                     return false
                   }
                 }, [' ', post.columns.label])
-              ]
-            ]),
-            (ds.file && ds.file.type != 'dir') ? '' : m('p.mt1.mb1', m.trust(desc))
+              ],
+              (ds.file && ds.file.type != 'dir') ? '' : m('p.mt1.mb1', m.trust(desc))
           ])
         })
       ]),
