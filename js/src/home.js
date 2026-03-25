@@ -145,7 +145,8 @@ var home = {
       let rec = ds.dblist.records[i]
       let option = {
         label: rec.columns.label,
-        type: 'keyword'
+        type: 'keyword',
+        apply: rec.columns.title
       }
       filecompletions.push(option)
     }

@@ -48,19 +48,18 @@ function completions(context) {
     filter: false,
     options: all_options.map(opt => {
       // Use uppercase for first character if written
-      let new_text = null 
-      if (opt.apply) {
-        new_text = uppercase 
-          ? opt.apply.charAt(0).toUpperCase() + opt.apply.slice(1) 
-          : opt.apply
+      let new_text = opt.apply
+      if (opt.apply && uppercase) {
+        new_text = opt.apply.charAt(0).toUpperCase() + opt.apply.slice(1) 
       }
-
       let new_label = uppercase 
         ? opt.label.charAt(0).toUpperCase() + opt.label.slice(1) 
         : opt.label
 
-      if (!is_link) {
-        new_label = new_label.replaceAll('-', ' ').replace(/\.[^.]+$/, '')
+      if (!is_link && opt.apply) {
+        new_label = opt.apply
+      } else if (is_link) {
+        new_text = opt.label
       }
 
       return {
