@@ -27,7 +27,7 @@ var Breadcrumb = {
     }
 
     if (ds.path || param.base) {
-      dirs = param.base && !ds.file ? param.base.split('/').slice(0, -1) 
+      dirs = param.base && !ds.file ? param.base.split('/') // .slice(0, -1) 
         : ds.path ? ds.path.split('/')
         : []
       path = [ds.cnxn] 

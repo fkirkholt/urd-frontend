@@ -73,7 +73,6 @@ m.route($('#main')[0], '/', {
       var query = m.parsePathname(path)
       ds.cnxn = args.cnxn
       ds.type = 'file'
-      ds.path = base_name.substring(0, base_name.lastIndexOf('/'))
 
       if ('table' in query.params) {
         config.tab = config.tab || 'data'
@@ -134,21 +133,22 @@ m.route($('#main')[0], '/', {
           return Datapanel
 
         } else if (result.type == 'dir') {
+          ds.file = null
           config.tab = 'databases'
-          if (args.base != ds.path || ds.dblist.grep != query.path.grep) {
-            ds.path = base_name
-            ds.file = result
-            home.load_databases()
-          }
-          if ('grep' in query.params) {
+          if ('grep' in query.params && (!ds.dblist || ds.dblist.grep != query.params.grep)) {
             m.request({
               method: 'get',
               url: '/dblist',
-              params: {cnxn: ds.cnxn, path: ds.path, pattern: query.params.grep} 
+              params: {cnxn: ds.cnxn, path: base_name, pattern: query.params.grep} 
             }).then(function(result) {
+              ds.path = base_name
               ds.dblist = result.data
               ds.dblist.grep = query.params.grep
             })
+          } else if (args.base != ds.path || (ds.dblist?.grep && !query.params.grep)) {
+            ds.path = base_name
+            ds.file = result
+            home.load_databases()
           }
           return home
         } else {
