@@ -131,7 +131,7 @@ var home = {
       const label = post.columns.label.toLowerCase()
       const descr = post.columns.description?.toLowerCase();
 
-      return !(
+      return !(post.deleted ||
         (!ds.dblist.grep || !ds.dblist.grep.includes(filter)) && (filter !== undefined && 
         !(label.includes(filter) ||
          (filter.at(0) == '^' && label.startsWith(filter.substring(1)) ||
@@ -186,6 +186,7 @@ var home = {
               if (result.success && ds.file && ds.file.path == filename) {
                 m.route.set('/' + ds.cnxn + (ds.path ? '/' + ds.path : ''))
               }
+              home.context_file.deleted = true
             })
           }
         }, 'Delete')
