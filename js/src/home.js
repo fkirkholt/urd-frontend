@@ -174,6 +174,11 @@ var home = {
           onclick: function() {
             var filename = home.context_file.columns.name
             $('#filelist-context').hide()
+            let r = confirm('Are you sure you want to delete the file?')
+            if (!r) {
+              return
+            }
+
             m.request({
               method: 'put',
               url: '/file_delete',
