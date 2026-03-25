@@ -133,7 +133,7 @@ m.route($('#main')[0], '/', {
           return Datapanel
 
         } else if (result.type == 'dir') {
-          ds.file = null
+          ds.file = result
           config.tab = 'databases'
           if ('grep' in query.params && (!ds.dblist || ds.dblist.grep != query.params.grep)) {
             m.request({
