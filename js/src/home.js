@@ -530,7 +530,7 @@ var home = {
           return m('li', {
             class: 'pointer hover-blue',
             onclick: function(ev) {
-              m.route.set('/' + ds.cnxn + '/' + link)
+              m.route.set('/' + ds.cnxn + (ds.path ? '/' + ds.path : '') + '/' + link)
             }
           }, link)
         })
