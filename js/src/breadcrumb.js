@@ -49,15 +49,15 @@ var Breadcrumb = {
       })
     }
 
-    if (ds.file && ds.file.type != 'dir') {
+    if (ds.file && !['dir', 'server'].includes(ds.file.type)) {
       items.push({
         icon: "nf-fa-file",
         text: ds.file.name,
         addr: '/' + ds.cnxn + '/' + ds.file.path
       })
     }
-    
-    if (ds.base && ds.base.name && ds.type != 'file' && ds.type != 'dblist') {
+
+    if (ds.base && ds.base.name && ds.file.type == 'server') {
       items.push({
         icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),

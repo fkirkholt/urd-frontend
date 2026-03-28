@@ -129,6 +129,7 @@ m.route($('#main')[0], '/', {
           config.tab = 'data'
           ds.type = 'database'
           ds.load_database(base_name)
+          ds.file = result
 
           return Datapanel
 
