@@ -46,7 +46,7 @@ var datastore = {
             .html(e.response.detail).show()
         }
       } else {
-        alert(e.response ? e.response.detail : 'An error has occurred.')
+        alert(e.response ? e.response.detail : 'Error loading database info')
       }
     });
   },

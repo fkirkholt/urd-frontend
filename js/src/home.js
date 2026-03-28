@@ -96,7 +96,7 @@ var home = {
         $('#login').show()
         $('#brukernavn').trigger('focus')
       } else {
-        alert(e.response ? e.response.detail : 'An error has occurred.')
+        alert(e.response ? e.response.detail : 'Error loading databases')
       }
     })
   },
