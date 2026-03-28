@@ -62,6 +62,7 @@ m.route($('#main')[0], '/', {
       config.tab = 'databases'
       ds.file = null
       ds.table = null
+      ds.path = null
       var query = m.parsePathname(path)
       home.load_databases(query.params.grep)
       return home

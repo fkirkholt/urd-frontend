@@ -235,7 +235,8 @@ var home = {
           m('span', {
             class: 'no-underline hover-blue pointer',
             onclick: function() {
-              m.route.set('/' + ds.cnxn + '/' + ds.path.substring(0, ds.path.lastIndexOf('/')))
+              let path = ds.path.substring(0, ds.path.lastIndexOf('/'))
+              m.route.set('/' + ds.cnxn + (path ? '/' + path : ''))
             }
           }, '..')
         ]),
