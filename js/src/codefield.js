@@ -13,24 +13,11 @@ import { yaml } from "@codemirror/lang-yaml"
 import { python } from "@codemirror/lang-python"
 import { javascript } from "@codemirror/lang-javascript"
 import { css } from "@codemirror/lang-css"
-import { LSPClient, languageServerExtensions } from "@codemirror/lsp-client"
 import { tags } from "@lezer/highlight"
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
 import { linter, lintKeymap, lintGutter } from '@codemirror/lint'
 
-function createWebSocketTransport(uri) {
-  let handlers = []
-  let sock = new WebSocket(uri)
-  sock.onmessage = e => { for (let h of handlers) h(e.data.toString()) }
-  return new Promise(resolve => {
-    sock.onopen = () => resolve({
-      send(message) { sock.send(message) },
-      subscribe(handler) { handlers.push(handler) },
-      unsubscribe(handler) { handlers = handlers.filter(h => h != handler) }
-    })
-  })
-}
 
 function completions(context) {
   let word = context.matchBefore(/[\p{L}\p{N}_-]*/u)
@@ -205,10 +192,6 @@ function Codefield() {
       lang,
       autocompletion({ override: [completions], selectOnOpen: false })
     ]
-    if (ds.file && ds.file.websocket) {
-      extensions.push(client.plugin("file://" + ds.file.abspath))
-      extensions.push(lintGutter())
-    }
 
     return extensions
 
@@ -226,14 +209,6 @@ function Codefield() {
     },
 
     oncreate: async function(vnode) {
-      if (ds.type == 'file' && ds.file.websocket) {
-        const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
-
-        client = new LSPClient({
-          timeout: 20000, // 20 seconds
-          extensions: languageServerExtensions()
-        }).connect(transport)
-      }
       onchange = vnode.attrs.onchange
 
       editor = new EditorView({
@@ -247,14 +222,6 @@ function Codefield() {
     },
     onupdate: async function(vnode) {
       if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
-        if (ds.type == 'file' && ds.file.websocket) {
-          const transport = await createWebSocketTransport("ws://" + ds.file.websocket)
-
-          client = new LSPClient({
-            timeout: 20000, // 20 seconds
-            extensions: languageServerExtensions()
-          }).connect(transport)
-        }
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
         changed = false
