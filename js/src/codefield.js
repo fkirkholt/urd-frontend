@@ -92,6 +92,132 @@ function Codefield() {
     }
   }
 
+  const ruffLinter = linter(async (view) => {
+    try {
+      const ruff = await import("@astral-sh/ruff-wasm-web");
+      // initialize wasm module
+      await ruff.default();
+      
+      ds.ws = ds.ws || {}
+      ds.ws.ruff = new ruff.Workspace({
+        lint: {
+          select: ['E', 'F', 'W'],
+        },
+      }, ruff.PositionEncoding.UTF16);
+    } catch (error) {
+      console.warn(error.message);
+      return []
+    }
+    const doc = view.state.doc;
+    const results = ds.ws.ruff.check(doc.toString());
+    const diagnostics = [];
+
+    for (const d of results) {
+      const start = d.start_location;
+      const end = d.end_location
+  
+      if (!start || !end) continue
+  
+      // Make sure we don't ask for lines that don't exeist
+      const startLineIdx = Math.min(start.row, doc.lines)
+      const endLineIdx = Math.min(end.row, doc.lines)
+      
+      const line = doc.line(startLineIdx)
+      const endLine = doc.line(endLineIdx)
+  
+      // Calculate position: Ruff (1-based) -> CodeMirror (0-based)
+      const from = Math.min(line.from + (start.column - 1), doc.length)
+      const to = Math.min(endLine.from + (end.column - 1), doc.length)
+  
+      // Check for valid values before we add
+      if (!Number.isNaN(from) && !Number.isNaN(to)) {
+        diagnostics.push({
+          from: Math.max(0, from),
+          to: Math.min(to, doc.length),
+          severity: d.code?.startsWith('F') || d.code?.startsWith('E') ? 'error' : 'warning',
+          message: `${d.code}: ${d.message}`,
+        })
+      }
+    }
+
+    return diagnostics
+  })
+
+  const biomeLinter = linter(async (view) => {
+
+    if (!ds.ws?.biome) {
+      try {
+        const biomeModule = await import("@biomejs/wasm-web")
+
+        // initialize wasm module (loads .wasm-file)
+        await biomeModule.default()
+
+        ds.ws = ds.ws || {}
+        ds.ws.biome = new biomeModule.Workspace()
+
+        ds.ws.biome.openProject({
+          projectKey: 1,
+          path: ds.file.abspath.replace(ds.file.path, ''),
+          openUninitialized: true
+        })
+
+        ds.ws.biome.updateSettings({
+          projectKey: 1, 
+          fileKey: 1,
+          configuration: {
+            linter: {
+              enabled: true,
+              rules: { 
+                recommended: true,
+                suspicious: {
+                  noDoubleEquals: "off"
+                },
+                style: {
+                  useTemplate: "off"
+                },
+                complexity: {
+                  useArrowFunction: "off"
+                }
+              }
+            }
+          }
+        })
+      } catch (err) {
+        console.error("Kunne ikke laste Biome:", err)
+        return []
+      }
+    }
+
+    ds.ws.biome.openFile({
+      projectKey: 1,
+      path: ds.file.path,
+      content: {
+        type: "fromClient",
+        content: view.state.doc.toString(),
+        version: 1
+      },
+    });
+
+    const result = ds.ws.biome.pullDiagnostics({
+        projectKey: 1,
+        path: ds.file.path,
+        categories: ["lint"],
+        max_diagnostics: 50
+    });
+
+    // map results to CodeMirror Diagnostics
+    const diagnostics = result.diagnostics.map((diag) => ({
+      from: diag.location.span[0],
+      to: diag.location.span[1],
+      severity: diag.severity === "error" ? "error" 
+        : diag.severity === "information" ? "information"
+        : "warning", 
+      message: diag.description,
+    }));
+
+    return diagnostics
+  })
+
   // Function to fold all levels of code
   function fold_all_recursive() {
     const state = editor.state;
@@ -192,6 +318,15 @@ function Codefield() {
       lang,
       autocompletion({ override: [completions], selectOnOpen: false })
     ]
+
+    if (attrs.lang == 'py') {
+      extensions.push(ruffLinter)
+      extensions.push(lintGutter())
+    }
+    if (attrs.lang == 'js') {
+      extensions.push(biomeLinter)
+      extensions.push(lintGutter())
+    } 
 
     return extensions
 

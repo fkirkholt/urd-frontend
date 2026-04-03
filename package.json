@@ -1,11 +1,12 @@
 {
   "name": "urd",
   "version": "1.0.0",
+  "type": "module",
   "description": "URD er et system utviklet for å kunne vise fram, registrere og søke i data fra relasjonsdatabaser.",
   "main": "test.js",
   "scripts": {
-    "start": "esbuild js/src/index.js --bundle --splitting --outdir=js/dist/ --format=esm --watch",
-    "build": "esbuild js/src/index.js --bundle --splitting --outdir=js/dist/ --format=esm"
+    "start": "node esbuild.config.js --watch",
+    "build": "node esbuild.config.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   },
   "homepage": "https://github.com/fkirkholt/urd-frontend#readme",
   "dependencies": {
+    "@astral-sh/ruff-wasm-web": "^0.15.8",
+    "@biomejs/wasm-web": "^2.4.10",
     "@codemirror/autocomplete": "^6.20.1",
     "@codemirror/commands": "^6.8.1",
     "@codemirror/lang-css": "^6.3.1",
@@ -57,6 +60,7 @@
     "doc": "docs"
   },
   "devDependencies": {
-    "esbuild": "0.25.8"
+    "esbuild": "0.25.8",
+    "esbuild-plugin-copy": "^2.1.1"
   }
 }
