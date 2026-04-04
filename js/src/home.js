@@ -244,8 +244,8 @@ var home = {
         ]),
         filtered_recs.map(function(post, i) {
           if (i == 100 && ds.dblist.trunc !== false) {
-            return m('a', {
-              href: '#',
+            return m('span', {
+              class: 'underline pointer',
               onclick: function() {
                 ds.dblist.trunc = false
               }
