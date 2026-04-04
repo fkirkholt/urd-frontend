@@ -131,7 +131,7 @@ var home = {
       const label = post.columns.label.toLowerCase()
       const descr = post.columns.description?.toLowerCase();
 
-      return !(post.deleted ||
+      return !(post.deleted || label.includes('/') ||
         (!ds.dblist.grep || !ds.dblist.grep.includes(filter)) && (filter !== undefined && 
         !(label.includes(filter) ||
          (filter.at(0) == '^' && label.startsWith(filter.substring(1)) ||
