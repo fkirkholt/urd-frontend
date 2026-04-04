@@ -151,11 +151,13 @@ var home = {
       let option = {
         label: rec.columns.label,
         type: 'keyword',
-        apply: rec.columns.title
+        title: rec.columns.title
       }
       filecompletions.push(option)
     }
-    ds.dblist.autocomplete['filecompletions'] = filecompletions
+    if (ds.dblist.autocomplete) {
+      ds.dblist.autocomplete['filecompletions'] = filecompletions
+    }
 
     return [m('div#list', { 
       class: 'overflow-y-auto overflow-x-hidden', 

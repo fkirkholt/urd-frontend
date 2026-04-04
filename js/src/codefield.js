@@ -43,10 +43,10 @@ function completions(context) {
         ? opt.label.charAt(0).toUpperCase() + opt.label.slice(1) 
         : opt.label
 
-      if (!is_link && opt.apply) {
-        new_label = opt.apply
-      } else if (is_link) {
+      if (is_link) {
         new_text = opt.label
+      } else if (opt.title) {
+        new_label = opt.title
       }
 
       return {
