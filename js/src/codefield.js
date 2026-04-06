@@ -215,6 +215,20 @@ function Codefield() {
       message: diag.description,
     }));
 
+    const maxWidth = 88
+
+    for (let i = 1; i <= view.state.doc.lines; i++) {
+      const line = view.state.doc.line(i);
+      if (line.length > maxWidth) {
+        diagnostics.push({
+          from: line.from + maxWidth,
+          to: line.to,
+          severity: "error",
+          message: `Line too long (${line.length} > ${maxWidth})`,
+        });
+      }
+    }
+
     return diagnostics
   })
 
