@@ -203,7 +203,7 @@ var home = {
           }
         }, 'Delete')
       ]),
-      m('input', {
+      config.tab == 'users' ? null : m('input', {
         id: 'filter_files',
         style: 'width:190px',
         placeholder: 'filter files',
@@ -221,7 +221,7 @@ var home = {
           return
         }
       }),
-      m('div', { 
+      config.tab == 'users' ? null : m('div', { 
         style: 'width:190px'
       }, m('span', { 
         class: 'fr gray' 
