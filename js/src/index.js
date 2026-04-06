@@ -64,7 +64,25 @@ m.route($('#main')[0], '/', {
       ds.table = null
       ds.path = null
       var query = m.parsePathname(path)
-      home.load_databases(query.params.grep)
+      m.request({
+        method: 'get',
+        url: '/file',
+        params: {
+          cnxn: args.cnxn,
+        }
+      }).then(function(result) {
+        if (result.type == 'server') {
+          home.load_databases(query.params.grep)
+        } else {
+            m.request({
+              method: 'get',
+              url: '/file_list',
+              params: {cnxn: ds.cnxn} 
+            }).then(function(result) {
+              ds.dblist = result.data
+            })
+        }
+      })
       return home
     }
   },
@@ -137,21 +155,15 @@ m.route($('#main')[0], '/', {
         } else if (result.type == 'dir') {
           ds.file = result
           config.tab = 'databases'
-          if ('grep' in query.params && (!ds.dblist || ds.dblist.grep != query.params.grep)) {
-            m.request({
-              method: 'get',
-              url: '/dblist',
-              params: {cnxn: ds.cnxn, path: base_name, pattern: query.params.grep} 
-            }).then(function(result) {
-              ds.path = base_name
-              ds.dblist = result.data
-              ds.dblist.grep = query.params.grep
-            })
-          } else if (args.base != ds.path || (ds.dblist?.grep && !query.params.grep)) {
+          m.request({
+            method: 'get',
+            url: '/file_list',
+            params: {cnxn: ds.cnxn, path: base_name, pattern: query.params.grep} 
+          }).then(function(result) {
             ds.path = base_name
-            ds.file = result
-            home.load_databases()
-          }
+            ds.dblist = result.data
+            ds.dblist.grep = query.params.grep
+          })
           return home
         } else {
           if (result.type == null) {
@@ -174,7 +186,14 @@ m.route($('#main')[0], '/', {
           var dir = base_name.substring(0, base_name.lastIndexOf('/'))
           if (!ds.dblist || ((ds.path || '') != dir) && !ds.dblist.grep) {
             ds.path = dir
-            home.load_databases()
+            m.request({
+              method: 'get',
+              url: '/file_list',
+              params: {cnxn: ds.cnxn, path: ds.path, pattern: query.params.grep} 
+            }).then(function(result) {
+              ds.dblist = result.data
+              ds.dblist.grep = query.params.grep
+            })
           }
 
           if (ds.file.path.endsWith('.md')) {

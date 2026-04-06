@@ -27,7 +27,13 @@ var home = {
         ds.file.dirty = false
       }
       if (load_files) {
-        home.load_databases()
+        m.request({
+          method: 'get',
+          url: '/file_list',
+          params: {cnxn: ds.cnxn, path: ds.path} 
+        }).then(function(result) {
+          ds.dblist = result.data
+        })
       }
     })
   },
