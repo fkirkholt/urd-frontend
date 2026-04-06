@@ -5,7 +5,7 @@ import { indentWithTab } from "@codemirror/commands"
 import { indentedLineWrap } from './linewrap' 
 import { syntaxTree, foldable, foldEffect, unfoldAll, foldService, 
          foldCode, unfoldCode, HighlightStyle, syntaxHighlighting,
-         defaultHighlightStyle} from "@codemirror/language"
+         defaultHighlightStyle, indentUnit} from "@codemirror/language"
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 import { sql } from "@codemirror/lang-sql"
 import { json } from "@codemirror/lang-json"
@@ -336,6 +336,7 @@ function Codefield() {
     if (attrs.lang == 'py') {
       extensions.push(ruffLinter)
       extensions.push(lintGutter())
+      extensions.push(indentUnit.of('    '))
     }
     if (attrs.lang == 'js') {
       extensions.push(biomeLinter)
