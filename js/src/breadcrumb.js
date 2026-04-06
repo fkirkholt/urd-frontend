@@ -20,7 +20,7 @@ var Breadcrumb = {
 
     if (ds.cnxn) {
       items.push({
-        icon: ['sqlite', 'duckdb'].includes(system) ? "nf-md-folder_outline" : "nf-fa-server",
+        icon: "nf-fa-server",
         text: ds.cnxn,
         addr: '/' + ds.cnxn
       })
@@ -57,7 +57,7 @@ var Breadcrumb = {
       })
     }
 
-    if (ds.base && ds.base.name && ds.file.type == 'server') {
+    if (ds.base && ds.base.name && ds.file?.type == 'server') {
       items.push({
         icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),
