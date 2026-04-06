@@ -150,7 +150,7 @@ var Tabbar = {
             }
           }, 'Users')
         ]),
-        !ds.dblist || ds.dblist.roles.length == 0 ? null : m('label', { class: 'fr'}, [
+        !ds.dblist || !ds.dblist.roles?.length != 0 ? null : m('label', { class: 'fr'}, [
           'Role: ',
           m('select', {
             name: 'role',
@@ -182,7 +182,7 @@ var Tabbar = {
               value: 'NONE',
               selected: ds.dblist.role == null
             }, 'Ingen'),
-            ds.dblist.roles.map(function(role) {
+            ds.dblist.roles?.map(function(role) {
               return m('option', {
                 value: role,
                 selected: ds.dblist.role == role
