@@ -67,6 +67,11 @@ var Export_dialog = {
         }
       }
     }
+
+    eventSource.onerror = function(err) {
+      console.error("EventSource failed:", err)
+      eventSource.close()
+    }
   },
 
   export_sql: function(dialect, table_defs, no_fkeys, no_empty, view_defs,
@@ -121,8 +126,6 @@ var Export_dialog = {
       Export_dialog.running = false
       Export_dialog.msg = ''
     }
-
-
   },
 
   view: function() {

@@ -50,7 +50,7 @@ var cache_dialog = {
                         var params = Object.keys(params).map(function(k) {
                             return k + '=' + params[k]
                         }).join('&')
-                        let eventSource = new EventSource('/urd/update_cache?' + params);
+                        let eventSource = new EventSource('/urd/update_cache?' + params)
 
                         eventSource.onmessage = function(event) {
                             var data = JSON.parse(event.data)
@@ -64,6 +64,10 @@ var cache_dialog = {
                                 $('#action-dialog').hide()
                                 ds.load_database(ds.base.name)
                             }
+                        }
+                        eventSource.onerror = function(err) {
+                          console.error("EventSource failed:", err)
+                          eventSource.close()
                         }
                     }.bind(this)
                 }),

@@ -14,7 +14,7 @@ var Import_dialog = {
     var params = Object.keys(params).map(function(k) {
       return k + '=' + params[k]
     }).join('&')
-    let eventSource = new EventSource('/import_tsv?' + params);
+    let eventSource = new EventSource('/import_tsv?' + params)
 
     eventSource.onmessage = function(event) {
       var data = JSON.parse(event.data)
@@ -27,6 +27,11 @@ var Import_dialog = {
         $('div.curtain').hide()
         $('#import-dialog').hide()
       }
+    }
+
+    eventSource.onerror = function(err) {
+      console.error("EventSource failed:", err)
+      eventSource.close()
     }
   },
 
