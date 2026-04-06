@@ -296,8 +296,7 @@ var home = {
               ]
               : [
                 m('span', { class: "nf-li" }, [
-                  m('i', { class: "nf nf-oct-file" }),
-                  m.trust('&nbsp;')
+                  m('i', { class: "nf nf-oct-file" })
                 ]),
                 post.rename ? m('input', {
                   value: post.columns.label,
