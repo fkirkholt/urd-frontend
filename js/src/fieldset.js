@@ -5,8 +5,7 @@ var Fieldset = {
     return [
       Object.keys(fieldset.items).map(function(label, idx) {
         var fieldname = fieldset.items[label]
-        var type = fieldname.indexOf('actions.') > -1
-          ? 'action' : 'field'
+        var type = fieldname.indexOf('actions.') > -1 ? 'action' : 'field'
 
         switch (type) {
           case 'field':
@@ -37,8 +36,8 @@ var Fieldset = {
             return !display
             ? m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
             : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
-              ? [separator, m('time', { datetime: field.value }, Field.display_value(field, rec))]
-              : [separator, m('data', { value: field.value }, Field.display_value(field, rec))]
+            ? [separator, m('time', { datetime: field.value }, Field.display_value(field, rec))]
+            : [separator, m('data', { value: field.value }, Field.display_value(field, rec))]
           case 'action':
             var action = ds.table.actions[fieldname]
             return m('span', { class: 'mr2' }, [
@@ -79,25 +78,25 @@ var Fieldset = {
           'data-set': rec.table.name + '.' + set.name,
           class: 'db ml3 mt1'
         }, [
-            m('b', {
-              class: [
-                'v-top nowrap underline pointer mr2',
-                set.inline ? 'db' : 'dib'
-              ].join(' '),
-              onclick: function() {
-                if (set.expandable) {
-                  set.expanded = !set.expanded
-                }
-                return false
+          m('b', {
+            class: [
+              'v-top nowrap underline pointer mr2',
+              set.inline ? 'db' : 'dib'
+            ].join(' '),
+            onclick: function() {
+              if (set.expandable) {
+                set.expanded = !set.expanded
               }
-            }, label),
-            set.inline ? '' : m('span', {
-              class: 'normal ml1 moon-gray f7'
-            }, count_field_values + '/' + count_fields),
-            // Draw inline fieldset
-            !set.expanded && set.inline
-              ? Fieldset.draw_inline_fieldset(rec, set) : null,
-          ]),
+              return false
+            }
+          }, label),
+          set.inline ? '' : m('span', {
+            class: 'normal ml1 moon-gray f7'
+          }, count_field_values + '/' + count_fields),
+          // Draw inline fieldset
+          !set.expanded && set.inline
+            ? Fieldset.draw_inline_fieldset(rec, set) : null,
+        ]),
       ],
       // Draw fields if the field group is expanded
       !set.expanded ? null : m('fieldset', {
@@ -105,17 +104,16 @@ var Fieldset = {
         'data-expandable': set.expandable,
         style: 'min-width: 0'
       }, [
-          m('legend', {
-          }, [
-              m('b', { 
-                class: set.expandable ? 'underline pointer' : '',
-                onclick: function(event) {
-                  console.log('klikket 1')
-                  if (set.expandable === false) return
-                  set.expanded = !set.expanded
-                  event.stopPropagation(); }
-              }, label),
-          ]),
+        m('legend', {
+        }, [
+          m('b', { 
+            class: set.expandable ? 'underline pointer' : '',
+            onclick: function(event) {
+              if (set.expandable === false) return
+              set.expanded = !set.expanded
+              event.stopPropagation(); }
+          }, label),
+        ]),
         Object.keys(set.items).map(function(label) {
           var subitem = set.items[label]
           if (typeof subitem == 'object') {

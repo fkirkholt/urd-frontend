@@ -300,82 +300,82 @@ var Grid = {
           config.dark_mode ? 'br b-mid-gray b--gray' : 'br b-light-gray b--moon-gray'
         ].join(' '),
       }, [
-          m('thead', { class: '' }, [
-            m('tr', { class: 'cursor-default' }, [
-              m('th.icon', {
+        m('thead', { class: '' }, [
+          m('tr', { class: 'cursor-default' }, [
+            m('th.icon', {
+              class: [
+                'tl normal f6 pa0',
+                config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'
+              ].join(' ')
+            }, ''),
+            Object.keys(ds.table.grid.columns).map(function(label) {
+              var col = ds.table.grid.columns[label]
+
+              var field = ds.table.fields[col]
+
+              // If this is for instance an action
+              if (field === undefined) {
+                return m('th', '')
+              }
+
+              if (field.hidden) return
+
+              var label = isNaN(parseInt(label))
+                ? label : ds.table.fields[col].label
+                  ? ds.table.fields[col].label : col
+              return m('th', {
+                id: col,
                 class: [
-                  'tl normal f6 pa0',
-                  config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'
+                  ['int', 'Decimal', 'float'].includes(field.datatype) ? 'tr' : 'tl',
+                  'f6 pa1 pb0 nowrap ba',
+                  config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray',
+                  config.compressed ? 'truncate' : '',
+                ].join(' '),
+                'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
+                onclick: Grid.sort.bind(Grid, col)
+              }, [
+              label, m('i', {
+                class: [
+                  'ml2',
+                  Grid.column_order(col) == 'asc' ? 'nf nf-fa-angle_up'
+                    : Grid.column_order(col) == 'desc' ? 'nf nf-fa-angle_down'
+                    : ''
                 ].join(' ')
-              }, ''),
-              Object.keys(ds.table.grid.columns).map(function(label) {
-                var col = ds.table.grid.columns[label]
-
-                var field = ds.table.fields[col]
-
-                // If this is for instance an action
-                if (field === undefined) {
-                  return m('th', '')
-                }
-
-                if (field.hidden) return
-
-                var label = isNaN(parseInt(label))
-                  ? label : ds.table.fields[col].label
-                    ? ds.table.fields[col].label : col
-                return m('th', {
-                  id: col,
-                  class: [
-                    ['int', 'Decimal', 'float'].includes(field.datatype) ? 'tr' : 'tl',
-                    'f6 pa1 pb0 nowrap ba',
-                    config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray',
-                    config.compressed ? 'truncate' : '',
-                  ].join(' '),
-                  'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
-                  onclick: Grid.sort.bind(Grid, col)
-                }, [
-                label, m('i', {
-                  class: [
-                    'ml2',
-                    Grid.column_order(col) == 'asc' ? 'nf nf-fa-angle_up'
-                      : Grid.column_order(col) == 'desc' ? 'nf nf-fa-angle_down'
-                      : ''
-                  ].join(' ')
-                })])
-              }),
-              !ds.table.grid.actions.length
-                ? ''
-                : m('th', {
-                  class: 'br bb b--moon-gray bg-light-gray f6 pa0'
-                })
-            ])
-          ]),
-          m('tbody', { class: 'overflow-y-auto overflow-x-hidden' }, [
-            ds.table.records.map(function(record, idx) {
-              record.base_name = ds.base.name
-              record.table_name = ds.table.name
-              if (record.dirty) Record.validate(record)
-
-              return record.hidden
-                ? ''
-                : m(Row, { list: ds.table, record: record, idx: idx })
-            })
-          ]),
-          (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
-            m('tr', { class: 'bg--light-gray bb br' }, [
-              m('td', {
-                class: 'tc bt b--moon-gray pb0'
-              }),
-              Object.keys(ds.table.grid.columns).map(function(label) {
-                var col = ds.table.grid.columns[label]
-                return m('td', {
-                  class: 'tr bl bt b--moon-gray bg-white f6 pa1 pb0 nowrap'
-                }, (col in ds.table.grid.sums)
-                    ? m.trust(String(ds.table.grid.sums[col]))
-                    : m.trust('&nbsp'))
+              })])
+            }),
+            !ds.table.grid.actions.length
+              ? ''
+              : m('th', {
+                class: 'br bb b--moon-gray bg-light-gray f6 pa0'
               })
-            ])
           ])
+        ]),
+        m('tbody', { class: 'overflow-y-auto overflow-x-hidden' }, [
+          ds.table.records.map(function(record, idx) {
+            record.base_name = ds.base.name
+            record.table_name = ds.table.name
+            if (record.dirty) Record.validate(record)
+
+            return record.hidden
+              ? ''
+              : m(Row, { list: ds.table, record: record, idx: idx })
+          })
+        ]),
+        (!Object.keys(ds.table.grid.sums).length) ? null : m('tfoot', [
+          m('tr', { class: 'bg--light-gray bb br' }, [
+            m('td', {
+              class: 'tc bt b--moon-gray pb0'
+            }),
+            Object.keys(ds.table.grid.columns).map(function(label) {
+              var col = ds.table.grid.columns[label]
+              return m('td', {
+                class: 'tr bl bt b--moon-gray bg-white f6 pa1 pb0 nowrap'
+              }, (col in ds.table.grid.sums)
+                  ? m.trust(String(ds.table.grid.sums[col]))
+                  : m.trust('&nbsp'))
+            })
+          ])
+        ])
       ])]),
       !ds.table.tab || ds.table.tab == 'data' ? '' : m(Chart, { 
         data: chart_data,

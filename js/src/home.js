@@ -272,83 +272,84 @@ var home = {
             class: desc ? '' : "flex",
             style: desc ? '' : "width: 180px"
           }, [
-              post.columns.type == 'database' ? [
-                m('span', { class: "nf-li" }, [
-                  m('i', { class: "nf nf-oct-database" })
-                ]),
-                m('span', {
-                  class: 'no-underline hover-blue dark-pink pointer',
-                  onclick: function() {
-                    m.route.set('/' + ds.cnxn + '/' + post.columns.name)
-                  }
-                }, ' ' + post.columns.label)
-              ]
-              : post.columns.type == 'dir' ?  [
-                m('span', { class: "nf-li" }, [
-                  m('i', { class: "nf nf-md-folder_outline" })
-                ]),
-                m('span', { 
-                  class: 'no-underline blue pointer truncate',
-                  onclick: function() {
-                    m.route.set('/' + ds.cnxn + '/' + post.columns.name)
-                  }
-                }, ' ' + post.columns.label)
-              ]
-              : [
-                m('span', { class: "nf-li" }, [
-                  m('i', { class: "nf nf-oct-file" })
-                ]),
-                post.rename ? m('input', {
-                  value: post.columns.label,
-                  onchange: function(event) {
-                    var from = post.columns.name
-                    var to = from.replace(post.columns.label, '') + event.target.value
-                    post.rename = false
-                    m.request({
-                      method: 'put',
-                      url: '/file_rename',
-                      params: {
-                        cnxn: ds.cnxn,
-                        src: from,
-                        dst: to
-                      },
-                    })
-                    .then(function(result) {
-                      post.columns.label = event.target.value
-                      post.columns.name = to
-                      if (result.success && ds.file && ds.file.path == from) {
-                        m.route.set('/' + ds.cnxn + '/' +  to)
-                      }
-                    })
-                  }
-                })
-                : m('span', {
-                  class: [
-                    'no-underline hover-blue pointer truncate ws-normal',
-                    (post.columns.size > 100000000) ? 'gray' : '',
-                  ].join(' '),
-                  onclick: function() {
-                    m.route.set('/' + ds.cnxn + '/' + post.columns.name)
-                  },
-                  oncontextmenu: function(event) {
-                    var top
-                    $('#filelist-context').toggle()
-                    var height = $('#filelist-context').height()
-                    home.context_file = post
-                    if (window.innerHeight - event.clientY < height) {
-                      top = event.clientY - 20 - height
-                    } else {
-                      top = event.clientY - 20
-                      }
-                    $('ul#filelist-context').css({
-                      top: top,
-                      left: event.clientX
-                    })
-                    return false
-                  }
-                }, [' ', post.columns.label])
-              ],
-              (ds.file && ds.file.type != 'dir') ? '' : m('p.mt1.mb1', m.trust(desc))
+            post.columns.type == 'database' ? [
+              m('span', { class: "nf-li" }, [
+                m('i', { class: "nf nf-oct-database" })
+              ]),
+              m('span', {
+                class: 'no-underline hover-blue dark-pink pointer',
+                onclick: function() {
+                  m.route.set('/' + ds.cnxn + '/' + post.columns.name)
+                }
+              }, label)
+            ]
+            : post.columns.type == 'dir' ?  [
+              m('span', { class: "nf-li" }, [
+                m('i', { class: "nf nf-md-folder_outline" })
+              ]),
+              m('span', { 
+                class: 'no-underline blue pointer',
+                style: 'overflow-wrap: anywhere',
+                onclick: function() {
+                  m.route.set('/' + ds.cnxn + '/' + post.columns.name)
+                }
+              }, label)
+            ]
+            : [
+              m('span', { class: "nf-li" }, [
+                m('i', { class: "nf nf-oct-file" })
+              ]),
+              post.rename ? m('input', {
+                value: post.columns.label,
+                onchange: function(event) {
+                  var from = post.columns.name
+                  var to = from.replace(post.columns.label, '') + event.target.value
+                  post.rename = false
+                  m.request({
+                    method: 'put',
+                    url: '/file_rename',
+                    params: {
+                      cnxn: ds.cnxn,
+                      src: from,
+                      dst: to
+                    },
+                  })
+                  .then(function(result) {
+                    post.columns.label = event.target.value
+                    post.columns.name = to
+                    if (result.success && ds.file && ds.file.path == from) {
+                      m.route.set('/' + ds.cnxn + '/' +  to)
+                    }
+                  })
+                }
+              })
+              : m('span', {
+                class: [
+                  'no-underline hover-blue pointer truncate ws-normal',
+                  (post.columns.size > 100000000) ? 'gray' : '',
+                ].join(' '),
+                onclick: function() {
+                  m.route.set('/' + ds.cnxn + '/' + post.columns.name)
+                },
+                oncontextmenu: function(event) {
+                  var top
+                  $('#filelist-context').toggle()
+                  var height = $('#filelist-context').height()
+                  home.context_file = post
+                  if (window.innerHeight - event.clientY < height) {
+                    top = event.clientY - 20 - height
+                  } else {
+                    top = event.clientY - 20
+                    }
+                  $('ul#filelist-context').css({
+                    top: top,
+                    left: event.clientX
+                  })
+                  return false
+                }
+              }, label)
+            ],
+            (ds.file && ds.file.type != 'dir') ? '' : m('p.mt1.mb1', m.trust(desc))
           ])
         })
       ]),

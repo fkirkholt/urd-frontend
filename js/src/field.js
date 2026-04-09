@@ -381,154 +381,151 @@ var Field = {
         (!config.edit_mode && config.hide_empty && field.value == null) ||
           (field.fkey && field.expanded && label)
       ) ? '' : [
-          m('label', {
-            'data-expandable': field.expandable && field.value !== null,
-            'data-field': rec.table.name + '.' + field.name,
-            class: [
-              (label && !label_left) ? 'dib ml3 mt1' : 'db ml2 mt1',
-              field.element == 'textarea' ? 'w-100' : '', 
-            ].join(' ')
-          }, [
-              label ? [
-                m('b', { 
-                  title: field.attrs.title,
-                  'data-after': ':', 
-                  class: [
-                    label_left ? 'mr2 nowrap' : 'db mr2 nowrap',
-                    field.expandable && field.value ? 'underline pointer' : '',
-                    field.element == 'textarea' && !config.edit_mode ? 'underline pointer' : ''
-                  ].join(' '),
-                  onclick: function() {
-                    if (field.fkey && field.expandable && field.value) {
-                      Field.toggle_fkey(rec, colname)
-                    } 
-                    if (field.element == 'textarea' && !config.edit_mode) {
-                      field.expanded = !field.expanded
-                    }
-                    if (!field.expanded) {
-                      field.foldable = false
-                    }
-                  }
-                }, [
-                  label,
-                ]),
-                field.element == 'textarea' && field.expanded
-                ? [ 
-                  m('span', {
-                    class: [
-                      'ml3 pointer link dim hover-blue',
-                      config.dark_mode ? 'gray' : 'moon-gray'
-                    ].join(' '),
-                    onclick: function() {
-                      var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
-
-                      for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
-                                                              selector + " .collapsible ul li p:first-child")) {
-                        let t = i.parentElement
-                        t.className = "fold close"
-                      }
-                    }
-                  }, 'Collapse all'),
-                  m('span', {
-                    class: [
-                      'ml3 pointer link dim hover-blue',
-                      config.dark_mode ? 'gray' : 'moon-gray'
-                    ].join(' '),
-                    onclick: function() {
-                      if (config.edit_mode) {
-                        Codefield.unfold_all(field.name)
-                      } else {
-                        var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
-
-                        for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
-                                                                selector + " .collapsible ul li p:first-child")) {
-                          let t = i.parentElement
-                          t.className = "fold open"
-                        }
-                      }
-                    }
-                  }, 'Expand all'),
-                  m('br')
-                ]
-                : ''
-              ] : m('i', {
+        m('label', {
+          'data-expandable': field.expandable && field.value !== null,
+          'data-field': rec.table.name + '.' + field.name,
+          class: [
+            (label && !label_left) ? 'dib ml3 mt1' : 'db ml2 mt1',
+            field.element == 'textarea' ? 'w-100' : '', 
+          ].join(' ')
+        }, [
+          label ? [
+            m('b', { 
+              title: field.attrs.title,
+              'data-after': ':', 
+              class: [
+                label_left ? 'mr2 nowrap' : 'db mr2 nowrap',
+                field.expandable && field.value ? 'underline pointer' : '',
+                field.element == 'textarea' && !config.edit_mode ? 'underline pointer' : ''
+              ].join(' '),
+              onclick: function() {
+                if (field.fkey && field.expandable && field.value) {
+                  Field.toggle_fkey(rec, colname)
+                } 
+                if (field.element == 'textarea' && !config.edit_mode) {
+                  field.expanded = !field.expanded
+                }
+                if (!field.expanded) {
+                  field.foldable = false
+                }
+              }
+            }, [
+              label,
+            ]),
+            field.element == 'textarea' && field.expanded
+            ? [ 
+              m('span', {
                 class: [
-                  'nf nf-fw',
-                  !field.expandable ? 'nf-oct-dot v-mid'
-                  : field.expanded ? 'nf-fa-angle_down' 
-                  : 'nf-fa-angle_right'
+                  'ml3 pointer link dim hover-blue',
+                  config.dark_mode ? 'gray' : 'moon-gray'
                 ].join(' '),
                 onclick: function() {
-                  if (field.fkey && field.expandable && field.value) {
-                    Field.toggle_fkey(rec, colname)
-                  } 
+                  var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+
+                  for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
+                                                          selector + " .collapsible ul li p:first-child")) {
+                    let t = i.parentElement
+                    t.className = "fold close"
+                  }
                 }
-              }),
-              !field.use || !config.admin ? '' : m('span', {
-                class: 'ml2 light-silver'
-              }, '(' + Field.get_percentage(field.use) + '%)'),
-              !display
-                ? m(Input, { rec: rec, fieldname: colname, ...field.attrs })
-                : (field.expandable && field.fkey) || field.attrs['data-format'] == 'link'
-                  ? m('a', {
-                    class: [
-                      'dib mw6',
-                      (field.expanded) ? '' : 'truncate'
-                    ].join(' '),
-                    'data-expandable': (field.element == 'textarea'),
-                    'data-expanded': field.expanded,
-                    'data-value': field.value,
-                    href: field.attrs['data-href'] ? href 
-                      : field.fkey ? Field.get_url(field, rec) 
-                      : '#',
-                    onclick: function() {
-                      if (field.element == 'textarea') {
-                        field.expanded = !field.expanded
-                      }
+              }, 'Collapse all'),
+              m('span', {
+                class: [
+                  'ml3 pointer link dim hover-blue',
+                  config.dark_mode ? 'gray' : 'moon-gray'
+                ].join(' '),
+                onclick: function() {
+                  if (config.edit_mode) {
+                    Codefield.unfold_all(field.name)
+                  } else {
+                    var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+
+                    for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
+                                                            selector + " .collapsible ul li p:first-child")) {
+                      let t = i.parentElement
+                      t.className = "fold open"
                     }
-                  }, Field.display_value(field, rec)) 
-                  : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
-                    ? m('time', {
-                      datetime: field.value,
-                      class: 'db'
-                    }, Field.display_value(field, rec))
-                    : ['json', 'yaml'].includes(field.attrs['data-format'])
-                      ? Field.display_value(field, rec)
-                      : m('data', {
-                        class: [
-                          'pr3 collapsible',
-                          label_left ? '' : 'db',
-                          label_left && ['int', 'float'].includes(field.datatype) ? 'fr' : '',
-                          (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
-                          (field.is_filepath) ? 'underline pointer blue' : '',
-                          field.element == 'textarea' ? 'markdown' : ''
-                        ].join(' '),
-                        value: field.element == 'textarea' ? null : field.value,
-                        onclick: function() {
-                          if (field.is_filepath) {
-                            data = {}
-                            data.base = rec.base_name;
-                            data.table = rec.table_name;
-                            data.column = field.name
-                            data.pkey = JSON.stringify(rec.pkey);
+                  }
+                }
+              }, 'Expand all'),
+              m('br')
+            ]
+            : ''
+          ] : m('i', {
+            class: [
+              'nf nf-fw',
+              !field.expandable ? 'nf-oct-dot v-mid'
+              : field.expanded ? 'nf-fa-angle_down' 
+              : 'nf-fa-angle_right'
+            ].join(' '),
+            onclick: function() {
+              if (field.fkey && field.expandable && field.value) {
+                Field.toggle_fkey(rec, colname)
+              } 
+            }
+          }),
+          !field.use || !config.admin ? '' : m('span', {
+            class: 'ml2 light-silver'
+          }, '(' + Field.get_percentage(field.use) + '%)'),
+          !display ? m(Input, { rec: rec, fieldname: colname, ...field.attrs })
+          : (field.expandable && field.fkey) || field.attrs['data-format'] == 'link'
+          ? m('a', {
+            class: [
+              'dib mw6',
+              (field.expanded) ? '' : 'truncate'
+            ].join(' '),
+            'data-expandable': (field.element == 'textarea'),
+            'data-expanded': field.expanded,
+            'data-value': field.value,
+            href: field.attrs['data-href'] ? href 
+              : field.fkey ? Field.get_url(field, rec) 
+              : '#',
+            onclick: function() {
+              if (field.element == 'textarea') {
+                field.expanded = !field.expanded
+              }
+            }
+          }, Field.display_value(field, rec)) 
+          : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
+          ? m('time', {
+            datetime: field.value,
+            class: 'db'
+          }, Field.display_value(field, rec))
+          : ['json', 'yaml'].includes(field.attrs['data-format'])
+          ? Field.display_value(field, rec)
+          : m('data', {
+            class: [
+              'pr3 collapsible',
+              label_left ? '' : 'db',
+              label_left && ['int', 'float'].includes(field.datatype) ? 'fr' : '',
+              (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
+              (field.is_filepath) ? 'underline pointer blue' : '',
+              field.element == 'textarea' ? 'markdown' : ''
+            ].join(' '),
+            value: field.element == 'textarea' ? null : field.value,
+            onclick: function() {
+              if (field.is_filepath) {
+                data = {}
+                data.base = rec.base_name;
+                data.table = rec.table_name;
+                data.column = field.name
+                data.pkey = JSON.stringify(rec.pkey);
 
-                            params = Object.keys(data).map(function(k) {
-                              return k + '=' + data[k]
-                            }).join('&')
-                            window.open('/db_file?' + params, '_blank')
-                          }
-                        }
-                      }, Field.display_value(field, rec, field.element != 'textarea')),
-              // Show trash bin for field from cross reference table
-              rec.table.relationship != 'M:M' || !config.edit_mode
-                ? ''
-                : m('i', {
-                  class: 'nf nf-fa-trash_o light-blue pl1 hover-blue pointer',
-                  onclick: Record.delete.bind(this, rec)
-                }),
-            ]),
-
-        ],
+                params = Object.keys(data).map(function(k) {
+                  return k + '=' + data[k]
+                }).join('&')
+                window.open('/db_file?' + params, '_blank')
+              }
+            }
+          }, Field.display_value(field, rec, field.element != 'textarea')),
+          // Show trash bin for field from cross reference table
+          rec.table.relationship != 'M:M' || !config.edit_mode ? ''
+          : m('i', {
+            class: 'nf nf-fa-trash_o light-blue pl1 hover-blue pointer',
+            onclick: Record.delete.bind(this, rec)
+          }),
+        ]),
+      ],
       // Expanded record
       !field.fkey || !field.expanded ? null : m('fieldset', {
         name: colname,

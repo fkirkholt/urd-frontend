@@ -34,36 +34,35 @@ var Select = {
         (value === '' || value === null) ? 'gray' : ''
       ].join(' ')
     }, [
-        vnode.attrs.required && value !== null && value !== ''
-          ? ''
-          : m('option', {
-            value: '',
-            class: 'gray normal'
-          }, vnode.attrs.placeholder
-              ? vnode.attrs.placeholder : m.trust('&nbsp;')
-          ),
-        vnode.attrs.optgroups
-          ? vnode.attrs.optgroups.map(function(optgroup, idx) {
-            return m('optgroup', {
-              label: optgroup.label,
-              'data-value': optgroup['data-value'],
-              class: 'black'
-            }, [
-                optgroup.options.map(function(option, idx) {
-                  return m('option', {
-                    value: option.value,
-                    class: config.dark_mode ? 'white' : 'black',
-                    selected: option.value === value
-                  }, option.label)
-                })
-              ])
-          })
-          : vnode.attrs.options.filter(function(option) {
-            return 'parent' in option ? option.parent === null : true
-          }).map(function(option, idx) {
-            return Select.draw_option(vnode.attrs.options, option, value, 0)
-          })
-      ])
+      vnode.attrs.required && value !== null && value !== '' ? ''
+      : m('option', {
+        value: '',
+        class: 'gray normal'
+      }, vnode.attrs.placeholder
+          ? vnode.attrs.placeholder : m.trust('&nbsp;')
+      ),
+      vnode.attrs.optgroups
+      ? vnode.attrs.optgroups.map(function(optgroup, idx) {
+        return m('optgroup', {
+          label: optgroup.label,
+          'data-value': optgroup['data-value'],
+          class: 'black'
+        }, [
+            optgroup.options.map(function(option, idx) {
+              return m('option', {
+                value: option.value,
+                class: config.dark_mode ? 'white' : 'black',
+                selected: option.value === value
+              }, option.label)
+            })
+          ])
+      })
+      : vnode.attrs.options.filter(function(option) {
+        return 'parent' in option ? option.parent === null : true
+      }).map(function(option, idx) {
+        return Select.draw_option(vnode.attrs.options, option, value, 0)
+      })
+    ])
   }
 }
 

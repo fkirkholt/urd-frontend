@@ -172,13 +172,13 @@ var Relation = {
         !config.edit_mode ||
         rel.relationship == "1:1"
       ) ? '' : [
-          !rel.privilege.insert ? '' : m('a', {
-            onclick: function(e) { Relation.add(e, rel) }
-          }, m('i', {
-            class: 'nf nf-md-text_box_plus_outline light-blue hover-blue '
-              + 'pointer ml1'
-          }))
-        ]
+        !rel.privilege.insert ? '' : m('a', {
+          onclick: function(e) { Relation.add(e, rel) }
+        }, m('i', {
+          class: 'nf nf-md-text_box_plus_outline light-blue hover-blue '
+            + 'pointer ml1'
+        }))
+      ]
     ]
   },
 
@@ -293,63 +293,60 @@ var Relation = {
     }
 
     return [
-      rel.expanded ? null : [m('div', 
-        {
-          'data-expandable': rel.count_records ? true : false,
-          'data-set': ref, 
-          class: 'db ml3 mt1'
-        }, 
-        [
-          m('b', { 
-            class: [
-              'dib mr2 ',
-              rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) ? ''
-              : 'underline pointer' 
-            ].join(''),
-            onclick: function() {
-              if (rel.count_records == 0 && rel.relationship == '1:1') {
-                return
-              }
-              Relation.toggle_heading(rel)
-              if (!rel.records || (rel.relationship == '1:1' && !rel.records[0].table)) {
-                Record.get_relations(rec, key)
-              } 
+      rel.expanded ? null : [m('div', {
+        'data-expandable': rel.count_records ? true : false,
+        'data-set': ref, 
+        class: 'db ml3 mt1'
+      }, [
+        m('b', { 
+          class: [
+            'dib mr2 ',
+            rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) ? ''
+            : 'underline pointer' 
+          ].join(''),
+          onclick: function() {
+            if (rel.count_records == 0 && rel.relationship == '1:1') {
+              return
             }
-          }, label),
-          rel.dirty
-            ? m('i', { class: 'nf nf-fa-pencil ml1 light-gray' })
-            : '',
-          (config.edit_mode && rel.relationship == '1:1') ? m('input', {
-            type: 'checkbox',
-            checked: rel.count_records > 0 && rel.records[0].delete != true,
-            onchange: function(ev) {
-              if (ev.target.checked) {
-                if (rel.count_records) {
-                  rel.records[0].delete = false
-                } else {
-                  Record.get_relations(rec, key)
-                }
+            Relation.toggle_heading(rel)
+            if (!rel.records || (rel.relationship == '1:1' && !rel.records[0].table)) {
+              Record.get_relations(rec, key)
+            } 
+          }
+        }, label),
+        rel.dirty
+          ? m('i', { class: 'nf nf-fa-pencil ml1 light-gray' })
+          : '',
+        (config.edit_mode && rel.relationship == '1:1') ? m('input', {
+          type: 'checkbox',
+          checked: rel.count_records > 0 && rel.records[0].delete != true,
+          onchange: function(ev) {
+            if (ev.target.checked) {
+              if (rel.count_records) {
+                rel.records[0].delete = false
               } else {
-                if (rel.records[0].new) {
-                  rel.records.splice(0, 1)
-                }
-                Record.delete(rel.records[0])
+                Record.get_relations(rec, key)
               }
+            } else {
+              if (rel.records[0].new) {
+                rel.records.splice(0, 1)
+              }
+              Record.delete(rel.records[0])
             }
-          })
-          : (rel.relationship == '1:1') ? m('span', {
-            class: 'gray f7'
-          }, rel.count_records ? '1:1' : '0:1')
-          : m('span', {
-              class: 'ml1 pr1 normal light-blue hover-blue f7 link pointer',
-              onclick: function() {
-                m.route.set(url)
-              }
-            }, [
-              rel.count_records,
-            ])
-        ]
-      )],
+          }
+        })
+        : (rel.relationship == '1:1') ? m('span', {
+          class: 'gray f7'
+        }, rel.count_records ? '1:1' : '0:1')
+        : m('span', {
+          class: 'ml1 pr1 normal light-blue hover-blue f7 link pointer',
+          onclick: function() {
+            m.route.set(url)
+          }
+        }, [
+          rel.count_records,
+        ])
+      ])],
       rel.expanded && rel.records
         ? m('fieldset', { 
           'data-set': ref, 
@@ -362,32 +359,32 @@ var Relation = {
               Relation.toggle_heading(rel)
             }
           }, [
-              m('b', { class: 'underline pointer mr2' }, label),
-              (config.edit_mode && rel.relationship == '1:1') ? m('input', {
-                type: 'checkbox',
-                checked: rel.count_records > 0 && rel.records[0].delete != true,
-                onchange: function(ev) {
-                  if (!ev.target.checked) {
-                    if (rel.records[0].new) {
-                      rel.records.splice(0, 1)
-                    } else {
-                      Record.delete(rel.records[0])
-                    }
-                    rel.expanded = false
-                    rel.count_records = 0
+            m('b', { class: 'underline pointer mr2' }, label),
+            (config.edit_mode && rel.relationship == '1:1') ? m('input', {
+              type: 'checkbox',
+              checked: rel.count_records > 0 && rel.records[0].delete != true,
+              onchange: function(ev) {
+                if (!ev.target.checked) {
+                  if (rel.records[0].new) {
+                    rel.records.splice(0, 1)
+                  } else {
+                    Record.delete(rel.records[0])
                   }
+                  rel.expanded = false
+                  rel.count_records = 0
                 }
-              })
-              : (rel.relationship == '1:1') ? ''
-              : m('span', {
-                  class: 'ml1 pr1 normal light-blue hover-blue f7 link pointer',
-                  onclick: function() {
-                    m.route.set(url)
-                  }
-                }, [
-                  rel.count_records,
-                ])
-            ]),
+              }
+            })
+            : (rel.relationship == '1:1') ? ''
+            : m('span', {
+              class: 'ml1 pr1 normal light-blue hover-blue f7 link pointer',
+              onclick: function() {
+                m.route.set(url)
+              }
+            }, [
+              rel.count_records,
+            ])
+          ]),
           ['1:M', 'M:M'].includes(rel.relationship)
           ? Relation.draw_relation_table(rel, rec)
           : m(Record, { record: rel.records[0] })

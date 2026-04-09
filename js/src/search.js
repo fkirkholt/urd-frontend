@@ -198,16 +198,15 @@ var Search = {
         m('tr', [
           // expansion icon
           m('td', { class: 'tc v-top' }, [
-            !field.fkey || !field.expandable || table.sublevel
-              ? null
-              : m('i.nf', {
-                class: !field.expanded
-                  ? 'nf-fa-angle_right'
-                  : field.expandable ? 'nf-fa-angle_down' : '',
-                onclick: function() {
-                  Search.toggle_relation(field)
-                }
-              })
+            !field.fkey || !field.expandable || table.sublevel ? null
+            : m('i.nf', {
+              class: !field.expanded
+                ? 'nf-fa-angle_right'
+                : field.expandable ? 'nf-fa-angle_down' : '',
+              onclick: function() {
+                Search.toggle_relation(field)
+              }
+            })
           ]),
           // label
           m('td.label', {

@@ -129,70 +129,70 @@ var SQLpanel = {
           query.tab == 'chart' ? '' : m('div', { class: 'overflow-auto mb3' }, [ m('table', {
             class: 'collapse ba overflow-auto'
           }, [
-              // m('tr.striped--light-gray', [
-              m('thead', [
-                m('tr', [
-                  is_link ? m('th') : '',
-                  Object.keys(query.data[0]).map(function(item, i) {
-                    return m('th', {
-                      class: 'pl1 pl2 tl'
-                    }, item)
-                  })
-                ]),
-              ]),
-              m('tbody', [
-                query.data.map(function(item, i) {
-                  var pk_values = []
-                  if (table) {
-                    $.each(table.pkey.columns, function(i, col) {
-                      if (item[col] !== undefined) {
-                        pk_values.push(col + '=' + item[col])
-                      }
-                    })
-                  }
-
-                  if (is_link) {
-                    var href = '/' + ds.cnxn + '/' + ds.base.name + '?table='
-                      + table.name + '&'
-                      + pk_values.join('&')
-                    var link = m('span.link', {
-                      class: 'nf nf-md-crosshairs_gps light-blue hover-blue pointer v-mid',
-                      onclick: function() {
-                        config.tab = 'data'
-                        m.route.set(href)
-                      }
-                    }, '')
-                  }
-
-                  return m('tr', {
-                    class: config.dark_mode ? 'bg-black stripe-dark' : 'striped--light-gray'
-                  }, [
-                    is_link ? m('td', { class: 'pl1 pl2' }, [link]) : '', 
-                    Object.keys(item).map(function(cell, i) {
-                      var is_link = false
-                      var link
-                      var value = (item[cell] && typeof (item[cell])) == 'string'
-                        ? m.trust(item[cell]
-                          .replace(/\n/g, '<br>')
-                          .replace(/\s/g, '&nbsp;'))
-                        : typeof (item[cell]) == 'boolean'
-                        ? (item[cell] ? 1 : 0)
-                        : item[cell]
-
-                      if (value === '') {
-                        value = '(empty)'
-                      } else if (value === null) {
-                        value = '(null)'
-                      }
-
-                      return m('td', {
-                        class: 'pl1 pl2'
-                      }, value)
-                    })
-                  ])
+            // m('tr.striped--light-gray', [
+            m('thead', [
+              m('tr', [
+                is_link ? m('th') : '',
+                Object.keys(query.data[0]).map(function(item, i) {
+                  return m('th', {
+                    class: 'pl1 pl2 tl'
+                  }, item)
                 })
-              ])
-            ])]),
+              ]),
+            ]),
+            m('tbody', [
+              query.data.map(function(item, i) {
+                var pk_values = []
+                if (table) {
+                  $.each(table.pkey.columns, function(i, col) {
+                    if (item[col] !== undefined) {
+                      pk_values.push(col + '=' + item[col])
+                    }
+                  })
+                }
+
+                if (is_link) {
+                  var href = '/' + ds.cnxn + '/' + ds.base.name + '?table='
+                    + table.name + '&'
+                    + pk_values.join('&')
+                  var link = m('span.link', {
+                    class: 'nf nf-md-crosshairs_gps light-blue hover-blue pointer v-mid',
+                    onclick: function() {
+                      config.tab = 'data'
+                      m.route.set(href)
+                    }
+                  }, '')
+                }
+
+                return m('tr', {
+                  class: config.dark_mode ? 'bg-black stripe-dark' : 'striped--light-gray'
+                }, [
+                  is_link ? m('td', { class: 'pl1 pl2' }, [link]) : '', 
+                  Object.keys(item).map(function(cell, i) {
+                    var is_link = false
+                    var link
+                    var value = (item[cell] && typeof (item[cell])) == 'string'
+                      ? m.trust(item[cell]
+                        .replace(/\n/g, '<br>')
+                        .replace(/\s/g, '&nbsp;'))
+                      : typeof (item[cell]) == 'boolean'
+                      ? (item[cell] ? 1 : 0)
+                      : item[cell]
+
+                    if (value === '') {
+                      value = '(empty)'
+                    } else if (value === null) {
+                      value = '(null)'
+                    }
+
+                    return m('td', {
+                      class: 'pl1 pl2'
+                    }, value)
+                  })
+                ])
+              })
+            ])
+          ])]),
           // m('p'),
           !show_chart || query.tab != 'chart' ? '' : m(Chart, {
             // id: 'nychart', 
@@ -217,11 +217,11 @@ var SQLpanel = {
               query.success ? 'bg-washed-green' : 'bg-washed-red'
             ].join(' ')
           }, [
-              query.result,
-              query.success ? m('span', {
-                class: 'gray'
-              }, ' (' + query.time + 's)') : ''
-            ])
+            query.result,
+            query.success ? m('span', {
+              class: 'gray'
+            }, ' (' + query.time + 's)') : ''
+          ])
         ]
       }
     })
@@ -241,12 +241,12 @@ var SQLpanel = {
         limit: $('input.limit').val()
       }
     }).then(function(data) {
-        SQLpanel.running = false
-        ds.result.push(data.result)
-        if (expressions.length) {
-          SQLpanel.run_query(expressions)
-        }
-      })
+      SQLpanel.running = false
+      ds.result.push(data.result)
+      if (expressions.length) {
+        SQLpanel.run_query(expressions)
+      }
+    })
   },
 
   view: function(vnode) {
@@ -267,56 +267,56 @@ var SQLpanel = {
         style: 'flex-grow: 1'
 
       }, [
-          m('div', [
-            m(Codefield, {
-              id: 'query',
-              class: 'ml3 ba b--light-silver mb2',
-              editable: true,
-              lang: 'sql',
-              value: SQLpanel.query,
-              oncreate: function(vnode) {
-                SQLpanel.editor = vnode.state
+        m('div', [
+          m(Codefield, {
+            id: 'query',
+            class: 'ml3 ba b--light-silver mb2',
+            editable: true,
+            lang: 'sql',
+            value: SQLpanel.query,
+            oncreate: function(vnode) {
+              SQLpanel.editor = vnode.state
+            }
+          }),
+          m('div', { class: 'ml3 h2' }, [
+            SQLpanel.running ? 'Running...'
+            : !ds.result ? null
+            : m('span', { class: 'fl' }, total_time + 's'),
+            m('button', {
+              id: 'run_sql',
+              class: 'fr pt0 pb0 nf nf-fa-play',
+              disabled: SQLpanel.running,
+              onclick: function() {
+                var sql = SQLpanel.editor.get_value()
+                var expressions = sql.split(';')
+                SQLpanel.running = true
+                expressions.reverse()
+                ds.result = []
+                SQLpanel.run_query(expressions)
               }
-            }),
-            m('div', { class: 'ml3 h2' }, [
-              SQLpanel.running ? 'Running...'
-              : !ds.result ? null
-              : m('span', { class: 'fl' }, total_time + 's'),
-              m('button', {
-                id: 'run_sql',
-                class: 'fr pt0 pb0 nf nf-fa-play',
-                disabled: SQLpanel.running,
-                onclick: function() {
-                  var sql = SQLpanel.editor.get_value()
-                  var expressions = sql.split(';')
-                  SQLpanel.running = true
-                  expressions.reverse()
-                  ds.result = []
-                  SQLpanel.run_query(expressions)
-                }
-              }, ' Run'),
-              m('label', {
-                class: 'fr mr3'
-              }, [
-                  'Limit: ',
-                  m('input.limit', {
-                    type: "number",
-                    class: "w4 v-top",
-                    style: "height: 18px",
-                    value: config.limit,
-                    onchange: function(ev) {
-                      config.limit = ev.target.value
-                    }
-                  })
-                ]),
-            ])
-          ]),
-          m('div', {
-            class: 'ml3'
-          }, [
-              SQLpanel.draw_result()
-            ])
+            }, ' Run'),
+            m('label', {
+              class: 'fr mr3'
+            }, [
+                'Limit: ',
+                m('input.limit', {
+                  type: "number",
+                  class: "w4 v-top",
+                  style: "height: 18px",
+                  value: config.limit,
+                  onchange: function(ev) {
+                    config.limit = ev.target.value
+                  }
+                })
+              ]),
+          ])
+        ]),
+        m('div', {
+          class: 'ml3'
+        }, [
+          SQLpanel.draw_result()
         ])
+      ])
     ]
   }
 }

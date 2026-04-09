@@ -88,40 +88,40 @@ var Pagination = {
           Pagination.navigate(e.target.name, false)
         }
       }, [
-          m('button[name="first"]', {
-            class: [
-              'icon nf nf-fa-angle_double_left ba b--light-silver br0',
-              config.dark_mode ? 'bg-mid-gray' : 'bg-white',
-              Pagination.disabled('first', table) ? 'silver' : 'color-inherit'
-            ].join(' '),
-            disabled: Pagination.disabled('first', table)
-          }),
-          m('button[name=previous]', {
-            class: [
-              'icon nf nf-fa-angle_left bt br bl-0 bb b--light-silver br0',
-              config.dark_mode ? 'bg-mid-gray' : 'bg-white',
-              Pagination.disabled('previous', table) ? 'silver' : 'color-inherit',
-            ].join(' '),
-            disabled: Pagination.disabled('previous', table)
-          }),
-          m('button[name=next]', {
-            class: [
-              'icon nf nf-fa-angle_right bt br bb bl-0 b--light-silver br0',
-              config.dark_mode ? 'bg-mid-gray' : 'bg-white',
-              Pagination.disabled('next', table) ? 'silver' : 'color-inherit'
-            ].join(' '),
-            disabled: Pagination.disabled('next', table)
-          }),
-          m('button[name=last]', {
-            class: [
-              'icon nf nf-fa-angle_double_right bt br bb bl-0',
-              'b--light-silver br0',
-              config.dark_mode ? 'bg-mid-gray' : 'bg-white',
-              Pagination.disabled('last', table) ? 'silver' : 'color-inherit'
-            ].join(' '),
-            disabled: Pagination.disabled('last', table)
-          })
-        ]),
+        m('button[name="first"]', {
+          class: [
+            'icon nf nf-fa-angle_double_left ba b--light-silver br0',
+            config.dark_mode ? 'bg-mid-gray' : 'bg-white',
+            Pagination.disabled('first', table) ? 'silver' : 'color-inherit'
+          ].join(' '),
+          disabled: Pagination.disabled('first', table)
+        }),
+        m('button[name=previous]', {
+          class: [
+            'icon nf nf-fa-angle_left bt br bl-0 bb b--light-silver br0',
+            config.dark_mode ? 'bg-mid-gray' : 'bg-white',
+            Pagination.disabled('previous', table) ? 'silver' : 'color-inherit',
+          ].join(' '),
+          disabled: Pagination.disabled('previous', table)
+        }),
+        m('button[name=next]', {
+          class: [
+            'icon nf nf-fa-angle_right bt br bb bl-0 b--light-silver br0',
+            config.dark_mode ? 'bg-mid-gray' : 'bg-white',
+            Pagination.disabled('next', table) ? 'silver' : 'color-inherit'
+          ].join(' '),
+          disabled: Pagination.disabled('next', table)
+        }),
+        m('button[name=last]', {
+          class: [
+            'icon nf nf-fa-angle_double_right bt br bb bl-0',
+            'b--light-silver br0',
+            config.dark_mode ? 'bg-mid-gray' : 'bg-white',
+            Pagination.disabled('last', table) ? 'silver' : 'color-inherit'
+          ].join(' '),
+          disabled: Pagination.disabled('last', table)
+        })
+      ]),
       m('div[name="statuslinje"]', {
         class: 'f6 fr mb1 mt1 ml2'
       }, [count ? from + '-' + to + ' av ' + count : count]),

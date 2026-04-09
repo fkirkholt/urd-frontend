@@ -346,43 +346,43 @@ var Toolbar = {
             config.dark_mode ? 'bg-dark-gray ba b--gray' : 'bg-white shadow-5'
           ].join(' ')
         }, [
-            m('li', {
+          m('li', {
+            class: 'nowrap hover-blue',
+            onclick: function() {
+              $('#export-dialog').show()
+              $('div.curtain').show()
+              $('ul#actions').hide()
+            }
+          }, 'Export records ...'),
+          m('li', {
+            class: 'nowrap hover-blue',
+            onclick: function() {
+              $('#convert-dialog').show()
+              $('div.curtain').show()
+              $('ul#actions').hide()
+            }
+          }, 'Convert fields ...'),
+          Object.keys(ds.table.actions).map(function(label, idx) {
+            var action = ds.table.actions[label]
+
+            if (action.communication == 'download') {
+              return
+            }
+
+            var txt = action.communication != 'ajax'
+              ? action.label + ' ...'
+              : action.label
+
+            return action.disabled ? '' : m('li', {
               class: 'nowrap hover-blue',
+              title: action.description,
               onclick: function() {
-                $('#export-dialog').show()
-                $('div.curtain').show()
-                $('ul#actions').hide()
+                Toolbar.run_action(action)
+                $('ul#actions').toggle()
               }
-            }, 'Export records ...'),
-            m('li', {
-              class: 'nowrap hover-blue',
-              onclick: function() {
-                $('#convert-dialog').show()
-                $('div.curtain').show()
-                $('ul#actions').hide()
-              }
-            }, 'Convert fields ...'),
-            Object.keys(ds.table.actions).map(function(label, idx) {
-              var action = ds.table.actions[label]
-
-              if (action.communication == 'download') {
-                return
-              }
-
-              var txt = action.communication != 'ajax'
-                ? action.label + ' ...'
-                : action.label
-
-              return action.disabled ? '' : m('li', {
-                class: 'nowrap hover-blue',
-                title: action.description,
-                onclick: function() {
-                  Toolbar.run_action(action)
-                  $('ul#actions').toggle()
-                }
-              }, '- ' + txt)
-            })
-          ])
+            }, '- ' + txt)
+          })
+        ])
       ]),
       // When single record is shown.
       !config.recordview || !ds.table.hidden ? '' : m('li.dib', {
@@ -390,74 +390,74 @@ var Toolbar = {
           // Toolbar.navigate(e.target.name)
         }
       }, [
-          m('button[name="first"]', {
-            class: [
-              'icon nf nf-fa-angle_double_left ba b--light-silver br0 bg-white',
-              Toolbar.button.disabled('first') ? 'moon-gray' : '',
-            ].join(' '),
-            disabled: Toolbar.button.disabled('first'),
-            onclick: function() {
-              if (ds.table.offset == 0) {
-                Toolbar.set_url({index: 0, offset: 0})
-              } else {
-                Pagination.navigate('first', true)
-              }
+        m('button[name="first"]', {
+          class: [
+            'icon nf nf-fa-angle_double_left ba b--light-silver br0 bg-white',
+            Toolbar.button.disabled('first') ? 'moon-gray' : '',
+          ].join(' '),
+          disabled: Toolbar.button.disabled('first'),
+          onclick: function() {
+            if (ds.table.offset == 0) {
+              Toolbar.set_url({index: 0, offset: 0})
+            } else {
+              Pagination.navigate('first', true)
             }
-          }),
-          m('button[name=previous]', {
-            class: [
-              'icon nf nf-fa-angle_left bt br bl-0 bb b--light-silver br0 bg-white',
-              Toolbar.button.disabled('previous') ? 'moon-gray' : ''
-            ].join(' '),
-            disabled: Toolbar.button.disabled('previous'),
-            onclick: function() {
-              var idx = ds.table.selection
-              var prev = parseInt(idx) - 1
-              if (prev == -1) {
-                Pagination.navigate('previous', true)
-              } else {
-                Toolbar.set_url({index: prev})
-              }
+          }
+        }),
+        m('button[name=previous]', {
+          class: [
+            'icon nf nf-fa-angle_left bt br bl-0 bb b--light-silver br0 bg-white',
+            Toolbar.button.disabled('previous') ? 'moon-gray' : ''
+          ].join(' '),
+          disabled: Toolbar.button.disabled('previous'),
+          onclick: function() {
+            var idx = ds.table.selection
+            var prev = parseInt(idx) - 1
+            if (prev == -1) {
+              Pagination.navigate('previous', true)
+            } else {
+              Toolbar.set_url({index: prev})
             }
-          }),
-          m('button[name=next]', {
-            class: [
-              'icon nf nf-fa-angle_right bt br bb bl-0 b--light-silver br0 bg-white',
-              Toolbar.button.disabled('next') ? 'moon-gray' : '',
-            ].join(' '),
-            disabled: Toolbar.button.disabled('next'),
-            onclick: function() {
-              var idx = ds.table.selection
-              var next = parseInt(idx) + 1
-              if (next == ds.table.records.length) {
-                Pagination.navigate('next', true)
-              } else {
-                Toolbar.set_url({index: next})
-              }
+          }
+        }),
+        m('button[name=next]', {
+          class: [
+            'icon nf nf-fa-angle_right bt br bb bl-0 b--light-silver br0 bg-white',
+            Toolbar.button.disabled('next') ? 'moon-gray' : '',
+          ].join(' '),
+          disabled: Toolbar.button.disabled('next'),
+          onclick: function() {
+            var idx = ds.table.selection
+            var next = parseInt(idx) + 1
+            if (next == ds.table.records.length) {
+              Pagination.navigate('next', true)
+            } else {
+              Toolbar.set_url({index: next})
             }
-          }),
-          m('button[name=last]', {
-            class: [
-              'icon nf nf-fa-angle_double_right bt br bb bl-0',
-              'b--light-silver br0 bg-white',
-              Toolbar.button.disabled('last') ? 'moon-gray' : '',
-            ].join(' '),
-            disabled: Toolbar.button.disabled('last'),
-            onclick: function() {
-              Pagination.navigate('last', true)
-            }
-          }),
-        ]),
+          }
+        }),
+        m('button[name=last]', {
+          class: [
+            'icon nf nf-fa-angle_double_right bt br bb bl-0',
+            'b--light-silver br0 bg-white',
+            Toolbar.button.disabled('last') ? 'moon-gray' : '',
+          ].join(' '),
+          disabled: Toolbar.button.disabled('last'),
+          onclick: function() {
+            Pagination.navigate('last', true)
+          }
+        }),
+      ]),
 
       /*
       !ds.table.help ? '' : m('i', {
-          id: 'btn_help_table',
-          class: 'nf nf-fa-question',
-          title: 'Hjelp',
-          style: 'margin-left: 10px; cursor: pointer',
-          onclick: function() {
-              // TODO: Se på hvordan dette skal implementeres
-          }
+        id: 'btn_help_table',
+        class: 'nf nf-fa-question',
+        title: 'Hjelp',
+        style: 'margin-left: 10px; cursor: pointer',
+        onclick: function() {
+            // TODO: how should this be implemented?
+        }
       }),
       */
     ])

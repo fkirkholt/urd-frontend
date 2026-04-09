@@ -193,16 +193,16 @@ var Tabbar = {
         m('label', {
           class: 'fr mr3'
         }, [
-            m('input#view_checkbox', {
-              class: 'mr1',
-              type: 'checkbox',
-              value: 1,
-              checked: config.edit_mode,
-              onclick: function(ev) {
-                Tabbar.set_view(ev.target.checked)
-              }
-            })
-          ], 'Edit mode')
+          m('input#view_checkbox', {
+            class: 'mr1',
+            type: 'checkbox',
+            value: 1,
+            checked: config.edit_mode,
+            onclick: function(ev) {
+              Tabbar.set_view(ev.target.checked)
+            }
+          })
+        ], 'Edit mode')
       ]
     }
     return !m.route.param('base') ? '' : [
@@ -256,31 +256,31 @@ var Tabbar = {
       !ds.table || !(config.tab == 'data') ? '' : m('label', {
         class: 'fr mr3'
       }, [
-          m('input', {
-            class: 'mr1',
-            type: 'checkbox',
-            value: 1,
-            checked: config.hide_empty,
-            onclick: function(ev) {
-              Tabbar.set_hidden(ev.target.checked)
-            }
-          })
-        ], 'Hide empty fields'),
+        m('input', {
+          class: 'mr1',
+          type: 'checkbox',
+          value: 1,
+          checked: config.hide_empty,
+          onclick: function(ev) {
+            Tabbar.set_hidden(ev.target.checked)
+          }
+        })
+      ], 'Hide empty fields'),
       (!ds.user.admin) || config.tab == 'sql' ? null : m('label', {
         class: 'fr mr3'
       }, [
-          'Threshold ',
-          m('input.threshold', {
-            type: "number",
-            class: "w3 v-top",
-            style: "height: 18px",
-            value: config.threshold * 100 || 0,
-            title: 'Terskel',
-            onchange: function(ev) {
-              config.threshold = ev.target.value / 100
-            }
-          }), ' %',
-        ]),
+        'Threshold ',
+        m('input.threshold', {
+          type: "number",
+          class: "w3 v-top",
+          style: "height: 18px",
+          value: config.threshold * 100 || 0,
+          title: 'Terskel',
+          onchange: function(ev) {
+            config.threshold = ev.target.value / 100
+          }
+        }), ' %',
+      ]),
       config.tab == 'data' || ds.base.system != 'sqlite' ? null : m('i', {
         class: 'nf nf-md-database_import_outline fr mr3 f5',
         title: 'Import',
@@ -328,16 +328,16 @@ var Tabbar = {
         class: 'fr mr3',
         title: "Show descendants that are also descendants of children of the record"
       }, [
-          m('input', {
-            class: 'mr1',
-            type: 'checkbox',
-            value: 1,
-            checked: config.show_all_descendants,
-            onclick: function(ev) {
-              config.show_all_descendants = ev.target.checked
-            }
-          })
-        ], 'Show all descendants')),
+        m('input', {
+          class: 'mr1',
+          type: 'checkbox',
+          value: 1,
+          checked: config.show_all_descendants,
+          onclick: function(ev) {
+            config.show_all_descendants = ev.target.checked
+          }
+        })
+      ], 'Show all descendants')),
       (config.tab !== 'data' || (ds.table && !ds.table.expansion_column) ? null : m('label', {
         class: 'fr mr3'
       }, [
@@ -371,21 +371,21 @@ var Tabbar = {
         class: 'fr mr3',
         title: "Choose which relations to display"
       }, [
-          'Show relations:',
-          Object.entries({
-            nearest: "nearest",
-            subordinate: "subordinate",
-            all: "all"
-          }).map(([key, value]) =>
-            m('label', m('input[type=radio]', {
-              class: 'ml2 mr1',
-              name: 'show_relations',
-              value: key,
-              checked: config.show_relations === key,
-              onchange: () => config.show_relations = key
-            }), value)
-          ),
-        ])),
+        'Show relations:',
+        Object.entries({
+          nearest: "nearest",
+          subordinate: "subordinate",
+          all: "all"
+        }).map(([key, value]) =>
+          m('label', m('input[type=radio]', {
+            class: 'ml2 mr1',
+            name: 'show_relations',
+            value: key,
+            checked: config.show_relations === key,
+            onchange: () => config.show_relations = key
+          }), value)
+        ),
+      ])),
       (config.tab != 'sql' ? null : m('label', {
         class: 'fr mr3',
         title: 'Choose sql expression',

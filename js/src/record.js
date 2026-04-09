@@ -95,22 +95,22 @@ var Record = {
         alias: alias
       }
     }).then(function(result) {
-        var rel = result.data[alias]
-        if (rel.relationship == '1:1') {
-          if (rel.count_records == 0) {
-            Record.create(rel, true)
-            rel.expanded = true
-            rel.count_records = 1
-          } else {
-            var record = rec.relations[alias].records[0]
-            record.base_name = rec.base_name
-            record.table = rel
-            rel.records = [record]
-            Record.get_relations_count(record)
-          }
+      var rel = result.data[alias]
+      if (rel.relationship == '1:1') {
+        if (rel.count_records == 0) {
+          Record.create(rel, true)
+          rel.expanded = true
+          rel.count_records = 1
+        } else {
+          var record = rec.relations[alias].records[0]
+          record.base_name = rec.base_name
+          record.table = rel
+          rel.records = [record]
+          Record.get_relations_count(record)
         }
-        Object.assign(rec.relations[alias], rel)
-      })
+      }
+      Object.assign(rec.relations[alias], rel)
+    })
   },
 
   create: function(list, relation) {
