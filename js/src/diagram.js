@@ -11,9 +11,9 @@ var Diagram = {
 
   // Show tooltip for boxes on mouseover when text is too small to read
   show_tooltip: function(evt) {
-    let tooltip = document.getElementById("tooltip")
+    const tooltip = document.getElementById("tooltip")
     var svg_width = $('svg').width()
-    var max_width = parseInt($('svg').css('max-width'))
+    var max_width = parseInt($('svg').css('max-width'), 10)
     var text = $(evt.target).next('text').text()
     if (max_width / svg_width > 2) {
       tooltip.innerHTML = text
@@ -28,7 +28,7 @@ var Diagram = {
     tooltip.style.display = "none"
   },
 
-  oninit: function(vnode) {
+  oninit: function() {
     import('mermaid').then(module => {
       mermaid = module.default
 
@@ -49,27 +49,27 @@ var Diagram = {
     })
   },
 
-  onbeforeupdate: function(vnode) {
+  onbeforeupdate: function() {
     // Define diagram based on type before redraw
     // This makes the diagram respond to changes in threshold value
     var def = ['erDiagram']
     var root_table = ds.base.tables[Diagram.root]
     if (Diagram.type == 'module') {
-      var subitems = ds.base.contents[Diagram.root].subitems
-      Object.values(subitems).map(function(node) {
+      const subitems = ds.base.contents[Diagram.root].subitems
+      Object.values(subitems).forEach(function(node) {
         Diagram.draw_fkeys_node(node, def)
       })
       Diagram.def = def.join("\n")
     } else if (Diagram.type == 'table') {
       Diagram.def = Diagram.get_table_def(root_table, [])
     }
-    Diagram.added_tables.map(function(tbl_name) {
+    Diagram.added_tables.forEach(function(tbl_name) {
       Diagram.add_path(tbl_name)
     })
 
   },
 
-  onupdate: function(vnode) {
+  onupdate: function() {
     if (this.def !== "") {
       // Redraw the graph if it's changed
       mermaid.mermaidAPI.initialize({
@@ -89,7 +89,7 @@ var Diagram = {
     }
 
     // Title for reference tables should be in italic
-    $('svg g.classGroup text tspan.title').each(function(index) {
+    $('svg g.classGroup text tspan.title').each(function() {
       var table_name = $(this).html()
       if (ds.base.tables[table_name].type == 'reference') {
         $(this).addClass('i')
@@ -112,9 +112,9 @@ var Diagram = {
       def.push("erDiagram")
       def.push(table.name + ' {')
       if (table.fields) {
-        var n = 0
+        let n = 0
         // defines first 10 columns (any more would take too much space)
-        Object.keys(table.fields).map(function(alias) {
+        Object.keys(table.fields).forEach(function(alias) {
           var field = table.fields[alias];
           if (!field.hidden) {
             n++
@@ -130,7 +130,7 @@ var Diagram = {
 
     // Draw belongs-to relations from foreign keys
     if (config.show_relations != 'subordinate') {
-      Object.keys(table.fkeys).map(function(alias) {
+      Object.keys(table.fkeys).forEach(function(alias) {
         var fk = table.fkeys[alias]
         var field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
         var field = table.fields ? table.fields[field_name] : null
@@ -138,8 +138,8 @@ var Diagram = {
         if (fk_table == undefined) {
           return
         }
-        var line = field && field.hidden ? '..' : '--'
-        var symbol = field && field.nullable ? ' o|' : ' ||'
+        var line = field?.hidden ? '..' : '--'
+        var symbol = field?.nullable ? ' o|' : ' ||'
 
         if (fk_table.hidden) {
           return
@@ -171,7 +171,7 @@ var Diagram = {
     }
 
     var rel_tables = []
-    Object.keys(table.relations).map(function(alias) {
+    Object.keys(table.relations).forEach(function(alias) {
       var rel = table.relations[alias]
       if (rel.table_name != table.name) {
         rel_tables.push(rel.table_name)
@@ -179,7 +179,7 @@ var Diagram = {
     })
 
     // Draw has-many relations
-    Object.keys(table.relations).map(function(alias) {
+    Object.keys(table.relations).forEach(function(alias) {
       var rel = table.relations[alias]
       var rel_table = ds.base.tables[rel.table_name]
 
@@ -200,7 +200,7 @@ var Diagram = {
       var fk_field = ds.base.tables[rel.table_name].fields
         ? ds.base.tables[rel.table_name].fields[fk_field_name]
         : null
-      var symbol = fk_field && fk_field.nullable ? ' o|' : ' ||'
+      var symbol = fk_field?.nullable ? ' o|' : ' ||'
       if (rel.table_name == table.name) {
         return
       }
@@ -232,7 +232,7 @@ var Diagram = {
       return
     }
 
-    Object.values(node.subitems).map(function(subnode) {
+    Object.values(node.subitems).forEach(function(subnode) {
       Diagram.draw_fkeys_node(subnode, def)
     })
   },
@@ -240,7 +240,7 @@ var Diagram = {
   // Draw foreign key relatons
   draw_fkeys: function(table, def) {
     if (table.hidden) return
-    Object.keys(table.fkeys).map(function(alias) {
+    Object.keys(table.fkeys).forEach(function(alias) {
       var fk = table.fkeys[alias]
       var field_name = fk.constrained_columns.slice(-1)[0]
       var field = table.fields[field_name]
@@ -288,7 +288,7 @@ var Diagram = {
     var new_path
     var found_paths = []
 
-    Object.keys(table.relations).map(function(fk_name) {
+    Object.keys(table.relations).forEach(function(fk_name) {
 
       // make a copy of path TODO: why
       new_path = path.slice()
@@ -299,7 +299,7 @@ var Diagram = {
       var fk_field = ds.base.tables[fk.table_name].fields
         ? ds.base.tables[fk.table_name].fields[fk_last_col]
         : null
-      var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
+      var symbol = fk_field?.nullable ? ' |o' : ' ||'
 
       // continue if path already includes this relation
       if (
@@ -330,12 +330,12 @@ var Diagram = {
       }
     })
 
-    Object.keys(table.fkeys).map(function(fk_name) {
+    Object.keys(table.fkeys).forEach(function(fk_name) {
       new_path = path.slice()
       var fk = table.fkeys[fk_name]
       var fk_field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
       var fk_field = table.fields ? table.fields[fk_field_name] : null
-      var symbol = fk_field && fk_field.nullable ? ' |o' : ' ||'
+      var symbol = fk_field?.nullable ? ' |o' : ' ||'
 
       if (
         path.includes('"' + fk.referred_table + '"' + symbol + '--o{ "' + table.name +
@@ -372,7 +372,7 @@ var Diagram = {
     }
 
     var shortest_path = found_paths[0]
-    $.each(found_paths, function(i, p) {
+    found_paths.forEach(function(p) {
       if (p.length < shortest_path.length) {
         shortest_path = p
       }

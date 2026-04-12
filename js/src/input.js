@@ -9,11 +9,11 @@ var Input = {
     // this column. This requires the column to be the last
     // column in the foreign key.
     var keys = []
-    Object.keys(rec.table.fkeys).map(function(fk_name) {
+    Object.keys(rec.table.fkeys).forEach(function(fk_name) {
       var key = rec.table.fkeys[fk_name]
 
       if (key.constrained_columns.indexOf(field.name) > 0) {
-        let last_fk_col = key.constrained_columns.slice(-1)
+        const last_fk_col = key.constrained_columns.slice(-1)
         if (
           last_fk_col != field.name &&
           rec.fields[last_fk_col].nullable == true
@@ -33,13 +33,14 @@ var Input = {
         var col = rec.fields[column]
         var cond
         if (col.value != null && column in rec.fields) {
-          var pkcol = field.fkey.referred_columns.slice(-1)[0]
+          const pkcol = field.fkey.referred_columns.slice(-1)[0]
 
           if (key.referred_table == field.fkey.referred_table) {
             cond = key.referred_columns[i] + " = '" + col.value + "'"
           } else {
             cond = pkcol + ' in (select ' + key.referred_columns[key.foreign_idx]
-            cond += ' from ' + key.referred_table + ' where ' + key.constrained_columns[i]
+            cond += ' from ' + key.referred_table
+            cond += ' where ' + key.constrained_columns[i]
             cond += " = '" + col.value + "')"
           }
           conditions.push(cond)
@@ -67,7 +68,7 @@ var Input = {
       field.errormsg = 'Må ha enhet (B, kB, MB, GB) til slutt'
       field.invalid = false
     } else if (field.datatype == 'int') {
-      var pattern = new RegExp("^-?[0-9]*$")
+      const pattern = /^-?[0-9]*$/
       if (!pattern.test(value)) {
         field.errormsg = 'Feltet skal ha heltall som verdi'
         field.invalid = true
@@ -118,7 +119,7 @@ var Input = {
       Input.validate(value, field)
     }
 
-    $.each(rec.table.indexes, function(i, idx) {
+    rec.table.indexes.forEach(function(idx) {
       if (idx.columns[0] === field.name) {
         if (idx.columns.length == 1 && idx.unique) {
           field.unique = true
@@ -127,8 +128,8 @@ var Input = {
     })
 
     if (field.element == 'select' && (field.options || field.optgroups)) {
-      var filtered_optgroups
-      var optgroup_field = rec.fields[field.optgroup_field]
+      let filtered_optgroups
+      const optgroup_field = rec.fields[field.optgroup_field]
 
       if (field.optgroups && field.optgroup_field && optgroup_field.value) {
         filtered_optgroups = field.optgroups.filter(function(optgroup) {
@@ -138,7 +139,7 @@ var Input = {
         filtered_optgroups = field.optgroups
       }
 
-      var option = field.options.find(function(opt) {
+      const option = field.options.find(function(opt) {
         return opt.value == field.value
       })
 
@@ -150,7 +151,7 @@ var Input = {
       vnode.attrs.onchange = function(event) {
         var idx = event.target.selectedIndex
         if (field.optgroup_field) {
-          var optgroup = $(':selected', event.target)
+          const optgroup = $(':selected', event.target)
             .closest('optgroup').data('value')
           rec.fields[field.optgroup_field].value = optgroup
         }
@@ -191,7 +192,6 @@ var Input = {
       }
       vnode.attrs.onchange = function(event) {
         var value = $(event.target).data('value')
-        var options
 
         // handle self referencing fields
         if (value === undefined) value = event.target.value
@@ -203,7 +203,7 @@ var Input = {
         }
 
         if (field.unique) {
-          var data = {
+          const data = {
             cnxn: ds.cnxn,
             schema: ds.base.schema,
             base: ds.base.name,
@@ -220,7 +220,7 @@ var Input = {
           }).then(function(result) {
             var options = result
             event.target.setCustomValidity("")
-            for (let idx in options) {
+            for (const idx in options) {
               if (value == options[idx].value) {
                 event.target.setCustomValidity("Ikke unik verdi")
                 field.invalid = true
@@ -285,7 +285,7 @@ var Input = {
 
       return m(Codefield, {...vnode.attrs})
     } else if (field.element == 'textarea') {
-      let text = field.value ? marked.parse(field.value) : ''
+      const text = field.value ? marked.parse(field.value) : ''
 
       vnode.attrs.class = 'w-100'
       vnode.attrs.onchange = function(event) {
@@ -339,8 +339,11 @@ var Input = {
       vnode.attrs.type = 'number'
       vnode.attrs.style = 'width: 70px'
       return m('input', {...vnode.attrs})
-    } else if (field.datatype = 'str' && get(field, 'attrs.data-format') == 'ISO 8601') {
-      vnode.attrs.pattern = '^[12]\\d{3}(?:(?:-(?:0[1-9]|1[0-2]))(?:-(?:0[1-9]|[12]\\d|3[01]))?)?$'
+    } else if (
+      field.datatype == 'str' && get(field, 'attrs.data-format') == 'ISO 8601'
+    ) {
+      vnode.attrs.pattern = 
+        '^[12]\\d{3}(?:(?:-(?:0[1-9]|1[0-2]))(?:-(?:0[1-9]|[12]\\d|3[01]))?)?$'
       return m('input', {...vnode.attrs})
     } else {
       vnode.attrs.value = typeof field.value === 'string'

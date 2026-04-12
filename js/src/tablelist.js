@@ -1,5 +1,5 @@
 var Tablelist = {
-  view: function(vnode) {
+  view: function() {
     if (!ds.base.tables) {
       return
     }
@@ -101,14 +101,14 @@ var Tablelist = {
         m('ul', {
           class: 'list pl2 mt0 overflow-auto'
         }, [
-          Object.keys(ds.base.tables).sort().map(function(item, i) {
+          Object.keys(ds.base.tables).sort().map(function(item) {
             var filter = $('#filter_tables').val()
             return (
               filter !== undefined && 
               !item.toLowerCase().includes(filter.toLowerCase())
             ) ? '' : m('li', {
               class: 'pointer',
-              onclick: function(ev) {
+              onclick: function() {
                 var sql = 'select * from ' + item
                 if (['oracle', 'sqlserver'].includes(ds.base.system)) {
                   sql += ' fetch next ' +  config.limit + ' rows only'

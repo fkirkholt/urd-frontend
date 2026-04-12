@@ -12,10 +12,12 @@ var login = {
       .filter(key => key.startsWith('urdr-cnxn-')).sort()
 
     var cnxn_options = [{label: 'New connection ...', value: 'new'}]
-    cnxn_names.forEach(name => cnxn_options.push({
+    cnxn_names.forEach(name => {
+      cnxn_options.push({
       label: name.replace('urdr-cnxn-', ''), 
       value: name.replace('urdr-cnxn-', '')
-    }))
+      })
+    })
 
     var header = ds.base.name == 'urdr' ? 'Log in' : 'Connect' 
 
@@ -46,7 +48,7 @@ var login = {
           }
         },
         class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
-        placeholder: '-- Choose connection --',
+        placeholder: '– Choose connection --',
         options: cnxn_options
       }),
       !this.create ? '' : m('input[type=text]', {
@@ -63,9 +65,9 @@ var login = {
         id: 'system',
         name: 'system',
         label: 'System',
-        placeholder: '-- Choose system --',
+        placeholder: '– Choose system --',
         value: login.param.system,
-        disabled: login.param.cnxn ? false : true,
+        disabled: !login.param.cnxn,
         onchange: function() {
           login.param.system = this.value
 
@@ -117,14 +119,15 @@ var login = {
         placeholder: $('#system').val() == 'sqlite'
           ? 'Path to folder' : 'Host',
         value: login.param.server,
-        disabled: login.param.cnxn ? false : true,
-        onkeyup: function(e) {
+        disabled: !login.param.cnxn,
+        onkeyup: function() {
           login.param.server = this.value
           return true
         },
         class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1'
       }),
-      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=text]', {
+      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' 
+      : m('input[type=text]', {
         id: 'brukernavn',
         name: 'brukernavn',
         placeholder: 'Brukernavn',
@@ -135,7 +138,8 @@ var login = {
           login.param.username = this.value
         }
       }),
-      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' : m('input[type=password]', {
+      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' 
+      : m('input[type=password]', {
         id: 'passord',
         name: 'passord',
         placeholder: 'Passord',
@@ -151,7 +155,7 @@ var login = {
         name: 'database',
         placeholder: 'Database',
         value: login.param.database,
-        disabled: login.param.cnxn ? false : true,
+        disabled: !login.param.cnxn,
         class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
         onchange: function() {
           login.param.database = this.value
@@ -183,7 +187,8 @@ var login = {
             login.create = false
 
             if (login.param.cnxn) {
-              Cookies.set('urdr-cnxn-' + login.param.cnxn, JSON.stringify(login.param), { expires: 365 })
+              Cookies.set('urdr-cnxn-' + login.param.cnxn, JSON.stringify(login.param), 
+                          { expires: 365 })
               Cookies.set('urdr-cnxn', login.param.cnxn, { expires: 1 })
             } 
 
@@ -191,7 +196,7 @@ var login = {
               method: 'post',
               url: '/login',
               params: login.param
-            }).then(function(result) {
+            }).then(function() {
               if (login.param.database) {
                 ds.dblist = null
                 m.route.set('/' + login.param.cnxn + '/' + login.param.database)

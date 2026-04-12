@@ -49,7 +49,7 @@ var Header = {
     }
   },
 
-  view: function(vnode) {
+  view: function() {
     return [
       m(Breadcrumb),
       m('div#menu', {
@@ -103,8 +103,8 @@ var Header = {
                     params: { cnxn: ds.cnxn },
                     responseType: "text",
                   }).then(function(result) {
-                      $('#print-view .content').append(result)
-                    })
+                    $('#print-view .content').append(result)
+                  })
 
                   $('#header').hide()
                   $('#page-container').hide()

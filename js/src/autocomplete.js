@@ -60,8 +60,8 @@ function Autocomplete() {
 
     onupdate: function(vnode) {
       if ($(document.activeElement).attr('name') == vnode.attrs.fieldname) {
-        var input_width = $(vnode.dom).outerWidth()
-        var offset = $(vnode.dom).offset()
+        const input_width = $(vnode.dom).outerWidth()
+        const offset = $(vnode.dom).offset()
         $('ul.options').css('min-width', input_width)
         $('ul.options').css('top', offset.top + $(vnode.dom).outerHeight())
         $('ul.options').css('left', offset.left)

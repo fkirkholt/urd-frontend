@@ -1,6 +1,6 @@
 var Diagrampanel = {
-  view: function(vnode) {
-    if (!ds.user || !ds.user.admin) {
+  view: function() {
+    if (!ds.user?.admin) {
         return null
     }
     return [

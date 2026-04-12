@@ -10,7 +10,7 @@ var Select = {
       }, m.trust(whitespace + option.label)),
       options.filter(function(opt) {
         return opt.parent == option.value
-      }).map(function(opt, idx) {
+      }).map(function(opt) {
         level += 1
         return Select.draw_option(options, opt, value, level)
       })
@@ -42,13 +42,13 @@ var Select = {
           ? vnode.attrs.placeholder : m.trust('&nbsp;')
       ),
       vnode.attrs.optgroups
-      ? vnode.attrs.optgroups.map(function(optgroup, idx) {
+      ? vnode.attrs.optgroups.map(function(optgroup) {
         return m('optgroup', {
           label: optgroup.label,
           'data-value': optgroup['data-value'],
           class: 'black'
         }, [
-            optgroup.options.map(function(option, idx) {
+            optgroup.options.map(function(option) {
               return m('option', {
                 value: option.value,
                 class: config.dark_mode ? 'white' : 'black',
@@ -59,7 +59,7 @@ var Select = {
       })
       : vnode.attrs.options.filter(function(option) {
         return 'parent' in option ? option.parent === null : true
-      }).map(function(option, idx) {
+      }).map(function(option) {
         return Select.draw_option(vnode.attrs.options, option, value, 0)
       })
     ])

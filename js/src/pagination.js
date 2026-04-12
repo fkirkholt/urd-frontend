@@ -2,14 +2,14 @@ var Pagination = {
 
   navigate: function(name, set_index) {
     var list = ds.table
-    var offset = parseInt(list.limit) + parseInt(list.offset)
+    var offset = parseInt(list.limit, 10) + parseInt(list.offset, 10)
     var selection = set_index == false ? null : 0
     switch (name) {
       case 'next':
-        offset = parseInt(list.offset) + parseInt(list.limit)
+        offset = parseInt(list.offset, 10) + parseInt(list.limit, 10)
         break
       case 'previous':
-        offset = parseInt(list.offset) - list.limit
+        offset = parseInt(list.offset, 10) - list.limit
         selection = set_index ? config.limit - 1 : null
         break
       case 'last':
@@ -27,28 +27,26 @@ var Pagination = {
   to: function() {
     var til_post
     var count = ds.table.count_records
-    if (count < (parseInt(ds.table.offset) + parseInt(ds.table.limit))) {
+    if (count < (parseInt(ds.table.offset, 10) + parseInt(ds.table.limit, 10))) {
       til_post = ds.table.count_records
     } else {
-      til_post = parseInt(ds.table.offset) + parseInt(ds.table.limit)
+      til_post = parseInt(ds.table.offset, 10) + parseInt(ds.table.limit, 10)
     }
     return til_post
   },
 
   disabled: function(name, table) {
-    var count_records = parseInt(table.count_records)
-    var offset = parseInt(table.offset)
-    var limit = parseInt(table.limit)
+    var count_records = parseInt(table.count_records, 10)
+    var offset = parseInt(table.offset, 10)
+    var limit = parseInt(table.limit, 10)
     if (name == 'first' || name == 'previous') {
-      return table.offset == 0 ? true : false
+      return table.offset == 0
     } else {
       return (count_records - offset <= limit)
-        ? true
-        : false
     }
   },
 
-  view: function(vnode) {
+  view: function() {
     var table = ds.table
     var count = ds.table.count_records
     var from = Number(ds.table.offset) + 1
@@ -56,27 +54,35 @@ var Pagination = {
     return m('div', [
       !ds.table.is_chart ? '' : m('ul', {class: 'di fl mt1 pl0'}, [
         m('li', {
-          class: ['nf nf-md-table list di ml0 pl2 pr2 bb b--gray pointer br1 br--top f5 pt1',
-          (!ds.table.tab || ds.table.tab == 'data') && config.dark_mode ? 'bg-near-black br pb3'
-          : (!ds.table.tab || ds.table.tab == 'data') ? 'bg-white br pb2'
-          : config.dark_mode ? 'bg-dark-gray'
-          : 'bg-light-gray pb1'
+          class: [
+            'nf nf-md-table list di ml0 pl2 pr2 bb b--gray pointer br1 br--top f5 pt1',
+            (!ds.table.tab || ds.table.tab == 'data') && config.dark_mode
+            ? 'bg-near-black br pb3'
+            : (!ds.table.tab || ds.table.tab == 'data') 
+            ? 'bg-white br pb2'
+            : config.dark_mode 
+            ? 'bg-dark-gray'
+            : 'bg-light-gray pb1'
           ].join(' '),
           style: (!ds.table.tab || ds.table.tab == 'data')
-            ? 'padding-top: 5px; padding-bottom: 2px' : 'padding-top: 3px; padding-bottom: 1px',
+            ? 'padding-top: 5px; padding-bottom: 2px' 
+            : 'padding-top: 3px; padding-bottom: 1px',
           onclick: function() {
             ds.table.tab = 'data'
           }
         }),
         m('li', {
-          class: ['nf nf-md-chart_bar list di ml0 pl2 pr2 bb br b--gray pointer br1 br--top f5 pt1',
-          (ds.table.tab == 'chart') && config.dark_mode ? 'bg-near-black'
-          : ds.table.tab == 'chart' ? 'bg-white bl'
-          : config.dark_mode ? 'bg-dark-gray'
-          : 'bg-light-gray'
+          class: [
+            'nf nf-md-chart_bar list di ml0 pl2 pr2 bb br b--gray', 
+            'pointer br1 br--top f5 pt1',
+            (ds.table.tab == 'chart') && config.dark_mode ? 'bg-near-black'
+            : ds.table.tab == 'chart' ? 'bg-white bl'
+            : config.dark_mode ? 'bg-dark-gray'
+            : 'bg-light-gray'
           ].join(' '),
           style: (ds.table.tab == 'chart')
-            ? 'padding-top: 5px; padding-bottom: 2px' : 'padding-top: 3px; padding-bottom: 1px',
+            ? 'padding-top: 5px; padding-bottom: 2px' 
+            : 'padding-top: 3px; padding-bottom: 1px',
           onclick: function() {
             ds.table.tab = 'chart'
           }
@@ -134,5 +140,4 @@ var Pagination = {
 export default Pagination
 
 import config from './config.js'
-import Record from './record.js'
 import Toolbar from './toolbar.js'

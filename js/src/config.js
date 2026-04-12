@@ -7,8 +7,8 @@ var config = {
   theme: Cookies.get('theme') ? Cookies.get('theme') : 'standard',
   compressed: Cookies.get('compressed') ? Cookies.get('compressed') : false,
   threshold: Cookies.get('threshold') ? Cookies.get('threshold') : 0,
-  recordview: Cookies.get('recordview') === 'true' ? true : false,
-  dark_mode: Cookies.get('dark_mode') === 'true' ? true : false,
+  recordview: Cookies.get('recordview') === 'true',
+  dark_mode: Cookies.get('dark_mode') === 'true',
 
   admin: false,
   edit_mode: false,
@@ -130,6 +130,4 @@ var config = {
 
 export default config
 
-// Placed here to avoid problems with circular inclusion
-import Grid from './grid'
 import Cookies from 'js-cookie'

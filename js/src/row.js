@@ -33,7 +33,7 @@ var Row = {
         return record
       })
     } else {
-      var path = rec.path ? rec.path : rowidx
+      const path = rec.path ? rec.path : rowidx
 
       list.records = list.records.map(function(record) {
 
@@ -57,6 +57,8 @@ var Row = {
   /** Toggle detailed view of record beneath row in relation list */
   toggle_record: function(rec, tbl) {
 
+    console.log('rec', rec)
+
     rec.open = !rec.open
 
     // Don't load record if it's already loaded
@@ -79,14 +81,13 @@ var Row = {
       rec.loaded = true
 
       // Get virtual columns from tbl.fields.
-      var field
-      for (let field_name in tbl.fields) {
-        let field = $.extend({}, tbl.fields[field_name])
+      for (const field_name in tbl.fields) {
+        const field = $.extend({}, tbl.fields[field_name])
         if (rel.fields[field.name] === undefined) {
           rel.fields[field.name] = field
         }
       }
-      for (let fieldname in tbl.fields) {
+      for (const fieldname in tbl.fields) {
         if (tbl.fields[fieldname].virtual) {
           rel.fields[fieldname].text = rel.columns[fieldname].text
         }
@@ -107,7 +108,7 @@ var Row = {
     var idx = vnode.attrs.idx
     return [m('tr', {
       tabindex: 0,
-      onclick: function(e) {
+      onclick: function() {
         if (list.ismain) { // if in main grid
           if (!list.pkey) {
             return
@@ -192,7 +193,7 @@ var Row = {
         ].join(' ')
       }),
       // Draw each column in the row
-      Object.keys(list.grid.columns).map(function(label, colidx) {
+      Object.keys(list.grid.columns).map(function(label) {
         var colname = list.grid.columns[label]
         var defines_relation = get(list.fields, colname + '.defines_relation')
 
@@ -201,7 +202,7 @@ var Row = {
           rowidx: idx,
           colname: colname,
           compressed: config.compressed,
-          border: list.ismain ? true : false,
+          border: list.ismain,
         })
       }),
       // Draw trash bin icon for deleting row in relations

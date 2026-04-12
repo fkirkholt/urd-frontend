@@ -8,7 +8,7 @@ var SQLpanel = {
     var chart_cols = Object.keys(data[0])
     var has_pkey = false
     var pkey = []
-    if (table && table.pkey.columns) {
+    if (table?.pkey.columns) {
       has_pkey = table.pkey.columns.every(val => chart_cols.includes(val));
     }
     if (has_pkey) {
@@ -17,15 +17,19 @@ var SQLpanel = {
     }
     var fkey_cols = []
     if (table) {
-      for (let key in table.fkeys) {
-        let fkey = table.fkeys[key]
+      for (const key in table.fkeys) {
+        const fkey = table.fkeys[key]
         fkey_cols = fkey_cols.concat(fkey.constrained_columns)
       }
     }
     var chart_data = []
-    data.forEach(function(item, i) {
-      for (let col in item) {
-        if (typeof(item[col]) != 'number' || pkey.includes(col) || fkey_cols.includes(col)) {
+    data.forEach(function(item) {
+      for (const col in item) {
+        if (
+          typeof(item[col]) != 'number' || 
+          pkey.includes(col) || 
+          fkey_cols.includes(col)
+        ) {
           const idx = chart_cols.indexOf(col)
           if ((has_pkey && idx == 0) || idx > 0) {
             chart_cols.splice(idx, 1)
@@ -34,17 +38,17 @@ var SQLpanel = {
       }
     }) 
     if (chart_cols.length > 1) {
-      data.forEach(function(item, i) {
+      data.forEach(function(item) {
         var new_item = {}
         if (has_pkey) {
-          let values = []
-          table.pkey.columns.forEach(function(col, i) {
+          const values = []
+          table.pkey.columns.forEach(function(col) {
             values.push(item[col])
           })
-          new_item['pkey'] = values.join(', ') 
+          new_item.pkey = values.join(', ') 
         }
-        for (let col in item) {
-          chart_cols.forEach(function(col, i) {
+        for (const col in item) {
+          chart_cols.forEach(function(col) {
             if (col == 'pkey') {
               return
             }
@@ -62,25 +66,32 @@ var SQLpanel = {
     if (!ds.result) return
 
     return ds.result.map(function(query, i) {
-      var table = ds.base.tables[query.table]
-      if (table && table.name.endsWith('_grid') && table.name.replace('_grid', '') in ds.base.tables) {
+      var pk_length
+      let table = ds.base.tables[query.table]
+      if (
+        table?.name.endsWith('_grid') && 
+        table?.name.replace('_grid', '') in ds.base.tables
+      ) {
         table = ds.base.tables[table.name.replace('_grid', '')]
       }
-      else if (table && table.name.endsWith('_view') && table.name.replace('_view', '') in ds.base.tables) {
+      else if (
+        table?.name.endsWith('_view') && 
+        table?.name.replace('_view', '') in ds.base.tables
+      ) {
         table = ds.base.tables[table.name.replace('_view', '')]
       }
+      
       if (table) {
-        var pk_length = table.pkey.columns.length
-        var pk_col = table.pkey.columns[pk_length - 1]
+        pk_length = table.pkey.columns.length
       }
-      if (query.data && query.data.length) {
-        var show_chart = false
-        var chart_data = SQLpanel.get_chart_data(query.data, table)
+      if (query.data?.length) {
+        let show_chart = false
+        const chart_data = SQLpanel.get_chart_data(query.data, table)
         if (chart_data.length && table && table.type != 'xref') {
           show_chart = true
         }
 
-        var is_link = false
+        let is_link = false
         if (table && pk_length) {
           is_link = true
           table.pkey.columns.forEach(function(col) {
@@ -104,9 +115,10 @@ var SQLpanel = {
             class: 'di w-100 pl1'
           }, [
             m('li', {
-              class: ['nf nf-md-table mt1 list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
-              (!query.tab || query.tab == 'data')
-                ? 'bg-white' : 'bg-light-gray'
+              class: [
+                'nf nf-md-table mt1 list di pl2 pr2 bl bt br b--gray',
+                'pointer br1 br--top f5 pt1',
+                (!query.tab || query.tab == 'data') ? 'bg-white' : 'bg-light-gray'
               ].join(' '),
               style: (!query.tab || query.tab == 'data')
                 ? 'padding-bottom: 2px' : 'padding-bottom: 1px',
@@ -115,9 +127,10 @@ var SQLpanel = {
               }
             }),
             m('li', {
-              class: ['nf nf-md-chart_bar mt1 list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
-              (query.tab == 'chart')
-                ? 'bg-white' : 'bg-light-gray'
+              class: [
+                'nf nf-md-chart_bar mt1 list di pl2 pr2 bl bt br b--gray',
+                'pointer br1 br--top f5 pt1',
+                (query.tab == 'chart') ? 'bg-white' : 'bg-light-gray'
               ].join(' '),
               style: (query.tab == 'chart')
                 ? 'padding-bottom: 2px' : 'padding-bottom: 1px',
@@ -126,73 +139,75 @@ var SQLpanel = {
               }
             })
           ]),
-          query.tab == 'chart' ? '' : m('div', { class: 'overflow-auto mb3' }, [ m('table', {
-            class: 'collapse ba overflow-auto'
-          }, [
-            // m('tr.striped--light-gray', [
-            m('thead', [
-              m('tr', [
-                is_link ? m('th') : '',
-                Object.keys(query.data[0]).map(function(item, i) {
-                  return m('th', {
-                    class: 'pl1 pl2 tl'
-                  }, item)
-                })
+          query.tab == 'chart' ? '' 
+          : m('div', { class: 'overflow-auto mb3' }, [ 
+              m('table', { class: 'collapse ba overflow-auto' }, [
+              // m('tr.striped--light-gray', [
+              m('thead', [
+                m('tr', [
+                  is_link ? m('th') : '',
+                  Object.keys(query.data[0]).map(function(item) {
+                    return m('th', {
+                      class: 'pl1 pl2 tl'
+                    }, item)
+                  })
+                ]),
               ]),
-            ]),
-            m('tbody', [
-              query.data.map(function(item, i) {
-                var pk_values = []
-                if (table) {
-                  $.each(table.pkey.columns, function(i, col) {
-                    if (item[col] !== undefined) {
-                      pk_values.push(col + '=' + item[col])
-                    }
-                  })
-                }
-
-                if (is_link) {
-                  var href = '/' + ds.cnxn + '/' + ds.base.name + '?table='
-                    + table.name + '&'
-                    + pk_values.join('&')
-                  var link = m('span.link', {
-                    class: 'nf nf-md-crosshairs_gps light-blue hover-blue pointer v-mid',
-                    onclick: function() {
-                      config.tab = 'data'
-                      m.route.set(href)
-                    }
-                  }, '')
-                }
-
-                return m('tr', {
-                  class: config.dark_mode ? 'bg-black stripe-dark' : 'striped--light-gray'
-                }, [
-                  is_link ? m('td', { class: 'pl1 pl2' }, [link]) : '', 
-                  Object.keys(item).map(function(cell, i) {
-                    var is_link = false
-                    var link
-                    var value = (item[cell] && typeof (item[cell])) == 'string'
-                      ? m.trust(item[cell]
-                        .replace(/\n/g, '<br>')
-                        .replace(/\s/g, '&nbsp;'))
-                      : typeof (item[cell]) == 'boolean'
-                      ? (item[cell] ? 1 : 0)
-                      : item[cell]
-
-                    if (value === '') {
-                      value = '(empty)'
-                    } else if (value === null) {
-                      value = '(null)'
-                    }
-
-                    return m('td', {
-                      class: 'pl1 pl2'
-                    }, value)
-                  })
-                ])
-              })
+              m('tbody', [
+                query.data.map(function(item) {
+                  var pk_values = []
+                  var link
+                  if (table) {
+                    table.pkey.columns.forEach(function(col) {
+                      if (item[col] !== undefined) {
+                        pk_values.push(col + '=' + item[col])
+                      }
+                    })
+                  }
+  
+                  if (is_link) {
+                    const href = '/' + ds.cnxn + '/' + ds.base.name + '?table='
+                      + table.name + '&'
+                      + pk_values.join('&')
+                    link = m('span.link', {
+                      // TODO: Endre ikon
+                      class: 'nf nf-md-crosshairs_gps light-blue hover-blue pointer v-mid',
+                      onclick: function() {
+                        config.tab = 'data'
+                        m.route.set(href)
+                      }
+                    }, '')
+                  }
+  
+                  return m('tr', {
+                    class: config.dark_mode ? 'bg-black stripe-dark' 
+                      : 'striped--light-gray'
+                  }, [
+                    is_link ? m('td', { class: 'pl1 pl2' }, [link]) : '', 
+                    Object.keys(item).map(function(cell) {
+                      var value = (item[cell] && typeof (item[cell])) == 'string'
+                        ? m.trust(item[cell]
+                          .replace(/\n/g, '<br>')
+                          .replace(/\s/g, '&nbsp;'))
+                        : typeof (item[cell]) == 'boolean'
+                        ? (item[cell] ? 1 : 0)
+                        : item[cell]
+  
+                      if (value === '') {
+                        value = '(empty)'
+                      } else if (value === null) {
+                        value = '(null)'
+                      }
+  
+                      return m('td', {
+                        class: 'pl1 pl2'
+                      }, value)
+                    })
+                  ])
+                })
+              ])
             ])
-          ])]),
+          ]),
           // m('p'),
           !show_chart || query.tab != 'chart' ? '' : m(Chart, {
             // id: 'nychart', 
@@ -249,15 +264,15 @@ var SQLpanel = {
     })
   },
 
-  view: function(vnode) {
+  view: function() {
     var total_time = 0
     if (ds.result) {
-      ds.result.map(function(query, i) {
+      ds.result.forEach(function(query) {
         total_time += query.time
       })
     }
 
-    return (!ds.user || !ds.user.admin) ? null : [
+    return (!ds.user?.admin) ? null : [
       m(Tablelist),
       m('div', {
         onclick: function() {

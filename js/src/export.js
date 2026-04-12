@@ -1,5 +1,3 @@
-import Cookies from 'js-cookie'
-
 var Export_dialog = {
 
   type: 'sql',
@@ -43,13 +41,12 @@ var Export_dialog = {
       param.columns = JSON.stringify(param.columns)
     }
 
-    var objects = []
     param.dest = $('input[name=dest]:checked').val() || 'download'
 
     var params = Object.keys(param).map(function(k) {
       return k + '=' + param[k]
     }).join('&')
-    let eventSource = new EventSource('/export_tsv?' + params)
+    const eventSource = new EventSource('/export_tsv?' + params)
 
     eventSource.onmessage = function(event) {
       var data = JSON.parse(event.data)
@@ -62,8 +59,10 @@ var Export_dialog = {
         Export_dialog.msg = 'Export finished'
 
         if (param.dest == 'download') {
-          var media_type = param.table ? 'text/tab-separated-values' : 'application/zip'
-          window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + '&media_type=' + media_type, '_blank')
+          const media_type = param.table ? 'text/tab-separated-values' 
+            : 'application/zip'
+          window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + 
+                      '&media_type=' + media_type, '_blank')
         }
       }
     }
@@ -74,8 +73,10 @@ var Export_dialog = {
     }
   },
 
-  export_sql: function(dialect, table_defs, no_fkeys, no_empty, view_defs,
-                       view_as_table, list_recs = false, data_recs = false, select_recs) {
+  export_sql: function(
+    dialect, table_defs, no_fkeys, no_empty, view_defs, view_as_table, 
+    list_recs = false, data_recs = false, select_recs
+  ) {
     var param = {}
     param.dest = $('input[name=dest]:checked').val() || 'download'
     param.dialect = dialect
@@ -96,7 +97,7 @@ var Export_dialog = {
     var params = Object.keys(param).map(function(k) {
       return k + '=' + param[k]
     }).join('&')
-    let eventSource = new EventSource('/export_sql?' + params)
+    const eventSource = new EventSource('/export_sql?' + params)
 
     eventSource.onmessage = function(event) {
       var data = JSON.parse(event.data)
@@ -112,13 +113,15 @@ var Export_dialog = {
         $('#export-dialog').hide()
 
         if (param.dest == 'download') {
-          var media_type = param.table ? 'text/tab-separated-values' : 'application/zip'
-          window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + '&media_type=' + media_type, '_blank')
+          const media_type = param.table ? 'text/tab-separated-values' 
+            : 'application/zip'
+          window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + 
+                      '&media_type=' + media_type, '_blank')
         }
       }
     }
 
-    eventSource.onerror = (error) => {
+    eventSource.onerror = () => {
       eventSource.close()
       $('div.curtain').hide()
       $('#export-dialog').hide()
@@ -136,9 +139,9 @@ var Export_dialog = {
     ? ds.cnxn.toLowerCase().replace(' ', '-')
     .replace('--', '-').replace(/-$/g, '')
     : ds.base.system
-    var exportdir = Export_dialog.cnxn_name && ['sqlite', 'duckdb'].includes(ds.base.system)
-    ? './'
-    : ds.config.exportdir + '/' + Export_dialog.cnxn_name
+    var exportdir = Export_dialog.cnxn_name && 
+      ['sqlite', 'duckdb'].includes(ds.base.system) ? './'
+      : ds.config.exportdir + '/' + Export_dialog.cnxn_name
     return m('form', [
       m('h3', 'Export ' + (config.tab != 'data' ? 'database' : 'table')),
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
@@ -201,10 +204,11 @@ var Export_dialog = {
               }
             }), ' (All)',
           ]),
-          config.tab != 'data' ? '' : Object.keys(ds.table.fields).map(function(fieldname, idx) {
+          config.tab != 'data' ? '' 
+          : Object.keys(ds.table.fields).flatMap(function(fieldname) {
             var field = ds.table.fields[fieldname]
             if (field.virtual) {
-              return
+              return []
             }
             return m('li', {}, [
               m('input[type=checkbox]', {
@@ -213,8 +217,10 @@ var Export_dialog = {
               }), ' ', field.label
             ])
           }),
-          config.tab == 'data' ? '' : Object.keys(ds.base.tables).sort().map(function(tblname, idx) {
-            var show_views = $('#export-dialog input[name=view-as-table]').prop('checked')
+          config.tab == 'data' ? '' 
+          : Object.keys(ds.base.tables).sort().map(function(tblname) {
+            var show_views = $('#export-dialog input[name=view-as-table]')
+              .prop('checked')
             var tbl = ds.base.tables[tblname]
             return (tbl.type == 'view' && !show_views) ? '' :  m('li', {}, [
               m('input[type=checkbox]', {
@@ -229,7 +235,7 @@ var Export_dialog = {
         m('label', [m('input[type=radio]', {
           name: 'dialect',
           value: 'mysql',
-          onchange: function(event) {
+          onchange: function() {
             Export_dialog.dialect = 'mysql'
             if (ds.base.system != 'mysql') {
               Export_dialog.view_defs = false
@@ -240,7 +246,7 @@ var Export_dialog = {
         m('label', [m('input[type=radio]', {
           name: 'dialect',
           value: 'oracle',
-          onchange: function(event) {
+          onchange: function() {
             Export_dialog.dialect = 'oracle'
             if (ds.base.system != 'oracle') {
               Export_dialog.view_defs = false
@@ -251,7 +257,7 @@ var Export_dialog = {
         m('label', [m('input[type=radio]', {
           name: 'dialect',
           value: 'postgresql',
-          onchange: function(event) {
+          onchange: function() {
             Export_dialog.dialect = 'postgresql'
             if (ds.base.system != 'postgresql') {
               Export_dialog.view_defs = false
@@ -262,7 +268,7 @@ var Export_dialog = {
         m('label', [m('input[type=radio]', {
           name: 'dialect',
           value: 'sqlite',
-          onchange: function(event) {
+          onchange: function() {
             Export_dialog.dialect = 'sqlite'
             if (ds.base.system != 'sqlite') {
               Export_dialog.view_defs = false
@@ -273,7 +279,7 @@ var Export_dialog = {
         m('label', [m('input[type=radio]', {
           name: 'dialect',
           value: 'mssql',
-          onchange: function(event) {
+          onchange: function() {
             Export_dialog.dialect = 'mssql'
             if (ds.base.system != 'mssql') {
               Export_dialog.view_defs = false
@@ -347,29 +353,29 @@ var Export_dialog = {
               return
             }
             Export_dialog.running = true
+            const clobs_as_files = $('#export-dialog input[name="clobs_to_files"]')
+              .prop('checked')
             if (this.type === 'tsv') {
-              var clobs_as_files = $('#export-dialog input[name="clobs_to_files"]')
-                .prop('checked')
-              var limit = $('#export-dialog input[name=limit]').val()
+              const limit = $('#export-dialog input[name=limit]').val()
               this.export_csv(clobs_as_files, limit)
             } else {
-              var dialect = $('#export-dialog input[name="dialect"]:checked')
+              const dialect = $('#export-dialog input[name="dialect"]:checked')
                 .val()
-              var table_defs = $('#export-dialog input[name="table-defs"]')
+              const table_defs = $('#export-dialog input[name="table-defs"]')
                 .prop('checked')
-              var no_fkeys = $('#export-dialog input[name="no_fkeys"]')
+              const no_fkeys = $('#export-dialog input[name="no_fkeys"]')
                 .prop('checked')
-              var no_empty = $('#export-dialog input[name="no_empty"]')
+              const no_empty = $('#export-dialog input[name="no_empty"]')
                 .prop('checked')
-              var view_defs = $('#export-dialog input[name="view-defs"]')
+              const view_defs = $('#export-dialog input[name="view-defs"]')
                 .prop('checked')
-              var view_as_table = $('#export-dialog input[name=view-as-table]')
+              const view_as_table = $('#export-dialog input[name=view-as-table]')
                 .prop('checked')
-              var list_records = $('#export-dialog input[name="list-records"]')
+              const list_records = $('#export-dialog input[name="list-records"]')
                 .prop('checked') || false
-              var data_records = $('#export-dialog input[name="data-records"]')
+              const data_records = $('#export-dialog input[name="data-records"]')
                 .prop('checked') || false
-              var select_records = $('#export-dialog input[name="select"]')
+              const select_records = $('#export-dialog input[name="select"]')
                 .prop('checked')
               Export_dialog.export_sql(dialect, table_defs, no_fkeys, no_empty,
                                        view_defs, view_as_table, list_records, 
@@ -399,5 +405,4 @@ var Export_dialog = {
 
 export default Export_dialog
 
-import Login from './login.js'
 import config from './config.js'

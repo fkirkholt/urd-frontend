@@ -1,5 +1,3 @@
-import Cookies from 'js-cookie'
-
 var Import_dialog = {
 
   import_started: false,
@@ -11,10 +9,10 @@ var Import_dialog = {
     params.cnxn = ds.cnxn
     params.base = ds.base.name
     params.dir = $('input[name=dir]:checked').val()
-    var params = Object.keys(params).map(function(k) {
+    params = Object.keys(params).map(function(k) {
       return k + '=' + params[k]
     }).join('&')
-    let eventSource = new EventSource('/import_tsv?' + params)
+    const eventSource = new EventSource('/import_tsv?' + params)
 
     eventSource.onmessage = function(event) {
       var data = JSON.parse(event.data)
@@ -36,7 +34,7 @@ var Import_dialog = {
   },
 
   view: function() {
-    if (!ds.config) {
+    if (!ds.config || !ds.base) {
       return
     }
 

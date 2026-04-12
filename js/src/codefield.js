@@ -16,14 +16,14 @@ import { css } from "@codemirror/lang-css"
 import { tags } from "@lezer/highlight"
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
-import { linter, lintKeymap, lintGutter } from '@codemirror/lint'
+import { linter, lintGutter } from '@codemirror/lint'
 
 
 function completions(context) {
-  let word = context.matchBefore(/[\p{L}\p{N}_-]*/u)
-  let uppercase = word.text.charAt(0) == word.text.charAt(0).toUpperCase()
-  let before = context.state.doc.sliceString(Math.max(0, word.from - 2), word.from)
-  let is_link = before == '](' ? true : false
+  const word = context.matchBefore(/[\p{L}\p{N}_-]*/u)
+  const uppercase = word.text.charAt(0) == word.text.charAt(0).toUpperCase()
+  const before = context.state.doc.sliceString(Math.max(0, word.from - 2), word.from)
+  const is_link = before == ']('
   if (!word || (word.to - word.from < 3 && !context.explicit))
     return null
   let all_options = []
@@ -65,10 +65,9 @@ function Codefield() {
   var onchange
   var changed
   var editable = new Compartment
-  var client
 
   function foldmethod(state, from, to) {
-    // https://discuss.codemirror.net/t/add-folding-on-indent-levels-for-plain-text-and-yaml-language/5925
+    // https://discuss.codemirror.net/t/5925
     const line = state.doc.lineAt(from) // First line
     const lines = state.doc.lines // Number of lines in the document
     const indent = line.text.search(/\S|$/) // Indent level of the first line
@@ -134,7 +133,8 @@ function Codefield() {
         diagnostics.push({
           from: Math.max(0, from),
           to: Math.min(to, doc.length),
-          severity: d.code?.startsWith('F') || d.code?.startsWith('E') ? 'error' : 'warning',
+          severity: d.code?.startsWith('F') || d.code?.startsWith('E') ? 'error' 
+            : 'warning',
           message: `${d.code}: ${d.message}`,
         })
       }
@@ -248,7 +248,7 @@ function Codefield() {
     });
 
     editor.dispatch({
-      effects: foldRanges.map(range => foldEffect.of({ from: range.from, to: range.to }))
+      effects: foldRanges.map(r => foldEffect.of({ from: r.from, to: r.to }))
     });
   }
 
@@ -259,18 +259,18 @@ function Codefield() {
   function get_extensions(attrs) {
     var lang
     var extensions
-    langs['sql'] = sql()
-    langs['json'] = json()
-    langs['yaml'] = yaml()
-    langs['text'] = null
-    langs['md'] = markdown({
+    langs.sql = sql()
+    langs.json = json()
+    langs.yaml = yaml()
+    langs.text = null
+    langs.md = markdown({
       base: markdownLanguage,
-      codeLanguages: languages, // This enables syntax highlighting for fenced code blocks
+      codeLanguages: languages, // enables syntax highlighting for fenced code blocks
     })
-    langs['py'] = python() 
-    langs['js'] = javascript()
-    langs['css'] = css()
-    lang = langs[attrs.lang] || langs['md'] 
+    langs.py = python() 
+    langs.js = javascript()
+    langs.css = css()
+    lang = langs[attrs.lang] || langs.md 
 
     const customHighlightStyle = HighlightStyle.define([
       { tag: tags.keyword, color: "#FF4136" },
@@ -306,7 +306,7 @@ function Codefield() {
         } 
       }),
       EditorView.domEventHandlers({
-        keydown(e, view) {
+        keydown(e) {
           if (e.key == '(' && e.ctrlKey) {
             foldCode(editor)
             return true
@@ -321,9 +321,9 @@ function Codefield() {
             return true
           }
         },
-        blur: function(e, view) {
+        blur: function(_, view) {
           if (changed && onchange) {
-            var value = view.state.doc.toString()
+            const value = view.state.doc.toString()
             onchange(value);
             changed = false
           }
@@ -348,7 +348,7 @@ function Codefield() {
   }
 
   return {
-    get_value: function(id) {
+    get_value: function() {
       return editor.state.doc.toString()
     },
 

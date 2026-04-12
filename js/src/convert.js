@@ -22,13 +22,13 @@ var Convert_dialog = {
       method: 'POST',
       params: param,
       url: '/convert'
-    }).then(function(data) {
+    }).then(function() {
         Grid.update(ds.table, {})
       })
   },
 
   view: function() {
-    if (!ds.table || !ds.table.fields) return
+    if (!ds.table?.fields) return
     return m('div', [
       m('label', {
         class: 'mr2'
@@ -59,13 +59,13 @@ var Convert_dialog = {
       m('div[name=valg]', { class: 'mt2 max-h5 overflow-y-auto' }, [
         'Velg felter:',
         m('ul', { class: 'list' }, [
-          Object.keys(ds.table.fields).map(function(fieldname, idx) {
+          Object.keys(ds.table.fields).flatMap(function(fieldname) {
             var field = ds.table.fields[fieldname]
             if (
               field.datatype != 'str' ||
                 (field.size != 0 && field.size < 256)
             ) {
-              return
+              return []
             }
             return m('li', {}, [
               m('input[type=checkbox]', {

@@ -6,11 +6,12 @@ var Field = {
     var field = rec.fields[colname]
 
     if (field.element == 'textarea' && field.expanded && !field.foldable) {
-      var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+      const selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
 
-      for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
-                                              selector + " .collapsible ul li p:first-child")) {
-        let t = i.parentElement
+      for (const i of 
+           document.querySelectorAll(selector + ".collapsible ol, "  + 
+                                     selector + " .collapsible ul li p:first-child")) {
+        const t = i.parentElement
         if (t.childElementCount > 1) {
           t.className = "fold open"
           i.onclick = function(event) {
@@ -92,13 +93,13 @@ var Field = {
 
     // Updates conditions for relations
     if (rec.relations) {
-      $.each(rec.relations, function(i, relation) {
+      rec.relations.forEach(function(relation) {
         if (!relation.betingelse) {
           return
         }
         $.each(relation.betingelse, function(relation_field) {
           if (relation_field == field.name) {
-            $.each(relation.records, function(i, post) {
+            relation.records.forEach(function(post) {
               post.fields[relation_field] = value
               post.dirty = true
               relasjon.dirty = true
@@ -117,7 +118,7 @@ var Field = {
     rec.invalid = false
     rec.dirty = false
     ds.table.dirty = false
-    $.each(rec.fields, function(name, field) {
+    rec.fields.forEach(function(field) {
       if (
         field.invalid || (
           field.nullable === false &&
@@ -144,9 +145,9 @@ var Field = {
     if (field.text !== null && field.text !== undefined) {
       value = typeof(field.text) == 'string' ? field.text.trim() : field.text
     } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
-      var icon = value == 0 ? 'nf-fa-square_o' 
+      const icon = value == 0 ? 'nf-fa-square_o' 
         : value == 1 ? 'nf-fa-check-square_o'
-          : 'nf-fa-minus-square_o'
+        : 'nf-fa-minus-square_o'
       value = m('i', { class: 'nf ' + icon })
     } else if (
       field.datatype == 'json' &&
@@ -176,7 +177,7 @@ var Field = {
       (field.datatype == 'str' && !field.size && field.expanded) ||
       get(field, 'attrs.data-format') == 'markdown'
     )) {
-      let result = field.value.replace(/(^|\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
+      let result = field.value.replace(/(^|\s)(:[\w+:-]*:)/gi, function (_, p1, p2) {
         return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>';
       });
 
@@ -190,7 +191,7 @@ var Field = {
         markedHighlight({
           emptyLangClass: 'hljs',
           langPrefix: 'hljs language-',
-          highlight(code, lang, info) {
+          highlight(code, lang) {
             const language = hljs.getLanguage(lang) ? lang : 'plaintext';
             return hljs.highlight(code, { language }).value;
           }
@@ -271,7 +272,7 @@ var Field = {
         var record = result.data
         var field
         // Get virtual columns from table.fields
-        for (let field_name in table.fields) {
+        for (const field_name in table.fields) {
           field = table.fields[field_name]
           if (record.fields[field.name] === undefined) {
             record.fields[field.name] = field
@@ -396,7 +397,8 @@ var Field = {
               class: [
                 label_left ? 'mr2 nowrap' : 'db mr2 nowrap',
                 field.expandable && field.value ? 'underline pointer' : '',
-                field.element == 'textarea' && !config.edit_mode ? 'underline pointer' : ''
+                field.element == 'textarea' && !config.edit_mode ? 'underline pointer' 
+                : ''
               ].join(' '),
               onclick: function() {
                 if (field.fkey && field.expandable && field.value) {
@@ -420,11 +422,13 @@ var Field = {
                   config.dark_mode ? 'gray' : 'moon-gray'
                 ].join(' '),
                 onclick: function() {
-                  var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+                  var selector = `[data-field="${rec.table.name}.${field.name}"]`
 
-                  for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
-                                                          selector + " .collapsible ul li p:first-child")) {
-                    let t = i.parentElement
+                  for (const i of document.querySelectorAll(
+                    selector + ".collapsible ol, "  + 
+                    selector + " .collapsible ul li p:first-child"
+                  )) {
+                    const t = i.parentElement
                     t.className = "fold close"
                   }
                 }
@@ -438,11 +442,13 @@ var Field = {
                   if (config.edit_mode) {
                     Codefield.unfold_all(field.name)
                   } else {
-                    var selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
+                    const selector = `[data-field="${rec.table.name}.${field.name}"]`
 
-                    for (let i of document.querySelectorAll(selector + ".collapsible ol, "  + 
-                                                            selector + " .collapsible ul li p:first-child")) {
-                      let t = i.parentElement
+                    for (const i of document.querySelectorAll(
+                      selector + ".collapsible ol, "  + 
+                      selector + " .collapsible ul li p:first-child"
+                    )) {
+                      const t = i.parentElement
                       t.className = "fold open"
                     }
                   }

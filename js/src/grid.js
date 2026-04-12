@@ -6,7 +6,7 @@ var Grid = {
   onupdate: function() {
     // Ensure scrolling to bottom for new records
     if ((ds.table.selection + 1) == ds.table.records.length) {
-      var height = $('#urdgrid tbody')[0].scrollHeight
+      const height = $('#urdgrid tbody')[0].scrollHeight
       $('#urdgrid tbody').get().pageYOffset = height //.scrollTop(height)
     }
   },
@@ -19,10 +19,9 @@ var Grid = {
 
   sort: function(col) {
     var list = ds.table
-    var sort_cols = {}
     var order
-    if (list.grid.sort_columns[col] && list.grid.sort_columns[col]['idx'] == 0) {
-      order = list.grid.sort_columns[col]['dir'] == 'ASC' ? 'DESC' : 'ASC'
+    if (list.grid.sort_columns[col] && list.grid.sort_columns[col].idx == 0) {
+      order = list.grid.sort_columns[col].dir == 'ASC' ? 'DESC' : 'ASC'
     } else {
       order = 'ASC'
     }
@@ -54,8 +53,8 @@ var Grid = {
 
       // Shows record if filter represents a primary key
       var is_pkey = true
-      for (let idx in ds.table.pkey) {
-        let key = ds.table.pkey[idx]
+      for (const idx in ds.table.pkey) {
+        const key = ds.table.pkey[idx]
         if (ds.table.filters[key] === undefined) {
           is_pkey = false
         }
@@ -64,7 +63,7 @@ var Grid = {
         Record.select(ds.table, 0)
       }
 
-      if (config.tab == 'data' && index !== undefined) {
+      if (cfg.tab == 'data' && index !== undefined) {
         Toolbar.set_url({index: index, replace: true})
       }
     })
@@ -177,7 +176,8 @@ var Grid = {
       if (result.data.msg) {
         alert(result.data.msg)
       }
-      $('#message').removeClass('bg-red').addClass('bg-light-green').show().html('Saved')
+      $('#message').removeClass('bg-red').addClass('bg-light-green')
+        .show().html('Saved')
 
       setTimeout(function() {
         $('#message').hide()
@@ -192,6 +192,7 @@ var Grid = {
   load: function(params) {
     var index
     var query = Grid.get_filter(params)
+    var sort_cols = {}
 
     if (ds.base.name != params.base) {
       ds.load_database(params.base)
@@ -199,20 +200,19 @@ var Grid = {
 
     if ('index' in params) {
       index = params.index
-    } else if (!config.recordview) {
+    } else if (!cfg.recordview) {
       index = 0
     }
 
     if ('order' in params) {
-      var sort = params.order.split(' ')
-      var sort_cols = {}
+      const sort = params.order.split(' ')
       sort_cols[sort[0]] = {col: sort[0], dir: sort[1], idx: 0}
     }
     
     Grid.get({
       cnxn: ds.cnxn,
       base: params.base, table: params.table, filter: query, 
-      limit: config.limit, offset: params.offset || 0, 
+      limit: cfg.limit, offset: params.offset || 0, 
       sort: JSON.stringify(sort_cols),
     }, index)
 
@@ -234,15 +234,18 @@ var Grid = {
         is_chart = true
         chart_columns.push(colname)
       }
-      if (field.datatype == 'unknown' && !isNaN(ds.table.records[0].columns[colname].value)) {
+      if (
+        field.datatype == 'unknown' && 
+        !Number.isNaN(ds.table.records[0].columns[colname].value)
+      ) {
         field.datatype = 'Decimal'
         is_chart = true
       }
     })
 
     var unique_cols
-    for (let key in ds.table.indexes) {
-      let idx = ds.table.indexes[key]
+    for (const key in ds.table.indexes) {
+      const idx = ds.table.indexes[key]
       if (idx.unique && JSON.stringify(idx.columns) !== JSON.stringify(ds.table.pkey)) {
         unique_cols = idx.columns
       }
@@ -257,12 +260,12 @@ var Grid = {
     var chart_data = ds.table.records.map(function(item) {
       var new_item = {}
       if (unique_cols) {
-        var values = []
-        unique_cols.map(function(colname) {
+        const values = []
+        unique_cols.forEach(function(colname) {
           if (!(colname in item.columns)) {
-            return false
+            return
           }
-          if (config.compressed) {
+          if (cfg.compressed) {
             values.push(item.columns[colname].value)
           } else {
             values.push(item.columns[colname].text)
@@ -270,8 +273,8 @@ var Grid = {
         })
         new_item.x = values.join(', ')
       } 
-      chart_columns.map(function(colname) {
-        if (config.compressed) {
+      chart_columns.forEach(function(colname) {
+        if (cfg.compressed) {
           new_item[colname] = item.columns[colname].value
         } else {
           new_item[colname] = item.columns[colname].text
@@ -297,7 +300,7 @@ var Grid = {
         'data-name': ds.table.name,
         class: [
           'overflow-auto collapse w-100',
-          config.dark_mode ? 'br b-mid-gray b--gray' : 'br b-light-gray b--moon-gray'
+          cfg.dark_mode ? 'br b-mid-gray b--gray' : 'br b-light-gray b--moon-gray'
         ].join(' '),
       }, [
         m('thead', { class: '' }, [
@@ -305,10 +308,10 @@ var Grid = {
             m('th.icon', {
               class: [
                 'tl normal f6 pa0',
-                config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'
+                cfg.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray'
               ].join(' ')
             }, ''),
-            Object.keys(ds.table.grid.columns).map(function(label) {
+            Object.keys(ds.table.grid.columns).flatMap(function(label) {
               var col = ds.table.grid.columns[label]
 
               var field = ds.table.fields[col]
@@ -318,9 +321,9 @@ var Grid = {
                 return m('th', '')
               }
 
-              if (field.hidden) return
+              if (field.hidden) return []
 
-              var label = isNaN(parseInt(label))
+              label = Number.isNaN(parseInt(label, 10))
                 ? label : ds.table.fields[col].label
                   ? ds.table.fields[col].label : col
               return m('th', {
@@ -328,8 +331,8 @@ var Grid = {
                 class: [
                   ['int', 'Decimal', 'float'].includes(field.datatype) ? 'tr' : 'tl',
                   'f6 pa1 pb0 nowrap ba',
-                  config.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray',
-                  config.compressed ? 'truncate' : '',
+                  cfg.dark_mode ? 'bg-mid-gray b--gray' : 'bg-light-gray b--moon-gray',
+                  cfg.compressed ? 'truncate' : '',
                 ].join(' '),
                 'data-sort': Grid.column_order(col) ? Grid.column_order(col) : false,
                 onclick: Grid.sort.bind(Grid, col)
@@ -381,7 +384,7 @@ var Grid = {
         data: chart_data,
         class: [
           'bb bt b--gray',
-          config.dark_mode ? 'bg-near-black' : 'bg-white'
+          cfg.dark_mode ? 'bg-near-black' : 'bg-white'
         ].join(' ')
       })
     ]
@@ -395,5 +398,5 @@ import Search from './search.js'
 import Record from './record.js'
 import Row from './row.js'
 import Chart from './chart.js'
-import config from './config.js'
+import cfg from './config.js'
 import Toolbar from './toolbar.js'

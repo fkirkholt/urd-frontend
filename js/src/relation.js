@@ -1,9 +1,7 @@
 var Relation = {
 
   toggle_heading: function(object) {
-    object.expanded
-      ? object.expanded = false
-      : object.expanded = true
+    object.expanded = !object.expanded
   },
 
   add: function(e, rel) {
@@ -28,7 +26,7 @@ var Relation = {
     var count_columns = 0
 
     // count columns that should be shown
-    $.each(rel.grid.columns, function(idx, field_name) {
+    rel.grid.columns.forEach(function(field_name) {
       var field = rel.fields[field_name]
       if (!(field.defines_relation)) {
         columns.push(field)
@@ -50,7 +48,7 @@ var Relation = {
       m('tr', { class: 'bb' }, [
         m('td'),
         rel.pkey.length == 0 ? '' : m('td', { class: 'w0' }),
-        Object.keys(rel.grid.columns).map(function(label, idx) {
+        Object.keys(rel.grid.columns).map(function(label) {
           var field_name = rel.grid.columns[label]
 
           var field = rel.fields[field_name]
@@ -63,11 +61,10 @@ var Relation = {
           if (!(field.defines_relation)) {
             count_columns++
           }
-          var label = label && !$.isArray(rel.grid.columns)
-            ? label : field.label_column
-              ? field.label_column : field.label
-          return field.defines_relation
-            ? ''
+          label = label && !$.isArray(rel.grid.columns) ? label 
+            : field.label_column ? field.label_column 
+            : field.label
+          return field.defines_relation ? ''
             : m('td', {
               style: 'text-align: left',
               class: 'f6 pa1 pb0'
@@ -88,10 +85,10 @@ var Relation = {
         })
         rec.readonly = !rec.new && !ismatch
 
-        rec.deletable = rec.relations ? true : false
+        rec.deletable = rec.relations
 
         if (rec.relations) {
-          $.each(rec.relations, function(idx, rel) {
+          Object.values(rec.relations).forEach(function(rel) {
             var count = rel.count_records
             if (count && rel.delete_rule == "RESTRICT") {
               rec.deletable = false
@@ -123,7 +120,7 @@ var Relation = {
 
   draw_relation_list: function(rel, record) {
     return [
-      rel.records.map(function(rec, rowidx) {
+      rel.records.flatMap(function(rec, rowidx) {
         rec.rowidx = rowidx
         // Make editable only relations attached directly to
         // record and not to parent records
@@ -133,7 +130,7 @@ var Relation = {
         rec.readonly = !rec.new && !ismatch
         if (rec.readonly) rec.inherited = true
 
-        if (rec.delete) return
+        if (rec.delete) return []
         if (rec.fields === undefined) {
           rec.fields = JSON.parse(JSON.stringify(rel.fields))
         }
@@ -143,7 +140,7 @@ var Relation = {
         rec.loaded = true
         rec.relations = {}
 
-        rel.grid.columns.map(function(key) {
+        rel.grid.columns.forEach(function(key) {
           var field = rec.fields[key]
           if (field.value === undefined) {
             field.value = rec.columns[key].value
@@ -155,11 +152,10 @@ var Relation = {
         })
 
         return [
-          rel.grid.columns.map(function(key) {
-            var label = rel.fields[key].label
+          rel.grid.columns.flatMap(function(key) {
 
             if (rel.fields[key].defines_relation) {
-              return
+              return []
             }
             return m(Field, {
               rec: rec, colname: key, label: null
@@ -190,7 +186,7 @@ var Relation = {
 
     // The foreign key columns should not be part of other foreign keys
     // of the table if this is a direct descendant
-    Object.values(rel_table.fkeys).map(function(fkey) {
+    Object.values(rel_table.fkeys).forEach(function(fkey) {
       var res = rel_fkey.constrained_columns.every(function(col) {
         return fkey.name != fkey_name && fkey.constrained_columns.indexOf(col) >= 0
       });
@@ -199,7 +195,9 @@ var Relation = {
       // has to be part of primary key. Only then does the table show up
       // beneath the referred table
       if (in_contents) {
-        res = res && fkey.constrained_columns.every(val => rel_table.pkey.columns.includes(val));
+        res = res && fkey.constrained_columns.every(
+          val => rel_table.pkey.columns.includes(val)
+        );
       }
 
       if (res) {
@@ -254,7 +252,7 @@ var Relation = {
     // default value.
     if (rel.show_if) {
       hidden = false
-      Object.keys(rel.show_if).map(function(key) {
+      Object.keys(rel.show_if).forEach(function(key) {
         var value = rel.show_if[key]
         if (rec.fields[key].value != value) {
           hidden = true
@@ -270,13 +268,12 @@ var Relation = {
     var ref = vnode.attrs.ref
     var label = vnode.attrs.label
     var key = ref.replace('relation.', '')
-    var rel = rec.relations && rec.relations[key]
+    var rel = rec.relations?.[key]
       ? rec.relations[key] : null
     if (rel === null || !('tables' in ds.base)) {
       return
     }
 
-    var table = ds.base.tables[rec.table_name]
     var usage = rec.table.relations[key].use
     var url = Relation.get_url(rel)
 
@@ -294,14 +291,15 @@ var Relation = {
 
     return [
       rel.expanded ? null : [m('div', {
-        'data-expandable': rel.count_records ? true : false,
+        'data-expandable': rel.count_records,
         'data-set': ref, 
         class: 'db ml3 mt1'
       }, [
         m('b', { 
           class: [
             'dib mr2 ',
-            rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) ? ''
+            rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) 
+            ? ''
             : 'underline pointer' 
           ].join(''),
           onclick: function() {

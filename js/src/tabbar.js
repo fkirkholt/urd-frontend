@@ -105,8 +105,9 @@ var Tabbar = {
     config.hide_empty = value
   },
 
-  view: function(vnode) {
+  view: function() {
     if (ds.type == 'dblist' || ds.type == 'file') {
+      if (!config.tab) config.tab = 'databases'
       return [
         m('ul', {
           class: 'di w-100'
@@ -114,18 +115,17 @@ var Tabbar = {
           m('li', {
             class: [
               'list di pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
-              (!config.tab || config.tab == 'databases') && config.dark_mode ? 'bg-dark-gray'
-              : (!config.tab || config.tab == 'databases') ? 'bg-near-white'
+              (config.tab == 'databases') && config.dark_mode ? 'bg-dark-gray'
+              : (config.tab == 'databases') ? 'bg-near-white'
               : config.dark_mode ? 'bg-mid-gray'
               : 'bg-light-gray'
             ].join(' '),
-            style: (!config.tab || config.tab == 'databases')
-              ? 'padding-bottom: 2px' : '',
+            style: (config.tab == 'databases') ? 'padding-bottom: 2px' : '',
             onclick: function() {
               config.tab = 'databases'
             }
           }, ['sqlite', 'duckdb'].includes(ds.base.system) ? 'Files' : 'Databases'),
-          !ds.dblist || !ds.dblist.useradmin ? '' : m('li', {
+          !ds.dblist?.useradmin ? '' : m('li', {
             class: [
               'list di ml2 pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
               config.tab == 'users' && config.dark_mode ? 'bg-dark-gray'
@@ -133,8 +133,7 @@ var Tabbar = {
               : config.dark_mode ? 'bg-near-black' 
               : 'bg-light-gray'
             ].join(' '),
-            style: (config.tab == 'users')
-              ? 'padding-bottom: 2px' : '',
+            style: (config.tab == 'users') ? 'padding-bottom: 2px' : '',
             onclick: function() {
               config.tab = 'users'
               if (!ds.users) {
@@ -150,7 +149,8 @@ var Tabbar = {
             }
           }, 'Users')
         ]),
-        !ds.dblist || !ds.dblist.roles?.length != 0 ? null : m('label', { class: 'fr'}, [
+        !ds.dblist || !ds.dblist.roles?.length != 0 ? null 
+        : m('label', {class: 'fr'}, [
           'Role: ',
           m('select', {
             name: 'role',
@@ -338,7 +338,8 @@ var Tabbar = {
           }
         })
       ], 'Show all descendants')),
-      (config.tab !== 'data' || (ds.table && !ds.table.expansion_column) ? null : m('label', {
+      config.tab !== 'data' || (ds.table && !ds.table.expansion_column) ? null 
+      : m('label', {
         class: 'fr mr3'
       }, [
         m('input', {
@@ -366,7 +367,7 @@ var Tabbar = {
               m.buildQueryString(query_params))
           }
         })
-      ], 'Show top level only')),
+      ], 'Show top level only'),
       (config.tab != 'diagram' ? null : m('label', {
         class: 'fr mr3',
         title: "Choose which relations to display"
@@ -412,5 +413,4 @@ var Tabbar = {
 export default Tabbar
 
 import SQLpanel from './sqlpanel.js'
-import Grid from './grid.js'
 import config from './config.js'

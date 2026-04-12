@@ -20,7 +20,6 @@ window.fix_circular = function () {
   };
 }
 
-import Contents from './contents.js'
 import header from './header.js'
 import home from './home.js'
 import Tabbar from './tabbar.js'
@@ -39,7 +38,7 @@ import Record from './record.js'
 m.route.prefix = ""
 m.route($('#main')[0], '/', {
   "/": {
-    onmatch: function(args, requestedPath) {
+    onmatch: function() {
       check_dirty()
       ds.cnxn = null
       ds.dblist = null
@@ -70,19 +69,25 @@ m.route($('#main')[0], '/', {
         params: {
           cnxn: args.cnxn,
         }
-      }).then(function(result) {
-        if (result.type == 'server') {
-          home.load_databases(query.params.grep)
+      })
+      .then(function(result) {
+        if (result.type === 'server') {
+          home.load_databases(query.params.grep);
+          return null; 
         } else {
-            m.request({
-              method: 'get',
-              url: '/file_list',
-              params: {cnxn: ds.cnxn} 
-            }).then(function(result) {
-              ds.dblist = result.data
-            })
+          return m.request({
+            method: 'get',
+            url: '/file_list',
+            params: { cnxn: ds.cnxn }
+          });
         }
       })
+      .then(function(result) {
+        ds.dblist = result.data;
+      })
+      .catch(function(error) {
+        console.error("Error:", error);
+      });
       return home
     }
   },
@@ -97,7 +102,7 @@ m.route($('#main')[0], '/', {
         config.tab = config.tab || 'data'
         ds.type = 'table'
 
-        var grid_path = path
+        let grid_path = path
 
         // remove `index` from grid_path so that grid is not
         // reloaded because of change in url when another record is shown
@@ -121,7 +126,7 @@ m.route($('#main')[0], '/', {
         } else {
           // Load correct record when index parameter changes
           if ('index' in args) {
-            let index = Number(args.index)
+            const index = Number(args.index)
             Record.select(ds.table, index)
           }
         }
@@ -183,7 +188,7 @@ m.route($('#main')[0], '/', {
             ds.file = result
           }
           config.tab = 'databases'
-          var dir = base_name.substring(0, base_name.lastIndexOf('/'))
+          const dir = base_name.substring(0, base_name.lastIndexOf('/'))
           if (!ds.dblist || ((ds.path || '') != dir) && !ds.dblist.grep) {
             ds.path = dir
             m.request({
@@ -217,13 +222,13 @@ m.route($('#main')[0], '/', {
 })
 
 function check_dirty() {
-  if ((ds.table && ds.table.dirty) || (ds.file && ds.file.dirty)) {
+  if (ds.table?.dirty || ds.file?.dirty) {
     if (config.autosave || confirm('You have unsaved data. Save?')) {
-      if (ds.file && ds.file.dirty) {
+      if (ds.file?.dirty) {
         if (home.editor) {
           home.save_file(ds.file.path, home.editor.get_value())
         }
-      } else if (ds.table && ds.table.hide) {
+      } else if (ds.table?.hide) {
         $('#save-and-close').trigger('click')
       } else {
         Grid.save()

@@ -1,7 +1,7 @@
 
 var Record = {
 
-  onupdate: function(vnode) {
+  onupdate: function() {
     var scroll_left = $('#main')[0].scrollLeft
     if (scroll_left > 0) {
       // scroll right
@@ -36,15 +36,14 @@ var Record = {
         rec.table = table
 
         // Get virtual columns from table.fields.
-        var field
-        for (let field_name in table.fields) {
-          let field = $.extend({}, table.fields[field_name])
+        for (const field_name in table.fields) {
+          const field = $.extend({}, table.fields[field_name])
           if (rec.fields[field.name] === undefined) {
             rec.fields[field.name] = field
           }
         }
 
-        for (let fieldname in table.fields) {
+        for (const fieldname in table.fields) {
           if (table.fields[fieldname].virtual) {
             rec.fields[fieldname].text = rec.columns[fieldname].text
           }
@@ -102,7 +101,7 @@ var Record = {
           rel.expanded = true
           rel.count_records = 1
         } else {
-          var record = rec.relations[alias].records[0]
+          const record = rec.relations[alias].records[0]
           record.base_name = rec.base_name
           record.table = rel
           rel.records = [record]
@@ -124,8 +123,8 @@ var Record = {
 
     // all columns and values defaults to null
     var columns = {}
-    for (let idx in list.grid.columns) {
-      let col = list.grid.columns[idx]
+    for (const idx in list.grid.columns) {
+      const col = list.grid.columns[idx]
       columns[col] = {
         text: null,
         value: null
@@ -175,11 +174,11 @@ var Record = {
       } else {
         // Sets the value to filtered value if such filter exists
         if (!relation) {
-          for (let idx in list.filters) {
-            var filter = list.filters[idx]
-            var parts = filter.field.split('.')
-            var table_name
-            var field_name
+          for (const idx in list.filters) {
+            const filter = list.filters[idx]
+            const parts = filter.field.split('.')
+            let table_name
+            let field_name
             if (parts.length == 2) {
               table_name = parts[0]
               field_name = parts[1]
@@ -201,9 +200,7 @@ var Record = {
           field.value = conditions[0].value
           field.dirty = true
         } else if (
-          field.attrs &&
-          field.attrs['data-format'] && 
-          field.attrs['data-format'] == 'json' &&
+          field.attrs?.['data-format'] == 'json' &&
           field.nullable == false
         ) {
           field.value = '{}'
@@ -238,7 +235,7 @@ var Record = {
     var clone = {}
     var field
     clone.fields = $.extend(true, {}, active_rec.fields)
-    for (let name in clone.fields) {
+    for (const name in clone.fields) {
       field = clone.fields[name]
       if (field.value) {
         field.dirty = true
@@ -279,7 +276,7 @@ var Record = {
 
   delete: function(rec) {
     if (rec.deletable === false) return
-    rec.delete = rec.delete ? false : true
+    rec.delete = !rec.delete
     rec.dirty = true
     ds.table.dirty = true
 
@@ -305,7 +302,7 @@ var Record = {
       body: JSON.stringify(changes.values),
       url: '/record'
     }).then(function(data) {
-      for (let fieldname in changes.values) {
+      for (const fieldname in changes.values) {
         rec.fields[fieldname].dirty = false
       }
       rec.new = false
@@ -329,7 +326,7 @@ var Record = {
         }, 4000)
         rec.delete = false
       } else if (rec.delete && rec.table_name == ds.table.name) {
-        var idx = rec.table.selection
+        const idx = rec.table.selection
         rec.table.records.splice(idx, 1)
         if (ds.table.records.length > idx) {
           console.log('setter index til ', idx)
@@ -344,7 +341,8 @@ var Record = {
     })
     .catch(function(e) {
       console.log('e', e)
-      $('#message').removeClass('bg-light-green').addClass('bg-red').show().html('Save failed')
+      $('#message').removeClass('bg-light-green').addClass('bg-red')
+        .show().html('Save failed')
       setTimeout(function() {
         $('#message').hide()
       }, 2000)
@@ -360,7 +358,7 @@ var Record = {
     record.messages = []
 
     if (record.dirty) {
-      for (let fieldname in record.fields) {
+      for (const fieldname in record.fields) {
         field = record.fields[fieldname]
         if (!field.defines_relation) {
           Input.validate(field.value, field)
@@ -372,11 +370,11 @@ var Record = {
       }
     }
 
-    for (let relname in record.relations) {
+    for (const relname in record.relations) {
       rel = record.relations[relname]
       rel.invalid = false
       rel.dirty = false
-      for (let idx in rel.records) {
+      for (const idx in rel.records) {
         rec = rel.records[idx]
         Record.validate(rec)
         if (rec.dirty) {
@@ -435,10 +433,10 @@ var Record = {
         referred_columns: rec.table.relations[alias].referred_columns,
         records: []
       }
-      for (let idx in rel.records) {
-        let subrec = rel.records[idx]
+      for (const idx in rel.records) {
+        const subrec = rel.records[idx]
         if (!subrec.dirty) continue
-        let subrec_changes = Record.get_changes(subrec, true)
+        const subrec_changes = Record.get_changes(subrec, true)
         changed_rel.records.push(subrec_changes)
       }
       changes.relations[alias] = changed_rel
@@ -463,7 +461,7 @@ var Record = {
         var data = {};
         var params
         if (action.communication === 'download') {
-          data.cnxn = ds.cnxn,
+          data.cnxn = ds.cnxn
           data.base = rec.base_name || ds.base.name;
           data.table = rec.table_name;
           data.pkey = JSON.stringify(rec.pkey);
@@ -471,7 +469,7 @@ var Record = {
           params = Object.keys(data).map(function(k) {
             return k + '=' + data[k]
           }).join('&')
-          var address = (action.url[0] === '/')
+          const address = (action.url[0] === '/')
             ? action.url
             : ds.base.schema + '/' + action.url;
           window.open(address + '?' + params, '_blank')
@@ -486,8 +484,8 @@ var Record = {
   is_deletable: function(rec) {
     var deletable = true
 
-    for (let idx in rec.relations) {
-      let rel = rec.relations[idx]
+    for (const idx in rec.relations) {
+      const rel = rec.relations[idx]
       if (rel.count_records && rel.delete_rule == "RESTRICT") {
         deletable = false
       }
@@ -499,7 +497,7 @@ var Record = {
   view: function(vnode) {
     var rec = vnode.attrs.record
 
-    if (!rec || !rec.table) {
+    if (!rec?.table) {
       return m('form[name="record"]')
     }
 
@@ -508,7 +506,7 @@ var Record = {
     rec.dirty = rec.dirty == undefined ? false : rec.dirty
 
     return [
-      Object.keys(rec.table.form.items).map(function(label) {
+      Object.keys(rec.table.form.items).flatMap(function(label) {
         var item = rec.table.form.items[label]
 
         if (
@@ -516,17 +514,20 @@ var Record = {
             item.indexOf('.') === -1 &&
             rec.table.fields[item].defines_relation
         ) {
-          return
+          return []
         }
 
         if (typeof item == 'object') {
-          Object.values(item.items).map(function(subitem) {
-            if (subitem in rec.table.fields && rec.table.fields[subitem].defines_relation) {
+          Object.values(item.items).forEach(function(subitem) {
+            if (
+              subitem in rec.table.fields && 
+              rec.table.fields[subitem].defines_relation
+            ) {
               item.defines_relation = true
             } 
           })
           if (item.defines_relation) {
-            return
+            return []
           }
           return m(Fieldset, {
             rec: rec,
@@ -537,6 +538,7 @@ var Record = {
           return m(Relation, { rec: rec, ref: item, label: label })
         } else if (typeof item == "string" && item.includes('action')) {
           // TODO
+          return []
         } else {
           return m(Field, { rec: rec, colname: item, label: label })
         }
@@ -548,8 +550,6 @@ var Record = {
 export default Record
 
 import config from './config.js'
-import merge from 'just-merge'
-import Grid from './grid.js'
 import Toolbar from './toolbar.js'
 import Fieldset from './fieldset.js'
 import Field from './field.js'

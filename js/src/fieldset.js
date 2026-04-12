@@ -3,43 +3,44 @@ var Fieldset = {
   draw_inline_fieldset: function(rec, fieldset) {
 
     return [
-      Object.keys(fieldset.items).map(function(label, idx) {
+      Object.keys(fieldset.items).flatMap(function(label, idx) {
         var fieldname = fieldset.items[label]
         var type = fieldname.indexOf('actions.') > -1 ? 'action' : 'field'
 
-        switch (type) {
-          case 'field':
-            var field = rec.fields[fieldname]
-            var separator
-            if (idx > 0 && (field.value !== null || field.text !== null)) {
-              separator = field.separator ? field.separator : ', '
+        if (type == 'field') {
+          const field = rec.fields[fieldname]
+          let separator
+          if (idx > 0 && (field.value !== null || field.text !== null)) {
+            separator = field.separator ? field.separator : ', '
+          } else {
+            separator = null
+          }
+
+          field.attrs = field.attrs || {}
+          field.attrs.placeholder = field.attrs.placeholder || field.label
+          field.attrs.class = 'dib'
+          if (field.size) {
+            const percent = (100/fieldset.size) * field.size
+            if (percent >= 35) {
+              field.attrs.class += ' mw4'
             } else {
-              separator = null
+              field.attrs.class += ' mw3'
             }
+          }
 
-            field.attrs = field.attrs || {}
-            field.attrs.placeholder = field.attrs.placeholder || field.label
-            field.attrs.class = 'dib'
-            if (field.size) {
-              let percent = (100/fieldset.size) * field.size
-              if (percent >= 35) {
-                field.attrs.class += ' mw4'
-              } else {
-                field.attrs.class += ' mw3'
-              }
-            }
+          // determine if field should be displayd or edited
+          const display = !rec.table.privilege.update || field.virtual ||
+            rec.readonly || !config.edit_mode || !field.editable
 
-            // determine if field should be displayd or edited
-            var display = !rec.table.privilege.update || field.virtual ||
-              rec.readonly || !config.edit_mode || !field.editable
-
-            return !display
-            ? m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
-            : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
-            ? [separator, m('time', { datetime: field.value }, Field.display_value(field, rec))]
-            : [separator, m('data', { value: field.value }, Field.display_value(field, rec))]
-          case 'action':
-            var action = ds.table.actions[fieldname]
+          return !display
+          ? m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
+          : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
+          ? [separator, m('time', { datetime: field.value }, 
+                          Field.display_value(field, rec))]
+          : [separator, m('data', { value: field.value }, 
+                          Field.display_value(field, rec))]
+        } else if (type == 'action') {
+            const action = ds.table.actions[fieldname]
             return m('span', { class: 'mr2' }, [
               m('input', {
                 type: 'button',
@@ -49,6 +50,8 @@ var Fieldset = {
                 }
               })
             ])
+        } else {
+          return []
         }
       })
     ]
@@ -62,7 +65,7 @@ var Fieldset = {
     // Find number of registered fields under the heading
     var count_fields = 0
     var count_field_values = 0
-    Object.keys(set.items).map(function(label) {
+    Object.keys(set.items).forEach(function(label) {
       count_fields++
       var col = set.items[label]
       if (rec.fields[col] && rec.fields[col].value !== null) {

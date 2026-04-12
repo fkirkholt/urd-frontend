@@ -6,14 +6,24 @@ var Breadcrumb = {
     var param = m.route.param()
     var dirs
     var path
-    var system = ds.dblist ? ds.dblist.system : ds.base.system
     var plug_img = ds.cnxn ? 'plug-connected.png' : 'plug-connect.png'
     var urdr_img = ds.cnxn ? 'urdr-glow-blue.png' : 'urdr.png'
     var urdr_class = ds.cnxn ? '' : 'invert-03' 
 
     items.push({
       icon: "",
-      text: '<img class="invert-03" width="29px" style="margin-bottom: -3.9px" src="/static/css/img/' + plug_img + '"><img class="v-mid ' + urdr_class + '" style="margin-left: -5px; margin-bottom: 3px; height: 1.25em" src="/static/css/img/' + urdr_img + '">',
+      text: [
+        m('img', {
+          class: 'invert-03',
+          style: 'margin-bottom: -3.9px; width: 29px',
+          src: '/static/css/img/' + plug_img
+        }),
+        m('img', {
+          class: 'v-mid ' + urdr_class,
+          style: 'margin-left: -5px; margin-bottom: 3px; height: 1.25em',
+          src: '/static/css/img/' + urdr_img
+        })
+      ],
       addr: '/',
       branch: ds.branch
     })
@@ -41,7 +51,7 @@ var Breadcrumb = {
       }
     }
 
-    if (ds.dblist && ds.dblist.grep) {
+    if (ds.dblist?.grep) {
       items.push({
         icon: "nf-fa-search",
         text: ds.dblist.grep,
@@ -57,7 +67,7 @@ var Breadcrumb = {
       })
     }
 
-    if (ds.base && ds.base.name && ds.file?.type == 'server') {
+    if (ds.base?.name && ds.file?.type == 'server') {
       items.push({
         icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),
@@ -77,7 +87,7 @@ var Breadcrumb = {
 
   },
 
-  view: function(vnode) {
+  view: function() {
     var param = m.route.param()
     if (!param) return
     var sti = this.get_items()
@@ -88,7 +98,7 @@ var Breadcrumb = {
           m('a', {
             class: 'fw3 white no-underline underline-hover f4 pointer',
             href: item.addr,
-            onclick: function(e) {
+            onclick: function() {
               m.route.set(item.addr)
               return false
             }
@@ -99,7 +109,7 @@ var Breadcrumb = {
             ].join(' '),
             style: item.icon == 'nf-md-crosshairs_gps' ? 'bottom: 0.75px'
               : item.icon !== 'table' ? 'bottom: 2px;' : ''
-          }), m.trust(item.text)]),
+          }), item.text]),
           !item.branch || item.branch == 'master'
             ? ''
             : m('span', { class: 'light-silver' }, [

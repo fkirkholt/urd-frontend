@@ -27,14 +27,15 @@ var home = {
         ds.file.dirty = false
       }
       if (load_files) {
-        m.request({
+        return m.request({
           method: 'get',
           url: '/file_list',
           params: {cnxn: ds.cnxn, path: ds.path} 
-        }).then(function(result) {
-          ds.dblist = result.data
         })
       }
+    })
+    .then(function(result) {
+      ds.dblist = result.data
     })
   },
 
@@ -42,7 +43,7 @@ var home = {
     if (!content) {
       return content
     }
-    let result = content.replace(/(^|\s)(\:[\w+:-]*\:)/gi, function (x, p1, p2, p3) {
+    let result = content.replace(/(^|\s)(:[\w+:-]*:)/gi, function (_, p1, p2) {
       return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>';
     });
 
@@ -54,7 +55,7 @@ var home = {
       markedHighlight({
         emptyLangClass: 'hljs',
         langPrefix: 'hljs language-',
-        highlight(code, lang, info) {
+        highlight(code, lang) {
           const language = hljs.getLanguage(lang) ? lang : 'plaintext';
           return hljs.highlight(code, { language }).value;
         }
@@ -114,9 +115,11 @@ var home = {
     })
 
     var selector = 'div.markdown'
-    for (let i of document.querySelectorAll(selector + " ol, "  + 
-                                            selector + " ul li p:first-child")) {
-      let t = i.parentElement
+    for (const i of document.querySelectorAll(
+      selector + " ol, "  + 
+      selector + " ul li p:first-child"
+    )) {
+      const t = i.parentElement
       if (t.childElementCount > 1 && !t.className.includes('fold')) {
         t.className = "fold open"
         i.onclick = function(event) {
@@ -128,21 +131,22 @@ var home = {
     }
   },
 
-  view: function(vnode) {
+  view: function() {
+    console.log('ds.dblist', ds.dblist)
     if (!ds.dblist) return
     if (config.tab == 'users' && !ds.users) return
 
-    var filtered_recs = ds.dblist.records ? ds.dblist.records.filter(function(post, i) {
+    var filtered_recs = ds.dblist.records ? ds.dblist.records.filter(function(post) {
       const filter = $('#filter_files').val()?.toLowerCase()
       const label = post.columns.label.toLowerCase()
       const descr = post.columns.description?.toLowerCase();
 
       return !(post.deleted || label.includes('/') ||
-        (!ds.dblist.grep || !ds.dblist.grep.includes(filter)) && (filter !== undefined && 
+        !ds.dblist.grep?.includes(filter) && (filter !== undefined && 
         !(label.includes(filter) ||
          (filter.at(0) == '^' && label.startsWith(filter.substring(1)) ||
          (filter.at(-1) == '$' && label.endsWith(filter.replace('$', '')))))) &&
-        (!descr || !descr.includes(filter))
+        !descr?.includes(filter)
       )
     }).sort((a, b) => { 
       return a.columns.label.localeCompare(b.columns.label, undefined, { 
@@ -151,10 +155,10 @@ var home = {
       }) 
     }) : []
 
-    let filecompletions = []
+    const filecompletions = []
     for (const i in ds.dblist.records) {
-      let rec = ds.dblist.records[i]
-      let option = {
+      const rec = ds.dblist.records[i]
+      const option = {
         label: rec.columns.label,
         type: 'keyword',
         title: rec.columns.title
@@ -162,7 +166,7 @@ var home = {
       filecompletions.push(option)
     }
     if (ds.dblist.autocomplete) {
-      ds.dblist.autocomplete['filecompletions'] = filecompletions
+      ds.dblist.autocomplete.filecompletions = filecompletions
     }
 
     return [m('div#list', { 
@@ -187,8 +191,7 @@ var home = {
           onclick: function() {
             var filename = home.context_file.columns.name
             $('#filelist-context').hide()
-            let r = confirm('Are you sure you want to delete the file?')
-            if (!r) {
+            if (!confirm('Are you sure you want to delete the file?')) {
               return
             }
 
@@ -221,7 +224,8 @@ var home = {
               file = (ds.dblist.path ? ds.dblist.path + '/' : '') + val
               m.route.set('/' + ds.cnxn + '/' + file)
             } else {
-              m.route.set('/' + ds.cnxn + (ds.dblist.path ? ('/' + ds.dblist.path) : '') + (val ? '?grep=' + val : ''))
+              m.route.set('/' + ds.cnxn + (ds.dblist.path ? ('/' + ds.dblist.path) : '')
+                          + (val ? '?grep=' + val : ''))
             }
           }
           return
@@ -243,12 +247,14 @@ var home = {
           m('span', {
             class: 'no-underline hover-blue pointer',
             onclick: function() {
-              let path = ds.path.substring(0, ds.path.lastIndexOf('/'))
+              const path = ds.path.substring(0, ds.path.lastIndexOf('/'))
               m.route.set('/' + ds.cnxn + (path ? '/' + path : ''))
             }
           }, '..')
         ]),
-        filtered_recs.map(function(post, i) {
+        filtered_recs.flatMap(function(post, i) {
+          var convert = new Convert()
+          var desc = null
           if (i == 100 && ds.dblist.trunc !== false) {
             return m('span', {
               class: 'underline pointer',
@@ -257,14 +263,13 @@ var home = {
               }
             }, 'Show all')
           } else if (i > 100 && ds.dblist.trunc !== false) {
-            return
+            return []
           }
-          var filter = $('#filter_files').val()
-          var convert = new Convert()
-          var desc = null
+          
           // output from ripgrep has ansi codes
           post.columns.name = convert.toHtml(post.columns.name)
           post.columns.label = convert.toHtml(post.columns.label)
+          const label = m.trust(' ' + post.columns.label.replaceAll('_', '_<wbr>'))
           if (post.columns.description) {
             desc = convert.toHtml(post.columns.description)
           }
@@ -353,7 +358,7 @@ var home = {
           ])
         })
       ]),
-      config.tab != 'users' ? null : ds.users.map(function(user, i) {
+      config.tab != 'users' ? null : ds.users.map(function(user) {
         return [
           user.expanded ? '' : m('p', {
             class: 'ml3 mt1 mb1 underline pointer',
@@ -376,11 +381,11 @@ var home = {
                 user.expanded = false
               }
             }, user.name),
-            ds.roles.map(function(role, i) {
+            ds.roles.map(function(role) {
               return m('label', { class: 'ml2' }, [
                 m('input[type=checkbox]', {
                   class: 'mr1',
-                  checked: user.roles && user.roles.includes(role),
+                  checked: user.roles?.includes(role),
                   onchange: function() {
                     if (this.checked) {
                       user.roles.push(role)
@@ -482,9 +487,10 @@ var home = {
           onclick: function() {
             var selector = 'div.markdown'
 
-            for (let i of document.querySelectorAll(selector + " ol, "  + 
-                                                    selector + " ul li p:first-child")) {
-              let t = i.parentElement
+            for (const i of document.querySelectorAll(
+              selector + " ol, "  + selector + " ul li p:first-child"
+            )) {
+              const t = i.parentElement
               t.className = ds.file.folded ? "fold open" : "fold close"
             }
             ds.file.folded = !ds.file.folded
@@ -529,16 +535,17 @@ var home = {
         }
       })
     ]),
-    !ds.file || !ds.file.path.endsWith('.md') ? '' : m('div#backlinks', {
+    !ds.file?.path.endsWith('.md') ? '' : m('div#backlinks', {
       class: 'flex flex-column ml3',
       style: 'min-width:210px'
     }, [
-      m('h3', { class: 'mb0' }, 'Backlinks (' + (ds.file.backlinks ? ds.file.backlinks.length : '0')  + ')'),
+      m('h3', { class: 'mb0' }, 
+        'Backlinks (' + (ds.file.backlinks ? ds.file.backlinks.length : '0')  + ')'),
       m('ul', [
-        !ds.file.backlinks ? '' : ds.file.backlinks.map(function(link, i) {
+        !ds.file.backlinks ? '' : ds.file.backlinks.map(function(link) {
           return m('li', {
             class: 'pointer hover-blue',
-            onclick: function(ev) {
+            onclick: function() {
               m.route.set('/' + ds.cnxn + (ds.path ? '/' + ds.path : '') + '/' + link)
             }
           }, link)

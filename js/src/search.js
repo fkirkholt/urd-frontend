@@ -39,20 +39,21 @@ var Search = {
     var search_criterias = Search.parse_search()
 
     m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name +
-      (search_criterias.length ? '&' + encodeURIComponent(search_criterias.join('&')) : ''))
+      (search_criterias.length ? '&' + encodeURIComponent(search_criterias.join('&')) 
+       : ''))
   },
 
   parse_search: function() {
     var search_criterias = []
 
-    Object.keys(ds.table.filters).map(function(label, idx) {
+    Object.keys(ds.table.filters).forEach(function(label) {
       var filter = ds.table.filters[label]
       if (
         filter.value ||
         ['IS NULL', 'IS NOT NULL'].includes(filter.operator)
       ) {
-        var value = filter.value
-        var operator = filter.operator
+        let value = filter.value
+        let operator = filter.operator
         if (filter.operator === 'LIKE' || filter.operator === 'NOT LIKE') {
           operator = filter.operator === 'LIKE' ? '=' : '!='
           value = '*' + value + '*'
@@ -79,11 +80,12 @@ var Search = {
   parse_query: function(expr) {
     var conditions = expr !== null ? expr.split(';') : []
     var search = {}
-    $.each(conditions, function(i, cond) {
-      var parts = cond.trim().split(/\s*([=<>]|!=|IN|LIKE|NOT LIKE|IS NULL|IS NOT NULL)\s*/)
+    conditions.forEach(function(cond) {
+      var parts = cond.trim()
+        .split(/\s*([=<>]|!=|IN|LIKE|NOT LIKE|IS NULL|IS NOT NULL)\s*/)
       if (parts.length > 1) {
-        var val = parts[2].replace(/(^'\*)|(^')|(\*'$)|('$)/g, '')
-        var operator = parts[1]
+        let val = parts[2].replace(/(^'\*)|(^')|(\*'$)|('$)/g, '')
+        let operator = parts[1]
 
         if (val.charAt(0) === '*' && val.slice(-1) === '*') {
           val = val.substr(1, val.length - 2)
@@ -98,14 +100,14 @@ var Search = {
         if (operator === 'IN') {
           val = val.replace(', ', ',').split(',')
           val = val.map(function(value) {
-            return value == parseInt(value)
-              ? parseInt(value)
+            return value == parseInt(value, 10)
+              ? parseInt(value, 10)
               : value
           })
         }
 
-        var field = parts[0]
-        var item = {
+        const field = parts[0]
+        const item = {
           field: field,
           operator: operator,
           value: val
@@ -154,7 +156,7 @@ var Search = {
           m('td'),
           m('td', { colspan: 3 }, [
             m('table', [
-              Object.keys(item.items).map(function(label, idx) {
+              Object.keys(item.items).map(function(label) {
                 var col = item.items[label]
                 return Search.draw_field(table, col, label)
               })
@@ -170,14 +172,14 @@ var Search = {
       !item.includes('relation.') &&
       !item.includes('actions.')
     ) {
-      var field = table.fields[item]
+      const field = table.fields[item]
 
 
-      label = isNaN(parseInt(label)) ? label : field.label
-      var operators = Search.get_operators(field)
+      label = Number.isNaN(parseInt(label, 10)) ? label : field.label
+      const operators = Search.get_operators(field)
 
       if (table.alias === undefined) table.alias = table.name
-      var filtername = table.alias == ds.table.name
+      const filtername = table.alias == ds.table.name
         ? field.name
         : (table.alias || table.name) + '.' + field.name
 
@@ -191,7 +193,7 @@ var Search = {
         }
       }
 
-      var filter = ds.table.filters[filtername]
+      const filter = ds.table.filters[filtername]
       field.value = filter.value
 
       return [
@@ -221,7 +223,7 @@ var Search = {
             value: filter.operator,
             width: '100px',
             onchange: function(e) {
-              filter.operator = e.target['value']
+              filter.operator = e.target.value
 
               // This code recreates the value field,
               // to run oncreate again
@@ -244,8 +246,8 @@ var Search = {
     }
 
     if (item.includes('relation')) {
-      var key = item.replace('relation.', '')
-      var rel = table.relations[key]
+      const key = item.replace('relation.', '')
+      const rel = table.relations[key]
 
       if (rel.relationship == '1:1') {
         return [
@@ -280,11 +282,11 @@ var Search = {
           !rel.table ? null : m('div', {
             class: 'ml4'
           }, [
-            Object.keys(rel.table.form.items).map(function(label, idx) {
+            Object.keys(rel.table.form.items).flatMap(function(label) {
               var item = rel.table.form.items[label]
 
               if (rel.constrained_columns.includes(item)) {
-                return
+                return []
               }
 
               if (
@@ -292,7 +294,7 @@ var Search = {
                 item.indexOf('.') === -1 &&
                 rel.table.fields[item].defines_relaton
               ) {
-                return
+                return []
               }
 
               return Search.draw_field(rel.table, item, label)
@@ -310,10 +312,8 @@ var Search = {
    *
    */
   draw_value_field: function(table, field, filter) {
-    var has_idx = false
-    var key
     var width
-    $.each(table.indexes, function(i, idx) {
+    table.indexes.forEach(function(idx) {
       if (idx.columns[0] === field.name) {
         has_idx = true
       }
@@ -338,14 +338,14 @@ var Search = {
         label: filter.label,
         style: 'flex: 2;',
         onchange: function(e) {
-          filter.value = e.target['value']
-          filter.label = e.target['textContent']
+          filter.value = e.target.value
+          filter.label = e.target.textContent
         }
       })
     } else if (
       field.datatype != 'int' && (
-        (field.element === 'select' &&
-          !['', 'LIKE', 'startswith', 'endswith', '>', '<'].includes(filter.operator)) ||
+        (field.element === 'select' && 
+         !['', 'LIKE', 'startswith', 'endswith', '>', '<'].includes(filter.operator)) ||
         (field.element === 'input' && field.attrs.type == 'search' &&
           ['=', '!='].includes(filter.operator))
       )
@@ -356,7 +356,7 @@ var Search = {
         fieldname: filter.field,
         item: filter,
         placeholder: 'Velg',
-        multiple: filter.operator === 'IN' ? true : false,
+        multiple: filter.operator === 'IN',
         options: field.options ? field.options : null,
         type: 'text',
         value: filter.value,
@@ -375,7 +375,7 @@ var Search = {
         },
         onchange: function(e) {
           filter.value = $(e.target).data('value')
-          filter.text = e.target['value']
+          filter.text = e.target.value
         },
         onclick: function(e) {
           if (e.target.value === '') {
@@ -385,7 +385,7 @@ var Search = {
       })
     } else if (field.element == 'input' && field.attrs.type == 'radio') {
       return [
-        field.options.map(function(filter, idx) {
+        field.options.map(function(filter) {
           return [m('input[type="radio"]', {
             value: filter.value
           }), filter.label]
@@ -397,7 +397,7 @@ var Search = {
         value: filter.value,
         style: 'flex: 2;',
         onchange: function() {
-          filter.value = e.target['value']
+          filter.value = e.target.value
         }
       })
     } else {
@@ -409,9 +409,9 @@ var Search = {
         type: field.datatype == 'int' && filter.operator !== 'IN' ? 'number' : 'text',
         value: filter.value !== undefined ? filter.value : '',
         style: 'width: ' + width,
-        disabled: filter.operator === '' ? true : false,
+        disabled: filter.operator === '',
         onchange: function(e) {
-          filter.value = e.target['value']
+          filter.value = e.target.value
         },
         onkeydown: function(e) {
           if (e.keyCode == 13) {
@@ -530,7 +530,7 @@ var Search = {
         class: 'pt1 pl1 pr2 flex flex-column',
         style: '-ms-overflow-style:-ms-autohiding-scrollbar'
       }, m('tbody', [
-        Object.keys(table.form.items).map(function(label, idx) {
+        Object.keys(table.form.items).flatMap(function(label) {
           var item = table.form.items[label]
 
           if (
@@ -538,7 +538,7 @@ var Search = {
             item.indexOf('.') === -1 &&
             table.fields[item].defines_relaton
           ) {
-            return
+            return []
           }
 
           return Search.draw_field(table, item, label)

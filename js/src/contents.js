@@ -15,13 +15,16 @@ var Contents = {
   // isn't shown
   display_header: function(node, display) {
     display = display || 'none'
-    Object.keys(node.subitems).map(function(label) {
+    Object.keys(node.subitems).forEach(function(label) {
       var subitem = node.subitems[label]
       if (typeof (subitem) == 'object') {
         display = Contents.display_header(subitem, display)
       } else {
-        var object = get(ds.base, subitem, ds.base.tables[subitem])
-        if (ds.table_filter && !object.name.toLowerCase().includes(ds.table_filter.toLowerCase())) {
+       const object = get(ds.base, subitem, ds.base.tables[subitem])
+        if (
+          ds.table_filter && 
+          !object.name.toLowerCase().includes(ds.table_filter.toLowerCase())
+        ) {
           return
         }
         if (
@@ -84,16 +87,16 @@ var Contents = {
             class: heading.class_content,
             style: 'display: ' + display
           }, [
-              Object.keys(heading.subitems).map(function(label) {
-                var subitem = heading.subitems[label]
-                if (Array.isArray(heading.subitems)) {
-                  var obj = get(ds.base, subitem)
-                  if (obj === undefined) return
-                  label = obj.label
-                }
-                return Contents.draw_table_node(label, subitem)
-              })
-            ])
+            Object.keys(heading.subitems).flatMap(function(label) {
+              var subitem = heading.subitems[label]
+              if (Array.isArray(heading.subitems)) {
+                const obj = get(ds.base, subitem)
+                if (obj === undefined) return []
+                label = obj.label
+              }
+              return Contents.draw_table_node(label, subitem)
+            })
+          ])
         ])
   },
 
@@ -104,11 +107,12 @@ var Contents = {
   draw_table_node: function(label, node) {
     var subitems
     var item
+    var display_chevron
     // If this is a table with subordinate tables
     if (typeof node == 'object') {
       subitems = node.subitems
       item = node.item
-      var display_chevron = Contents.display_header(node)
+      display_chevron = Contents.display_header(node)
     } else {
       subitems = false
       item = node
@@ -118,7 +122,10 @@ var Contents = {
     if (item.indexOf('.') == -1) item = 'tables.' + item
     if (
       ((table.hidden || table.type == 'list') && !config.admin) ||
-      (ds.table_filter && !table.name.toLowerCase().includes(ds.table_filter.toLowerCase()))
+      (
+        ds.table_filter && 
+        !table.name.toLowerCase().includes(ds.table_filter.toLowerCase())
+      )
     ) {
       return
     }
@@ -199,7 +206,7 @@ var Contents = {
         !subitems || !node.expanded ? '' : m('.content', {
           style: 'margin-left:' + 18 + 'px',
         }, [
-            Object.keys(subitems).map(function(label) {
+            Object.keys(subitems).flatMap(function(label) {
               var subitem = subitems[label]
               var subitem_name
               if (typeof subitem == 'object') {
@@ -211,15 +218,18 @@ var Contents = {
 
               // find the fkey defining the relation
               var rel_fkey_name
-              Object.keys(rel.fkeys).map(function(fkey_name) {
+              Object.keys(rel.fkeys).forEach(function(fkey_name) {
                 var fkey = rel.fkeys[fkey_name]
                 if (fkey.referred_table == table.name) {
                   rel_fkey_name = fkey_name
                 }
               })
 
-              if (!config.show_all_descendants && !Relation.is_direct(rel.name, rel_fkey_name, true)) {
-                return
+              if (
+                !config.show_all_descendants && 
+                !Relation.is_direct(rel.name, rel_fkey_name, true)
+              ) {
+                return []
               }
               return Contents.draw_table_node(label, subitem)
             })
@@ -298,7 +308,9 @@ var Contents = {
                 var schema = $(this).val()
                 var db_name = ds.base.name.split('.')[0]
                 var adr = ['postgresql', 'mssql'].includes(ds.base.system)
-                  ? '/' + ds.cnxn + '/' + db_name + (['dbo', 'public'].includes(schema) ? '' : '.' + schema)
+                  ? '/' + ds.cnxn + '/' + db_name + (
+                    ['dbo', 'public'].includes(schema) ? '' : '.' + schema
+                  )
                   : '/' + ds.cnxn + '/' + schema
                 m.route.set(adr)
               }
@@ -323,11 +335,10 @@ var Contents = {
             ? Object.keys(ds.base.contents).sort().map(function(label) {
               var item = ds.base.contents[label]
               if (typeof item == 'object' && !item.item) {
-                var retur = Contents.draw_heading(label, item, 3)
+                return Contents.draw_heading(label, item, 3)
               } else {
-                var retur = Contents.draw_table_node(label, item)
+                return Contents.draw_table_node(label, item)
               }
-              return retur
             })
             // Draw contents from ds.base.tables
             // NOTE: This never happens, because ds.base.contents is always set

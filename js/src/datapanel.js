@@ -1,17 +1,14 @@
 var Datapanel = {
 
   set_attrs: function() {
-    var string_value
     if (ds.base.html_attrs == undefined) {
       return
     }
-    Object.keys(ds.base.html_attrs).sort().forEach(function(selector, i) {
-      for (let attr in ds.base.html_attrs[selector]) {
-        let value = ds.base.html_attrs[selector][attr]
+    Object.keys(ds.base.html_attrs).sort().forEach(function(selector) {
+      for (const attr in ds.base.html_attrs[selector]) {
+        const value = ds.base.html_attrs[selector][attr]
         if (attr == 'style' && typeof(value) == 'object' && value !== null) {
-          string_value = ''
-          for (let key in value) {
-            var values = value[key].split(' ')
+          for (const key in value) {
             $(selector).css(key, value[key])
           }
         } else if (typeof value == 'boolean') {
@@ -33,7 +30,7 @@ var Datapanel = {
     Datapanel.set_attrs()
   },
 
-  view: function(vnode) {
+  view: function() {
 
     if (config.tab == 'diagram') {
       return [
@@ -56,8 +53,8 @@ var Datapanel = {
     // Find if primary key columns in query parameters.
     // This means a specific record is shown.
     var is_pkey = true
-    for (let idx in ds.table.pkey) {
-      let key = ds.table.pkey[idx]
+    for (const idx in ds.table.pkey) {
+      const key = ds.table.pkey[idx]
       if (params[key] === undefined) {
         is_pkey = false
       }

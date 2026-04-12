@@ -12,6 +12,8 @@ var Cell = {
   },
 
   view: function(vnode) {
+    var val
+    var icon
     var list = vnode.attrs.list
     var rowidx = vnode.attrs.rowidx
     var colname = vnode.attrs.colname
@@ -24,7 +26,7 @@ var Cell = {
 
     if (get(field, 'attrs.data-format') == 'markdown') {
       field.value = col.value
-      var val = Field.display_value(field, rec)
+      val = Field.display_value(field, rec)
     }
 
     var value = col.value == null && col.text == null ? ''
@@ -35,18 +37,18 @@ var Cell = {
       : col.text ? col.text : col.value
 
     if (field.element == 'input' && field.attrs.type == 'checkbox') {
-      var icon = value == 0 
-        ? 'nf-fa-square_o' : value == 1 
-          ? 'nf-fa-check_square_o' : 'nf-fa-minus_square_o'
-      value = m('i', { class: 'nf ' + icon })
+      const checkicon = value == 0 ? 'nf-fa-square_o' 
+        : value == 1 ? 'nf-fa-check_square_o' 
+        : 'nf-fa-minus_square_o'
+      value = m('i', { class: 'nf ' + checkicon })
     }
     
     var expansion = false
 
     if (list.ismain && list.expansion_column) {
-      var expansion_col = null
+      let expansion_col = null
       for (const indexname in ds.table.indexes) {
-        let index = ds.table.indexes[indexname]
+        const index = ds.table.indexes[indexname]
         if (index.unique && index.columns.join() != ds.table.pkey.join()) {
           for (const fieldname of index.columns) {
             if (ds.table.fields[fieldname].datatype == 'str') {
@@ -67,7 +69,7 @@ var Cell = {
       expansion = colname == expansion_col
     }
 
-    var icon = m('i', {
+    icon = m('i', {
       class: [
         'nf nf-fw',
         rec.expanded ? 'nf-fa-angle_down' : 'nf-fa-angle_right',
@@ -99,7 +101,8 @@ var Cell = {
       ].join(' '),
       title: compressed && value.length > 30 ? value : '',
       headers: colname,
-      'data-value': ('' + col.value).replace('\n', ' ').replace(/\s\s+/g, ' ').slice(0, 255)
+      'data-value': ('' + col.value).replace('\n', ' ').replace(/\s\s+/g, ' ')
+        .slice(0, 255)
     }, [ expansion ? icon : '', value ])
   }
 }

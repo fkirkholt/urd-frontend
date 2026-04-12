@@ -12,7 +12,7 @@ const getDecorations = (state) => {
     const line = state.doc.line(i + 1)
     const numberOfSpaces = getStartSpaces(line.text).length
 
-    var offset = numberOfSpaces
+    let offset = numberOfSpaces
     if (/^[*+-] /.test(line.text.trim())) {
       offset = offset + 2
     }

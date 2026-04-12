@@ -63,10 +63,8 @@ var Toolbar = {
         background: true
       }).then(function(result) {
         if (action.update_field) {
-          var field = ds.table.records[rec_idx]
-            .fields[action.update_field]
-          Field.update(result.value, field.name,
-            ds.table.records[rec_idx])
+          const field = ds.table.records[rec_idx].fields[action.update_field]
+          Field.update(result.value, field.name, ds.table.records[rec_idx])
           m.redraw()
         }
       }).catch(function(e) {
@@ -91,12 +89,9 @@ var Toolbar = {
       var offset = ds.table.offset
       if (name == 'first' || name == 'previous') {
         return offset == 0 && selection == 0
-          ? true : false
       } else {
         return (count_records - offset <= ds.table.limit &&
-          selection == count_records - ds.table.offset - 1)
-          ? true
-          : false
+                selection == count_records - ds.table.offset - 1)
       }
     }
   },
@@ -129,7 +124,9 @@ var Toolbar = {
     var param = m.route.param()
     search_params = []
     $.each(param, function(key, value) {
-      if (['cnxn', 'base', 'table', 'index', 'offset', 'order'].indexOf(key) >= 0) return
+      if (['cnxn', 'base', 'table', 'index', 'offset', 'order'].indexOf(key) >= 0) {
+        return
+      }
       var expr = value ? key + '=' + value : key 
       search_params.push(expr)
     })
@@ -158,20 +155,20 @@ var Toolbar = {
     m.route.set('/' + ds.cnxn + '/' + ds.base.name, query_params, {replace: replace})
   },
 
-  view: function(vnode) {
+  view: function() {
 
-    if (!ds.base.name || !ds.table || !ds.table.records || ds.type === 'dblist') return
+    if (!ds.base.name || !ds.table?.records || ds.type === 'dblist') return
 
     var idx = ds.table.selection
     var rec = ds.table.records[idx]
 
     // Table can just hold one row if last pkey column starts with 'const_'
-    var single_rec = ds.table.pkey && ds.table.pkey.slice(-1)[0].substr(0, 6) == 'const_'
+    var single_rec = ds.table.pkey?.slice(-1)[0].substr(0, 6) == 'const_'
     var params = m.route.param()
     var full = single_rec && ds.table.records.length
     var is_pkey = true
-    for (let idx in ds.table.pkey) {
-      let key = ds.table.pkey[idx]
+    for (const idx in ds.table.pkey) {
+      const key = ds.table.pkey[idx]
       if (params[key] === undefined) {
         is_pkey = false
       }
@@ -230,8 +227,9 @@ var Toolbar = {
         },
         onchange: function(event) {
           var value = event.target.value
-          m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name +
-             (value ? '&' + encodeURI(value.replace(/;\s*/g, '&')).replace(':', '%3A') : ''))
+          m.route.set('/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name + 
+                      (value ? '&' + encodeURI(value.replace(/;\s*/g, '&'))
+                       .replace(':', '%3A') : ''))
         }
       }),
       // Button for editing selected record
@@ -253,7 +251,7 @@ var Toolbar = {
           onclick: function(e) {
             config.edit_mode = !config.edit_mode
             if (config.edit_mode) {
-              let idx = ds.table.selection
+              const idx = ds.table.selection
               Toolbar.set_url({index: idx})
               e.stopPropagation()
             }
@@ -362,11 +360,11 @@ var Toolbar = {
               $('ul#actions').hide()
             }
           }, 'Convert fields ...'),
-          Object.keys(ds.table.actions).map(function(label, idx) {
+          Object.keys(ds.table.actions).flatMap(function(label) {
             var action = ds.table.actions[label]
 
             if (action.communication == 'download') {
-              return
+              return []
             }
 
             var txt = action.communication != 'ajax'
@@ -386,9 +384,9 @@ var Toolbar = {
       ]),
       // When single record is shown.
       !config.recordview || !ds.table.hidden ? '' : m('li.dib', {
-        onclick: function(e) {
-          // Toolbar.navigate(e.target.name)
-        }
+        // onclick: function(e) {
+        //   Toolbar.navigate(e.target.name)
+        // }
       }, [
         m('button[name="first"]', {
           class: [
@@ -412,7 +410,7 @@ var Toolbar = {
           disabled: Toolbar.button.disabled('previous'),
           onclick: function() {
             var idx = ds.table.selection
-            var prev = parseInt(idx) - 1
+            var prev = parseInt(idx, 10) - 1
             if (prev == -1) {
               Pagination.navigate('previous', true)
             } else {
@@ -428,7 +426,7 @@ var Toolbar = {
           disabled: Toolbar.button.disabled('next'),
           onclick: function() {
             var idx = ds.table.selection
-            var next = parseInt(idx) + 1
+            var next = parseInt(idx, 10) + 1
             if (next == ds.table.records.length) {
               Pagination.navigate('next', true)
             } else {
