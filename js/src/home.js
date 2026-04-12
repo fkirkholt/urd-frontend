@@ -196,7 +196,7 @@ var home = {
             }
 
             m.request({
-              method: 'put',
+              method: 'delete',
               url: '/file_delete',
               params: {
                 cnxn: ds.cnxn,
