@@ -119,7 +119,7 @@ var Input = {
       Input.validate(value, field)
     }
 
-    rec.table.indexes.forEach(function(idx) {
+    Object.values(rec.table.indexes).forEach(function(idx) {
       if (idx.columns[0] === field.name) {
         if (idx.columns.length == 1 && idx.unique) {
           field.unique = true

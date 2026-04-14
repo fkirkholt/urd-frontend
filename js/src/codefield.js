@@ -27,9 +27,11 @@ function completions(context) {
   if (!word || (word.to - word.from < 3 && !context.explicit))
     return null
   let all_options = []
-  Object.values(ds.dblist.autocomplete).forEach(options => {
-    all_options = all_options.concat(options)
-  });
+  if (ds.dblist) {
+    Object.values(ds.dblist.autocomplete).forEach(options => {
+      all_options = all_options.concat(options)
+    });
+  }
   return {
     from: word.from,
     filter: false,

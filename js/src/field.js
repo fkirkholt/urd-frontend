@@ -93,7 +93,7 @@ var Field = {
 
     // Updates conditions for relations
     if (rec.relations) {
-      rec.relations.forEach(function(relation) {
+      Object.values(rec.relations).forEach(function(relation) {
         if (!relation.betingelse) {
           return
         }
@@ -118,7 +118,7 @@ var Field = {
     rec.invalid = false
     rec.dirty = false
     ds.table.dirty = false
-    rec.fields.forEach(function(field) {
+    Object.values(rec.fields).forEach(function(field) {
       if (
         field.invalid || (
           field.nullable === false &&

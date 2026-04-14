@@ -313,11 +313,6 @@ var Search = {
    */
   draw_value_field: function(table, field, filter) {
     var width
-    table.indexes.forEach(function(idx) {
-      if (idx.columns[0] === field.name) {
-        has_idx = true
-      }
-    })
 
     if (filter.disabled) {
       return null
@@ -350,7 +345,6 @@ var Search = {
           ['=', '!='].includes(filter.operator))
       )
     ) {
-      key = field.fkey ? field.fkey.referred_columns : [field.name]
 
       return m(Autocomplete, {
         fieldname: filter.field,
