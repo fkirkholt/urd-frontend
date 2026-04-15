@@ -64,6 +64,10 @@ var Datapanel = {
     var hide_grid = config.recordview &&
       (params.index !== undefined || is_pkey)
 
+    if (config.recordview && !hide_grid) {
+      config.edit_mode = false
+    }
+
     return !ds.table.records ? m('div', 'laster ...') : [
       m(Contents),
       ds.table.search || hide_grid

@@ -199,23 +199,16 @@ var Toolbar = {
       ]),
       // Button for expanding or compressing grid.
       // A compressed grid has no word wrap and shortens text
-      ds.table.hidden ? '' : m('i', {
-        class: 'ml1 mr2 nf pointer '
-          + (config.compressed ? 'nf-md-arrow_expand' : 'nf-md-arrow_collapse'),
-        title: config.compressed ? 'Ekspander' : 'Komprimer',
-        onclick: function() {
-          config.compressed = !config.compressed
-        }
-      }),
-      // Button for opening search
-      ds.table.hidden ? '' : m('i', {
-        class: 'nf nf-fa-search ml1 mr2 pointer dim',
-        title: 'Søk',
-        onclick: function() {
-          ds.table.filters = Search.parse_query(ds.table.query)
-          ds.table.search = !ds.table.search
-        }
-      }),
+      ds.table.hidden ? '' :  m('li', { class: 'dib' }, [
+        m('i', {
+          class: 'ml1 mr2 nf pointer '
+            + (config.compressed ? 'nf-md-arrow_expand' : 'nf-md-arrow_collapse'),
+          title: config.compressed ? 'Ekspander' : 'Komprimer',
+          onclick: function() {
+            config.compressed = !config.compressed
+          }
+        }),
+      ]),
       // Search field
       ds.table.hidden ? '' : m('input[type=search]', {
         placeholder: ds.table.fts ? "Full-text search" : "Search all text fields",
@@ -237,9 +230,7 @@ var Toolbar = {
         m('i', {
           class: [
             'nf ml3 mr1 pointer f6',
-            config.edit_mode && ds.table.dirty ? 'nf-md-text_box_check' 
-            : config.edit_mode ? 'nf-md-text_box' 
-            : 'nf-md-text_box_edit',
+            config.edit_mode ? 'nf-md-text_box' : 'nf-md-text_box_edit',
             ds.table.privilege.update == true
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
@@ -250,13 +241,9 @@ var Toolbar = {
           : 'Edit record',
           onclick: function(e) {
             config.edit_mode = !config.edit_mode
-            if (config.edit_mode) {
-              const idx = ds.table.selection
-              Toolbar.set_url({index: idx})
-              e.stopPropagation()
-            }
-            if (!ds.table.dirty) return
-            Grid.save()
+            const idx = ds.table.selection
+            Toolbar.set_url({index: idx})
+            e.redraw = false
           }
         })
       ]),
@@ -270,7 +257,7 @@ var Toolbar = {
               : 'moon-gray'
           ].join(' '),
           title: 'New record',
-          onclick: function() {
+          onclick: function(e) {
             if (ds.table.privilege.insert != true || full) return
             Record.create(ds.table)
             Toolbar.set_url({index: ds.table.selection, replace: true})
@@ -286,6 +273,7 @@ var Toolbar = {
             if (!config.edit_mode) {
               config.edit_mode = true
             }
+            e.redraw = false
           }
         })
       ]),
@@ -298,12 +286,13 @@ var Toolbar = {
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
           title: 'Copy record',
-          onclick: function() {
+          onclick: function(e) {
             if (ds.table.privilege.insert != true || full) return
             Record.copy()
             if (!config.edit_mode) {
               config.edit_mode = true
             }
+            e.redraw = false
           }
         })
       ]),
@@ -314,10 +303,34 @@ var Toolbar = {
             'nf ml2 mr1 nf-md-text_box_remove',
             (ds.table.privilege.delete == true &&
               rec && Record.is_deletable(rec))
-              ? ' dim pointer' : '_outline o-30'
+              ? ' dim pointer' : '_outline o-50'
           ].join(''),
           title: 'Delete',
           onclick: Toolbar.delete_record
+        })
+      ]),
+      // Button for opening search
+      ds.table.hidden ? '' : m('li', { class: 'dib' }, [
+        m('i', {
+          class: 'nf nf-md-text_box_search mr2 ml2 pointer dim',
+          title: 'Søk',
+          onclick: function() {
+            ds.table.filters = Search.parse_query(ds.table.query)
+            ds.table.search = !ds.table.search
+          }
+        })
+      ]),
+      // Button for saving changes
+      config.autosave ? null : m('li', { class: 'dib' }, [
+        m('i', {
+          class: [
+            'nf ml2 mr2 pointer',
+            !ds.table.dirty ? 'nf-fa-save o-50' : 'nf-md-content_save dim'
+          ].join(' '),
+          onclick: function() {
+            if (!ds.table.dirty) return
+            Grid.save()
+          }
         })
       ]),
       // Button for printing page

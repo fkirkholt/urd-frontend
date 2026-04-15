@@ -167,6 +167,10 @@ var Row = {
         :'min-w1 pl1 pr1 ba b--moon-gray',
         onclick: function(e) {
           Toolbar.set_url({index: idx})
+          if (record.dirty) {
+            config.edit_mode = true
+            e.redraw = false
+          }
           e.stopPropagation()
         }
       }, [
@@ -174,7 +178,7 @@ var Row = {
           class: [
             config.autosave && !(record.invalid) ? 'nf nf-md-text_box'
             : record.invalid ? 'nf nf-fa-warning red ' 
-            : record.delete ? 'nf nf-md-text_box_remove' 
+            : record.delete ? 'nf nf-md-text_box_minus' 
             : record.new ? 'nf nf-md-text_box_plus' 
             : record.dirty ? 'nf nf-md-text_box_edit' 
             : 'nf nf-md-text_box',

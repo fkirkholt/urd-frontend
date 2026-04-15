@@ -77,7 +77,9 @@ var Breadcrumb = {
 
     if (param.table && ds.table) {
       items.push({
-        icon: ds.table.type == 'list' ? "nf-fa-list" : "nf-md-table",
+        icon: ds.table.type == 'list' ? "nf-fa-list" 
+          : ds.table.dirty ? "nf-md-table_edit" 
+          : "nf-md-table",
         text: ds.table.label,
         addr: '/' + ds.cnxn + '/' + ds.base.name + '?table=' + ds.table.name
       })

@@ -43,12 +43,14 @@
 }
 
 .nf-md-table:before{content:"\f04eb"}
+.nf-md-table_edit:before{content:"\f04f0"}
 .nf-md-vector_link:before{content:"\f0fe8"}
 .nf-md-folder:before{content:"\f024b"}
 .nf-md-database_outline:before{content:"\f1632"}
 .nf-fa-file:before{content:"\f15b"}
 .nf-fa-file_o:before{content:"\f016"}
 .nf-fa-save:before{content:"\f0c7"}
+.nf-md-content_save:before{content:"\f0193"}
 .nf-fa-square_o:before{content:"\f096"}
 .nf-fa-check_square_o:before{content:"\f046"}
 .nf-fa-minus_square_o:before{content:"\f147"}
@@ -101,13 +103,16 @@
 .nf-md-text_box_edit:before{content:"\f1a7c"}
 .nf-md-text_box_multiple:before{content:"\f0ab7"}
 .nf-md-text_box_plus:before{content:"\f0eaa"}
+.nf-md-text_box_minus:before{content:"\f0ea8"}
 .nf-md-text_box_remove:before{content:"\f0eac"}
 .nf-md-text_box_outline:before{content:"\f09ed"}
 .nf-md-text_box_check_outline:before{content:"\f0ea7"}
 .nf-md-text_box_plus_outline:before{content:"\f0eab"}
+.nf-md-text_box_minus_outline:before{content:"\f0ea9"}
 .nf-md-text_box_multiple_outline:before{content:"\f0ab8"}
 .nf-md-text_box_edit_outline:before{content:"\f1a7d"}
 .nf-md-text_box_remove_outline:before{content:"\f0ead"}
+.nf-md-text_box_search:before{content:"\f0eae"}
 .nf-md-plus_box_outline:before{content:"\f0704"}
 .nf-md-plus_box_multiple_outline:before{content:"\f1143"}
 .nf-oct-fold:before{content:"\f48c"}

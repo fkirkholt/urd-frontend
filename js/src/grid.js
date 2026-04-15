@@ -63,7 +63,8 @@ var Grid = {
         Record.select(ds.table, 0)
       }
 
-      if (cfg.tab == 'data' && index !== undefined) {
+      const route = m.route.get()
+      if (cfg.tab == 'data' && index !== undefined && route.includes('&index=')) {
         Toolbar.set_url({index: index, replace: true})
       }
     })
