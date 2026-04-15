@@ -97,6 +97,14 @@ var Breadcrumb = {
     return m('div', { class: 'fl' }, [
       sti.map(function(item, idx) {
         return [
+          m('i', {
+            class: [
+              'relative nf ' + item.icon,
+              idx === 0 ? 'f4 white' : 'f6 mr2 white',
+            ].join(' '),
+            style: item.icon == 'nf-md-crosshairs_gps' ? 'bottom: 0.75px'
+              : item.icon !== 'table' ? 'bottom: 2px;' : ''
+          }),
           m('a', {
             class: 'fw3 white no-underline underline-hover f4 pointer',
             href: item.addr,
@@ -104,14 +112,7 @@ var Breadcrumb = {
               m.route.set(item.addr)
               return false
             }
-          }, [m('i', {
-            class: [
-              'relative nf ' + item.icon,
-              idx === 0 ? 'f4 white' : 'f6 mr2 white',
-            ].join(' '),
-            style: item.icon == 'nf-md-crosshairs_gps' ? 'bottom: 0.75px'
-              : item.icon !== 'table' ? 'bottom: 2px;' : ''
-          }), item.text]),
+          }, item.text),
           !item.branch || item.branch == 'master'
             ? ''
             : m('span', { class: 'light-silver' }, [
