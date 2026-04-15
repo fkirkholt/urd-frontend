@@ -136,11 +136,7 @@ var Grid = {
   },
 
   save: function() {
-    var data = {
-      base_name: ds.base.name,
-      table_name: ds.table.name,
-      records: []
-    }
+    var records = []
 
     var invalid = false
     var messages = []
@@ -159,7 +155,7 @@ var Grid = {
 
       var changes = Record.get_changes(rec, true)
       if (idx == ds.table.selection) changes.selected = true
-      data.records.push(changes)
+      records.push(changes)
     })
 
     if (invalid) {
@@ -171,8 +167,8 @@ var Grid = {
     m.request({
       method: 'put',
       url: '/table',
-      params: { cnxn: ds.cnxn },
-      body: data
+      params: { cnxn: ds.cnxn, base: ds.base.name, table: ds.table.name },
+      body: records
     }).then(function(result) {
       if (result.data.msg) {
         alert(result.data.msg)
