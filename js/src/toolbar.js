@@ -179,7 +179,7 @@ var Toolbar = {
     return m('ul', { 
       id: 'toolbar', 
       target: '_blank', 
-      class: 'flex f6 list pl1 mt0 pt2 mb0 ba b--moon-gray' 
+      class: 'flex f5 list pl1 mt0 pt2 mb0 ba b--moon-gray' 
     }, [
       // Make form to use with submit action
       m('li', [
@@ -229,7 +229,7 @@ var Toolbar = {
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf ml3 mr1 pointer f6',
+            'nf ml3 mr1 pointer',
             config.edit_mode ? 'nf-md-text_box' : 'nf-md-text_box_edit',
             ds.table.privilege.update == true
               ? 'dim pointer' : 'moon-gray'
@@ -281,7 +281,7 @@ var Toolbar = {
       m('li', { class: 'dib' }, [
         m('i', {
           class: [
-            'nf nf-md-text_box_multiple ml2 mr1 f6',
+            'nf nf-md-text_box_multiple ml2 mr1',
             ds.table.privilege.insert == true && !full
               ? 'dim pointer' : 'moon-gray'
           ].join(' '),
