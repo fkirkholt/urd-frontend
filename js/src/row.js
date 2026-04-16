@@ -159,6 +159,16 @@ var Row = {
         record.class ? record.class : '',
       ].join(' ')
     }, [
+      // Draw expansion icon
+      (list.ismain || // only records in relations should be expanded
+        record.pkey == null
+      ) ? '' : m('td.nf', {
+        class: [
+          'w1',
+          record.open ? 'nf-fa-angle_down' : 'nf-fa-angle_right',
+          record.invalid ? 'invalid' : record.dirty ? 'dirty' : '',
+        ].join(' ')
+      }),
       // Draw icons indicating if record is dirty, illegal, new etc.
       m('td.icon', {
         align: 'center',
@@ -187,15 +197,6 @@ var Row = {
           title: !record.messages ? null : record.messages.join(' ') 
         })
       ]),
-      // Draw expansion icon
-      (list.ismain || // only records in relations should be expanded
-        record.pkey == null
-      ) ? '' : m('td.nf', {
-        class: [
-          record.open ? 'nf-fa-angle_down' : 'nf-fa-angle_right',
-          record.invalid ? 'invalid' : record.dirty ? 'dirty' : '',
-        ].join(' ')
-      }),
       // Draw each column in the row
       Object.keys(list.grid.columns).map(function(label) {
         var colname = list.grid.columns[label]
