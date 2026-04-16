@@ -68,30 +68,35 @@ function Codefield() {
   var changed
   var editable = new Compartment
 
-  function foldmethod(state, from, to) {
-    // https://discuss.codemirror.net/t/5925
-    const line = state.doc.lineAt(from) // First line
-    const lines = state.doc.lines // Number of lines in the document
-    const indent = line.text.search(/\S|$/) // Indent level of the first line
-    let foldStart = from // Start of the fold
-    let foldEnd = to // End of the fold
-
-    // Check the next line if it is on a deeper indent level
-    // If it is, check the next line and so on
-    // If it is not, go on with the foldEnd
-    let nextLine = line
-    while (nextLine.number < lines) {
-      nextLine = state.doc.line(nextLine.number + 1) // Next line
-      const nextIndent = nextLine.text.search(/\S|$/) // Indent level of the next line
-
-      // If the next line is on a deeper indent level, add it to the fold
-      if (nextIndent > indent || nextLine.text == '') {
-        foldEnd = nextLine.to // Set the fold end to the end of the next line
-      } else {
-        break // If the next line is not on a deeper indent level, stop
+  // Custom fold service that folds based on indentation level
+  const indentFold = foldService.of((state, lineStart) => {
+    const line = state.doc.lineAt(lineStart);
+    const indent = line.text.search(/\S|$/);
+    
+    if (indent === -1 || line.text.trim().length === 0) return null;
+  
+    let foldEnd = line.to;
+    let nextLineNum = line.number + 1;
+  
+    while (nextLineNum <= state.doc.lines) {
+      const nextLine = state.doc.line(nextLineNum);
+      const nextIndent = nextLine.text.search(/\S|$/);
+  
+      if (nextLine.text.trim().length === 0) {
+        foldEnd = nextLine.to;
+        nextLineNum++;
+        continue;
       }
+  
+      if (nextIndent > indent) {
+        foldEnd = nextLine.to;
+        nextLineNum++;
+      } else break;
     }
-  }
+  
+    if (foldEnd <= line.to) return null;
+    return { from: line.to, to: foldEnd };
+  });
 
   const ruffLinter = linter(async (view) => {
     try {
@@ -283,7 +288,7 @@ function Codefield() {
       syntaxHighlighting(customHighlightStyle), 
       syntaxHighlighting(defaultHighlightStyle),
       basicSetup,
-      foldService.of(foldmethod),
+      indentFold,
       keymap.of([
         {
           key: "Tab",
