@@ -60,11 +60,20 @@ var Breadcrumb = {
     }
 
     if (ds.file && !['dir', 'server'].includes(ds.file.type)) {
-      items.push({
-        icon: "nf-fa-file",
-        text: ds.file.name,
-        addr: '/' + ds.cnxn + '/' + ds.file.path
-      })
+      const parts = ds.file.path.split('/')
+      if (ds.path) {
+        // First part of ds.file.path is the same as ds.path
+        parts.splice(0, ds.path.split('/').length)
+      }
+      let i = 0
+      for (const part of parts) {
+        i++
+        items.push({
+          icon: i == parts.length ? "nf-fa-file" : "nf-md-folder_outline",
+          text: part,
+          addr: '/' + ds.cnxn + '/' + parts.slice(0, i).join('/')
+        })
+      }
     }
 
     if (ds.base?.name && ds.file?.type == 'server') {

@@ -62,6 +62,8 @@ m.route($('#main')[0], '/', {
       ds.file = null
       ds.table = null
       ds.path = null
+      ds.dblist = null
+      home.initialized = false
       var query = m.parsePathname(path)
       m.request({
         method: 'get',
@@ -72,24 +74,25 @@ m.route($('#main')[0], '/', {
       })
       .then(function(result) {
         if (result.type === 'server') {
-          home.load_databases(query.params.grep);
-          return null; 
+          home.load_databases(query.params.grep)
+          return null
         } else {
           return m.request({
             method: 'get',
             url: '/file_list',
-            params: { cnxn: ds.cnxn }
-          });
+            params: { cnxn: ds.cnxn, pattern: query.params.grep }
+          })
         }
       })
       .then(function(result) {
-        ds.dblist = result.data;
+        ds.dblist = result.data
+        ds.dblist.grep = query.params.grep
       })
       .catch(function(error) {
-        console.error("Error:", error);
-      });
+        console.error("Error:", error)
+      })
       return home
-    }
+    },
   },
   "/:cnxn/:base...": {
     onmatch: function(args, path) {
@@ -160,6 +163,8 @@ m.route($('#main')[0], '/', {
         } else if (result.type == 'dir') {
           ds.file = result
           config.tab = 'databases'
+          ds.dblist = null
+          home.initialized = false
           m.request({
             method: 'get',
             url: '/file_list',
@@ -188,9 +193,7 @@ m.route($('#main')[0], '/', {
             ds.file = result
           }
           config.tab = 'databases'
-          const dir = base_name.substring(0, base_name.lastIndexOf('/'))
-          if (!ds.dblist || ((ds.path || '') != dir) && !ds.dblist.grep) {
-            ds.path = dir
+          if (!ds.dblist) {
             m.request({
               method: 'get',
               url: '/file_list',

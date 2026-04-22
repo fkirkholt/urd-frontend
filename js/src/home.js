@@ -2,9 +2,10 @@ import config from './config.js'
 import Grid from './grid.js'
 import Codefield from './codefield.js'
 import { Marked } from 'marked'
-import { markedHighlight } from "marked-highlight";
-import hljs from 'highlight.js';
-import Convert from 'ansi-to-html'
+import { markedHighlight } from "marked-highlight"
+import hljs from 'highlight.js'
+import Filetree from './filetree.js'
+
 
 const KEY_CODE_ENTER = 13
 
@@ -27,6 +28,8 @@ var home = {
         ds.file.dirty = false
       }
       if (load_files) {
+        ds.dblist = null
+        home.initialized = false
         return m.request({
           method: 'get',
           url: '/file_list',
@@ -131,17 +134,13 @@ var home = {
     }
   },
 
-  view: function() {
-    console.log('ds.dblist', ds.dblist)
-    if (!ds.dblist) return
-    if (config.tab == 'users' && !ds.users) return
-
-    var filtered_recs = ds.dblist.records ? ds.dblist.records.filter(function(post) {
+  filterRecs: function(recs) {
+    recs = recs.filter(function(rec) {
       const filter = $('#filter_files').val()?.toLowerCase()
-      const label = post.columns.label.toLowerCase()
-      const descr = post.columns.description?.toLowerCase();
+      const label = rec.columns.label.toLowerCase()
+      const descr = rec.columns.description?.toLowerCase()
 
-      return !(post.deleted || label.includes('/') ||
+      return !(rec.deleted || label.includes('../') ||
         !ds.dblist.grep?.includes(filter) && (filter !== undefined && 
         !(label.includes(filter) ||
          (filter.at(0) == '^' && label.startsWith(filter.substring(1)) ||
@@ -153,13 +152,29 @@ var home = {
         numeric: true, 
         sensitivity: 'base' 
       }) 
-    }) : []
+    })
+
+    return recs
+  },
+
+  view: function() {
+    if (!ds.dblist) return
+    if (config.tab == 'users' && !ds.users) return
+
+    if (!home.initialized) {
+      home.filtered_recs = home.filterRecs(ds.dblist.records)
+      home.treeData = Filetree.buildTree(home.filtered_recs)
+      Object.keys(home.treeData.children).forEach(key => {
+        Filetree.collapseTree(home.treeData.children[key])
+      })
+      home.initialized = true
+    }
 
     const filecompletions = []
     for (const i in ds.dblist.records) {
       const rec = ds.dblist.records[i]
       const option = {
-        label: rec.columns.label,
+        label: ds.path ? ds.path + '/' + rec.columns.label : rec.columns.label,
         type: 'keyword',
         title: rec.columns.title
       }
@@ -171,25 +186,25 @@ var home = {
 
     return [m('div#list', { 
       class: 'overflow-y-auto overflow-x-hidden', 
-      style: (ds.file && ds.file.type != 'dir') ? 'min-width: 200px; width:200px' : ''
+      style: (ds.file && ds.file.type != 'dir') ? 'min-width: 250px; width:250px' : ''
     }, [
       m('ul#filelist-context', {
         class: [
-        'absolute left-0 list pa1 shadow-5 dn pointer z-999',
+        'absolute left-0 list pa1 shadow-5 dn pointer z-999 pl2 pr2 ba b--gray',
         config.dark_mode ? 'bg-dark-gray' : 'bg-white'
         ].join(' ')
       }, [
         m('li', {
           class: 'hover-blue',
           onclick: function() {
-            home.context_file.rename = true
+            Filetree.context_file.rename = true
             $('#filelist-context').hide()
           }
         }, 'Rename'),
         m('li', {
           class: 'hover-blue',
           onclick: function() {
-            var filename = home.context_file.columns.name
+            const node = Filetree.context_file
             $('#filelist-context').hide()
             if (!confirm('Are you sure you want to delete the file?')) {
               return
@@ -200,23 +215,24 @@ var home = {
               url: '/file_delete',
               params: {
                 cnxn: ds.cnxn,
-                filename: filename
+                filename: node.path
               },
             })
             .then(function(result) {
-              if (result.success && ds.file && ds.file.path == filename) {
+              if (result.success && ds.file && ds.file.path == node.path) {
                 m.route.set('/' + ds.cnxn + (ds.path ? '/' + ds.path : ''))
               }
-              home.context_file.deleted = true
+              node.deleted = true
             })
           }
         }, 'Delete')
       ]),
       config.tab == 'users' ? null : m('input', {
         id: 'filter_files',
-        style: 'width:190px',
+        style: 'width:240px',
         placeholder: 'filter files',
         onkeydown: function(event) {
+          home.initialized = false
           var val = event.target.value
           var file
           if (event.keyCode == KEY_CODE_ENTER) {
@@ -231,131 +247,40 @@ var home = {
           return
         }
       }),
-      config.tab == 'users' ? null : m('div', { 
-        style: 'width:190px'
-      }, m('span', { 
-        class: 'fr gray' 
-      }, (
-        filtered_recs.length == ds.dblist.records.length) ? filtered_recs.length
-        : filtered_recs.length + '/' + ds.dblist.records.length
-      )),
-      config.tab == 'users' ? null : m('ul', { class: 'nf-ul' }, [
+      config.tab == 'users' ? null : m('div', {
+        style: 'width:240px'
+      }, [
+        m('span', {
+          class: 'fr gray' 
+        }, home.filtered_recs.length == ds.dblist.records.length 
+          ? home.filtered_recs.length
+          : home.filtered_recs.length + '/' + ds.dblist.records.length
+        )
+      ]),
+      config.tab == 'users' ? null : m("ul.list", { style: 'margin-left: 20px' }, [
         !ds.path ? null : m('li', [
-          m('span', { class: "nf-li" }, [
-            m('i', { class: "nf nf-fa-level_up" })
-          ]),
+          m('i', { class: "nf nf-fa-level_up", style: "margin-left:-24px" }),
           m('span', {
-            class: 'no-underline hover-blue pointer',
+            class: 'no-underline hover-blue pointer ml2',
             onclick: function() {
               const path = ds.path.substring(0, ds.path.lastIndexOf('/'))
               m.route.set('/' + ds.cnxn + (path ? '/' + path : ''))
             }
           }, '..')
         ]),
-        filtered_recs.flatMap(function(post, i) {
-          var convert = new Convert()
-          var desc = null
-          if (i == 100 && ds.dblist.trunc !== false) {
+        Object.values(home.treeData.children).flatMap(function(child, idx) {
+          const node = home.treeData
+          if (idx == 100 && home.trunc !== false) {
             return m('span', {
               class: 'underline pointer',
               onclick: function() {
-                ds.dblist.trunc = false
+                node.trunc = false
               }
             }, 'Show all')
-          } else if (i > 100 && ds.dblist.trunc !== false) {
+          } else if (idx > 100 && node.trunc !== false) {
             return []
           }
-          
-          // output from ripgrep has ansi codes
-          post.columns.name = convert.toHtml(post.columns.name)
-          post.columns.label = convert.toHtml(post.columns.label)
-          const label = m.trust(' ' + post.columns.label.replaceAll('_', '_<wbr>'))
-          if (post.columns.description) {
-            desc = convert.toHtml(post.columns.description)
-          }
-          return m('li', {
-            class: desc ? '' : "flex",
-            style: desc ? '' : "width: 180px"
-          }, [
-            post.columns.type == 'database' ? [
-              m('span', { class: "nf-li" }, [
-                m('i', { class: "nf nf-oct-database" })
-              ]),
-              m('span', {
-                class: 'no-underline hover-blue dark-pink pointer',
-                onclick: function() {
-                  m.route.set('/' + ds.cnxn + '/' + post.columns.name)
-                }
-              }, label)
-            ]
-            : post.columns.type == 'dir' ?  [
-              m('span', { class: "nf-li" }, [
-                m('i', { class: "nf nf-md-folder_outline" })
-              ]),
-              m('span', { 
-                class: 'no-underline blue pointer',
-                style: 'overflow-wrap: anywhere',
-                onclick: function() {
-                  m.route.set('/' + ds.cnxn + '/' + post.columns.name)
-                }
-              }, label)
-            ]
-            : [
-              m('span', { class: "nf-li" }, [
-                m('i', { class: "nf nf-oct-file" })
-              ]),
-              post.rename ? m('input', {
-                value: post.columns.label,
-                onchange: function(event) {
-                  var from = post.columns.name
-                  var to = from.replace(post.columns.label, '') + event.target.value
-                  post.rename = false
-                  m.request({
-                    method: 'put',
-                    url: '/file_rename',
-                    params: {
-                      cnxn: ds.cnxn,
-                      src: from,
-                      dst: to
-                    },
-                  })
-                  .then(function(result) {
-                    post.columns.label = event.target.value
-                    post.columns.name = to
-                    if (result.success && ds.file && ds.file.path == from) {
-                      m.route.set('/' + ds.cnxn + '/' +  to)
-                    }
-                  })
-                }
-              })
-              : m('span', {
-                class: [
-                  'no-underline hover-blue pointer truncate ws-normal',
-                  (post.columns.size > 100000000) ? 'gray' : '',
-                ].join(' '),
-                onclick: function() {
-                  m.route.set('/' + ds.cnxn + '/' + post.columns.name)
-                },
-                oncontextmenu: function(event) {
-                  var top
-                  $('#filelist-context').toggle()
-                  var height = $('#filelist-context').height()
-                  home.context_file = post
-                  if (window.innerHeight - event.clientY < height) {
-                    top = event.clientY - 20 - height
-                  } else {
-                    top = event.clientY - 20
-                    }
-                  $('ul#filelist-context').css({
-                    top: top,
-                    left: event.clientX
-                  })
-                  return false
-                }
-              }, label)
-            ],
-            (ds.file && ds.file.type != 'dir') ? '' : m('p.mt1.mb1', m.trust(desc))
-          ])
+          return m(Filetree, { node: child })
         })
       ]),
       config.tab != 'users' ? null : ds.users.map(function(user) {
@@ -500,7 +425,7 @@ var home = {
       !ds.file || ds.file.type == 'dir' ? '' 
       : ds.file.msg ? m('div', { class: 'ml3'}, ds.file.msg) 
       : ds.file.type.startsWith('image/') ? m('div', m('img', { 
-        src: ds.file.name
+        src: '/' + ds.file.path
       }))
       : ds.file.type == 'application/pdf' ? m('embed', {
         src: ds.file.name,

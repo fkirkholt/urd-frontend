@@ -17,6 +17,7 @@ import { tags } from "@lezer/highlight"
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
 import { linter, lintGutter } from '@codemirror/lint'
+import { relpath } from './utils.js'
 
 
 function completions(context) {
@@ -46,7 +47,7 @@ function completions(context) {
         : opt.label
 
       if (is_link) {
-        new_text = opt.label
+        new_text = new_label = relpath(ds.file.path, opt.label)
       } else if (opt.title) {
         new_label = opt.title
       }
@@ -124,7 +125,7 @@ function Codefield() {
   
       if (!start || !end) continue
   
-      // Make sure we don't ask for lines that don't exeist
+      // Make sure we don't ask for lines that don't exist
       const startLineIdx = Math.min(start.row, doc.lines)
       const endLineIdx = Math.min(end.row, doc.lines)
       
@@ -190,7 +191,7 @@ function Codefield() {
           }
         })
       } catch (err) {
-        console.error("Kunne ikke laste Biome:", err)
+        console.error("Couldn't load Biome:", err)
         return []
       }
     }
