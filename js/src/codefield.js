@@ -48,6 +48,8 @@ function completions(context) {
 
       if (is_link) {
         new_text = new_label = relpath(ds.file.path, opt.label)
+      } else if (opt.title && uppercase) {
+        new_label = opt.title.charAt(0).toUpperCase() + opt.title.slice(1)
       } else if (opt.title) {
         new_label = opt.title
       }
