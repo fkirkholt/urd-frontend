@@ -107,6 +107,14 @@ const Filetree = {
         value: node.name,
         class: 'ml1 pl1',
         style: "width:" + node.width + 'px;',
+        oncreate: (vnode) => {
+          vnode.dom.focus()
+        },
+        onkeydown: (e) => {
+          if (e.key === 'Escape') {
+            node.rename = false
+          }
+        },
         onchange: function(event) {
           var orig = { name: node.name, path: node.path }
           var from = node.path
