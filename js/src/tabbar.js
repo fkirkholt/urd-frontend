@@ -124,7 +124,7 @@ var Tabbar = {
             onclick: function() {
               config.tab = 'databases'
             }
-          }, ['sqlite', 'duckdb'].includes(ds.base.system) ? 'Files' : 'Databases'),
+          }, ds.dblist && ['sqlite', 'duckdb'].includes(ds.dblist.system) ? 'Files' : 'Databases'),
           !ds.dblist?.useradmin ? '' : m('li', {
             class: [
               'list di ml2 pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
