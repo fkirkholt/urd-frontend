@@ -326,13 +326,14 @@ var Record = {
         }, 4000)
         rec.delete = false
       } else if (rec.delete && rec.table_name == ds.table.name) {
-        const idx = rec.table.selection
-        rec.table.records.splice(idx, 1)
-        if (ds.table.records.length > idx) {
-          console.log('setter index til ', idx)
-          Toolbar.set_url({index: idx})
-        } else {
-          Toolbar.set_url({index: idx - 1})
+        const idx = ds.table.selection
+        ds.table.records.splice(idx, 1)
+        if (m.route.param('index')) {
+          if (ds.table.records.length > idx) {
+            Toolbar.set_url({index: idx})
+          } else {
+            Toolbar.set_url({index: idx - 1})
+          }
         }
       } else if (rec.delete) {
         rec.table.records.splice(rec.rowidx, 1)
