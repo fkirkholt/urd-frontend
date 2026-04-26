@@ -147,11 +147,6 @@ var home = {
          (filter.at(-1) == '$' && label.endsWith(filter.replace('$', '')))))) &&
         !descr?.includes(filter)
       )
-    }).sort((a, b) => { 
-      return a.columns.label.localeCompare(b.columns.label, undefined, { 
-        numeric: true, 
-        sensitivity: 'base' 
-      }) 
     })
 
     return recs
