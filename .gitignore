@@ -5,3 +5,13 @@ tmp/
 js/dist/
 node_modules/
 docs/
+
+# Yarn Modern
+.yarn/*
+!.yarn/releases
+!.yarn/patches
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
