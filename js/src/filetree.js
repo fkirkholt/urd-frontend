@@ -105,8 +105,8 @@ const Filetree = {
       }),
       node.rename ? m('input', {
         value: node.name,
-        class: 'ml1 pl1',
-        style: "width:" + node.width + 'px;',
+        class: 'ml1',
+        style: "width:" + (node.width - 30) + 'px;',
         oncreate: (vnode) => {
           vnode.dom.focus()
         },
