@@ -1,9 +1,33 @@
 import { deepmerge } from './utils.js'
 import Convert from 'ansi-to-html'
 
+
 const Filetree = {
 
   context_file: null,
+
+  onbeforeupdate: function(vnode) {
+    const node = vnode.attrs.node;
+  
+    // Allow redraw to switch text with input
+    if (node.rename && !vnode.state.renaming) {
+      vnode.state.renaming = true;
+      return true;
+    }
+  
+    // Protect input field while writing
+    if (node.rename) {
+      return false;
+    }
+  
+    // Redraw to remove input on finish editing
+    if (!node.rename && vnode.state.renaming) {
+      vnode.state.renaming = false;
+      return true;
+    }
+    
+    return true
+  },
 
   buildTree: function(recs, path='') {
     const tree = { name: "root", children: {} }
