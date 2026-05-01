@@ -253,6 +253,9 @@ var Tabbar = {
           }
         }, 'SQL')
       ]),
+      config.tab != 'sql' ? '' : m('span', {
+        class: 'gray ml2'
+      }, `system: ${ds.base.system}; host: ${ds.base.host}; driver: ${ds.base.driver}`),
       !ds.table || !(config.tab == 'data') ? '' : m('label', {
         class: 'fr mr3'
       }, [
