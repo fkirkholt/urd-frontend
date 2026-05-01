@@ -132,7 +132,7 @@ var login = {
         name: 'brukernavn',
         placeholder: 'Brukernavn',
         value: login.param.username,
-        disabled: login.param.cnxn || ds.base.name == 'urdr' ? false : true,
+        disabled: !(login.param.cnxn || ds.base.name == 'urdr'),
         class: 'db w-100 mb1',
         onchange: function() {
           login.param.username = this.value
@@ -144,7 +144,7 @@ var login = {
         name: 'passord',
         placeholder: 'Passord',
         value: login.param.password,
-        disabled: login.param.cnxn || ds.base.name == 'urdr' ? false : true,
+        disabled: !(login.param.cnxn || ds.base.name == 'urdr'),
         class: 'db w-100 mb1',
         onchange: function() {
           login.param.password = this.value
