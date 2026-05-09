@@ -62,6 +62,15 @@ input[type="checkbox"] { accent-color: #357EDD }
     border-right: 1px solid gray
 }
 
+.cm-editor .cm-gutter.cm-gutter-lint {
+  display: none !important;
+}
+
+/* Show lint gutter only if there's something to show */
+.cm-editor.has-diagnostics .cm-gutter.cm-gutter-lint {
+  display: flex !important;
+}
+
 table#urdgrid thead th {
     position: sticky; 
     position: -webkit-sticky; 

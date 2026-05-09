@@ -1,6 +1,6 @@
 import { basicSetup, EditorView } from 'codemirror'
 import { keymap } from "@codemirror/view"
-import { EditorState, Compartment } from "@codemirror/state"
+import { EditorState, Compartment, StateField } from "@codemirror/state"
 import { indentWithTab } from "@codemirror/commands"
 import { indentedLineWrap } from './linewrap' 
 import { syntaxTree, foldable, foldEffect, unfoldAll, foldService, 
@@ -16,7 +16,7 @@ import { css } from "@codemirror/lang-css"
 import { tags } from "@lezer/highlight"
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
-import { linter, lintGutter } from '@codemirror/lint'
+import { linter, lintGutter, diagnosticCount } from '@codemirror/lint'
 import { relpath } from './utils.js'
 
 
@@ -242,6 +242,45 @@ function Codefield() {
     return diagnostics
   })
 
+  const todoLinter = linter((view) => {
+    const diagnostics = [];
+    const doc = view.state.doc.toString();
+    let regex = /\b(todo|note):/ig;
+  
+    for (const match of doc.matchAll(regex)) {
+      console.log('todo funnet')
+      diagnostics.push({
+        from: match.index,
+        to: match.index + match[0].length,
+        severity: "warning",
+        message: match[0],
+      });
+    }
+    regex = /\b(next|bug):/ig;
+  
+    for (const match of doc.matchAll(regex)) {
+      diagnostics.push({
+        from: match.index,
+        to: match.index + match[0].length,
+        severity: "error",
+        message: match[0],
+      });
+    }
+    return diagnostics;
+  });
+
+  const lintGutterAutoHider = StateField.define({
+    create() { return false; },
+    update(value, tr) {
+      // Sjekk om antall diagnostikker i hele dokumentet er > 0
+      console.log('ant-feil', diagnosticCount(tr.state))
+      return diagnosticCount(tr.state) > 0;
+    },
+    provide: f => EditorView.editorAttributes.from(f, hasErrors => {
+      return hasErrors ? { class: "has-diagnostics" } : null;
+    })
+  });
+
   // Function to fold all levels of code
   function fold_all_recursive() {
     const state = editor.state;
@@ -302,6 +341,9 @@ function Codefield() {
       ]),
       EditorView.lineWrapping,
       indentedLineWrap,
+      todoLinter,
+      lintGutter(),
+      lintGutterAutoHider,
       editable.of(EditorView.editable.of(attrs.editable)),
       EditorView.updateListener.of((update) => { 
         if (update.docChanged && !changed) { 
@@ -345,12 +387,10 @@ function Codefield() {
 
     if (attrs.lang == 'py') {
       extensions.push(ruffLinter)
-      extensions.push(lintGutter())
       extensions.push(indentUnit.of('    '))
     }
     if (attrs.lang == 'js') {
       extensions.push(biomeLinter)
-      extensions.push(lintGutter())
     } 
 
     return extensions
