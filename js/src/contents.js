@@ -18,9 +18,16 @@ var Contents = {
     Object.keys(node.subitems).forEach(function(label) {
       var subitem = node.subitems[label]
       if (typeof (subitem) == 'object') {
+        if (subitem.item) {
+          const object = get(ds.base, subitem.item, ds.base.tables[subitem.item])
+          if (
+            (object.hidden != true && object.type != 'list') || config.admin) {
+            display = 'block'
+          }
+        }
         display = Contents.display_header(subitem, display)
       } else {
-       const object = get(ds.base, subitem, ds.base.tables[subitem])
+        const object = get(ds.base, subitem, ds.base.tables[subitem])
         if (
           ds.table_filter && 
           !object.name.toLowerCase().includes(ds.table_filter.toLowerCase())
@@ -150,7 +157,7 @@ var Contents = {
             'w1 mr1 tc light-silver nf',
             node.expanded ? 'nf-oct-chevron_down' : 'nf-oct-chevron_right',
           ].join(' '),
-          style: display_chevron == 'none' ? 'display: none' : '',
+          style: display_chevron == 'none' ? 'visibility: hidden' : '',
           onclick: function() {
             node.expanded = !node.expanded
           }
