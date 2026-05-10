@@ -234,6 +234,17 @@ var Export_dialog = {
       this.type == 'tsv' ? '' : m('div[name=valg]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dialect',
+          value: 'duckdb',
+          onchange: function() {
+            Export_dialog.dialect = 'duckdb'
+            if (ds.base.system != 'duckdb') {
+              Export_dialog.view_defs = false
+            }
+          }
+        })], ' DuckDB'),
+        m('br'),
+        m('label', [m('input[type=radio]', {
+          name: 'dialect',
           value: 'mysql',
           onchange: function() {
             Export_dialog.dialect = 'mysql'
