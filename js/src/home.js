@@ -466,7 +466,8 @@ var home = {
           return m('li', {
             class: 'pointer hover-blue',
             onclick: function() {
-              m.route.set('/' + ds.cnxn + (ds.path ? '/' + ds.path : '') + '/' + link)
+              const parent = ds.file.path.substring(0, ds.file.path.lastIndexOf('/'));
+              m.route.set('/' + ds.cnxn + '/' + parent + '/' + link)
             }
           }, link)
         })
