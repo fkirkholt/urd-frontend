@@ -21,20 +21,19 @@ export function relpath(from, to) {
     const fromParts = from.split('/')
     const toParts = to.split('/')
 
-    // Fjern filnavnet fra "from" slik at vi regner utgangspunktet fra mappen
     fromParts.pop()
 
     let i = 0
-    // Finn felles utgangspunkt
+    // Find common starting point
     while (i < fromParts.length && i < toParts.length && fromParts[i] === toParts[i]) {
         i++
     }
 
-    // Antall steg opp fra "from"
+    // Number of steps up from "from"
     const upSteps = fromParts.length - i
     const upPrefix = upSteps > 0 ? '../'.repeat(upSteps) : ''
 
-    // Resten av stien til "to"
+    // The rest of the path to "to"
     const remainingPath = toParts.slice(i).join('/')
 
     return upPrefix + remainingPath
