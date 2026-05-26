@@ -373,6 +373,25 @@ var Toolbar = {
               $('ul#actions').hide()
             }
           }, 'Convert fields ...'),
+          !(ds.table.fts_search || ds.table.vector_search) ? null : m('li', {
+            class: 'nowrap hover-blue',
+            onclick: function() {
+              m.request({
+                url: '/embed',
+                method: 'PUT',
+                params: {
+                  cnxn: ds.cnxn,
+                  base: m.route.param('base'),
+                  table: ds.table.name,
+                }
+              }).then(function(result) {
+                alert(result.msg)
+                $('ul#actions').hide()
+              }).catch(function(e) {
+                alert(e.response ? e.response.detail : 'An error has occured.')
+              })
+            }
+          }, 'Generate search indexes'),
           Object.keys(ds.table.actions).flatMap(function(label) {
             var action = ds.table.actions[label]
 
