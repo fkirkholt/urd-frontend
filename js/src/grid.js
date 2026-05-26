@@ -210,7 +210,7 @@ var Grid = {
       cnxn: ds.cnxn,
       base: params.base, table: params.table, filter: query, 
       limit: cfg.limit, offset: params.offset || 0, 
-      sort: sort_cols.length ? JSON.stringify(sort_cols) : null,
+      sort: Object.keys(sort_cols).length ? JSON.stringify(sort_cols) : null,
     }, index)
 
 
