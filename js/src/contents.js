@@ -195,7 +195,7 @@ var Contents = {
 
             var type_txt = table.type == 'list'
               ? 'Set as data table'
-              : 'Set as looup table'
+              : 'Set as lookup table'
             $('ul#context-table li.type').html(type_txt)
 
             $('ul#context-table')

@@ -317,7 +317,7 @@ var Tabbar = {
             return
           }
           m.request({
-            url: '/urd/dialog_cache?version=1',
+            url: '/urd/dialog_analyze?version=1',
             params: {cnxn: ds.cnxn},
             responseType: "text",
           }).then(function(result) {

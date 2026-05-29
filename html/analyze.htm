@@ -50,7 +50,7 @@ var cache_dialog = {
                         var params = Object.keys(params).map(function(k) {
                             return k + '=' + params[k]
                         }).join('&')
-                        let eventSource = new EventSource('/urd/update_cache?' + params)
+                        let eventSource = new EventSource('/urd/analyze?' + params)
 
                         eventSource.onmessage = function(event) {
                             var data = JSON.parse(event.data)
