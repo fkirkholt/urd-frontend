@@ -9,11 +9,6 @@ var Toolbar = {
       Record.create(ds.table)
       return false
     })
-    mousetrap(document.body).bind('mod+f', function() {
-      ds.table.search = true
-      m.redraw()
-      return false
-    })
     mousetrap(document.body).bind('esc', function() {
       $('#urdgrid tr.focus').trigger('focus')
     })
