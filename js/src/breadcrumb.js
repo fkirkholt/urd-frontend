@@ -37,7 +37,7 @@ var Breadcrumb = {
     }
 
     if (ds.path || param.base) {
-      dirs = param.base && !ds.file ? param.base.split('/') // .slice(0, -1) 
+      dirs = param.base && !ds.file ? param.base.split('/').slice(0, -1) 
         : ds.path ? ds.path.split('/')
         : []
       path = [ds.cnxn] 
@@ -61,6 +61,8 @@ var Breadcrumb = {
 
     if (ds.file && !['dir', 'server'].includes(ds.file.type)) {
       const parts = ds.file.path.split('/')
+      const is_sqlite = ds.file.type == 'application/vnd.sqlite3'
+      const fileicon = is_sqlite ? 'nf-dev-sqlite' : "nf-fa-file"
       if (ds.path) {
         // First part of ds.file.path is the same as ds.path
         parts.splice(0, ds.path.split('/').length)
@@ -69,7 +71,7 @@ var Breadcrumb = {
       for (const part of parts) {
         i++
         items.push({
-          icon: i == parts.length ? "nf-fa-file" : "nf-md-folder_outline",
+          icon: i == parts.length ? fileicon : "nf-md-folder_outline",
           text: part,
           addr: '/' + ds.cnxn + '/' + parts.slice(0, i).join('/')
         })

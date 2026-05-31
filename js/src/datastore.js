@@ -23,6 +23,14 @@ var datastore = {
       datastore.branch = data.branch
       datastore.config = data.config
 
+      if (['sqlite', 'duckdb'].includes(data.base.system)) {
+        datastore.file = {
+          name: ds.base.name.split('/')[-1],
+          path: ds.base.name,
+          type: 'application/vnd.' + (ds.base.system == 'sqlite' ? 'sqlite3' : 'duckdb')
+        }
+      }
+
       if (data.config) {
         $.extend(datastore.cache.config, data.config)
       }
