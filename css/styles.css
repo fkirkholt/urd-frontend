@@ -380,3 +380,36 @@ mark {
 .invert-03 {
     filter: invert(0.3);
 }
+
+details { margin-top: 4px; scroll-margin-top: 20px; }
+details details { margin-left: 24px; }
+summary {
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+summary:hover { background-color: #e2e2e2; }
+details:target > summary,
+summary.is-targeted {
+  background-color: #0066cc;
+  color: white;
+}
+.markdown-body {
+  margin-left: 10px;
+  padding: 6px 12px;
+  border-left: 4px solid #0066cc;
+  background-color: #f4f9ff;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border-radius: 0 4px 4px 0;
+}
+.markdown-body p {
+  margin: 0 0 10px 0;
+}
+.markdown-body p:last-child {
+  margin-bottom: 0;
+}
+a { color: #0066cc; text-decoration: none; font-weight: 500; }
+a:hover { text-decoration: underline; }

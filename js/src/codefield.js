@@ -5,15 +5,19 @@ import { indentWithTab } from "@codemirror/commands"
 import { indentedLineWrap } from './linewrap' 
 import { syntaxTree, foldable, foldEffect, unfoldAll, foldService, 
          foldCode, unfoldCode, HighlightStyle, syntaxHighlighting,
-         defaultHighlightStyle, indentUnit} from "@codemirror/language"
+         defaultHighlightStyle, indentUnit, LRLanguage, LanguageSupport,
+         indentService, getIndentUnit
+       } from "@codemirror/language"
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 import { sql } from "@codemirror/lang-sql"
 import { json } from "@codemirror/lang-json"
 import { yaml } from "@codemirror/lang-yaml"
+import { parser as yamlParser} from "@lezer/yaml"
 import { python } from "@codemirror/lang-python"
 import { javascript } from "@codemirror/lang-javascript"
 import { css } from "@codemirror/lang-css"
 import { tags } from "@lezer/highlight"
+import { parseMixed } from "@lezer/common"
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
 import { linter, lintGutter, diagnosticCount } from '@codemirror/lint'
@@ -70,6 +74,102 @@ function Codefield() {
   var onchange
   var changed
   var editable = new Compartment
+
+
+  const markdownSupport = markdown({
+    // Support all standard languages in code blocks
+    codeLanguages: languages
+  });
+
+  const mixedYamlParser = yamlParser.configure({
+    wrap: parseMixed((node, input) => {
+      if (node.name === "BlockLiteral") { // text block after '|' or '|-'
+        const blockStart = node.from;
+        const blockEnd = node.to;
+        const fullText = input.read(blockStart, blockEnd);
+  
+        // Don't include the block literal indicator
+        const firstLineBreak = fullText.indexOf("\n");
+        if (firstLineBreak === -1) return null;
+  
+        const contentStartPos = blockStart + firstLineBreak + 1;
+        const lines = fullText.slice(firstLineBreak + 1).split("\n");
+  
+        // Find number of spaces used for indentation
+        let indentSize = 0;
+        for (const line of lines) {
+          if (line.trim().length > 0) {
+            const match = line.match(/^ */);
+            indentSize = match ? match[0].length : 0;
+            break;
+          }
+        }
+  
+        // Build a list with precise text areas (ranges) for the Markdown parser
+        const overlays = [];
+        let currentPos = contentStartPos;
+  
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          const lineLength = line.length;
+  
+          const actualIndent = line.search(/\S/) < indentSize && line.search(/\S/) !== -1 
+            ? line.search(/\S/) 
+            : indentSize;
+  
+          const textStart = currentPos + actualIndent;
+          const textEnd = currentPos + lineLength + (i < lines.length - 1 ? 1 : 0);
+  
+          if (textStart < textEnd) {
+            overlays.push({ from: textStart, to: textEnd });
+          }
+  
+          // Move position marker to the sart of next line
+          currentPos += lineLength + 1;
+        }
+  
+        if (overlays.length > 0) {
+          return {
+            parser: markdownSupport.language.parser,
+            overlay: overlays
+          };
+        }
+      }
+      return null;
+    })
+  })
+
+  const yamlMixedLanguage = LRLanguage.define({ parser: mixedYamlParser })
+
+  function yamlWithMarkdown() {
+    const base = yaml();
+  
+    const yamlIndent = indentService.of((context, pos) => {
+      const { state } = context;
+      const line = state.doc.lineAt(pos);
+      if (line.number === 1) return null;
+    
+      const prevLine = state.doc.line(line.number - 1);
+      const prevText = prevLine.text;
+      const prevIndent = prevText.match(/^(\s*)/)[1].length;
+      const indentUnit = getIndentUnit(state);
+    
+      // Block literal indicator — indent one level in
+      if (/:\s*\|[-+]?\s*$/.test(prevText)) {
+        return prevIndent + indentUnit;
+      }
+    
+      // Mapping key or sequence entry — indent one level in
+      if (/:\s*$/.test(prevText) || /^\s*-\s*$/.test(prevText)) {
+        return prevIndent + indentUnit;
+      }
+    
+      // Default — match previous line's indent
+      return prevIndent;
+    });
+  
+    return new LanguageSupport(yamlMixedLanguage, yamlIndent);
+  }
 
   // Custom fold service that folds based on indentation level
   const indentFold = foldService.of((state, lineStart) => {
@@ -310,12 +410,9 @@ function Codefield() {
     var extensions
     langs.sql = sql()
     langs.json = json()
-    langs.yaml = yaml()
+    langs.yaml = yamlWithMarkdown()
     langs.text = null
-    langs.md = markdown({
-      base: markdownLanguage,
-      codeLanguages: languages, // enables syntax highlighting for fenced code blocks
-    })
+    langs.md = markdownSupport 
     langs.py = python() 
     langs.js = javascript()
     langs.css = css()

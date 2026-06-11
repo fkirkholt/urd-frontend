@@ -96,6 +96,56 @@ m.route($('#main')[0], '/', {
   },
   "/:cnxn/:base...": {
     onmatch: function(args, path) {
+
+      var previousPath = m.route.get();
+
+      // get url without hash og query strings
+      var cleanPreviousPath = previousPath?.split('#')[0];
+      var cleanRequestedPath = path.split('#')[0];
+
+      // check if only hash is changed
+      if (cleanPreviousPath === cleanRequestedPath && path !== previousPath) {
+        setTimeout(function() {
+          const hash = window.location.hash;
+          if (!hash) return;
+
+          document.querySelectorAll('summary.is-targeted').forEach(function(el) {
+            el.classList.remove('is-targeted');
+          });
+
+          // Close all open nodes first
+          const openDetails = document.querySelectorAll('details[open]');
+          openDetails.forEach(function(details) {
+            details.open = false;
+          });
+          
+          const targetId = hash.substring(1);
+          const targetElement = document.getElementById(targetId);
+          console.log('targetElement', targetElement)
+          
+          if (targetElement) {
+            // open all parent nodes
+            let parent = targetElement.parentElement;
+            
+            while (parent) {
+              if (parent.tagName === "DETAILS") {
+                parent.open = true;
+              }
+              parent = parent.parentElement;
+            }
+            
+            targetElement.scrollIntoView({ behavior: "instant", block: "start" });
+            targetElement.open = true
+            const summaryElement = targetElement.querySelector('summary');
+            if (summaryElement) {
+              summaryElement.classList.add('is-targeted');
+            }
+          }
+        }, 50);
+        // Avoid redraw of DOM
+        return new Promise(function() {}); 
+      }
+      
       var base_name = args.base
       var query = m.parsePathname(path)
       ds.cnxn = args.cnxn

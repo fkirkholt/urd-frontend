@@ -249,9 +249,9 @@ var Input = {
       vnode.attrs.class = vnode.attrs.class + ' ba b--gray w-100'
       vnode.attrs.editable = true
       vnode.attrs.lang = 'yaml'
-      vnode.attrs.value = yaml.dump(JSON.parse(field.value))
+      vnode.attrs.value = YAML.stringify(JSON.parse(field.value))
       vnode.attrs.onchange = function(value) {
-        value = JSON.stringify(yaml.load(value))
+        value = JSON.stringify(YAML.parse(value))
         Field.update(value, field.name, rec)
       }
 
@@ -377,5 +377,5 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 import Codefield from './codefield'
-import yaml from 'js-yaml'
+import YAML from 'yaml';
 import config from './config.js'

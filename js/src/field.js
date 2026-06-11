@@ -159,7 +159,7 @@ var Field = {
         'data-pkey': rec.pkey,
         editable: false,
         lang: 'yaml',
-        value: yaml.dump(JSON.parse(field.value))
+        value: YAML.stringify(JSON.parse(field.value))
       })
     } else if (field.value && (
       field.datatype == 'json' ||
@@ -171,7 +171,7 @@ var Field = {
         'data-pkey': rec.pkey,
         editable: false,
         lang: 'yaml',
-        value: yaml.dump(JSON.parse(field.value))
+        value: YAML.stringify(JSON.parse(field.value))
       })
     } else if (field.value && (
       (field.datatype == 'str' && !field.size && field.expanded) ||
@@ -559,7 +559,7 @@ import config from './config.js'
 import { Marked } from 'marked'
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
-import yaml from 'js-yaml'
+import YAML from 'yaml'
 import Input from './input.js'
 import Record from './record.js'
 import get from 'just-safe-get'

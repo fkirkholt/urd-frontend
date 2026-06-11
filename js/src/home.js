@@ -2,12 +2,151 @@ import config from './config.js'
 import Grid from './grid.js'
 import Codefield from './codefield.js'
 import { Marked } from 'marked'
+import YAML, { isMap, isSeq, isPair, isScalar } from 'yaml'
 import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js'
 import Filetree from './filetree.js'
 
 
 const KEY_CODE_ENTER = 13
+
+const marked = new Marked(
+  markedHighlight({
+    emptyLangClass: 'hljs',
+    langPrefix: 'hljs language-',
+    highlight(code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext'
+      return hljs.highlight(code, { language }).value
+    }
+  })
+)
+
+
+var yaml = {
+  escapeHtml: function(text) {
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+  },
+
+  backlinkMap: new Map(),
+
+  // Regex catching hash
+  hashRegex: /\]\s*\(\s*#([a-zA-Z0-9_-]+)\s*\)|#([a-zA-Z0-9_-]+)/g,
+  
+  astToHtml: function(node, keyName = null, currentAnchorContext = null) {
+    if (!node) return ''
+  
+    const activeAnchor = node.anchor || currentAnchorContext
+  
+    if (isPair(node)) {
+      return yaml.astToHtml(node.value, node.key.toString(), activeAnchor)
+    }
+  
+    const anchor = node.anchor
+    const anchorAttr = anchor ? ` id="${anchor}"` : ''
+  
+    // Handle ALIAS and register backlink
+    if (node.type === 'ALIAS') {
+      if (node.source && activeAnchor) {
+        yaml.addBacklink(node.source, activeAnchor)
+      }
+      return `
+        <details open>
+          <summary>${keyName}</summary>
+          <i>Referanse til <a href="#${node.source}">#${node.source}</a></i>
+        </details>`
+    }
+  
+    // Handle MAP (objects) and Sequences ()
+    if (isMap(node)|| isSeq(node)) {
+      let contentHtml = ''
+      node.items.forEach((item, index) => {
+        contentHtml += yaml.astToHtml(item, index, activeAnchor)
+      })
+  
+      if (keyName === null) return contentHtml
+  
+      return `
+        <details${anchorAttr}>
+          <summary>${keyName}</summary>${contentHtml}
+        </details>`
+    }
+  
+    // Handle SCALAR (Tekst/values) and scan for backlinks
+    if (isScalar(node)) {
+      if (typeof node.value === 'string' && activeAnchor) {
+        const matches = node.value.matchAll(yaml.hashRegex)
+        
+        for (const match of matches) {
+          const targetAnchor = match[1] || match[2]
+          if (targetAnchor && targetAnchor !== activeAnchor) {
+            yaml.addBacklink(targetAnchor, activeAnchor)
+          }
+        }
+      }
+
+      return `
+        <details${anchorAttr} data-expanded="false" data-type="${node.type}">
+          <summary>${keyName}</summary>
+          <div class="markdown-body">${yaml.escapeHtml(node.value)}</div>
+        </details>`
+    }
+  
+    return ''
+  },
+  
+  addBacklink: function(target, fromAnchor) {
+    if (!yaml.backlinkMap.has(target)) yaml.backlinkMap.set(target, [])
+    if (!yaml.backlinkMap.get(target).includes(fromAnchor)) {
+      yaml.backlinkMap.get(target).push(fromAnchor)
+    }
+  },
+
+    
+  parse: function(content) {
+    const parsedDoc = content ? YAML.parseDocument(content) : ''
+    const html = yaml.astToHtml(parsedDoc.contents)
+    yaml.backlinks = Object.fromEntries(yaml.backlinkMap)
+    return m.trust(html)
+  },
+
+  parseMarkdown: function() {
+    // Find all nodes not yet parsed
+    const selector = 'details[data-expanded="false"]'
+    const unexpandedNodes = Array.from(document.querySelectorAll(selector))
+    
+    function parseNextBatch() {
+      // Take 20 nodes at a time for not to freeze the browser
+      const batch = unexpandedNodes.splice(0, 20)
+      if (batch.length === 0) return
+  
+      batch.forEach(node => { yaml.parseSingleNode(node) })
+  
+      // Wait 10 ms before next batch to secure responsiveness
+      setTimeout(parseNextBatch, 10)
+    }
+  
+    // Start background job after 200ms
+    setTimeout(parseNextBatch, 200)
+  },
+
+  parseSingleNode: function(details) {
+    if (details.getAttribute('data-expanded') === 'false') {
+      const container = details.querySelector('.markdown-body')
+      if (container) {
+        let cleanedMarkdown = container.textContent.split('\n')
+          .map(line => line.trim()).join('\n')
+        if (details.getAttribute('data-type') === 'BLOCK_FOLDED') {
+          cleanedMarkdown = cleanedMarkdown.split('\n').join('\n\n')
+        }
+        container.innerHTML = marked.parse(cleanedMarkdown)
+        details.setAttribute('data-expanded', 'true')
+      }
+    }
+  }
+}
 
 var home = {
 
@@ -47,23 +186,12 @@ var home = {
       return content
     }
     let result = content.replace(/(^|\s)(:[\w+:-]*:)/gi, function (_, p1, p2) {
-      return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>';
-    });
+      return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>'
+    })
 
     // Hack to make marked format first list item like the rest.
     // There must be text in front of the list
     result = 'dummy-paragraph\n\n' + result
-
-    const marked = new Marked(
-      markedHighlight({
-        emptyLangClass: 'hljs',
-        langPrefix: 'hljs language-',
-        highlight(code, lang) {
-          const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-          return hljs.highlight(code, { language }).value;
-        }
-      })
-    );
 
     result = marked.parse(result)
     // Remove text inserted in hack above
@@ -131,6 +259,9 @@ var home = {
           t.classList.toggle("close")
         } 
       }
+    }
+    if (ds.file && /\.(yml|yaml)/.test(ds.file.path)) {
+      yaml.parseMarkdown()
     }
   },
 
@@ -431,12 +562,16 @@ var home = {
       : !config.edit_mode && ds.file.path.endsWith('.md') ? m('div', {
         class: 'ml3 overflow-y-auto markdown'
       }, home.parsed_markdown(ds.file.content))
+      : !config.edit_mode && /\.(yml|yaml)/.test(ds.file.path) ? m('div', {
+        class: 'ml3 overflow-y-auto markdown'
+      }, yaml.parse(ds.file.content))
       : m(Codefield, {
         id: 'file-content',
         class: 'ml3 ba b--light-silver mb2 bottom-0 overflow-y-auto',
         editable: config.edit_mode,
         'data-pkey': ds.file.path,
         lang: ds.file.path.endsWith('.sql') ? 'sql'
+          : /\.(yml|yaml)$/.test(ds.file.path) ? 'yaml'
           : ds.file.path.endsWith('.yml') ? 'yaml'
           : ds.file.path.endsWith('.json') ? 'json'
           : ds.file.path.endsWith('.md') ? 'md'
@@ -476,5 +611,44 @@ var home = {
     ]
   }
 }
+
+document.addEventListener('toggle', (event) => {
+  const details = event.target
+
+  if (details.tagName !== 'DETAILS' || !details.open) return
+
+  yaml.parseSingleNode(details)
+
+  // Generate references if node has an anchor
+  if (details.id && yaml.backlinks && !details.querySelector('.backlinks-section')) {
+    const refs = yaml.backlinks[details.id]
+    console.log('refs', refs)
+
+    if (refs && refs.length > 0) {
+      const links = refs
+        .map(refAnchor => `
+          <a href="#${refAnchor}" class="backlink-tag nowrap">
+            #${refAnchor}
+          </a>`)
+        .join('')
+      
+      const backlinkHtml = `
+        <details class="backlinks-section" style="margin-top:8px; margin-left:20px;">
+          <summary style="cursor:pointer;">🔗 Refs (${refs.length})</summary>
+          <div class="ml3 flex flex-row flex-wrap" style="gap:8px 12px;">
+            ${links}
+          </div>
+        </details>`
+
+      const markdownBody = details.querySelector('.markdown-body')
+      if (markdownBody) {
+        markdownBody.insertAdjacentHTML('afterend', backlinkHtml)
+      } else {
+        details.insertAdjacentHTML('beforeend', backlinkHtml)
+      }
+    }
+  }
+}, { capture: true })
+
 
 export default home
