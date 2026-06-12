@@ -75,6 +75,27 @@ function Codefield() {
   var changed
   var editable = new Compartment
 
+  function getActiveLine() {
+    const headPosition = editor.state.selection.main.head
+    const line = editor.state.doc.lineAt(headPosition)
+    return line.number
+  }
+  
+  function goToLine(view, lineNum) {
+    // Check if line number is valid
+    const totalLines = view.state.doc.lines
+    const targetLine = Math.max(1, Math.min(lineNum, totalLines))
+  
+    const lineInfo = view.state.doc.line(targetLine)
+  
+    view.dispatch({
+      selection: { anchor: lineInfo.from },
+      effects: EditorView.scrollIntoView(lineInfo.from, {
+        y: "center",
+        yMargin: 0
+      })
+    })
+  }
 
   const markdownSupport = markdown({
     // Support all standard languages in code blocks
@@ -471,6 +492,14 @@ function Codefield() {
           }
         },
         blur: function(_, view) {
+          if (!ds.filepos) {
+            ds.filepos = {}
+          }
+          if (ds.file) {
+            const line = getActiveLine()
+            ds.filepos[ds.file.name] = line
+          }
+          
           if (changed && onchange) {
             const value = view.state.doc.toString()
             onchange(value);
@@ -530,6 +559,11 @@ function Codefield() {
       editor.dispatch({ 
         effects: editable.reconfigure(EditorView.editable.of(vnode.attrs.editable)) 
       })
+      if (ds.file?.line) {
+        goToLine(editor, ds.file.line)
+      } else {
+        goToLine(editor, 1)
+      }
     },
     view: function(vnode) {
       return m('div', { class: vnode.attrs.class })

@@ -242,6 +242,9 @@ m.route($('#main')[0], '/', {
             }
           } else {
             ds.file = result
+            if (ds.filepos?.[ds.file.name]) {
+              ds.file.line = ds.filepos[ds.file.name]
+            }
           }
           config.tab = 'databases'
           if (!ds.dblist) {
