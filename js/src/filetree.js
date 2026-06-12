@@ -116,7 +116,7 @@ const Filetree = {
               params: {cnxn: ds.cnxn, path: node.path} 
             })
             .then(function(result) {
-              const tree = home.buildTree(result.data.records, node.path)
+              const tree = Filetree.buildTree(result.data.records, node.path)
               home.treeData = deepmerge(home.treeData, tree)
             })
           }
