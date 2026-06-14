@@ -213,7 +213,7 @@ const Filetree = {
       }))
       : null,
       !node.desc || (ds.file && ds.file.type !== 'dir') ? null : m('p.mt1.mb1', {
-        class: "mt1 mb1 ml4 pl2"
+        class: "mt1 mb1"
       }, m.trust(node.desc))
     ])
   }
