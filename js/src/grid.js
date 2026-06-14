@@ -5,7 +5,7 @@ var Grid = {
 
   onupdate: function() {
     // Ensure scrolling to bottom for new records
-    if ((ds.table.selection + 1) == ds.table.records.length) {
+    if ((ds.table.selection + 1) === ds.table.records.length) {
       const height = $('#urdgrid tbody')[0].scrollHeight
       $('#urdgrid tbody').get().pageYOffset = height //.scrollTop(height)
     }
@@ -13,15 +13,15 @@ var Grid = {
 
   column_order: function(col) {
     return ds.table.grid.sort_columns[col]
-      ? ds.table.grid.sort_columns[col]['dir'].toLowerCase()
+      ? ds.table.grid.sort_columns[col].dir.toLowerCase()
       : ''
   },
 
   sort: function(col) {
     var list = ds.table
     var order
-    if (list.grid.sort_columns[col] && list.grid.sort_columns[col].idx == 0) {
-      order = list.grid.sort_columns[col].dir == 'ASC' ? 'DESC' : 'ASC'
+    if (list.grid.sort_columns[col] && list.grid.sort_columns[col].idx === 0) {
+      order = list.grid.sort_columns[col].dir === 'ASC' ? 'DESC' : 'ASC'
     } else {
       order = 'ASC'
     }
@@ -64,7 +64,7 @@ var Grid = {
       }
 
       const route = m.route.get()
-      if (cfg.tab == 'data' && index !== undefined && route.includes('&index=')) {
+      if (cfg.tab === 'data' && index !== undefined && route.includes('&index=')) {
         Toolbar.set_url({index: index, replace: true})
       }
     })
@@ -154,7 +154,7 @@ var Grid = {
       }
 
       var changes = Record.get_changes(rec, true)
-      if (idx == ds.table.selection) changes.selected = true
+      if (idx === ds.table.selection) changes.selected = true
       records.push(changes)
     })
 
@@ -191,7 +191,7 @@ var Grid = {
     var query = Grid.get_filter(params)
     var sort_cols = {}
 
-    if (ds.base.name != params.base) {
+    if (ds.base.name !== params.base) {
       ds.load_database(params.base)
     }
 
@@ -232,7 +232,7 @@ var Grid = {
         chart_columns.push(colname)
       }
       if (
-        field.datatype == 'unknown' && 
+        field.datatype === 'unknown' && 
         !Number.isNaN(ds.table.records[0].columns[colname].value)
       ) {
         field.datatype = 'Decimal'
@@ -247,11 +247,11 @@ var Grid = {
         unique_cols = idx.columns
       }
     }
-    if (!unique_cols && ds.table.pkey && ds.table.pkey[0] != 'rowid') {
+    if (!unique_cols && ds.table.pkey && ds.table.pkey[0] !== 'rowid') {
       unique_cols = ds.table.pkey
     }
 
-    if (!is_chart || chart_columns.length == 0) {
+    if (!is_chart || chart_columns.length === 0) {
       return []
     }
     var chart_data = ds.table.records.map(function(item) {
@@ -291,7 +291,7 @@ var Grid = {
     ds.table.is_chart = chart_data.length > 0
 
     return [
-      ds.table.tab == 'chart' ? '' : m('div', { 
+      ds.table.tab === 'chart' ? '' : m('div', { 
         class: 'bottom-0, overflow-y-auto'
       }, [m('table#urdgrid.tbl', {
         'data-name': ds.table.name,
@@ -337,8 +337,8 @@ var Grid = {
               label, m('i', {
                 class: [
                   'ml2',
-                  Grid.column_order(col) == 'asc' ? 'nf nf-fa-angle_up'
-                    : Grid.column_order(col) == 'desc' ? 'nf nf-fa-angle_down'
+                  Grid.column_order(col) === 'asc' ? 'nf nf-fa-angle_up'
+                    : Grid.column_order(col) === 'desc' ? 'nf nf-fa-angle_down'
                     : ''
                 ].join(' ')
               })])
@@ -377,7 +377,7 @@ var Grid = {
           ])
         ])
       ])]),
-      !ds.table.tab || ds.table.tab == 'data' ? '' : m(Chart, { 
+      !ds.table.tab || ds.table.tab === 'data' ? '' : m(Chart, { 
         data: chart_data,
         class: [
           'bb bt b--gray',

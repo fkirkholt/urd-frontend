@@ -167,7 +167,7 @@ m.route($('#main')[0], '/', {
           }
         }
 
-        if (Grid.url != grid_path) {
+        if (Grid.url !== grid_path) {
           check_dirty()
           if (ds.table) {
             ds.table.records = []
@@ -211,7 +211,7 @@ m.route($('#main')[0], '/', {
 
           return Datapanel
 
-        } else if (result.type == 'dir') {
+        } else if (result.type === 'dir') {
           ds.file = result
           config.tab = 'databases'
           ds.dblist = null

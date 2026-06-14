@@ -11,7 +11,7 @@ function Autocomplete() {
   var timer = null
 
   function keydown(event, attrs) {
-    if (event.keyCode == KEY_CODE_ENTER && !attrs.unique) {
+    if (event.keyCode === KEY_CODE_ENTER && !attrs.unique) {
       option = options[index]
       event.target.value = option.label
       // Use JSON.stringify to set correct data type
@@ -19,17 +19,17 @@ function Autocomplete() {
       attrs.onchange(event)
       options = []
 
-    } else if (event.keyCode == KEY_CODE_UP) {
-      if (index == 0) {
+    } else if (event.keyCode === KEY_CODE_UP) {
+      if (index === 0) {
         return
       }
       index--
-    } else if (event.keyCode == KEY_CODE_DOWN) {
-      if (index == options.length - 1) {
+    } else if (event.keyCode === KEY_CODE_DOWN) {
+      if (index === options.length - 1) {
         return
       }
       index++
-    } else if (event.keyCode == KEY_CODE_TAB) {
+    } else if (event.keyCode === KEY_CODE_TAB) {
       delete event.target.dataset.value
       return
     } else {
@@ -59,7 +59,7 @@ function Autocomplete() {
   return {
 
     onupdate: function(vnode) {
-      if ($(document.activeElement).attr('name') == vnode.attrs.fieldname) {
+      if ($(document.activeElement).attr('name') === vnode.attrs.fieldname) {
         const input_width = $(vnode.dom).outerWidth()
         const offset = $(vnode.dom).offset()
         $('ul.options').css('min-width', input_width)
@@ -71,7 +71,7 @@ function Autocomplete() {
 
     view: function(vnode) {
       var item = vnode.attrs.item
-      if (vnode.attrs.value != option.value) {
+      if (vnode.attrs.value !== option.value) {
         option = {
           value: vnode.attrs.value,
           label: vnode.attrs.text
@@ -83,10 +83,10 @@ function Autocomplete() {
           name: vnode.attrs.fieldname,
           'data-table': vnode.attrs['data-table'],
           type: vnode.attrs.type || 'search',
-          size: item.element == 'input' && item.size && !item.view
+          size: item.element === 'input' && item.size && !item.view
             ? item.size
             : null,
-          maxlength: item.element == 'input' && item.size && !item.view
+          maxlength: item.element === 'input' && item.size && !item.view
             ? item.size
             : null,
           class: vnode.attrs.class,
@@ -133,8 +133,8 @@ function Autocomplete() {
                 class: [
                   vnode.attrs.unique ? 'gray' : '',
                   'pl1 pr1',
-                  !vnode.attrs.unique && i == index && config.dark_mode ? 'bg-blue' 
-                  : !vnode.attrs.unique && i == index ? 'bg-light-blue'
+                  !vnode.attrs.unique && i === index && config.dark_mode ? 'bg-blue' 
+                  : !vnode.attrs.unique && i === index ? 'bg-light-blue'
                   : ''
                 ].join(' ')
               }, row.label)

@@ -6,10 +6,10 @@ var Select = {
       m('option', {
         value: option.value,
         class: config.dark_mode ? 'white' : 'black',
-        selected: option.value == value
+        selected: option.value === value
       }, m.trust(whitespace + option.label)),
       options.filter(function(opt) {
-        return opt.parent == option.value
+        return opt.parent === option.value
       }).map(function(opt) {
         level += 1
         return Select.draw_option(options, opt, value, level)

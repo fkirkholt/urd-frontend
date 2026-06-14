@@ -5,7 +5,7 @@ var Field = {
     var colname = vnode.attrs.colname
     var field = rec.fields[colname]
 
-    if (field.element == 'textarea' && field.expanded && !field.foldable) {
+    if (field.element === 'textarea' && field.expanded && !field.foldable) {
       const selector = '[data-field="' + rec.table.name + '.' + field.name + '"]'
 
       for (const i of 
@@ -30,7 +30,7 @@ var Field = {
     var field = rec.fields[field_name]
 
     field.value = value
-    if (value == '') {
+    if (value === '') {
       field.value = null
     }
     field.invalid = false
@@ -44,7 +44,7 @@ var Field = {
     if (rec.columns && field.name in rec.columns) {
       rec.columns[field.name].text = field.text
         ? field.text.replace(/\u00a0/g, '')
-        : typeof value == "string"
+        : typeof value === "string"
           ? value.substring(0, 256)
           : value
       rec.columns[field.name].value = value
@@ -53,11 +53,11 @@ var Field = {
     // For each select that depends on the changed field, we must set the
     // value to empty and load new options
     $.each(rec.table.fields, function(name, other_field) {
-      if (name == field.name || !other_field.fkey) return
+      if (name === field.name || !other_field.fkey) return
       if (other_field.defines_relation) return
 
       if (
-        other_field.element == 'select' &&
+        other_field.element === 'select' &&
         other_field.fkey.constrained_columns.length > 1
       ) {
         // If the field is part of the dropdowns foreign keys
@@ -98,7 +98,7 @@ var Field = {
           return
         }
         $.each(relation.betingelse, function(relation_field) {
-          if (relation_field == field.name) {
+          if (relation_field === field.name) {
             relation.records.forEach(function(post) {
               post.fields[relation_field] = value
               post.dirty = true
@@ -110,7 +110,7 @@ var Field = {
     }
 
     // don't save if not autosave is on 
-    if (config.autosave == false) {
+    if (!config.autosave) {
       return
     }
 
@@ -121,7 +121,7 @@ var Field = {
     Object.values(rec.fields).forEach(function(field) {
       if (
         field.invalid || (
-          field.nullable === false &&
+          !field.nullable &&
           field.value == null &&
           field.extra !== 'auto_increment'
         )
@@ -143,15 +143,15 @@ var Field = {
     var value = field.value
 
     if (field.text !== null && field.text !== undefined) {
-      value = typeof(field.text) == 'string' ? field.text.trim() : field.text
-    } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
-      const icon = value == 0 ? 'nf-fa-square_o' 
-        : value == 1 ? 'nf-fa-check-square_o'
+      value = typeof(field.text) === 'string' ? field.text.trim() : field.text
+    } else if (field.element === 'input' && field.attrs.type === 'checkbox') {
+      const icon = value === 0 ? 'nf-fa-square_o' 
+        : value === 1 ? 'nf-fa-check-square_o'
         : 'nf-fa-minus-square_o'
       value = m('i', { class: 'nf ' + icon })
     } else if (
-      field.datatype == 'json' &&
-      get(field, 'attrs.data-format') == 'yaml'
+      field.datatype === 'json' &&
+      get(field, 'attrs.data-format') === 'yaml'
     ) {
       value = m(Codefield, {
         id: 'yaml',
@@ -162,8 +162,8 @@ var Field = {
         value: YAML.stringify(JSON.parse(field.value))
       })
     } else if (field.value && (
-      field.datatype == 'json' ||
-      get(field, 'attrs.data-format') == 'json'
+      field.datatype === 'json' ||
+      get(field, 'attrs.data-format') === 'json'
     )) {
       value = m(Codefield, {
         id: 'yaml',
@@ -174,8 +174,8 @@ var Field = {
         value: YAML.stringify(JSON.parse(field.value))
       })
     } else if (field.value && (
-      (field.datatype == 'str' && !field.size && field.expanded) ||
-      get(field, 'attrs.data-format') == 'markdown'
+      (field.datatype === 'str' && !field.size && field.expanded) ||
+      get(field, 'attrs.data-format') === 'markdown'
     )) {
       let result = field.value.replace(/(^|\s)(:[\w+:-]*:)/gi, function (_, p1, p2) {
         return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>';
@@ -208,7 +208,7 @@ var Field = {
 
       value = m.trust(result)
     } else if (field.expanded) {
-      if (typeof(value) == 'string') {
+      if (typeof(value) === 'string') {
         value = m.trust(value.replace("\n", '<br>'))
       }
     }
@@ -253,7 +253,7 @@ var Field = {
       }
     }).then(function(result) {
       var table = result.data
-      if (table.count_records == 0) {
+      if (table.count_records === 0) {
         alert("Record not found")
       }
       var pk = table.records[0].pkey
@@ -294,8 +294,8 @@ var Field = {
 
     if (field.fkey) {
       if (
-        (ds.base.system == 'postgresql' && field.fkey.referred_schema != 'public') ||
-        (ds.base.system == 'mssql' && field.fkey.referred_schema != 'dbo')
+        (ds.base.system === 'postgresql' && field.fkey.referred_schema !== 'public') ||
+        (ds.base.system === 'mssql' && field.fkey.referred_schema !== 'dbo')
       ) {
         base = ds.base.cat + '.' + field.fkey.referred_schema
       } else if (['postgresql', 'sqlite', 'duckdb'].includes(ds.base.system)) {
@@ -316,7 +316,7 @@ var Field = {
   is_mandatory: function(field) {
     // TODO: Hva gjør jeg med rights her?
     var mandatory = !field.nullable && !field.extra && field.editable
-      && !field.source == true
+      && !field.source
 
     return mandatory
   },
@@ -324,7 +324,7 @@ var Field = {
   // Get percentage with precision 2 from number
   get_percentage: function(number) {
     var percentage
-    if (number == 1) {
+    if (number === 1) {
       percentage = 100
     } else if (number) {
       percentage = (number * 100).toFixed(1)
@@ -387,7 +387,7 @@ var Field = {
           'data-field': rec.table.name + '.' + field.name,
           class: [
             (label && !label_left) ? 'dib ml3 mt1' : 'db ml2 mt1',
-            field.element == 'textarea' ? 'w-100' : '', 
+            field.element === 'textarea' ? 'w-100' : '', 
           ].join(' ')
         }, [
           label ? [
@@ -397,14 +397,14 @@ var Field = {
               class: [
                 label_left ? 'mr2 nowrap' : 'db mr2 nowrap',
                 field.expandable && field.value ? 'underline pointer' : '',
-                field.element == 'textarea' && !config.edit_mode ? 'underline pointer' 
+                field.element === 'textarea' && !config.edit_mode ? 'underline pointer' 
                 : ''
               ].join(' '),
               onclick: function() {
                 if (field.fkey && field.expandable && field.value) {
                   Field.toggle_fkey(rec, colname)
                 } 
-                if (field.element == 'textarea' && !config.edit_mode) {
+                if (field.element === 'textarea' && !config.edit_mode) {
                   field.expanded = !field.expanded
                 }
                 if (!field.expanded) {
@@ -414,7 +414,7 @@ var Field = {
             }, [
               label,
             ]),
-            field.element == 'textarea' && field.expanded
+            field.element === 'textarea' && field.expanded
             ? [ 
               m('span', {
                 class: [
@@ -474,25 +474,25 @@ var Field = {
             class: 'ml2 light-silver'
           }, '(' + Field.get_percentage(field.use) + '%)'),
           !display ? m(Input, { rec: rec, fieldname: colname, ...field.attrs })
-          : (field.expandable && field.fkey) || field.attrs['data-format'] == 'link'
+          : (field.expandable && field.fkey) || field.attrs['data-format'] === 'link'
           ? m('a', {
             class: [
               'dib mw6',
               (field.expanded) ? '' : 'truncate'
             ].join(' '),
-            'data-expandable': (field.element == 'textarea'),
+            'data-expandable': (field.element === 'textarea'),
             'data-expanded': field.expanded,
             'data-value': field.value,
             href: field.attrs['data-href'] ? href 
               : field.fkey ? Field.get_url(field, rec) 
               : '#',
             onclick: function() {
-              if (field.element == 'textarea') {
+              if (field.element === 'textarea') {
                 field.expanded = !field.expanded
               }
             }
           }, Field.display_value(field, rec)) 
-          : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
+          : field.datatype === 'date' || field.attrs['data-format'] === 'ISO 8601'
           ? m('time', {
             datetime: field.value,
             class: 'db'
@@ -506,9 +506,9 @@ var Field = {
               label_left && ['int', 'float'].includes(field.datatype) ? 'fr' : '',
               (field.expanded) ? 'bl b--moon-gray pl3' : 'truncate',
               (field.is_filepath) ? 'underline pointer blue' : '',
-              field.element == 'textarea' ? 'markdown' : ''
+              field.element === 'textarea' ? 'markdown' : ''
             ].join(' '),
-            value: field.element == 'textarea' ? null : field.value,
+            value: field.element === 'textarea' ? null : field.value,
             onclick: function() {
               if (field.is_filepath) {
                 data = {}
@@ -523,9 +523,9 @@ var Field = {
                 window.open('/db_file?' + params, '_blank')
               }
             }
-          }, Field.display_value(field, rec, field.element != 'textarea')),
+          }, Field.display_value(field, rec, field.element !== 'textarea')),
           // Show trash bin for field from cross reference table
-          rec.table.relationship != 'M:M' || !config.edit_mode ? ''
+          rec.table.relationship !== 'M:M' || !config.edit_mode ? ''
           : m('i', {
             class: 'nf nf-fa-trash_o light-blue pl1 hover-blue pointer',
             onclick: Record.delete.bind(this, rec)

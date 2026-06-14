@@ -19,7 +19,7 @@ var login = {
       })
     })
 
-    var header = ds.base.name == 'urdr' ? 'Log in' : 'Connect' 
+    var header = ds.base.name === 'urdr' ? 'Log in' : 'Connect' 
 
     return m('form', [
       m('div', { class: 'f4 mb2' }, header),
@@ -28,7 +28,7 @@ var login = {
       this.create ? '' : m(Select, {
         value: login.param.cnxn,
         onchange: function() {
-          if (this.value == 'new') {
+          if (this.value === 'new') {
             login.create = true
             login.param = {}
           } else if (this.value) {
@@ -47,21 +47,21 @@ var login = {
             })
           }
         },
-        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
+        class: ds.base.name === 'urdr' ? 'dn' : 'db w-100 mb1',
         placeholder: '– Choose connection --',
         options: cnxn_options
       }),
       !this.create ? '' : m('input[type=text]', {
         id: 'connection-name',
         placeholder: 'Connection name',
-        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
+        class: ds.base.name === 'urdr' ? 'dn' : 'db w-100 mb1',
         onchange: function() {
           login.param.name = this.value
           login.param.cnxn = this.value.toLowerCase().replace(' ', '-')
         }
       }),
       m(Select, {
-        class: ds.base.name == 'urdr' ? 'dn' : 'w-100 mb1',
+        class: ds.base.name === 'urdr' ? 'dn' : 'w-100 mb1',
         id: 'system',
         name: 'system',
         label: 'System',
@@ -116,7 +116,7 @@ var login = {
       m('input[type=text]', {
         id: 'server',
         name: 'server',
-        placeholder: $('#system').val() == 'sqlite'
+        placeholder: $('#system').val() === 'sqlite'
           ? 'Path to folder' : 'Host',
         value: login.param.server,
         disabled: !login.param.cnxn,
@@ -124,27 +124,27 @@ var login = {
           login.param.server = this.value
           return true
         },
-        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1'
+        class: ds.base.name === 'urdr' ? 'dn' : 'db w-100 mb1'
       }),
-      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' 
+      login.param.system === 'sqlite' && ds.base.name !== 'urdr' ? '' 
       : m('input[type=text]', {
         id: 'brukernavn',
         name: 'brukernavn',
         placeholder: 'Brukernavn',
         value: login.param.username,
-        disabled: !(login.param.cnxn || ds.base.name == 'urdr'),
+        disabled: !(login.param.cnxn || ds.base.name === 'urdr'),
         class: 'db w-100 mb1',
         onchange: function() {
           login.param.username = this.value
         }
       }),
-      login.param.system == 'sqlite' && ds.base.name != 'urdr' ? '' 
+      login.param.system === 'sqlite' && ds.base.name !== 'urdr' ? '' 
       : m('input[type=password]', {
         id: 'passord',
         name: 'passord',
         placeholder: 'Passord',
         value: login.param.password,
-        disabled: !(login.param.cnxn || ds.base.name == 'urdr'),
+        disabled: !(login.param.cnxn || ds.base.name === 'urdr'),
         class: 'db w-100 mb1',
         onchange: function() {
           login.param.password = this.value
@@ -156,7 +156,7 @@ var login = {
         placeholder: 'Database',
         value: login.param.database,
         disabled: !login.param.cnxn,
-        class: ds.base.name == 'urdr' ? 'dn' : 'db w-100 mb1',
+        class: ds.base.name === 'urdr' ? 'dn' : 'db w-100 mb1',
         onchange: function() {
           login.param.database = this.value
         }
@@ -168,7 +168,7 @@ var login = {
         }, [m('input[type=radio]', {
           name: 'driver',
           value: key,
-          checked: (!login.param.driver && idx == 0) || login.param.driver === key,
+          checked: (!login.param.driver && idx === 0) || login.param.driver === key,
           onchange: function(e) {
             e.redraw = false
             login.param.driver = key
@@ -178,11 +178,11 @@ var login = {
       m('input[type=button]', {
         id: 'btn_login',
         value: login.param.server || !login.param.cnxn ? header : 'Delete',
-        disabled: !login.param.cnxn && ds.base.name != 'urdr',
+        disabled: !login.param.cnxn && ds.base.name !== 'urdr',
         class: 'db w-100',
         onclick: function() {
           $('#message').hide()
-          if (login.param.server || ds.base.name == 'urdr') {
+          if (login.param.server || ds.base.name === 'urdr') {
             login.error = false
             login.create = false
 
@@ -208,7 +208,7 @@ var login = {
                 $('#login').hide();
               }
             }).catch(function(e) {
-              if (e.code == 401) {
+              if (e.code === 401) {
                 login.error = true
                 $('#brukernavn').trigger('focus').trigger('select')
               }

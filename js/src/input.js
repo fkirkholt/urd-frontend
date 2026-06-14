@@ -15,8 +15,8 @@ var Input = {
       if (key.constrained_columns.indexOf(field.name) > 0) {
         const last_fk_col = key.constrained_columns.slice(-1)
         if (
-          last_fk_col != field.name &&
-          rec.fields[last_fk_col].nullable == true
+          last_fk_col !== field.name &&
+          rec.fields[last_fk_col].nullable === true
         ) {
           return
         }
@@ -35,7 +35,7 @@ var Input = {
         if (col.value != null && column in rec.fields) {
           const pkcol = field.fkey.referred_columns.slice(-1)[0]
 
-          if (key.referred_table == field.fkey.referred_table) {
+          if (key.referred_table === field.fkey.referred_table) {
             cond = key.referred_columns[i] + " = '" + col.value + "'"
           } else {
             cond = pkcol + ' in (select ' + key.referred_columns[key.foreign_idx]
@@ -55,8 +55,8 @@ var Input = {
   validate: function(value, field) {
     field.invalid = field.invalid || false
     field.errormsg = field.errormsg || ''
-    if (field.editable == false) return
-    if ((field.nullable || field.extra) && (value == '' || value == null)) {
+    if (!field.editable) return
+    if ((field.nullable || field.extra) && (value === '' || value == null)) {
       field.invalid = false
     } else if (
       !field.nullable && (value === '' || value === null) &&
@@ -64,28 +64,28 @@ var Input = {
     ) {
       field.errormsg = 'Feltet kan ikke stå tomt'
       field.invalid = true
-    } else if (field.datatype == 'int' && field.format === 'byte') {
+    } else if (field.datatype === 'int' && field.format === 'byte') {
       field.errormsg = 'Må ha enhet (B, kB, MB, GB) til slutt'
       field.invalid = false
-    } else if (field.datatype == 'int') {
+    } else if (field.datatype === 'int') {
       const pattern = /^-?[0-9]*$/
       if (!pattern.test(value)) {
         field.errormsg = 'Feltet skal ha heltall som verdi'
         field.invalid = true
       }
-    } else if (field.datatype == 'date') {
-      if (dayjs(value, 'YYYY-MM-DD', true).isValid() == false) {
+    } else if (field.datatype === 'date') {
+      if (!dayjs(value, 'YYYY-MM-DD', true).isValid()) {
         field.errormsg = 'Feil datoformat'
         field.invalid = true
       }
     } else if (
-      field.datatype == 'str' && 
-      field.attrs.placeholder == 'yyyy(-mm(-dd))'
+      field.datatype === 'str' && 
+      field.attrs.placeholder === 'yyyy(-mm(-dd))'
     ) {
       if (
-        dayjs(value, 'YYYY-MM-DD', true).isValid() == false &&
-        dayjs(value, 'YYYY-MM', true).isValid() == false &&
-        dayjs(value, 'YYYY', true).isValid() == false
+        !dayjs(value, 'YYYY-MM-DD', true).isValid() &&
+        !dayjs(value, 'YYYY-MM', true).isValid() &&
+        !dayjs(value, 'YYYY', true).isValid()
       ) {
         field.errormsg = 'Feil datoformat'
         field.invalid = true
@@ -101,13 +101,13 @@ var Input = {
 
     if (
       !vnode.attrs.placeholder &&
-      field.extra == 'auto_increment' &&
-      field.element != 'select'
+      field.extra === 'auto_increment' &&
+      field.element !== 'select'
     ) {
       vnode.attrs.placeholder = 'autoincr.'
     }
 
-    vnode.attrs.required = field.extra != 'auto_increment' && !field.nullable
+    vnode.attrs.required = field.extra !== 'auto_increment' && !field.nullable
     vnode.attrs.value = field.value
     vnode.attrs.disabled = !field.editable
     vnode.attrs.style = vnode.attrs.style || {}
@@ -121,26 +121,26 @@ var Input = {
 
     Object.values(rec.table.indexes).forEach(function(idx) {
       if (idx.columns[0] === field.name) {
-        if (idx.columns.length == 1 && idx.unique) {
+        if (idx.columns.length === 1 && idx.unique) {
           field.unique = true
         }
       }
     })
 
-    if (field.element == 'select' && (field.options || field.optgroups)) {
+    if (field.element === 'select' && (field.options || field.optgroups)) {
       let filtered_optgroups
       const optgroup_field = rec.fields[field.optgroup_field]
 
       if (field.optgroups && field.optgroup_field && optgroup_field.value) {
         filtered_optgroups = field.optgroups.filter(function(optgroup) {
-          return optgroup.label == optgroup_field.value
+          return optgroup.label === optgroup_field.value
         })
       } else {
         filtered_optgroups = field.optgroups
       }
 
       const option = field.options.find(function(opt) {
-        return opt.value == field.value
+        return opt.value === field.value
       })
 
       vnode.attrs.options = field.options
@@ -155,7 +155,7 @@ var Input = {
             .closest('optgroup').data('value')
           rec.fields[field.optgroup_field].value = optgroup
         }
-        if (event.target.value == field.value) {
+        if (event.target.value === field.value) {
           return
         }
         var text = event.target.options[idx].text
@@ -169,12 +169,12 @@ var Input = {
           disabled: true, value: option ? option.label : field.value
         })
         : m(Select, {...vnode.attrs})
-    } else if (field.element === 'input' && field.attrs.type == 'search') {
+    } else if (field.element === 'input' && field.attrs.type === 'search') {
 
       if (!field.text) field.text = field.value
 
-      vnode.attrs.type = field.datatype == 'int' ? 'number' : 'text'
-      vnode.attrs.class += field.datatype == 'int' ? ' mw4' : ''
+      vnode.attrs.type = field.datatype === 'int' ? 'number' : 'text'
+      vnode.attrs.class += field.datatype === 'int' ? ' mw4' : ''
       vnode.attrs.size = field.size ? Math.round(field.size * 0.7) : null
       vnode.attrs.item = field
       vnode.attrs.text = field.text
@@ -221,7 +221,7 @@ var Input = {
             var options = result
             event.target.setCustomValidity("")
             for (const idx in options) {
-              if (value == options[idx].value) {
+              if (value === options[idx].value) {
                 event.target.setCustomValidity("Ikke unik verdi")
                 field.invalid = true
                 field.errormsg = 'Ikke unik verdi'
@@ -242,7 +242,7 @@ var Input = {
 
       return m(Autocomplete, {...vnode.attrs})
     } else if (
-      field.datatype == 'json'
+      field.datatype === 'json'
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
@@ -257,7 +257,7 @@ var Input = {
 
       return m(Codefield, {...vnode.attrs})
     } else if (
-      field.datatype == 'str' && (!field.size || field.size > 1000) 
+      field.datatype === 'str' && (!field.size || field.size > 1000) 
     ) {
       vnode.attrs.id = field.name
       vnode.attrs['data-pkey'] = rec.pkey
@@ -270,13 +270,13 @@ var Input = {
       vnode.attrs.lang = null
       vnode.attrs.value = field.value
       vnode.attrs.onchange = function(value) {
-        if (!field.dirty || value == '' || field.value == null) {
+        if (!field.dirty || value === '' || field.value == null) {
           // Activates save button on change
           m.redraw()
         }
         // Remove trailing space
         value = value.replace(/ *\n/g, '\n')
-        if (value != field.value) {
+        if (value !== field.value) {
           Field.update(value, field.name, rec)
         }
       }
@@ -284,7 +284,7 @@ var Input = {
       field.foldable = false
 
       return m(Codefield, {...vnode.attrs})
-    } else if (field.element == 'textarea') {
+    } else if (field.element === 'textarea') {
       const text = field.value ? marked.parse(field.value) : ''
 
       vnode.attrs.class = 'w-100'
@@ -295,9 +295,9 @@ var Input = {
       }
 
       return vnode.attrs.disabled ? m.trust(text) : m('textarea', {...vnode.attrs})
-    } else if (field.element == 'input' && field.attrs.type == 'checkbox') {
+    } else if (field.element === 'input' && field.attrs.type === 'checkbox') {
       vnode.attrs.checked = +field.value
-      vnode.attrs.indeterminate = field.value === null ? true : false
+      vnode.attrs.indeterminate = field.value === null
       vnode.attrs.onclick = function(event) {
         var cb = event.target
         if (field.nullable && cb.readOnly) cb.checked=cb.readOnly=false;
@@ -311,7 +311,7 @@ var Input = {
       }
 
       return m('input[type=checkbox][name=' + field.name + ']', {...vnode.attrs})
-    } else if (field.element == 'input' && field.attrs.type == 'date') {
+    } else if (field.element === 'input' && field.attrs.type === 'date') {
       vnode.attrs.value = typeof field.value === 'object' && field.value !== null
         ? field.value.date
         : field.value
@@ -327,7 +327,7 @@ var Input = {
       }
 
       return m('input[type=date]', {...vnode.attrs})
-    } else if (field.datatype == 'float' || field.datatype == 'Decimal') {
+    } else if (field.datatype === 'float' || field.datatype === 'Decimal') {
       vnode.attrs.type = 'number'
       if (field.scale > 0) {
         vnode.attrs.step = '.' + '0'.repeat(field.scale - 1) + '1'
@@ -335,12 +335,12 @@ var Input = {
       vnode.attrs.class += field.precision < 5 
         ? ' mw3' : ' mw4'
       return m('input', {...vnode.attrs})
-    } else if (field.datatype == 'int') {
+    } else if (field.datatype === 'int') {
       vnode.attrs.type = 'number'
       vnode.attrs.style = 'width: 70px'
       return m('input', {...vnode.attrs})
     } else if (
-      field.datatype == 'str' && get(field, 'attrs.data-format') == 'ISO 8601'
+      field.datatype === 'str' && get(field, 'attrs.data-format') === 'ISO 8601'
     ) {
       vnode.attrs.pattern = 
         '^[12]\\d{3}(?:(?:-(?:0[1-9]|1[0-2]))(?:-(?:0[1-9]|[12]\\d|3[01]))?)?$'

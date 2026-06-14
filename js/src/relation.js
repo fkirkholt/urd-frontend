@@ -36,8 +36,8 @@ var Relation = {
     // Make list instead of table of relations if only one column shown
     // and this relation has no subordinate relations of its own
     if (
-      columns.length == 1 && columns[0].fkey &&
-      Object.keys(rel.relations).length == 0
+      columns.length === 1 && columns[0].fkey &&
+      Object.keys(rel.relations).length === 0
     ) {
       rel.relationship = 'M:M'
       return Relation.draw_relation_list(rel, record)
@@ -47,7 +47,7 @@ var Relation = {
       // draw header cells
       m('tr', { class: 'bb' }, [
         m('td'),
-        rel.pkey.length == 0 ? '' : m('td', { class: 'w0' }),
+        rel.pkey.length === 0 ? '' : m('td', { class: 'w0' }),
         Object.keys(rel.grid.columns).map(function(label) {
           var field_name = rel.grid.columns[label]
 
@@ -81,7 +81,7 @@ var Relation = {
         // record and not to parent records
         var ismatch = Object.keys(rel.conds).every(function(k) {
           if (!rec.columns[k]) return true
-          return rel.conds[k] == rec.columns[k].value
+          return rel.conds[k] === rec.columns[k].value
         })
         rec.readonly = !rec.new && !ismatch
 
@@ -90,7 +90,7 @@ var Relation = {
         if (rec.relations) {
           Object.values(rec.relations).forEach(function(rel) {
             var count = rel.count_records
-            if (count && rel.delete_rule == "RESTRICT") {
+            if (count && rel.delete_rule === "RESTRICT") {
               rec.deletable = false
             }
           })
@@ -125,7 +125,7 @@ var Relation = {
         // Make editable only relations attached directly to
         // record and not to parent records
         var ismatch = Object.keys(rel.conds).every(function(k) {
-          return rec.columns[k] && rel.conds[k] == rec.columns[k].value
+          return rec.columns[k] && rel.conds[k] === rec.columns[k].value
         })
         rec.readonly = !rec.new && !ismatch
         if (rec.readonly) rec.inherited = true
@@ -166,7 +166,7 @@ var Relation = {
       (
         record.readonly ||
         !config.edit_mode ||
-        rel.relationship == "1:1"
+        rel.relationship === "1:1"
       ) ? '' : [
         !rel.privilege.insert ? '' : m('a', {
           onclick: function(e) { Relation.add(e, rel) }
@@ -188,7 +188,7 @@ var Relation = {
     // of the table if this is a direct descendant
     Object.values(rel_table.fkeys).forEach(function(fkey) {
       var res = rel_fkey.constrained_columns.every(function(col) {
-        return fkey.name != fkey_name && fkey.constrained_columns.indexOf(col) >= 0
+        return fkey.name !== fkey_name && fkey.constrained_columns.indexOf(col) >= 0
       });
 
       // If we check direct relation in contents, then the foreign key also
@@ -213,9 +213,9 @@ var Relation = {
     var base_path
     var conditions
     if (
-      ds.base.system == 'postgresql' &&
+      ds.base.system === 'postgresql' &&
       rel.schema_name &&
-      rel.schema_name != rel.base_name && rel.schema_name != 'public'
+      rel.schema_name !== rel.base_name && rel.schema_name !== 'public'
     ) {
       base_path = rel.base_name + '.' + rel.schema_name
     } else if (['sqlite', 'duckdb'].includes(ds.base.system)) {
@@ -232,7 +232,7 @@ var Relation = {
       })
     }
 
-    if (conditions.length == 0) conditions = rel.conditions
+    if (conditions.length === 0) conditions = rel.conditions
 
     if (conditions) {
       url += '&' + conditions.join('&')
@@ -254,7 +254,7 @@ var Relation = {
       hidden = false
       Object.keys(rel.show_if).forEach(function(key) {
         var value = rel.show_if[key]
-        if (rec.fields[key].value != value) {
+        if (rec.fields[key].value !== value) {
           hidden = true
         }
       })
@@ -298,16 +298,16 @@ var Relation = {
         m('b', { 
           class: [
             'dib mr2 ',
-            rel.relationship == '1:1' && (!rel.count_records || rel.records[0].delete) 
+            rel.relationship === '1:1' && (!rel.count_records || rel.records[0].delete) 
             ? ''
             : 'underline pointer' 
           ].join(''),
           onclick: function() {
-            if (rel.count_records == 0 && rel.relationship == '1:1') {
+            if (rel.count_records === 0 && rel.relationship === '1:1') {
               return
             }
             Relation.toggle_heading(rel)
-            if (!rel.records || (rel.relationship == '1:1' && !rel.records[0].table)) {
+            if (!rel.records || (rel.relationship === '1:1' && !rel.records[0].table)) {
               Record.get_relations(rec, key)
             } 
           }
@@ -315,9 +315,9 @@ var Relation = {
         rel.dirty
           ? m('i', { class: 'nf nf-fa-pencil ml1 light-gray' })
           : '',
-        (config.edit_mode && rel.relationship == '1:1') ? m('input', {
+        (config.edit_mode && rel.relationship === '1:1') ? m('input', {
           type: 'checkbox',
-          checked: rel.count_records > 0 && rel.records[0].delete != true,
+          checked: rel.count_records > 0 && !rel.records[0].delete,
           onchange: function(ev) {
             if (ev.target.checked) {
               if (rel.count_records) {
@@ -333,7 +333,7 @@ var Relation = {
             }
           }
         })
-        : (rel.relationship == '1:1') ? m('span', {
+        : (rel.relationship === '1:1') ? m('span', {
           class: 'gray f7'
         }, rel.count_records ? '1:1' : '0:1')
         : m('span', {
@@ -358,9 +358,9 @@ var Relation = {
             }
           }, [
             m('b', { class: 'underline pointer mr2' }, label),
-            (config.edit_mode && rel.relationship == '1:1') ? m('input', {
+            (config.edit_mode && rel.relationship === '1:1') ? m('input', {
               type: 'checkbox',
-              checked: rel.count_records > 0 && rel.records[0].delete != true,
+              checked: rel.count_records > 0 && !rel.records[0].delete,
               onchange: function(ev) {
                 if (!ev.target.checked) {
                   if (rel.records[0].new) {
@@ -373,7 +373,7 @@ var Relation = {
                 }
               }
             })
-            : (rel.relationship == '1:1') ? ''
+            : (rel.relationship === '1:1') ? ''
             : m('span', {
               class: 'ml1 pr1 normal light-blue hover-blue f7 link pointer',
               onclick: function() {

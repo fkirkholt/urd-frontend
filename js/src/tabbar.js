@@ -106,7 +106,7 @@ var Tabbar = {
   },
 
   view: function() {
-    if (ds.type == 'dblist' || ds.type == 'file') {
+    if (ds.type === 'dblist' || ds.type === 'file') {
       if (!config.tab) config.tab = 'databases'
       return [
         m('ul', {
@@ -115,12 +115,12 @@ var Tabbar = {
           m('li', {
             class: [
               'list di pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
-              (config.tab == 'databases') && config.dark_mode ? 'bg-dark-gray'
-              : (config.tab == 'databases') ? 'bg-near-white'
+              (config.tab === 'databases') && config.dark_mode ? 'bg-dark-gray'
+              : (config.tab === 'databases') ? 'bg-near-white'
               : config.dark_mode ? 'bg-mid-gray'
               : 'bg-light-gray'
             ].join(' '),
-            style: (config.tab == 'databases') ? 'padding-bottom: 2px' : '',
+            style: (config.tab === 'databases') ? 'padding-bottom: 2px' : '',
             onclick: function() {
               config.tab = 'databases'
             }
@@ -128,12 +128,12 @@ var Tabbar = {
           !ds.dblist?.useradmin ? '' : m('li', {
             class: [
               'list di ml2 pl2 pr2 pt1 f5 bl bt br b--gray pointer br1 br--top',
-              config.tab == 'users' && config.dark_mode ? 'bg-dark-gray'
-              : config.tab == 'users' ? 'bg-near-white'
+              config.tab === 'users' && config.dark_mode ? 'bg-dark-gray'
+              : config.tab === 'users' ? 'bg-near-white'
               : config.dark_mode ? 'bg-near-black' 
               : 'bg-light-gray'
             ].join(' '),
-            style: (config.tab == 'users') ? 'padding-bottom: 2px' : '',
+            style: (config.tab === 'users') ? 'padding-bottom: 2px' : '',
             onclick: function() {
               config.tab = 'users'
               if (!ds.users) {
@@ -149,7 +149,7 @@ var Tabbar = {
             }
           }, 'Users')
         ]),
-        !ds.dblist || !ds.dblist.roles?.length != 0 ? null 
+        !ds.dblist || !ds.dblist.roles?.length !== 0 ? null 
         : m('label', {class: 'fr'}, [
           'Role: ',
           m('select', {
@@ -185,7 +185,7 @@ var Tabbar = {
             ds.dblist.roles?.map(function(role) {
               return m('option', {
                 value: role,
-                selected: ds.dblist.role == role
+                selected: ds.dblist.role === role
               }, role)
             })
           ])
@@ -212,12 +212,12 @@ var Tabbar = {
         m('li', {
           class: [
             'list di pl2 pr2 bl bt br b--gray pointer br1 br--top f5 pt1',
-            (!config.tab || config.tab == 'data') && config.dark_mode ? 'bg-dark-gray'
-            : (!config.tab || config.tab == 'data') ? 'bg-near-white'
+            (!config.tab || config.tab === 'data') && config.dark_mode ? 'bg-dark-gray'
+            : (!config.tab || config.tab === 'data') ? 'bg-near-white'
             : config.dark_mode ? 'bg-near-black'
             : 'bg-light-gray'
           ].join(' '),
-          style: (!config.tab || config.tab == 'data')
+          style: (!config.tab || config.tab === 'data')
             ? 'padding-bottom: 2px' : 'padding-bottom: 0px',
           onclick: function() {
             config.tab = 'data'
@@ -227,12 +227,12 @@ var Tabbar = {
           title: 'Entity Relationship Diagram',
           class: [
             'list ml2 pl2 pt0 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
-            config.tab == 'diagram' && config.dark_mode ? 'bg-dark-gray'
-            : config.tab == 'diagram' ? 'bg-near-white'
+            config.tab === 'diagram' && config.dark_mode ? 'bg-dark-gray'
+            : config.tab === 'diagram' ? 'bg-near-white'
             : config.dark_mode ? 'bg-near-black' 
             : 'bg-light-gray'
           ].join(' '),
-          style: 'padding-bottom: ' + (config.tab == 'diagram' ? '2px' : '0px'),
+          style: 'padding-bottom: ' + (config.tab === 'diagram' ? '2px' : '0px'),
           onclick: function() {
             config.tab = 'diagram'
           }
@@ -242,21 +242,21 @@ var Tabbar = {
         m('li', {
           class: [
             'list ml2 pl2 pr2 di bl bt br b--gray pointer br1 br--top f5 pt1',
-            config.tab == 'sql' && config.dark_mode ? 'bg-dark-gray'
-            : config.tab == 'sql' ? 'bg-near-white'
+            config.tab === 'sql' && config.dark_mode ? 'bg-dark-gray'
+            : config.tab === 'sql' ? 'bg-near-white'
             : config.dark_mode ? 'bg-near-black' 
             : 'bg-light-gray'
           ].join(' '),
-          style: 'padding-bottom: ' + (config.tab == 'sql' ? '2px' : '0px'),
+          style: 'padding-bottom: ' + (config.tab === 'sql' ? '2px' : '0px'),
           onclick: function() {
             config.tab = 'sql'
           }
         }, 'SQL')
       ]),
-      config.tab != 'sql' ? '' : m('span', {
+      config.tab !== 'sql' ? '' : m('span', {
         class: 'gray ml2'
       }, `system: ${ds.base.system}; host: ${ds.base.host}; driver: ${ds.base.driver}`),
-      !ds.table || !(config.tab == 'data') ? '' : m('label', {
+      !ds.table || !(config.tab === 'data') ? '' : m('label', {
         class: 'fr mr3'
       }, [
         m('input', {
@@ -269,7 +269,7 @@ var Tabbar = {
           }
         })
       ], 'Hide empty fields'),
-      (!ds.user.admin) || config.tab == 'sql' ? null : m('label', {
+      (!ds.user.admin) || config.tab === 'sql' ? null : m('label', {
         class: 'fr mr3'
       }, [
         'Threshold ',
@@ -284,7 +284,7 @@ var Tabbar = {
           }
         }), ' %',
       ]),
-      config.tab == 'data' || ds.base.system != 'sqlite' ? null : m('i', {
+      config.tab === 'data' || ds.base.system !== 'sqlite' ? null : m('i', {
         class: 'nf nf-md-database_import_outline fr mr3 f5',
         title: 'Import',
         onclick: function() {
@@ -292,7 +292,7 @@ var Tabbar = {
           $('#import-dialog').show()
         }
       }),
-      config.tab == 'data' ? null : m('i', {
+      config.tab === 'data' ? null : m('i', {
         class: 'nf nf-md-database_export_outline fr mr3 f5',
         title: 'Export',
         onclick: function() {
@@ -300,7 +300,7 @@ var Tabbar = {
           $('#export-dialog').show()
         }
       }),
-      config.tab == 'data' ? null : m('i', {
+      config.tab === 'data' ? null : m('i', {
         class: 'nf nf-md-file_export_outline fr mr3 f5',
         title: 'Export to KDRS Search & View',
         onclick: function() {
@@ -308,7 +308,7 @@ var Tabbar = {
           $('#kdrs-dialog').show()
         }
       }),
-      config.tab == 'data' ? null : m('i', {
+      config.tab === 'data' ? null : m('i', {
         class: 'nf nf-oct-cache fr mr3 f5',
         title: 'Update cache',
         onclick: function() {
@@ -352,7 +352,7 @@ var Tabbar = {
           checked: ds.table && ds.table.filters && 
                    ds.table.expansion_column in ds.table.filters && 
                    ds.table.filters[ds.table.expansion_column] &&
-                   ds.table.filters[ds.table.expansion_column].operator == 'IS NULL',
+                   ds.table.filters[ds.table.expansion_column].operator === 'IS NULL',
           onclick: function(ev) {
             var path = m.route.get()
             var query_params = {}
@@ -371,7 +371,7 @@ var Tabbar = {
           }
         })
       ], 'Show top level only'),
-      (config.tab != 'diagram' ? null : m('label', {
+      (config.tab !== 'diagram' ? null : m('label', {
         class: 'fr mr3',
         title: "Choose which relations to display"
       }, [
@@ -390,7 +390,7 @@ var Tabbar = {
           }), value)
         ),
       ])),
-      (config.tab != 'sql' ? null : m('label', {
+      (config.tab !== 'sql' ? null : m('label', {
         class: 'fr mr3',
         title: 'Choose sql expression',
       }, [

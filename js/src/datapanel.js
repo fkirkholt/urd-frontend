@@ -1,23 +1,23 @@
 var Datapanel = {
 
   set_attrs: function() {
-    if (ds.base.html_attrs == undefined) {
+    if (ds.base.html_attrs === undefined) {
       return
     }
     Object.keys(ds.base.html_attrs).sort().forEach(function(selector) {
       for (const attr in ds.base.html_attrs[selector]) {
         const value = ds.base.html_attrs[selector][attr]
-        if (attr == 'style' && typeof(value) == 'object' && value !== null) {
+        if (attr === 'style' && typeof(value) === 'object' && value !== null) {
           for (const key in value) {
             $(selector).css(key, value[key])
           }
-        } else if (typeof value == 'boolean') {
+        } else if (typeof value === 'boolean') {
           $(selector).prop(attr, value)
         } else {
           $(selector).attr(attr, value)
         }
 
-        if (attr == 'data-text') {
+        if (attr === 'data-text') {
           $(selector).text(value)
         }
       }
@@ -32,14 +32,14 @@ var Datapanel = {
 
   view: function() {
 
-    if (config.tab == 'diagram') {
+    if (config.tab === 'diagram') {
       return [
         m(Contents),
         m(Diagram)
       ]
     }
 
-    if (config.tab == 'sql') {
+    if (config.tab === 'sql') {
       return m(SQLpanel)
     }
 

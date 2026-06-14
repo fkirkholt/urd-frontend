@@ -17,19 +17,19 @@ var Header = {
         link.rel = 'icon'
         document.head.appendChild(link)
     }
-    if (ds.type == 'login') {
+    if (ds.type === 'login') {
       favicon = 'location.svg'
       title = 'login'
-    } else if (ds.type == 'file' && ds.file && ds.file.type != 'dir') {
+    } else if (ds.type === 'file' && ds.file && ds.file.type !== 'dir') {
       favicon = 'file.svg'
       title = ds.file.name
-    } else if (ds.type == 'file' && ds.file && ds.file.type == 'dir') {
+    } else if (ds.type === 'file' && ds.file && ds.file.type === 'dir') {
       favicon = 'folder.svg'
       title = ds.file.path
-    } else if (ds.type == 'dblist' && ['sqlite', 'duckdb'].includes(ds.base.system)) {
+    } else if (ds.type === 'dblist' && ['sqlite', 'duckdb'].includes(ds.base.system)) {
       favicon = 'folder.svg'
       title = ds.cnxn
-    } else if (ds.type == 'dblist') {
+    } else if (ds.type === 'dblist') {
       favicon = 'host.svg'
       title = ds.cnxn
     } else {
@@ -77,7 +77,7 @@ var Header = {
             m('li', {
               class: 'dn',
               onclick: function() {
-                if ($('#keyboard-shortcuts').css('visibility') == 'visible') {
+                if ($('#keyboard-shortcuts').css('visibility') === 'visible') {
                   $('#keyboard-shortcuts').css('visibility', 'hidden')
                   $(this).html('Show keyboard shortcuts')
                 }

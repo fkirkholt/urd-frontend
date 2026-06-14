@@ -7,7 +7,7 @@ var Fieldset = {
         var fieldname = fieldset.items[label]
         var type = fieldname.indexOf('actions.') > -1 ? 'action' : 'field'
 
-        if (type == 'field') {
+        if (type === 'field') {
           const field = rec.fields[fieldname]
           let separator
           if (idx > 0 && (field.value !== null || field.text !== null)) {
@@ -34,12 +34,12 @@ var Fieldset = {
 
           return !display
           ? m(Input, { rec: rec, fieldname: fieldname, ...field.attrs })
-          : field.datatype == 'date' || field.attrs['data-format'] == 'ISO 8601'
+          : field.datatype === 'date' || field.attrs['data-format'] === 'ISO 8601'
           ? [separator, m('time', { datetime: field.value }, 
                           Field.display_value(field, rec))]
           : [separator, m('data', { value: field.value }, 
                           Field.display_value(field, rec))]
-        } else if (type == 'action') {
+        } else if (type === 'action') {
             const action = ds.table.actions[fieldname]
             return m('span', { class: 'mr2' }, [
               m('input', {
@@ -119,7 +119,7 @@ var Fieldset = {
         ]),
         Object.keys(set.items).map(function(label) {
           var subitem = set.items[label]
-          if (typeof subitem == 'object') {
+          if (typeof subitem === 'object') {
             return m(Fieldset, {
               rec: rec, fieldset: subitem, label: label
             })

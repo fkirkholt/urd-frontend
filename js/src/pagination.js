@@ -3,7 +3,7 @@ var Pagination = {
   navigate: function(name, set_index) {
     var list = ds.table
     var offset = parseInt(list.limit, 10) + parseInt(list.offset, 10)
-    var selection = set_index == false ? null : 0
+    var selection = !set_index ? null : 0
     switch (name) {
       case 'next':
         offset = parseInt(list.offset, 10) + parseInt(list.limit, 10)
@@ -39,8 +39,8 @@ var Pagination = {
     var count_records = parseInt(table.count_records, 10)
     var offset = parseInt(table.offset, 10)
     var limit = parseInt(table.limit, 10)
-    if (name == 'first' || name == 'previous') {
-      return table.offset == 0
+    if (name === 'first' || name === 'previous') {
+      return table.offset === 0
     } else {
       return (count_records - offset <= limit)
     }
@@ -56,15 +56,15 @@ var Pagination = {
         m('li', {
           class: [
             'nf nf-md-table list di ml0 pl2 pr2 bb b--gray pointer br1 br--top f5 pt1',
-            (!ds.table.tab || ds.table.tab == 'data') && config.dark_mode
+            (!ds.table.tab || ds.table.tab === 'data') && config.dark_mode
             ? 'bg-near-black br pb3'
-            : (!ds.table.tab || ds.table.tab == 'data') 
+            : (!ds.table.tab || ds.table.tab === 'data') 
             ? 'bg-white br pb2'
             : config.dark_mode 
             ? 'bg-dark-gray'
             : 'bg-light-gray pb1'
           ].join(' '),
-          style: (!ds.table.tab || ds.table.tab == 'data')
+          style: (!ds.table.tab || ds.table.tab === 'data')
             ? 'padding-top: 5px; padding-bottom: 2px' 
             : 'padding-top: 3px; padding-bottom: 1px',
           onclick: function() {
@@ -75,12 +75,12 @@ var Pagination = {
           class: [
             'nf nf-md-chart_bar list di ml0 pl2 pr2 bb br b--gray', 
             'pointer br1 br--top f5 pt1',
-            (ds.table.tab == 'chart') && config.dark_mode ? 'bg-near-black'
-            : ds.table.tab == 'chart' ? 'bg-white bl'
+            (ds.table.tab === 'chart') && config.dark_mode ? 'bg-near-black'
+            : ds.table.tab === 'chart' ? 'bg-white bl'
             : config.dark_mode ? 'bg-dark-gray'
             : 'bg-light-gray'
           ].join(' '),
-          style: (ds.table.tab == 'chart')
+          style: (ds.table.tab === 'chart')
             ? 'padding-top: 5px; padding-bottom: 2px' 
             : 'padding-top: 3px; padding-bottom: 1px',
           onclick: function() {

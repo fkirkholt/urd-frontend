@@ -127,13 +127,13 @@ var Row = {
       // Key bindings for grid
       onkeydown: function(e) {
         e.redraw = false
-        if (e.keyCode == 38 || e.keyCode == 75) { // arrow up or k
+        if (e.keyCode === 38 || e.keyCode === 75) { // arrow up or k
           $(this).prev('tr').trigger('focus')
           e.preventDefault()
-        } else if (e.keyCode == 40 || e.keyCode == 74) { // arrow down or j
+        } else if (e.keyCode === 40 || e.keyCode === 74) { // arrow down or j
           $(this).next('tr').trigger('focus')
           e.preventDefault()
-        } else if (e.keyCode == 13) { // enter
+        } else if (e.keyCode === 13) { // enter
           e.redraw = false
           $(this).trigger('click')
           if (config.recordview) {
@@ -142,16 +142,16 @@ var Row = {
             $('form[name=record]').find('input,textarea,select')
               .first().trigger('focus')
           }
-        } else if (e.keyCode == 32) { // space
+        } else if (e.keyCode === 32) { // space
           $(this).trigger('click')
           e.preventDefault()
-        } else if (e.shiftKey && e.keyCode == 9) { // shift tab
+        } else if (e.shiftKey && e.keyCode === 9) { // shift tab
           $(this).prev('tr').trigger('click')
-        } else if (e.keyCode == 9) { // tab
+        } else if (e.keyCode === 9) { // tab
           $(this).next('tr').trigger('click')
         }
       },
-      'data-selected': list.selection == idx,
+      'data-selected': list.selection === idx,
       // classes for row
       class: [
         'lh-copy cursor-default',
@@ -228,7 +228,7 @@ var Row = {
         })
       ]),
       // Draw icons for actions in main grid
-      list.grid.actions.length == 0 ? '' : m('td', {
+      list.grid.actions.length === 0 ? '' : m('td', {
         class: [
           'br b--moon-gray bb--light-gray f6 tr',
           list.grid.actions.length ? 'pr2 pl2' : 'pa0'

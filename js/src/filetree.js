@@ -41,7 +41,7 @@ const Filetree = {
       let currentLevel = tree.children
   
       parts.forEach((part, idx) => {
-        const lastpart = idx == parts.length - 1
+        const lastpart = idx === parts.length - 1
         if (!currentLevel[part]) {
           currentLevel[part] = { 
             name: part, 
@@ -92,7 +92,7 @@ const Filetree = {
     if (node.deleted) return
 
     if (
-      Object.keys(node.children).length == 1 && 
+      Object.keys(node.children).length === 1 && 
       Object.keys(Object.values(node.children)[0].children).length)
     {
       const subnode = Object.values(node.children)[0]
@@ -104,12 +104,12 @@ const Filetree = {
       style: node.desc ? 'max-width: 500px' : ''
     }, [
       m('i.nf.f7', {
-        class: node.type == 'dir' && node.expanded ? "nf-oct-chevron_down mr1"
-          : node.type == 'dir' ? "nf-oct-chevron_right mr1" : '',
+        class: node.type === 'dir' && node.expanded ? "nf-oct-chevron_down mr1"
+          : node.type === 'dir' ? "nf-oct-chevron_right mr1" : '',
         style: "margin-left: -40px",
         onclick: function() {
           node.expanded = !node.expanded
-          if (Object.keys(node.children).length == 0) {
+          if (Object.keys(node.children).length === 0) {
             return m.request({
               method: 'get',
               url: '/file_list',
@@ -123,8 +123,8 @@ const Filetree = {
         }
       }),
       m('i.nf', { 
-        class: node.type == 'dir' ? "nf-md-folder_outline" 
-          : node.type == 'database' ? "nf-oct-database ml3"
+        class: node.type === 'dir' ? "nf-md-folder_outline" 
+          : node.type === 'database' ? "nf-oct-database ml3"
           : "nf-oct-file ml3"
       }),
       node.rename ? m('input', {
@@ -157,7 +157,7 @@ const Filetree = {
             },
           })
           .then(function(result) {
-            if (result.success && ds.file && ds.file.path == from) {
+            if (result.success && ds.file && ds.file.path === from) {
               m.route.set('/' + ds.cnxn + '/' +  to)
             }
           })
@@ -171,8 +171,8 @@ const Filetree = {
         class: [
           "pointer",
           node.size > 100000000 ? 'gray' : '',
-          node.type == 'dir' ? 'blue' : '',
-          node.type == 'database' ? 'dark-pink' : ''
+          node.type === 'dir' ? 'blue' : '',
+          node.type === 'database' ? 'dark-pink' : ''
         ].join(' '),
         onclick: function() {
           const path = ds.dblist.path ? (ds.dblist.path + '/') : ''
@@ -196,7 +196,7 @@ const Filetree = {
           return false
         }
       }, m.trust(node.name.replaceAll('_', '_<wbr>'))),
-      node.type == 'dir' ? m("ul.list", {
+      node.type === 'dir' ? m("ul.list", {
         class: node.expanded ? '' : 'dn'
       }, children.flatMap(function(child, idx) {
         if (idx == 100 && node.trunc !== false) {
@@ -212,7 +212,7 @@ const Filetree = {
         return m(Filetree, { node: child })
       }))
       : null,
-      !node.desc || (ds.file && ds.file.type != 'dir') ? null : m('p.mt1.mb1', {
+      !node.desc || (ds.file && ds.file.type !== 'dir') ? null : m('p.mt1.mb1', {
         class: "mt1 mb1 ml4 pl2"
       }, m.trust(node.desc))
     ])

@@ -4,7 +4,7 @@ var Cell = {
   align: function(list, colname) {
     var col = list.fields[colname];
     if ((['int', 'float', 'Decimal'].includes(col.datatype) &&
-      !col.fkey) && (col.element !== 'input' || col.attrs.type != 'checkbox')) {
+      !col.fkey) && (col.element !== 'input' || col.attrs.type !== 'checkbox')) {
       return 'right';
     } else {
       return 'left';
@@ -24,21 +24,21 @@ var Cell = {
     var col = rec.columns[colname]
     if (field.hidden) return
 
-    if (get(field, 'attrs.data-format') == 'markdown') {
+    if (get(field, 'attrs.data-format') === 'markdown') {
       field.value = col.value
       val = Field.display_value(field, rec)
     }
 
     var value = col.value == null && col.text == null ? ''
       // Show value if the table is displayed in compressed mode
-      : get(field, 'attrs.data-format') == 'markdown' ? val
+      : get(field, 'attrs.data-format') === 'markdown' ? val
       : compressed ? col.value
       // else show the display text (that also shows in a select box)
       : col.text ? col.text : col.value
 
-    if (field.element == 'input' && field.attrs.type == 'checkbox') {
-      const checkicon = value == 0 ? 'nf-fa-square_o' 
-        : value == 1 ? 'nf-fa-check_square_o' 
+    if (field.element === 'input' && field.attrs.type === 'checkbox') {
+      const checkicon = value === 0 ? 'nf-fa-square_o' 
+        : value === 1 ? 'nf-fa-check_square_o' 
         : 'nf-fa-minus_square_o'
       value = m('i', { class: 'nf ' + checkicon })
     }
@@ -49,9 +49,9 @@ var Cell = {
       let expansion_col = null
       for (const indexname in ds.table.indexes) {
         const index = ds.table.indexes[indexname]
-        if (index.unique && index.columns.join() != ds.table.pkey.join()) {
+        if (index.unique && index.columns.join() !== ds.table.pkey.join()) {
           for (const fieldname of index.columns) {
-            if (ds.table.fields[fieldname].datatype == 'str') {
+            if (ds.table.fields[fieldname].datatype === 'str') {
               expansion_col = fieldname
               break
             }
@@ -60,13 +60,13 @@ var Cell = {
       }
       if (!expansion_col) {
         for (const fieldname of ds.table.grid.columns) {
-          if (ds.table.fields[fieldname].datatype == 'str') {
+          if (ds.table.fields[fieldname].datatype === 'str') {
             expansion_col = fieldname
             break
           }
         }
       }
-      expansion = colname == expansion_col
+      expansion = colname === expansion_col
     }
 
     icon = m('i', {
@@ -89,7 +89,7 @@ var Cell = {
         compressed || (value && value.length < 30) || (
           field.datatype !== 'str' &&
             field.datatype !== 'bytes' &&
-            field.element != 'select'
+            field.element !== 'select'
         )
           ? 'nowrap' : '',
         compressed && value && value.length > 30 ? 'truncate' : 'overflow-wrap',

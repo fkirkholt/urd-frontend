@@ -223,7 +223,7 @@ var home = {
     })
     .catch(function(e) {
       if (e.code === 401) {
-        if (typeof(e.response.detail) == 'string') {
+        if (typeof(e.response.detail) === 'string') {
           alert(e.response.detail)
         } else {
           ds.base.system = e.response.detail.system
@@ -274,8 +274,8 @@ var home = {
       return !(rec.deleted || label.includes('../') ||
         !ds.dblist.grep?.includes(filter) && (filter !== undefined && 
         !(label.includes(filter) ||
-         (filter.at(0) == '^' && label.startsWith(filter.substring(1)) ||
-         (filter.at(-1) == '$' && label.endsWith(filter.replace('$', '')))))) &&
+         (filter.at(0) === '^' && label.startsWith(filter.substring(1)) ||
+         (filter.at(-1) === '$' && label.endsWith(filter.replace('$', '')))))) &&
         !descr?.includes(filter)
       )
     })
@@ -285,7 +285,7 @@ var home = {
 
   view: function() {
     if (!ds.dblist) return
-    if (config.tab == 'users' && !ds.users) return
+    if (config.tab === 'users' && !ds.users) return
 
     if (!home.initialized) {
       home.filtered_recs = home.filterRecs(ds.dblist.records)
@@ -312,7 +312,7 @@ var home = {
 
     return [m('div#list', { 
       class: 'overflow-y-auto overflow-x-hidden', 
-      style: (ds.file && ds.file.type != 'dir') ? 'min-width: 250px; width:250px' : ''
+      style: (ds.file && ds.file.type !== 'dir') ? 'min-width: 250px; width:250px' : ''
     }, [
       m('ul#filelist-context', {
         class: [
@@ -345,7 +345,7 @@ var home = {
               },
             })
             .then(function(result) {
-              if (result.success && ds.file && ds.file.path == node.path) {
+              if (result.success && ds.file && ds.file.path === node.path) {
                 m.route.set('/' + ds.cnxn + (ds.path ? '/' + ds.path : ''))
               }
               node.deleted = true
@@ -353,7 +353,7 @@ var home = {
           }
         }, 'Delete')
       ]),
-      config.tab == 'users' ? null : m('input', {
+      config.tab === 'users' ? null : m('input', {
         id: 'filter_files',
         style: 'width:240px',
         placeholder: 'filter files',
@@ -361,7 +361,7 @@ var home = {
           home.initialized = false
           var val = event.target.value
           var file
-          if (event.keyCode == KEY_CODE_ENTER) {
+          if (event.keyCode === KEY_CODE_ENTER) {
             if (event.shiftKey) {
               file = (ds.dblist.path ? ds.dblist.path + '/' : '') + val
               m.route.set('/' + ds.cnxn + '/' + file)
@@ -373,17 +373,17 @@ var home = {
           return
         }
       }),
-      config.tab == 'users' ? null : m('div', {
+      config.tab === 'users' ? null : m('div', {
         style: 'width:240px'
       }, [
         m('span', {
           class: 'fr gray' 
-        }, home.filtered_recs.length == ds.dblist.records.length 
+        }, home.filtered_recs.length === ds.dblist.records.length 
           ? home.filtered_recs.length
           : home.filtered_recs.length + '/' + ds.dblist.records.length
         )
       ]),
-      config.tab == 'users' ? null : m("ul.list", { style: 'margin-left: 20px' }, [
+      config.tab === 'users' ? null : m("ul.list", { style: 'margin-left: 20px' }, [
         !ds.path ? null : m('li', [
           m('i', { class: "nf nf-fa-level_up", style: "margin-left:-24px" }),
           m('span', {
@@ -396,7 +396,7 @@ var home = {
         ]),
         Object.values(home.treeData.children).flatMap(function(child, idx) {
           const node = home.treeData
-          if (idx == 100 && home.trunc !== false) {
+          if (idx === 100 && home.trunc !== false) {
             return m('span', {
               class: 'underline pointer',
               onclick: function() {
@@ -409,7 +409,7 @@ var home = {
           return m(Filetree, { node: child })
         })
       ]),
-      config.tab != 'users' ? null : ds.users.map(function(user) {
+      config.tab !== 'users' ? null : ds.users.map(function(user) {
         return [
           user.expanded ? '' : m('p', {
             class: 'ml3 mt1 mb1 underline pointer',
@@ -514,7 +514,7 @@ var home = {
       class: 'flex flex-column',
       style: 'flex-grow: 1'
     }, [
-      !ds.file || ds.file.type == 'dir' ? '' 
+      !ds.file || ds.file.type === 'dir' ? '' 
       : m('div', { class: 'ml3 mb2'}, [
         m('i', { 
           id: 'save-file',
@@ -548,12 +548,12 @@ var home = {
           }
         }),
       ]),
-      !ds.file || ds.file.type == 'dir' ? '' 
+      !ds.file || ds.file.type === 'dir' ? '' 
       : ds.file.msg ? m('div', { class: 'ml3'}, ds.file.msg) 
       : ds.file.type.startsWith('image/') ? m('div', m('img', { 
         src: '/' + ds.file.path
       }))
-      : ds.file.type == 'application/pdf' ? m('embed', {
+      : ds.file.type === 'application/pdf' ? m('embed', {
         src: ds.file.name,
         type: ds.file.type,
         height: '100%',

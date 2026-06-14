@@ -19,7 +19,7 @@ var Import_dialog = {
       Import_dialog.msg = data.msg
       Import_dialog.progress = data.progress
       m.redraw()
-      if (data.msg == "done") {
+      if (data.msg === "done") {
         eventSource.close()
         Import_dialog.msg = ''
         $('div.curtain').hide()

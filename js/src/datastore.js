@@ -27,7 +27,7 @@ var datastore = {
         datastore.file = {
           name: ds.base.name.split('/')[-1],
           path: ds.base.name,
-          type: 'application/vnd.' + (ds.base.system == 'sqlite' ? 'sqlite3' : 'duckdb')
+          type: 'application/vnd.' + (ds.base.system === 'sqlite' ? 'sqlite3' : 'duckdb')
         }
       }
 
@@ -49,7 +49,7 @@ var datastore = {
         $('div.curtain').show()
         $('#login').show()
         $('#brukernavn').trigger('focus')
-        if (e.response && typeof e.response.detail == 'string') {
+        if (e.response && typeof e.response.detail === 'string') {
           $('#message').removeClass('bg-light-green').addClass('bg-red')
             .html(e.response.detail).show()
         }

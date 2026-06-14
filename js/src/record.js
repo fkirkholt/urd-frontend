@@ -10,7 +10,7 @@ var Record = {
   },
 
   select: function(table, idx) {
-    if (table.records.length == 0) {
+    if (table.records.length === 0) {
       table.selection = null
       return
     }
@@ -95,8 +95,8 @@ var Record = {
       }
     }).then(function(result) {
       var rel = result.data[alias]
-      if (rel.relationship == '1:1') {
-        if (rel.count_records == 0) {
+      if (rel.relationship === '1:1') {
+        if (rel.count_records === 0) {
           Record.create(rel, true)
           rel.expanded = true
           rel.count_records = 1
@@ -179,7 +179,7 @@ var Record = {
             const parts = filter.field.split('.')
             let table_name
             let field_name
-            if (parts.length == 2) {
+            if (parts.length === 2) {
               table_name = parts[0]
               field_name = parts[1]
             } else {
@@ -200,8 +200,7 @@ var Record = {
           field.value = conditions[0].value
           field.dirty = true
         } else if (
-          field.attrs?.['data-format'] == 'json' &&
-          field.nullable == false
+          field.attrs?.['data-format'] === 'json' && !field.nullable
         ) {
           field.value = '{}'
         } else {
@@ -318,14 +317,14 @@ var Record = {
           } 
         })
         rec.pkey = data.values
-      } else if (rec.delete && data.result != 'success') {
+      } else if (rec.delete && data.result !== 'success') {
         $('#message').removeClass('bg-light-green').addClass('bg-red')
         .show().html(data.result)
         setTimeout(function() {
           $('#message').hide()
         }, 4000)
         rec.delete = false
-      } else if (rec.delete && rec.table_name == ds.table.name) {
+      } else if (rec.delete && rec.table_name === ds.table.name) {
         const idx = ds.table.selection
         ds.table.records.splice(idx, 1)
         if (m.route.param('index')) {
@@ -383,7 +382,7 @@ var Record = {
         }
         if (rec.invalid) {
           rel.invalid = true
-          if (rel.relationship == '1:1') {
+          if (rel.relationship === '1:1') {
             record.messages = record.messages.concat(rec.messages)
           }
         }
@@ -408,11 +407,11 @@ var Record = {
     changes.method = rec.delete ? 'delete' :
       rec.new ? 'post' : 'put'
 
-    if (changes.method == 'delete') return changes
+    if (changes.method === 'delete') return changes
 
     var values = {}
     $.each(rec.fields, function(name, field) {
-      if (field.dirty == true) {
+      if (field.dirty) {
         values[name] = field.value
       }
     })
@@ -487,7 +486,7 @@ var Record = {
 
     for (const idx in rec.relations) {
       const rel = rec.relations[idx]
-      if (rel.count_records && rel.delete_rule == "RESTRICT") {
+      if (rel.count_records && rel.delete_rule === "RESTRICT") {
         deletable = false
       }
     }
@@ -504,7 +503,7 @@ var Record = {
 
     Record.validate(rec)
 
-    rec.dirty = rec.dirty == undefined ? false : rec.dirty
+    rec.dirty = rec.dirty === undefined ? false : rec.dirty
 
     return [
       Object.keys(rec.table.form.items).flatMap(function(label) {
@@ -518,7 +517,7 @@ var Record = {
           return []
         }
 
-        if (typeof item == 'object') {
+        if (typeof item === 'object') {
           Object.values(item.items).forEach(function(subitem) {
             if (
               subitem in rec.table.fields && 
@@ -535,9 +534,9 @@ var Record = {
             fieldset: item,
             label: label
           })
-        } else if (typeof item == "string" && item.includes('relation')) {
+        } else if (typeof item === "string" && item.includes('relation')) {
           return m(Relation, { rec: rec, ref: item, label: label })
-        } else if (typeof item == "string" && item.includes('action')) {
+        } else if (typeof item === "string" && item.includes('action')) {
           // TODO
           return []
         } else {

@@ -17,11 +17,11 @@ var Contents = {
     display = display || 'none'
     Object.keys(node.subitems).forEach(function(label) {
       var subitem = node.subitems[label]
-      if (typeof (subitem) == 'object') {
+      if (typeof (subitem) === 'object') {
         if (subitem.item) {
           const object = get(ds.base, subitem.item, ds.base.tables[subitem.item])
           if (
-            (object.hidden != true && object.type != 'list') || config.admin) {
+            (!object.hidden && object.type !== 'list') || config.admin) {
             display = 'block'
           }
         }
@@ -35,7 +35,7 @@ var Contents = {
           return
         }
         if (
-          (object.hidden != true && object.type != 'list') || config.admin) {
+          (!object.hidden && object.type !== 'list') || config.admin) {
           display = 'block'
         }
       }
@@ -116,7 +116,7 @@ var Contents = {
     var item
     var display_chevron
     // If this is a table with subordinate tables
-    if (typeof node == 'object') {
+    if (typeof node === 'object') {
       subitems = node.subitems
       item = node.item
       display_chevron = Contents.display_header(node)
@@ -126,9 +126,9 @@ var Contents = {
     }
     // For now only tables are accepted in contents
     var table = get(ds.base, item, ds.base.tables[item])
-    if (item.indexOf('.') == -1) item = 'tables.' + item
+    if (item.indexOf('.') === -1) item = 'tables.' + item
     if (
-      ((table.hidden || table.type == 'list') && !config.admin) ||
+      ((table.hidden || table.type === 'list') && !config.admin) ||
       (
         ds.table_filter && 
         !table.name.toLowerCase().includes(ds.table_filter.toLowerCase())
@@ -136,7 +136,7 @@ var Contents = {
     ) {
       return
     }
-    var icon = table.type && (table.type == 'list') 
+    var icon = table.type && (table.type === 'list') 
       ? 'nf-fa-list'
       : 'nf-md-table'
     var icon_color = table.hidden && config.dark_mode ? 'silver'
@@ -147,17 +147,17 @@ var Contents = {
     return m('div', {
       class: [
         'nowrap',
-        ds.table && ds.table.name == table.name && config.dark_mode  ? 'bg-blue'
-        : ds.table && ds.table.name == table.name ? 'bg-blue white' : ''
+        ds.table && ds.table.name === table.name && config.dark_mode  ? 'bg-blue'
+        : ds.table && ds.table.name === table.name ? 'bg-blue white' : ''
       ].join(' ')
     }, [
         // Draw expansion icon for tables having subordinate tables
-        typeof node != 'object' ? m('i', { class: 'mr1 nf nf-oct-dot o-0' }) : m('i', {
+        typeof node !== 'object' ? m('i', { class: 'mr1 nf nf-oct-dot o-0' }) : m('i', {
           class: [
             'w1 mr1 tc light-silver nf',
             node.expanded ? 'nf-oct-chevron_down' : 'nf-oct-chevron_right',
           ].join(' '),
-          style: display_chevron == 'none' ? 'visibility: hidden' : '',
+          style: display_chevron === 'none' ? 'visibility: hidden' : '',
           onclick: function() {
             node.expanded = !node.expanded
           }
@@ -167,7 +167,7 @@ var Contents = {
           class: [
             icon_color + ' mr1 nf ' + icon,
             // Indent icon correctly when there is no expansjon icon
-            (typeof node == 'object' && display_chevron == 'block')
+            (typeof node === 'object' && display_chevron === 'block')
               ? ''
               : ''
           ].join(' '),
@@ -177,7 +177,7 @@ var Contents = {
           class: [
             'color-inherit underline-hover nowrap pointer',
             table.description ? 'dot' : 'link',
-            table.type == 'view' ? 'i' : ''
+            table.type === 'view' ? 'i' : ''
           ].join(' '),
           title: table.description ? table.description : '',
           onclick: function() {
@@ -193,7 +193,7 @@ var Contents = {
               : 'Hide table'
             $('ul#context-table li.hide').html(hidden_txt)
 
-            var type_txt = table.type == 'list'
+            var type_txt = table.type === 'list'
               ? 'Set as data table'
               : 'Set as lookup table'
             $('ul#context-table li.type').html(type_txt)
@@ -216,7 +216,7 @@ var Contents = {
             Object.keys(subitems).flatMap(function(label) {
               var subitem = subitems[label]
               var subitem_name
-              if (typeof subitem == 'object') {
+              if (typeof subitem === 'object') {
                 subitem_name = subitem.item
               } else {
                 subitem_name = subitem
@@ -227,7 +227,7 @@ var Contents = {
               var rel_fkey_name
               Object.keys(rel.fkeys).forEach(function(fkey_name) {
                 var fkey = rel.fkeys[fkey_name]
-                if (fkey.referred_table == table.name) {
+                if (fkey.referred_table === table.name) {
                   rel_fkey_name = fkey_name
                 }
               })
@@ -272,7 +272,7 @@ var Contents = {
           ].join(' ')
         }, [
             // Show links to this table
-            config.tab == 'data' ? '' : m('li', {
+            config.tab === 'data' ? '' : m('li', {
               class: 'hover-blue',
               onclick: function() {
                 Diagram.added_tables.push(Contents.context_table)
@@ -295,7 +295,7 @@ var Contents = {
               class: 'hover-blue',
               onclick: function() {
                 var tbl = Contents.context_table
-                tbl.type = tbl.type == 'table'
+                tbl.type = tbl.type === 'table'
                   ? 'list'
                   : 'table'
                 $('ul#context-table').hide()
@@ -323,7 +323,7 @@ var Contents = {
               }
             }, [
                 ds.base.schemata.map(function(schema) {
-                  var selected = (schema.split('.').at(-1) == ds.base.schema)
+                  var selected = (schema.split('.').at(-1) === ds.base.schema)
                   return m('option', {
                     value: schema,
                     selected: selected
@@ -341,7 +341,7 @@ var Contents = {
             // Draw contents from ds.base.contents
             ? Object.keys(ds.base.contents).sort().map(function(label) {
               var item = ds.base.contents[label]
-              if (typeof item == 'object' && !item.item) {
+              if (typeof item === 'object' && !item.item) {
                 return Contents.draw_heading(label, item, 3)
               } else {
                 return Contents.draw_table_node(label, item)
@@ -356,7 +356,7 @@ var Contents = {
         ]),
       ]),
       // Show database description to the right of the contents
-      ds.type != 'database' || !ds.base.description ? '' : m('div', { class: 'pl5' }, [
+      ds.type !== 'database' || !ds.base.description ? '' : m('div', { class: 'pl5' }, [
         m('b', 'Description'),
         m('br'),
         m('p', ds.base.description)

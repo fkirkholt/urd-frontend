@@ -38,13 +38,13 @@ var Toolbar = {
       return
     }
 
-    if (communication == 'route') {
+    if (communication === 'route') {
       address += '?' + m.buildQueryString(prim_key)
       Grid.url = address
       m.route.set(address)      
-    } else if (communication == 'submit') {
+    } else if (communication === 'submit') {
       $form.attr('action', address).attr('method', 'post').submit()
-    } else if (communication == 'ajax') {
+    } else if (communication === 'ajax') {
       m.request({
         url: address,
         method: action.method ? action.method : 'get',
@@ -65,7 +65,7 @@ var Toolbar = {
       }).catch(function(e) {
         alert(e.response ? e.response.detail : 'An error has occured.')
       })
-    } else if (communication == 'dialog') {
+    } else if (communication === 'dialog') {
       m.request({
         url: address + '?version=1',
         responseType: "text",
@@ -82,11 +82,11 @@ var Toolbar = {
       var selection = ds.table.selection
       var count_records = ds.table.count_records
       var offset = ds.table.offset
-      if (name == 'first' || name == 'previous') {
-        return offset == 0 && selection == 0
+      if (name === 'first' || name === 'previous') {
+        return offset === 0 && selection === 0
       } else {
         return (count_records - offset <= ds.table.limit &&
-                selection == count_records - ds.table.offset - 1)
+                selection === count_records - ds.table.offset - 1)
       }
     }
   },
@@ -100,7 +100,7 @@ var Toolbar = {
       r = confirm('Are you sure you want to delete the record?')
     }
 
-    if (r === true) {
+    if (r) {
       if (rec.new) {
         ds.table.records.splice(idx, 1)
       } else {
@@ -158,7 +158,7 @@ var Toolbar = {
     var rec = ds.table.records[idx]
 
     // Table can just hold one row if last pkey column starts with 'const_'
-    var single_rec = ds.table.pkey?.slice(-1)[0].substr(0, 6) == 'const_'
+    var single_rec = ds.table.pkey?.slice(-1)[0].substr(0, 6) === 'const_'
     var params = m.route.param()
     var full = single_rec && ds.table.records.length
     var is_pkey = true
@@ -226,13 +226,12 @@ var Toolbar = {
           class: [
             'nf ml3 mr1 pointer',
             config.edit_mode ? 'nf-md-text_box' : 'nf-md-text_box_edit',
-            ds.table.privilege.update == true
-              ? 'dim pointer' : 'moon-gray'
+            ds.table.privilege.update ? 'dim pointer' : 'moon-gray'
           ].join(' '),
           title: config.edit_mode && config.autosave ? 'Finish edit' 
           : config.edit_mode && ds.table.dirty ? 'Finish edit and save' 
           : config.edit_mode ? 'Finish edit'
-          : idx == undefined ? 'Edit mode' 
+          : idx === undefined ? 'Edit mode' 
           : 'Edit record',
           onclick: function(e) {
             config.edit_mode = !config.edit_mode
@@ -253,7 +252,7 @@ var Toolbar = {
           ].join(' '),
           title: 'New record',
           onclick: function(e) {
-            if (ds.table.privilege.insert != true || full) return
+            if (!ds.table.privilege.insert || full) return
             Record.create(ds.table)
             Toolbar.set_url({index: ds.table.selection, replace: true})
 
@@ -277,12 +276,11 @@ var Toolbar = {
         m('i', {
           class: [
             'nf nf-md-text_box_multiple ml2 mr1',
-            ds.table.privilege.insert == true && !full
-              ? 'dim pointer' : 'moon-gray'
+            ds.table.privilege.insert && !full ? 'dim pointer' : 'moon-gray'
           ].join(' '),
           title: 'Copy record',
           onclick: function(e) {
-            if (ds.table.privilege.insert != true || full) return
+            if (!ds.table.privilege.insert || full) return
             Record.copy()
             if (!config.edit_mode) {
               config.edit_mode = true
@@ -296,8 +294,7 @@ var Toolbar = {
         m('i', {
           class: [
             'nf ml2 mr1 nf-md-text_box_remove',
-            (ds.table.privilege.delete == true &&
-              rec && Record.is_deletable(rec))
+            (ds.table.privilege.delete && rec && Record.is_deletable(rec))
               ? ' dim pointer' : '_outline o-50'
           ].join(''),
           title: 'Delete',
@@ -390,11 +387,11 @@ var Toolbar = {
           Object.keys(ds.table.actions).flatMap(function(label) {
             var action = ds.table.actions[label]
 
-            if (action.communication == 'download') {
+            if (action.communication === 'download') {
               return []
             }
 
-            var txt = action.communication != 'ajax'
+            var txt = action.communication !== 'ajax'
               ? action.label + ' ...'
               : action.label
 
@@ -422,7 +419,7 @@ var Toolbar = {
           ].join(' '),
           disabled: Toolbar.button.disabled('first'),
           onclick: function() {
-            if (ds.table.offset == 0) {
+            if (ds.table.offset === 0) {
               Toolbar.set_url({index: 0, offset: 0})
             } else {
               Pagination.navigate('first', true)
@@ -438,7 +435,7 @@ var Toolbar = {
           onclick: function() {
             var idx = ds.table.selection
             var prev = parseInt(idx, 10) - 1
-            if (prev == -1) {
+            if (prev === -1) {
               Pagination.navigate('previous', true)
             } else {
               Toolbar.set_url({index: prev})
@@ -454,7 +451,7 @@ var Toolbar = {
           onclick: function() {
             var idx = ds.table.selection
             var next = parseInt(idx, 10) + 1
-            if (next == ds.table.records.length) {
+            if (next === ds.table.records.length) {
               Pagination.navigate('next', true)
             } else {
               Toolbar.set_url({index: next})

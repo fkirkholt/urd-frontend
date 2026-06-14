@@ -100,7 +100,7 @@ var Search = {
         if (operator === 'IN') {
           val = val.replace(', ', ',').split(',')
           val = val.map(function(value) {
-            return value == parseInt(value, 10)
+            return value === parseInt(value, 10)
               ? parseInt(value, 10)
               : value
           })
@@ -179,15 +179,15 @@ var Search = {
       const operators = Search.get_operators(field)
 
       if (table.alias === undefined) table.alias = table.name
-      const filtername = table.alias == ds.table.name
+      const filtername = table.alias === ds.table.name
         ? field.name
         : (table.alias || table.name) + '.' + field.name
 
       if (!ds.table.filters[filtername]) {
         ds.table.filters[filtername] = {
           field: filtername,
-          operator: field.element == 'textarea' || (
-            field.element == 'input' && field.attrs.type == 'text' &&
+          operator: field.element === 'textarea' || (
+            field.element === 'input' && field.attrs.type === 'text' &&
             !['int', 'Decimal', 'float'].includes(field.datatype)
           ) ? 'LIKE' : '='
         }
@@ -249,7 +249,7 @@ var Search = {
       const key = item.replace('relation.', '')
       const rel = table.relations[key]
 
-      if (rel.relationship == '1:1') {
+      if (rel.relationship === '1:1') {
         return [
           rel.expanded ? null : [m('label', 
             {
@@ -319,10 +319,10 @@ var Search = {
     } else if (['IS NULL', 'IS NOT NULL'].includes(filter.operator)) {
       return null
     } else if (
-      ((field.element == 'select' && field.options &&
+      ((field.element === 'select' && field.options &&
         filter.operator !== 'IN') ||
-        (field.element == 'input' &&
-          field.attrs.type == 'checkbox')) &&
+        (field.element === 'input' &&
+          field.attrs.type === 'checkbox')) &&
       filter.operator !== ''
     ) {
       return m(Select, {
@@ -338,10 +338,10 @@ var Search = {
         }
       })
     } else if (
-      field.datatype != 'int' && (
+      field.datatype !== 'int' && (
         (field.element === 'select' && 
          !['', 'LIKE', 'startswith', 'endswith', '>', '<'].includes(filter.operator)) ||
-        (field.element === 'input' && field.attrs.type == 'search' &&
+        (field.element === 'input' && field.attrs.type === 'search' &&
           ['=', '!='].includes(filter.operator))
       )
     ) {
@@ -377,7 +377,7 @@ var Search = {
           }
         }
       })
-    } else if (field.element == 'input' && field.attrs.type == 'radio') {
+    } else if (field.element === 'input' && field.attrs.type === 'radio') {
       return [
         field.options.map(function(filter) {
           return [m('input[type="radio"]', {
@@ -385,7 +385,7 @@ var Search = {
           }), filter.label]
         })
       ]
-    } else if (field.element == 'input' && field.attrs.type == 'date') {
+    } else if (field.element === 'input' && field.attrs.type === 'date') {
       return m('input[type=date]', {
         name: filter.field,
         value: filter.value,
@@ -395,12 +395,12 @@ var Search = {
         }
       })
     } else {
-      width = (field.size === null || field.size == 0 || field.size > 20)
+      width = (field.size === null || field.size === 0 || field.size > 20)
         ? '100%'
         : field.size + 'em'
       return m('input', {
         name: filter.field,
-        type: field.datatype == 'int' && filter.operator !== 'IN' ? 'number' : 'text',
+        type: field.datatype === 'int' && filter.operator !== 'IN' ? 'number' : 'text',
         value: filter.value !== undefined ? filter.value : '',
         style: 'width: ' + width,
         disabled: filter.operator === '',
@@ -408,7 +408,7 @@ var Search = {
           filter.value = e.target.value
         },
         onkeydown: function(e) {
-          if (e.keyCode == 13) {
+          if (e.keyCode === 13) {
             filter.value = e.target.value
             Search.search(ds.table.filter)
             e.preventDefault()
@@ -437,34 +437,34 @@ var Search = {
     operators = operators.filter(function(operator) {
 
       if (
-        ((field.element == 'select' &&
+        ((field.element === 'select' &&
           (field.fkey && field.fkey.referred_table !== field.table)) ||
-          (field.element == 'input' && field.attrs.type == 'radio')) &&
+          (field.element === 'input' && field.attrs.type === 'radio')) &&
         ['LIKE', 'NOT LIKE', 'startswith', 'endswith', '>', '<']
           .includes(operator.value)
       ) {
         return false
       } else if (
-        field.datatype == 'bool' &&
+        field.datatype === 'bool' &&
         ['IN', 'LIKE', 'NOT LIKE', 'startswith', 'endswith', '>', '<']
           .includes(operator.value)
       ) {
         return false
       } else if (
-        ((field.element == 'input' & field.attrs.type == 'text' &&
-          field.datatype == 'int') ||
-          (field.element == 'input' &&
-            (field.attrs.type == 'date' ||
-              field.datatype == 'int'))) &&
+        ((field.element === 'input' & field.attrs.type === 'text' &&
+          field.datatype === 'int') ||
+          (field.element === 'input' &&
+            (field.attrs.type === 'date' ||
+              field.datatype === 'int'))) &&
         ['LIKE', 'NOT LIKE', 'startswith', 'endswith'].includes(operator.value)
       ) {
         return false
       } else if (
-        (field.datatype == 'str' &&
-          (field.element == 'textarea' ||
-            (field.element == 'input' && field.attrs.type == 'text') ||
-            (field.element == 'input' &&
-              field.attrs.type == 'text'))) &&
+        (field.datatype === 'str' &&
+          (field.element === 'textarea' ||
+            (field.element === 'input' && field.attrs.type === 'text') ||
+            (field.element === 'input' &&
+              field.attrs.type === 'text'))) &&
         ['IN'].includes(operator.value)
       ) {
         return false

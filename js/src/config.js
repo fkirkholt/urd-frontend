@@ -25,13 +25,13 @@ var config = {
     var threshold = $('#preferences [name="threshold"]').val() / 100
     var dark_mode = $('#preferences [name="dark_mode"]').prop('checked') 
     if (
-      limit != config.limit
-      || select != config.select
-      || autosave != config.autosave
-      || theme != config.theme
-      || threshold != config.threshold
-      || recordview != config.recordview
-      || dark_mode != config.dark_mode
+      limit !== config.limit
+      || select !== config.select
+      || autosave !== config.autosave
+      || theme !== config.theme
+      || threshold !== config.threshold
+      || recordview !== config.recordview
+      || dark_mode !== config.dark_mode
     ) {
       config.limit = limit ? limit : config.limit
       config.select = select

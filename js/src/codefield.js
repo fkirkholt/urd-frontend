@@ -26,9 +26,9 @@ import { relpath } from './utils.js'
 
 function completions(context) {
   const word = context.matchBefore(/[\p{L}\p{N}_-]*/u)
-  const uppercase = word.text.charAt(0) == word.text.charAt(0).toUpperCase()
+  const uppercase = word.text.charAt(0) === word.text.charAt(0).toUpperCase()
   const before = context.state.doc.sliceString(Math.max(0, word.from - 2), word.from)
-  const is_link = before == ']('
+  const is_link = before === ']('
   if (!word || (word.to - word.from < 3 && !context.explicit))
     return null
   let all_options = []
@@ -134,7 +134,7 @@ function Codefield() {
           const line = lines[i];
           const lineLength = line.length;
   
-          const actualIndent = line.search(/\S/) < indentSize && line.search(/\S/) !== -1 
+          const actualIndent = line.search(/\S/) < indentSize && line.search(/\S/) !== -1
             ? line.search(/\S/) 
             : indentSize;
   
@@ -188,7 +188,7 @@ function Codefield() {
       // Default — match previous line's indent
       return prevIndent;
     });
-  
+
     return new LanguageSupport(yamlMixedLanguage, yamlIndent);
   }
 
@@ -477,16 +477,16 @@ function Codefield() {
       }),
       EditorView.domEventHandlers({
         keydown(e) {
-          if (e.key == '(' && e.ctrlKey) {
+          if (e.key === '(' && e.ctrlKey) {
             foldCode(editor)
             return true
-          } else if (e.key == ')' && e.ctrlKey) {
+          } else if (e.key === ')' && e.ctrlKey) {
             unfoldCode(editor)
             return true
-          } else if (e.key == '8' && e.altKey && e.ctrlKey) {
+          } else if (e.key === '8' && e.altKey && e.ctrlKey) {
             fold_all_recursive()
             return true
-          } else if (e.key == '9' && e.altKey && e.ctrlKey) {
+          } else if (e.key === '9' && e.altKey && e.ctrlKey) {
             unfold_all()
             return true
           }
@@ -511,11 +511,11 @@ function Codefield() {
       autocompletion({ override: [completions], selectOnOpen: false })
     ]
 
-    if (attrs.lang == 'py') {
+    if (attrs.lang === 'py') {
       extensions.push(ruffLinter)
       extensions.push(indentUnit.of('    '))
     }
-    if (attrs.lang == 'js') {
+    if (attrs.lang === 'js') {
       extensions.push(biomeLinter)
     } 
 
@@ -547,7 +547,7 @@ function Codefield() {
       }
     },
     onupdate: async function(vnode) {
-      if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] != pkey) {
+      if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] !== pkey) {
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
         changed = false

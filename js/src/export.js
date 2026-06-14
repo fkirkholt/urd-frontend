@@ -18,7 +18,7 @@ var Export_dialog = {
     }
 
     var tables = []
-    if (config.tab == 'data') {
+    if (config.tab === 'data') {
       tables.push(ds.table.name)
       param.filter = ds.table.query
       param.columns = []
@@ -53,12 +53,12 @@ var Export_dialog = {
       Export_dialog.msg = data.msg
       Export_dialog.progress = data.progress
       m.redraw()
-      if (data.msg == "done") {
+      if (data.msg === "done") {
         eventSource.close();
         Export_dialog.running = false
         Export_dialog.msg = 'Export finished'
 
-        if (param.dest == 'download') {
+        if (param.dest === 'download') {
           const media_type = param.table ? 'text/tab-separated-values' 
             : 'application/zip'
           window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + 
@@ -90,7 +90,7 @@ var Export_dialog = {
     param.select_recs = select_recs
     param.base = ds.base.name
     param.cnxn = ds.cnxn
-    if (config.tab == 'data') {
+    if (config.tab === 'data') {
       param.table = ds.table.name
       param.filter = ds.table.query
     }
@@ -104,7 +104,7 @@ var Export_dialog = {
       Export_dialog.msg = data.msg
       Export_dialog.progress = data.progress
       m.redraw()
-      if (data.msg == "done") {
+      if (data.msg === "done") {
         eventSource.close();
         Export_dialog.running = false
         Export_dialog.msg = ''
@@ -112,7 +112,7 @@ var Export_dialog = {
         $('div.curtain').hide()
         $('#export-dialog').hide()
 
-        if (param.dest == 'download') {
+        if (param.dest === 'download') {
           const media_type = param.table ? 'text/tab-separated-values' 
             : 'application/zip'
           window.open('/download?cnxn=' + ds.cnxn + '&path=' + data.path + 
@@ -143,13 +143,13 @@ var Export_dialog = {
       ['sqlite', 'duckdb'].includes(ds.base.system) ? './'
       : ds.config.exportdir + '/' + Export_dialog.cnxn_name
     return m('form', [
-      m('h3', 'Export ' + (config.tab != 'data' ? 'database' : 'table')),
+      m('h3', 'Export ' + (config.tab !== 'data' ? 'database' : 'table')),
       !ds.config.exportdir ? '' :  m('div[name=dest]', { class: "mt2" }, [
         m('label', { class: 'db' }, [m('input[type=radio]', {
           name: 'dest',
           value: exportdir
-        })], ' ' + (exportdir == './' ? 'Aktiv mappe' : exportdir)),
-        exportdir == './' ? '' 
+        })], ' ' + (exportdir === './' ? 'Aktiv mappe' : exportdir)),
+        exportdir === './' ? '' 
         : m('label', { class: 'db' }, [m('input[type=radio]', {
           name: 'dest',
           value: exportdir + '/' + ds.base.schema
@@ -193,7 +193,7 @@ var Export_dialog = {
           })
         ]),
         m('br'),
-        config.tab == 'data' ? 'Choose columns:' : 'Choose tables:',
+        config.tab === 'data' ? 'Choose columns:' : 'Choose tables:',
         m('ul', { class: 'list' }, [
           m('li', { class: 'mb2' }, [
             m('input[type=checkbox]', {
@@ -204,7 +204,7 @@ var Export_dialog = {
               }
             }), ' (All)',
           ]),
-          config.tab != 'data' ? '' 
+          config.tab !== 'data' ? '' 
           : Object.keys(ds.table.fields).flatMap(function(fieldname) {
             var field = ds.table.fields[fieldname]
             if (field.virtual) {
@@ -217,12 +217,12 @@ var Export_dialog = {
               }), ' ', field.label
             ])
           }),
-          config.tab == 'data' ? '' 
+          config.tab === 'data' ? '' 
           : Object.keys(ds.base.tables).sort().map(function(tblname) {
             var show_views = $('#export-dialog input[name=view-as-table]')
               .prop('checked')
             var tbl = ds.base.tables[tblname]
-            return (tbl.type == 'view' && !show_views) ? '' :  m('li', {}, [
+            return (tbl.type === 'view' && !show_views) ? '' :  m('li', {}, [
               m('input[type=checkbox]', {
                 name: 'object',
                 value: tblname
@@ -231,13 +231,13 @@ var Export_dialog = {
           })
         ])
       ]),
-      this.type == 'tsv' ? '' : m('div[name=valg]', { class: "mt2" }, [
+      this.type === 'tsv' ? '' : m('div[name=valg]', { class: "mt2" }, [
         m('label', [m('input[type=radio]', {
           name: 'dialect',
           value: 'duckdb',
           onchange: function() {
             Export_dialog.dialect = 'duckdb'
-            if (ds.base.system != 'duckdb') {
+            if (ds.base.system !== 'duckdb') {
               Export_dialog.view_defs = false
             }
           }
@@ -248,7 +248,7 @@ var Export_dialog = {
           value: 'mysql',
           onchange: function() {
             Export_dialog.dialect = 'mysql'
-            if (ds.base.system != 'mysql') {
+            if (ds.base.system !== 'mysql') {
               Export_dialog.view_defs = false
             }
           }
@@ -259,7 +259,7 @@ var Export_dialog = {
           value: 'oracle',
           onchange: function() {
             Export_dialog.dialect = 'oracle'
-            if (ds.base.system != 'oracle') {
+            if (ds.base.system !== 'oracle') {
               Export_dialog.view_defs = false
             }
           }
@@ -270,7 +270,7 @@ var Export_dialog = {
           value: 'postgresql',
           onchange: function() {
             Export_dialog.dialect = 'postgresql'
-            if (ds.base.system != 'postgresql') {
+            if (ds.base.system !== 'postgresql') {
               Export_dialog.view_defs = false
             }
           }
@@ -281,7 +281,7 @@ var Export_dialog = {
           value: 'sqlite',
           onchange: function() {
             Export_dialog.dialect = 'sqlite'
-            if (ds.base.system != 'sqlite') {
+            if (ds.base.system !== 'sqlite') {
               Export_dialog.view_defs = false
             }
           }
@@ -292,7 +292,7 @@ var Export_dialog = {
           value: 'mssql',
           onchange: function() {
             Export_dialog.dialect = 'mssql'
-            if (ds.base.system != 'mssql') {
+            if (ds.base.system !== 'mssql') {
               Export_dialog.view_defs = false
             }
           }
@@ -313,12 +313,12 @@ var Export_dialog = {
         })], ' Exclude empty tables'),
         m('br'),
         m('label', {
-          class: Export_dialog.dialect != ds.base.system ? 'gray' : '',
-          title: Export_dialog.dialect != ds.base.system 
+          class: Export_dialog.dialect !== ds.base.system ? 'gray' : '',
+          title: Export_dialog.dialect !== ds.base.system 
           ? 'Only accessible when exporting to same database system' : null
         }, [m('input[type=checkbox]', {
           name: 'view-defs',
-          disabled: Export_dialog.dialect != ds.base.system,
+          disabled: Export_dialog.dialect !== ds.base.system,
           checked: Export_dialog.view_defs,
           onchange: function(event) {
             Export_dialog.view_defs = event.target.checked
@@ -329,17 +329,17 @@ var Export_dialog = {
           name: 'view-as-table'
         })], ' Export views as tables'),
         m('br'),
-        config.tab == 'data' && ds.table && ds.table.type != 'list' ? '' : [
+        config.tab === 'data' && ds.table && ds.table.type !== 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
             name: 'list-records'
-          })], config.tab == 'data' ? ' Export records' 
+          })], config.tab === 'data' ? ' Export records' 
           : ' Export records from lookup tables'),
           m('br'),
         ],
-        config.tab == 'data' && ds.table && ds.table.type == 'list' ? '' : [
+        config.tab === 'data' && ds.table && ds.table.type === 'list' ? '' : [
           m('label', [m('input[type=checkbox]', {
             name: 'data-records'
-          })], config.tab == 'data' ? ' Export records'
+          })], config.tab === 'data' ? ' Export records'
           : ' Export records from data tables'),
           m('br'),
         ],
@@ -349,14 +349,14 @@ var Export_dialog = {
         m('br')
       ]),
       m('div[name=buttons]', { class: "bottom-0 mt2" }, [
-        Export_dialog.progress == 0 && !Export_dialog.running ? '' 
+        Export_dialog.progress === 0 && !Export_dialog.running ? '' 
         : m('div', Export_dialog.progress + ' % | ' + Export_dialog.msg),
         m('input[type=button]', {
           value: 'OK',
           class: 'fr',
           disabled: Export_dialog.running,
           onclick: function() {
-            if (Export_dialog.msg == 'Export finished') {
+            if (Export_dialog.msg === 'Export finished') {
               Export_dialog.progress = 0
               Export_dialog.msg = 'Counting records ...'
               $('div.curtain').hide()

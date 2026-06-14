@@ -54,13 +54,13 @@ var Diagram = {
     // This makes the diagram respond to changes in threshold value
     var def = ['erDiagram']
     var root_table = ds.base.tables[Diagram.root]
-    if (Diagram.type == 'module') {
+    if (Diagram.type === 'module') {
       const subitems = ds.base.contents[Diagram.root].subitems
       Object.values(subitems).forEach(function(node) {
         Diagram.draw_fkeys_node(node, def)
       })
       Diagram.def = def.join("\n")
-    } else if (Diagram.type == 'table') {
+    } else if (Diagram.type === 'table') {
       Diagram.def = Diagram.get_table_def(root_table, [])
     }
     Diagram.added_tables.forEach(function(tbl_name) {
@@ -91,7 +91,7 @@ var Diagram = {
     // Title for reference tables should be in italic
     $('svg g.classGroup text tspan.title').each(function() {
       var table_name = $(this).html()
-      if (ds.base.tables[table_name].type == 'reference') {
+      if (ds.base.tables[table_name].type === 'reference') {
         $(this).addClass('i')
       }
     })
@@ -108,7 +108,7 @@ var Diagram = {
     var def_recur
 
     // definition for main table
-    if (tablenames.length == 1) {
+    if (tablenames.length === 1) {
       def.push("erDiagram")
       def.push(table.name + ' {')
       if (table.fields) {
@@ -129,13 +129,13 @@ var Diagram = {
     }
 
     // Draw belongs-to relations from foreign keys
-    if (config.show_relations != 'subordinate') {
+    if (config.show_relations !== 'subordinate') {
       Object.keys(table.fkeys).forEach(function(alias) {
         var fk = table.fkeys[alias]
         var field_name = fk.constrained_columns[fk.constrained_columns.length - 1]
         var field = table.fields ? table.fields[field_name] : null
         var fk_table = ds.base.tables[fk.referred_table]
-        if (fk_table == undefined) {
+        if (fk_table === undefined) {
           return
         }
         var line = field?.hidden ? '..' : '--'
@@ -145,7 +145,7 @@ var Diagram = {
           return
         }
 
-        if (field_name[0] == '_') {
+        if (field_name[0] === '_') {
           return
         }
 
@@ -157,13 +157,13 @@ var Diagram = {
         + '"' + table.name + '"' + ' : "' + field_name + '"')
         if (fk_table === undefined) return
         // def.push(fk.table + ' : pk(' + fk_table.pkey.join(', ') + ')')
-        if (fk_table.rowcount && fk.table != table.name) {
+        if (fk_table.rowcount && fk.table !== table.name) {
           // def.push(fk.table + ' : count(' + fk_table.rowcount + ')')
         }
 
 
         // Draw relations recursively
-        if (config.show_relations == 'all' && !tablenames.includes(fk.referred_table)) {
+        if (config.show_relations === 'all' && !tablenames.includes(fk.referred_table)) {
           def_recur = Diagram.get_table_def(fk_table, tablenames)
           def = def.concat(def_recur)
         }
@@ -173,7 +173,7 @@ var Diagram = {
     var rel_tables = []
     Object.keys(table.relations).forEach(function(alias) {
       var rel = table.relations[alias]
-      if (rel.table_name != table.name) {
+      if (rel.table_name !== table.name) {
         rel_tables.push(rel.table_name)
       }
     })
@@ -201,7 +201,7 @@ var Diagram = {
         ? ds.base.tables[rel.table_name].fields[fk_field_name]
         : null
       var symbol = fk_field?.nullable ? ' o|' : ' ||'
-      if (rel.table_name == table.name) {
+      if (rel.table_name === table.name) {
         return
       }
 
@@ -211,7 +211,7 @@ var Diagram = {
 
       // Draw relations recursively
       if (
-        config.show_relations != 'nearest' &&
+        config.show_relations !== 'nearest' &&
         !tablenames.includes(rel.table_name)
       ) {
         def_recur = Diagram.get_table_def(rel_table, tablenames)
@@ -312,14 +312,14 @@ var Diagram = {
       var fk_table = ds.base.tables[fk.table_name]
       // Don't make paths that goes through hidden tables or
       // reference tables
-      if (fk_table.hidden || fk_table.type == 'list') {
+      if (fk_table.hidden || fk_table.type === 'list') {
         return
       }
 
       new_path.push('"' + table.name + '"' + symbol + '--o{ "' + fk.table_name +
         '" : "' + fk_last_col + '"')
 
-      if (fk.table_name == Diagram.root) {
+      if (fk.table_name === Diagram.root) {
         found_paths.push(new_path)
       } else {
         // goes further in the path in search for Diagram.root
@@ -344,21 +344,21 @@ var Diagram = {
         return
       }
       var fk_table = ds.base.tables[fk.referred_table]
-      if (fk_table == undefined) {
+      if (fk_table === undefined) {
         return
       }
 
-      if (fk_table.hidden || fk_table.type == 'list') {
+      if (fk_table.hidden || fk_table.type === 'list') {
         return
       }
 
       new_path.push('"' + fk.referred_table + '"' + symbol + '--o{ "' + table.name +
         '" : "' + fk_field_name + '"')
 
-      if (fk.referred_table == Diagram.root) {
+      if (fk.referred_table === Diagram.root) {
         found_paths.push(new_path)
       } else {
-        if (fk_table.type == 'list') return
+        if (fk_table.type === 'list') return
 
         new_path = Diagram.get_path(fk_table, new_path)
         if (new_path) {
@@ -367,7 +367,7 @@ var Diagram = {
       }
     })
 
-    if (found_paths.length == 0) {
+    if (found_paths.length === 0) {
       return false
     }
 

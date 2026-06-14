@@ -25,13 +25,13 @@ var Pwd_dialog = {
           old_pwd = $('#old_pwd').val()
           new_pwd = $('#new_pwd').val()
           rep_pwd = $('#rep_pwd').val()
-          if (new_pwd != rep_pwd) {
+          if (new_pwd !== rep_pwd) {
             $('#new_pwd').val('')
             $('#rep_pwd').val('')
             alert('Gjentatt passord er forskjellig fra nytt passord')
             return
           } 
-          if (old_pwd == '' || new_pwd == '') {
+          if (old_pwd === '' || new_pwd === '') {
             alert('Fyll ut alle felter')
             return
           }

@@ -61,7 +61,7 @@ var Breadcrumb = {
 
     if (ds.file && !['dir', 'server'].includes(ds.file.type)) {
       const parts = ds.file.path.split('/')
-      const is_sqlite = ds.file.type == 'application/vnd.sqlite3'
+      const is_sqlite = ds.file.type === 'application/vnd.sqlite3'
       const fileicon = is_sqlite ? 'nf-dev-sqlite' : "nf-fa-file"
       if (ds.path) {
         // First part of ds.file.path is the same as ds.path
@@ -71,14 +71,14 @@ var Breadcrumb = {
       for (const part of parts) {
         i++
         items.push({
-          icon: i == parts.length ? fileicon : "nf-md-folder_outline",
+          icon: i === parts.length ? fileicon : "nf-md-folder_outline",
           text: part,
           addr: '/' + ds.cnxn + '/' + parts.slice(0, i).join('/')
         })
       }
     }
 
-    if (ds.base?.name && ds.file?.type == 'server') {
+    if (ds.base?.name && ds.file?.type === 'server') {
       items.push({
         icon: "nf-md-database_outline",
         text: ds.base.name.split('/').at(-1),
@@ -88,7 +88,7 @@ var Breadcrumb = {
 
     if (param.table && ds.table) {
       items.push({
-        icon: ds.table.type == 'list' ? "nf-fa-list" 
+        icon: ds.table.type === 'list' ? "nf-fa-list" 
           : ds.table.dirty ? "nf-md-table_edit" 
           : "nf-md-table",
         text: ds.table.label,
@@ -113,7 +113,7 @@ var Breadcrumb = {
               'relative nf ' + item.icon,
               idx === 0 ? 'f4 white' : 'f6 mr2 white',
             ].join(' '),
-            style: item.icon == 'nf-md-crosshairs_gps' ? 'bottom: 0.75px'
+            style: item.icon === 'nf-md-crosshairs_gps' ? 'bottom: 0.75px'
               : item.icon !== 'table' ? 'bottom: 2px;' : ''
           }),
           m('a', {
@@ -124,13 +124,13 @@ var Breadcrumb = {
               return false
             }
           }, item.text),
-          !item.branch || item.branch == 'master'
+          !item.branch || item.branch === 'master'
             ? ''
             : m('span', { class: 'light-silver' }, [
               m('i', { class: 'nf nf-fa-code_fork ml2' }),
               ds.branch,
             ]),
-          idx == sti.length - 1
+          idx === sti.length - 1
             ? ''
             : m('i', { class: 'nf nf-oct-chevron_right f5 fw3 ml1 mr1' })
         ]
