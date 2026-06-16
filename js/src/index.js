@@ -198,7 +198,12 @@ m.route($('#main')[0], '/', {
           path: base_name,
         }
       }).then(function(result) {
-        const db_types = ['application/vnd.sqlite3', 'application/vnd.duckdb', 'server']
+        const db_types = [
+          'application/vnd.sqlite3', 
+          'application/vnd.duckdb',
+          'application/x-sqlite3',
+          'server'
+        ]
         if (db_types.includes(result.type)) {
           ds.cnxn = args.cnxn
           Grid.url = ''
