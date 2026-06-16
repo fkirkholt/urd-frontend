@@ -99,6 +99,7 @@ function Codefield() {
 
   const markdownSupport = markdown({
     // Support all standard languages in code blocks
+    base: markdownLanguage,
     codeLanguages: languages
   });
 
