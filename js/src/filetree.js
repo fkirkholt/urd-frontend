@@ -1,5 +1,6 @@
 import { deepmerge } from './utils.js'
 import Convert from 'ansi-to-html'
+import home from './home.js'
 
 
 const Filetree = {
