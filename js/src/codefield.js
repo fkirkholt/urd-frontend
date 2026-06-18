@@ -556,15 +556,15 @@ function Codefield() {
           doc: vnode.attrs.value,
           extensions: get_extensions(vnode.attrs)
         }))
+        if (ds.file?.line) {
+          goToLine(editor, ds.file.line)
+        } else {
+          goToLine(editor, 1)
+        }
       }
       editor.dispatch({ 
         effects: editable.reconfigure(EditorView.editable.of(vnode.attrs.editable)) 
       })
-      if (ds.file?.line) {
-        goToLine(editor, ds.file.line)
-      } else {
-        goToLine(editor, 1)
-      }
     },
     view: function(vnode) {
       return m('div', { class: vnode.attrs.class })
