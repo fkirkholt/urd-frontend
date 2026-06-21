@@ -6,6 +6,7 @@ import YAML, { isMap, isSeq, isPair, isScalar } from 'yaml'
 import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js'
 import Filetree from './filetree.js'
+import TypstPreviewer from './typstpreview'
 
 
 const KEY_CODE_ENTER = 13
@@ -565,6 +566,9 @@ var home = {
       : !config.edit_mode && /\.(yml|yaml)/.test(ds.file.path) ? m('div', {
         class: 'ml3 overflow-y-auto markdown'
       }, yaml.parse(ds.file.content))
+      : !config.edit_mode && ds.file.path.endsWith('.typ') ? m(TypstPreviewer, { 
+        content: ds.file.content 
+      })
       : m(Codefield, {
         id: 'file-content',
         class: 'ml3 ba b--light-silver mb2 bottom-0 overflow-y-auto',
@@ -578,6 +582,7 @@ var home = {
           : ds.file.path.endsWith('.py') ? 'py'
           : ds.file.path.endsWith('.js') ? 'js'
           : ds.file.path.endsWith('.css') ? 'css'
+          : ds.file.path.endsWith('.typ') ? 'typst'
           : 'text',
         value: ds.file.content,
         oncreate: function(vnode) {

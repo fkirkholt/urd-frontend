@@ -25,7 +25,6 @@ const config = {
   outdir: 'js/dist',
   format: 'esm', 
   loader: { '.wasm': 'file' },
-  external: ['ruff_wasm'],
   plugins: [
     logStatusPlugin,
     copy({
@@ -39,11 +38,26 @@ const config = {
         {
           from: 'node_modules/@astral-sh/ruff-wasm-web/ruff_wasm_bg.wasm',
           to: 'js/dist'
-        }
+        },
+        {
+          from: 'node_modules/@vedivad/typst-web-service/dist/typsten_bg.wasm',
+          to: 'js/dist'
+        },
       ],
     }),
   ],
 };
+
+// Bundle the worker separately as its own self-contained script
+await esbuild.build({
+  entryPoints: ["node_modules/@vedivad/typst-web-service/dist/typsten-worker.js"],
+  bundle: true,
+  outfile: "js/dist/typsten-worker.js",
+  format: "esm",   // keep as module worker
+  define: {
+    "import.meta.url": "self.location.href",  // inside a worker, self.location.href is the worker's own URL
+  },
+});
 
 if (process.argv.includes('--watch')) {
   const ctx = await esbuild.context(config);

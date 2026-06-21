@@ -411,7 +411,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/lint@npm:^6.0.0, @codemirror/lint@npm:^6.8.5":
+"@codemirror/lint@npm:^6.0.0, @codemirror/lint@npm:^6.8.5, @codemirror/lint@npm:^6.9.7":
   version: 6.9.7
   resolution: "@codemirror/lint@npm:6.9.7"
   dependencies:
@@ -510,7 +510,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.23.0, @codemirror/view@npm:^6.27.0, @codemirror/view@npm:^6.37.0, @codemirror/view@npm:^6.42.0":
+"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.23.0, @codemirror/view@npm:^6.27.0, @codemirror/view@npm:^6.37.0, @codemirror/view@npm:^6.42.0, @codemirror/view@npm:^6.43.1":
   version: 6.43.1
   resolution: "@codemirror/view@npm:6.43.1"
   dependencies:
@@ -788,7 +788,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lezer/highlight@npm:^1.0.0, @lezer/highlight@npm:^1.1.3, @lezer/highlight@npm:^1.2.0, @lezer/highlight@npm:^1.2.1":
+"@lezer/highlight@npm:^1.0.0, @lezer/highlight@npm:^1.1.3, @lezer/highlight@npm:^1.2.0, @lezer/highlight@npm:^1.2.1, @lezer/highlight@npm:^1.2.3":
   version: 1.2.3
   resolution: "@lezer/highlight@npm:1.2.3"
   dependencies:
@@ -1332,6 +1332,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vedivad/codemirror-typst@npm:^0.18.8":
+  version: 0.18.8
+  resolution: "@vedivad/codemirror-typst@npm:0.18.8"
+  dependencies:
+    "@lezer/highlight": "npm:^1.2.3"
+    "@vedivad/typst-web-service": "workspace:^"
+  peerDependencies:
+    "@codemirror/autocomplete": ^6
+    "@codemirror/language": ^6
+    "@codemirror/lint": ^6
+    "@codemirror/state": ^6
+    "@codemirror/view": ^6
+  checksum: 10c0/77e2cbae3f52c03a427ec272b1ffa90441cb3ad2b6975cc6b261dfc387baf187870471f82bc7d1b640002b8f903d811f240f0f5bc317051d7e4c565dc812a30c
+  languageName: node
+  linkType: hard
+
+"@vedivad/typst-web-service@npm:@vedivad/typst-web-service@^0.18.8":
+  version: 0.18.8
+  resolution: "@vedivad/typst-web-service@npm:0.18.8"
+  dependencies:
+    comlink: "npm:^4.4.2"
+    fflate: "npm:^0.8.2"
+    nanotar: "npm:^0.2.0"
+  checksum: 10c0/0ab1e6216c1ce29426be54a452805ad4db9f983e408cfd14c6afbdd3fdcd603a109bec9d21870d02f53436aa1d68ed8f57d795c7f8461ff257b3bbe65d22428f
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^3.0.0, abbrev@npm:^3.0.1":
   version: 3.0.1
   resolution: "abbrev@npm:3.0.1"
@@ -1617,6 +1644,13 @@ __metadata:
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: 10c0/a1a3f914156960902f46f7f56bc62effc6c94e84b2cae157a526b1c1f74b677a47ec602bf68a61abfa2b42d15b7c5651c6dbe72a43af720bc588dff885b10f95
+  languageName: node
+  linkType: hard
+
+"comlink@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "comlink@npm:4.4.2"
+  checksum: 10c0/38aa1f455cf08e94aaa8fc494fd203cc0ef02ece6c21404b7931ce17567e8a72deacddab98aa5650cfd78332ff24c34610586f6fb27fd19dc77e753ed1980deb
   languageName: node
   linkType: hard
 
@@ -2336,6 +2370,13 @@ __metadata:
     picomatch:
       optional: true
   checksum: 10c0/e345083c4306b3aed6cb8ec551e26c36bab5c511e99ea4576a16750ddc8d3240e63826cc624f5ae17ad4dc82e68a253213b60d556c11bfad064b7607847ed07f
+  languageName: node
+  linkType: hard
+
+"fflate@npm:^0.8.2":
+  version: 0.8.3
+  resolution: "fflate@npm:0.8.3"
+  checksum: 10c0/eab181ca37f5348ae76d4b6f840e0026e30220e33153289ac942222d8b9638237d486507dbcc09878d724095bd354993a2ee48bbee99c8f2c6440d4448719aa7
   languageName: node
   linkType: hard
 
@@ -3388,6 +3429,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanotar@npm:^0.2.0":
+  version: 0.2.1
+  resolution: "nanotar@npm:0.2.1"
+  checksum: 10c0/f262b921098f9aff9501108d617e691b0046179abd3781b7781338db449de49016e8a7c17ecde1ebe1dc45eb9fd20ff4ad1599bd1f6df922e036b6beb811c6bd
+  languageName: node
+  linkType: hard
+
 "negotiator@npm:^1.0.0":
   version: 1.0.0
   resolution: "negotiator@npm:1.0.0"
@@ -4284,10 +4332,14 @@ __metadata:
     "@codemirror/lang-yaml": "npm:^6.1.2"
     "@codemirror/language": "npm:^6.11.0"
     "@codemirror/language-data": "npm:^6.5.1"
+    "@codemirror/lint": "npm:^6.9.7"
     "@codemirror/lsp-client": "npm:^6.0.1"
+    "@codemirror/state": "npm:^6.6.0"
     "@codemirror/stream-parser": "npm:^0.19.9"
+    "@codemirror/view": "npm:^6.43.1"
     "@mdi/js": "npm:^7.4.47"
     "@mdi/svg": "npm:^7.4.47"
+    "@vedivad/codemirror-typst": "npm:^0.18.8"
     ansi-to-html: "npm:^0.7.2"
     cash-dom: "npm:^8.1.5"
     chart.js: "npm:^4.4.6"

@@ -16,6 +16,7 @@ import { parser as yamlParser} from "@lezer/yaml"
 import { python } from "@codemirror/lang-python"
 import { javascript } from "@codemirror/lang-javascript"
 import { css } from "@codemirror/lang-css"
+import { createTypstSetup, TypstProject } from "@vedivad/codemirror-typst"
 import { tags } from "@lezer/highlight"
 import { parseMixed } from "@lezer/common"
 import { languages } from '@codemirror/language-data'
@@ -427,7 +428,7 @@ function Codefield() {
     unfoldAll(editor)
   }
 
-  function get_extensions(attrs) {
+  function get_extensions(attrs, setup) {
     var lang
     var extensions
     langs.sql = sql()
@@ -508,8 +509,10 @@ function Codefield() {
           }
         } 
       }),
-      lang,
-      autocompletion({ override: [completions], selectOnOpen: false })
+      ...(setup 
+        ? [...setup] 
+        : [lang, autocompletion({ override: [completions], selectOnOpen: false })]
+      ),
     ]
 
     if (attrs.lang === 'py') {
@@ -537,10 +540,20 @@ function Codefield() {
 
     oncreate: async function(vnode) {
       onchange = vnode.attrs.onchange
+      let project
+      let setup
+      
+      if (vnode.attrs.lang === 'typst') {
+        project = await TypstProject.create()
+        await project.setText('/doc.typ', vnode.attrs.value)
+        setup = createTypstSetup({ project, sync: "editor-driven" })
+      } else {
+        setup = null
+      }
 
       editor = new EditorView({
-        doc: vnode.attrs.value,
-        extensions: get_extensions(vnode.attrs),
+        doc: vnode.attrs.lang === 'typst' ? project.getText('/doc.typ') : vnode.attrs.value,
+        extensions: get_extensions(vnode.attrs, setup),
         parent: vnode.dom
       })
       if (vnode.attrs['data-pkey']) {
@@ -549,12 +562,21 @@ function Codefield() {
     },
     onupdate: async function(vnode) {
       if (editor && vnode.attrs['data-pkey'] && vnode.attrs['data-pkey'] !== pkey) {
+        let project
+        let setup
+        if (vnode.attrs.lang === 'typst') {
+          project = await TypstProject.create()
+          await project.setText('/doc.typ', vnode.attrs.value)
+          setup = createTypstSetup({ project, sync: "editor-driven" })
+        } else {
+          setup = null
+        }
         pkey = vnode.attrs['data-pkey']
         onchange = vnode.attrs.onchange
         changed = false
         editor.setState(EditorState.create({
+          extensions: get_extensions(vnode.attrs, setup),
           doc: vnode.attrs.value,
-          extensions: get_extensions(vnode.attrs)
         }))
         if (ds.file?.line) {
           goToLine(editor, ds.file.line)
