@@ -19,6 +19,7 @@ import { css } from "@codemirror/lang-css"
 import { createTypstSetup, TypstProject } from "@vedivad/codemirror-typst"
 import { tags } from "@lezer/highlight"
 import { parseMixed } from "@lezer/common"
+import { parser as mdParser } from "@lezer/markdown";
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
 import { linter, lintGutter, diagnosticCount } from '@codemirror/lint'
@@ -106,61 +107,42 @@ function Codefield() {
 
   const mixedYamlParser = yamlParser.configure({
     wrap: parseMixed((node, input) => {
-      if (node.name === "BlockLiteral") { // text block after '|' or '|-'
-        const blockStart = node.from;
-        const blockEnd = node.to;
-        const fullText = input.read(blockStart, blockEnd);
-  
-        // Don't include the block literal indicator
-        const firstLineBreak = fullText.indexOf("\n");
-        if (firstLineBreak === -1) return null;
-  
-        const contentStartPos = blockStart + firstLineBreak + 1;
-        const lines = fullText.slice(firstLineBreak + 1).split("\n");
-  
-        // Find number of spaces used for indentation
+      if (node.name === "BlockLiteralContent") {
+        const fullText = input.read(node.from, node.to);
+        const lines = fullText.split("\n");
+
         let indentSize = 0;
         for (const line of lines) {
           if (line.trim().length > 0) {
-            const match = line.match(/^ */);
-            indentSize = match ? match[0].length : 0;
+            indentSize = line.match(/^ */)[0].length;
             break;
           }
         }
-  
-        // Build a list with precise text areas (ranges) for the Markdown parser
+
+        // Build overlays per line, stripping indent but keeping the trailing newline
         const overlays = [];
-        let currentPos = contentStartPos;
-  
+        let pos = node.from;
+        
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i];
-          const lineLength = line.length;
-  
-          const actualIndent = line.search(/\S/) < indentSize && line.search(/\S/) !== -1
-            ? line.search(/\S/) 
-            : indentSize;
-  
-          const textStart = currentPos + actualIndent;
-          const textEnd = currentPos + lineLength + (i < lines.length - 1 ? 1 : 0);
-  
-          if (textStart < textEnd) {
-            overlays.push({ from: textStart, to: textEnd });
-          }
-  
-          // Move position marker to the sart of next line
-          currentPos += lineLength + 1;
+          const isLast = i === lines.length - 1;
+          const actualIndent = line.trim().length > 0
+            ? Math.min(indentSize, line.match(/^ */)[0].length)
+            : 0;
+        
+          const from = pos + actualIndent;
+          const to = isLast ? node.to : pos + line.length + 1; // +1 includes the \n
+        
+          if (from < to) overlays.push({ from, to });
+        
+          pos += line.length + 1;
         }
-  
-        if (overlays.length > 0) {
-          return {
-            parser: markdownSupport.language.parser,
-            overlay: overlays
-          };
-        }
+        
+        return { parser: mdParser, overlay: overlays };
       }
       return null;
     })
-  })
+  });
 
   const yamlMixedLanguage = LRLanguage.define({ parser: mixedYamlParser })
 
@@ -191,7 +173,7 @@ function Codefield() {
       return prevIndent;
     });
 
-    return new LanguageSupport(yamlMixedLanguage, yamlIndent);
+    return new LanguageSupport(yamlMixedLanguage, [markdownSupport.support, yamlIndent]);
   }
 
   // Custom fold service that folds based on indentation level
