@@ -190,6 +190,18 @@ var home = {
       return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>'
     })
 
+    marked.use({
+      walkTokens(token) {
+        if (token.type === 'list_item') {
+          const first = token.tokens?.[0]
+          if (first?.type === 'text') {
+            first.text = first.text.replace(/^([^:]+):(?!\w+:)/, '**$1**:')
+            first.tokens = marked.Lexer.lexInline(first.text)
+          }
+        }
+      }
+    });
+
     // Hack to make marked format first list item like the rest.
     // There must be text in front of the list
     result = 'dummy-paragraph\n\n' + result

@@ -24,6 +24,7 @@ import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
 import { linter, lintGutter, diagnosticCount } from '@codemirror/lint'
 import { relpath } from './utils.js'
+import { compactListHighlighter } from './compact-deflist.js'
 
 
 function completions(context) {
@@ -417,7 +418,7 @@ function Codefield() {
     langs.json = json()
     langs.yaml = yamlWithMarkdown()
     langs.text = null
-    langs.md = markdownSupport 
+    langs.md = [markdownSupport, compactListHighlighter()]
     langs.py = python() 
     langs.js = javascript()
     langs.css = css()
