@@ -190,7 +190,9 @@ var home = {
       }
     })
     .then(function(result) {
-      ds.dblist = result.data
+      if (result) {
+        ds.dblist = result.data
+      }
     })
   },
 
@@ -212,7 +214,7 @@ var home = {
           }
         }
       }
-    });
+    })
 
     // Hack to make marked format first list item like the rest.
     // There must be text in front of the list
@@ -631,7 +633,7 @@ var home = {
           return m('li', {
             class: 'pointer hover-blue',
             onclick: function() {
-              const parent = ds.file.path.substring(0, ds.file.path.lastIndexOf('/'));
+              const parent = ds.file.path.substring(0, ds.file.path.lastIndexOf('/'))
               m.route.set('/' + ds.cnxn + '/' + parent + '/' + link)
             }
           }, link)

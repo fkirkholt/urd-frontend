@@ -11,7 +11,6 @@ import { syntaxTree, foldable, foldEffect, unfoldAll, foldService,
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown"
 import { sql } from "@codemirror/lang-sql"
 import { json } from "@codemirror/lang-json"
-import { yaml } from "@codemirror/lang-yaml"
 import { parser as yamlParser} from "@lezer/yaml"
 import { python } from "@codemirror/lang-python"
 import { javascript } from "@codemirror/lang-javascript"
@@ -19,7 +18,7 @@ import { css } from "@codemirror/lang-css"
 import { createTypstSetup, TypstProject } from "@vedivad/codemirror-typst"
 import { tags } from "@lezer/highlight"
 import { parseMixed } from "@lezer/common"
-import { parser as mdParser } from "@lezer/markdown";
+import { parser as mdParser } from "@lezer/markdown"
 import { languages } from '@codemirror/language-data'
 import { autocompletion, moveCompletionSelection } from "@codemirror/autocomplete"
 import { linter, lintGutter, diagnosticCount } from '@codemirror/lint'
@@ -39,7 +38,7 @@ function completions(context) {
   if (ds.dblist) {
     Object.values(ds.dblist.autocomplete).forEach(options => {
       all_options = all_options.concat(options)
-    });
+    })
   }
   if (ds.file.completions) {
     all_options = all_options.concat(ds.file.completions)
@@ -110,131 +109,129 @@ function Codefield() {
     // Support all standard languages in code blocks
     base: markdownLanguage,
     codeLanguages: languages
-  });
+  })
 
   const mixedYamlParser = yamlParser.configure({
     wrap: parseMixed((node, input) => {
       if (node.name === "BlockLiteralContent") {
-        const fullText = input.read(node.from, node.to);
-        const lines = fullText.split("\n");
+        const fullText = input.read(node.from, node.to)
+        const lines = fullText.split("\n")
 
-        let indentSize = 0;
+        let indentSize = 0
         for (const line of lines) {
           if (line.trim().length > 0) {
-            indentSize = line.match(/^ */)[0].length;
-            break;
+            indentSize = line.match(/^ */)[0].length
+            break
           }
         }
 
         // Build overlays per line, stripping indent but keeping the trailing newline
-        const overlays = [];
-        let pos = node.from;
+        const overlays = []
+        let pos = node.from
         
         for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
-          const isLast = i === lines.length - 1;
+          const line = lines[i]
+          const isLast = i === lines.length - 1
           const actualIndent = line.trim().length > 0
             ? Math.min(indentSize, line.match(/^ */)[0].length)
-            : 0;
+            : 0
         
-          const from = pos + actualIndent;
-          const to = isLast ? node.to : pos + line.length + 1; // +1 includes the \n
+          const from = pos + actualIndent
+          const to = isLast ? node.to : pos + line.length + 1 // +1 includes the \n
         
-          if (from < to) overlays.push({ from, to });
+          if (from < to) overlays.push({ from, to })
         
-          pos += line.length + 1;
+          pos += line.length + 1
         }
         
-        return { parser: mdParser, overlay: overlays };
+        return { parser: mdParser, overlay: overlays }
       }
-      return null;
+      return null
     })
-  });
+  })
 
   const yamlMixedLanguage = LRLanguage.define({ parser: mixedYamlParser })
 
-  function yamlWithMarkdown() {
-    const base = yaml();
-  
+  function yamlWithMarkdown() {  
     const yamlIndent = indentService.of((context, pos) => {
-      const { state } = context;
-      const line = state.doc.lineAt(pos);
-      if (line.number === 1) return null;
+      const { state } = context
+      const line = state.doc.lineAt(pos)
+      if (line.number === 1) return null
     
-      const prevLine = state.doc.line(line.number - 1);
-      const prevText = prevLine.text;
-      const prevIndent = prevText.match(/^(\s*)/)[1].length;
-      const indentUnit = getIndentUnit(state);
+      const prevLine = state.doc.line(line.number - 1)
+      const prevText = prevLine.text
+      const prevIndent = prevText.match(/^(\s*)/)[1].length
+      const indentUnit = getIndentUnit(state)
     
       // Block literal indicator — indent one level in
       if (/:\s*\|[-+]?\s*$/.test(prevText)) {
-        return prevIndent + indentUnit;
+        return prevIndent + indentUnit
       }
     
       // Mapping key or sequence entry — indent one level in
       if (/:\s*$/.test(prevText) || /^\s*-\s*$/.test(prevText)) {
-        return prevIndent + indentUnit;
+        return prevIndent + indentUnit
       }
     
       // Default — match previous line's indent
-      return prevIndent;
-    });
+      return prevIndent
+    })
 
-    return new LanguageSupport(yamlMixedLanguage, [markdownSupport.support, yamlIndent]);
+    return new LanguageSupport(yamlMixedLanguage, [markdownSupport.support, yamlIndent])
   }
 
   // Custom fold service that folds based on indentation level
   const indentFold = foldService.of((state, lineStart) => {
-    const line = state.doc.lineAt(lineStart);
-    const indent = line.text.search(/\S|$/);
+    const line = state.doc.lineAt(lineStart)
+    const indent = line.text.search(/\S|$/)
     
-    if (indent === -1 || line.text.trim().length === 0) return null;
+    if (indent === -1 || line.text.trim().length === 0) return null
   
-    let foldEnd = line.to;
-    let nextLineNum = line.number + 1;
+    let foldEnd = line.to
+    let nextLineNum = line.number + 1
   
     while (nextLineNum <= state.doc.lines) {
-      const nextLine = state.doc.line(nextLineNum);
-      const nextIndent = nextLine.text.search(/\S|$/);
+      const nextLine = state.doc.line(nextLineNum)
+      const nextIndent = nextLine.text.search(/\S|$/)
   
       if (nextLine.text.trim().length === 0) {
-        foldEnd = nextLine.to;
-        nextLineNum++;
-        continue;
+        foldEnd = nextLine.to
+        nextLineNum++
+        continue
       }
   
       if (nextIndent > indent) {
-        foldEnd = nextLine.to;
-        nextLineNum++;
-      } else break;
+        foldEnd = nextLine.to
+        nextLineNum++
+      } else break
     }
   
-    if (foldEnd <= line.to) return null;
-    return { from: line.to, to: foldEnd };
-  });
+    if (foldEnd <= line.to) return null
+    return { from: line.to, to: foldEnd }
+  })
 
   const ruffLinter = linter(async (view) => {
     try {
-      const ruff = await import("@astral-sh/ruff-wasm-web");
+      const ruff = await import("@astral-sh/ruff-wasm-web")
       // initialize wasm module
-      await ruff.default();
+      await ruff.default()
       
       ds.ws = ds.ws || {}
       ds.ws.ruff = new ruff.Workspace({
         lint: {
           select: ['E', 'F', 'W'],
         },
-      }, ruff.PositionEncoding.UTF16);
+      }, ruff.PositionEncoding.UTF16)
     } catch (error) {
-      console.warn(error.message);
+      console.warn(error.message)
       return []
     }
-    const doc = view.state.doc;
-    const results = ds.ws.ruff.check(doc.toString());
-    const diagnostics = [];
+    const doc = view.state.doc
+    const results = ds.ws.ruff.check(doc.toString())
+    const diagnostics = []
 
     for (const d of results) {
-      const start = d.start_location;
+      const start = d.start_location
       const end = d.end_location
   
       if (!start || !end) continue
@@ -318,14 +315,14 @@ function Codefield() {
         content: view.state.doc.toString(),
         version: 1
       },
-    });
+    })
 
     const result = ds.ws.biome.pullDiagnostics({
         projectKey: 1,
         path: ds.file.path,
         categories: ["lint"],
         max_diagnostics: 50
-    });
+    })
 
     // map results to CodeMirror Diagnostics
     const diagnostics = result.diagnostics.map((diag) => ({
@@ -335,19 +332,19 @@ function Codefield() {
         : diag.severity === "information" ? "information"
         : "warning", 
       message: diag.description,
-    }));
+    }))
 
     const maxWidth = 88
 
     for (let i = 1; i <= view.state.doc.lines; i++) {
-      const line = view.state.doc.line(i);
+      const line = view.state.doc.line(i)
       if (line.length > maxWidth) {
         diagnostics.push({
           from: line.from + maxWidth,
           to: line.to,
           severity: "error",
           message: `Line too long (${line.length} > ${maxWidth})`,
-        });
+        })
       }
     }
 
@@ -355,9 +352,9 @@ function Codefield() {
   })
 
   const todoLinter = linter((view) => {
-    const diagnostics = [];
-    const doc = view.state.doc.toString();
-    let regex = /\b(todo|note):/ig;
+    const diagnostics = []
+    const doc = view.state.doc.toString()
+    let regex = /\b(todo|note):/ig
   
     for (const match of doc.matchAll(regex)) {
       console.log('todo funnet')
@@ -366,9 +363,9 @@ function Codefield() {
         to: match.index + match[0].length,
         severity: "warning",
         message: match[0],
-      });
+      })
     }
-    regex = /\b(next|bug):/ig;
+    regex = /\b(next|bug):/ig
   
     for (const match of doc.matchAll(regex)) {
       diagnostics.push({
@@ -376,41 +373,39 @@ function Codefield() {
         to: match.index + match[0].length,
         severity: "error",
         message: match[0],
-      });
+      })
     }
-    return diagnostics;
-  });
+    return diagnostics
+  })
 
   const lintGutterAutoHider = StateField.define({
     create() { return false; },
-    update(value, tr) {
-      // Sjekk om antall diagnostikker i hele dokumentet er > 0
-      console.log('ant-feil', diagnosticCount(tr.state))
-      return diagnosticCount(tr.state) > 0;
+    update(_value, tr) {
+      return diagnosticCount(tr.state) > 0
     },
     provide: f => EditorView.editorAttributes.from(f, hasErrors => {
-      return hasErrors ? { class: "has-diagnostics" } : null;
+      return hasErrors ? { class: "has-diagnostics" } : null
     })
-  });
+  })
 
   // Function to fold all levels of code
   function fold_all_recursive() {
-    const state = editor.state;
+    const state = editor.state
 
     // Traverse the syntax tree and collect all foldable ranges
-    const foldRanges  = [];
+    const foldRanges  = []
     syntaxTree(state).iterate({
       enter(node) {
         const isFoldable = foldable(state, node.from, node.to)
         if (isFoldable) {
-          foldRanges.push({ from: isFoldable.from, to: isFoldable.to });
+          foldRanges.push({ from: isFoldable.from, to: isFoldable.to })
         }
       }
-    });
+    })
 
     editor.dispatch({
       effects: foldRanges.map(r => foldEffect.of({ from: r.from, to: r.to }))
-    });
+    })
   }
 
   function unfold_all() {
@@ -493,7 +488,7 @@ function Codefield() {
           
           if (changed && onchange) {
             const value = view.state.doc.toString()
-            onchange(value);
+            onchange(value)
             changed = false
           }
         } 
@@ -541,7 +536,9 @@ function Codefield() {
       }
 
       editor = new EditorView({
-        doc: vnode.attrs.lang === 'typst' ? project.getText('/doc.typ') : vnode.attrs.value,
+        doc: vnode.attrs.lang === 'typst' 
+          ? project.getText('/doc.typ') 
+          : vnode.attrs.value,
         extensions: get_extensions(vnode.attrs, setup),
         parent: vnode.dom
       })
