@@ -31,6 +31,7 @@ function completions(context) {
   const word = context.matchBefore(/[\p{L}\p{N}_-]*/u)
   const uppercase = word.text.charAt(0) === word.text.charAt(0).toUpperCase()
   const before = context.state.doc.sliceString(Math.max(0, word.from - 2), word.from)
+  const is_hash = before === '(#'
   const is_link = before === ']('
   if (!word || (word.to - word.from < 3 && !context.explicit))
     return null
@@ -39,6 +40,9 @@ function completions(context) {
     Object.values(ds.dblist.autocomplete).forEach(options => {
       all_options = all_options.concat(options)
     });
+  }
+  if (ds.file.completions) {
+    all_options = all_options.concat(ds.file.completions)
   }
   return {
     from: word.from,
@@ -53,7 +57,9 @@ function completions(context) {
         ? opt.label.charAt(0).toUpperCase() + opt.label.slice(1) 
         : opt.label
 
-      if (is_link) {
+      if (is_hash) {
+        new_text = new_label = opt.label
+      } else if (is_link) {
         new_text = new_label = relpath(ds.file.path, opt.label)
       } else if (opt.title && uppercase) {
         new_label = opt.title.charAt(0).toUpperCase() + opt.title.slice(1)

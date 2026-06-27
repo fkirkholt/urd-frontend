@@ -32,6 +32,7 @@ var yaml = {
   },
 
   backlinkMap: new Map(),
+  completions: [],
 
   // Regex catching hash
   hashRegex: /\]\s*\(\s*#([a-zA-Z0-9_-]+)\s*\)|#([a-zA-Z0-9_-]+)/g,
@@ -46,6 +47,9 @@ var yaml = {
     }
   
     const anchor = node.anchor
+    if (anchor) {
+      yaml.addCompletion(keyName, anchor)
+    }
     const anchorAttr = anchor ? ` id="${anchor}"` : ''
   
     // Handle ALIAS and register backlink
@@ -104,7 +108,15 @@ var yaml = {
       yaml.backlinkMap.get(target).push(fromAnchor)
     }
   },
-
+  
+  addCompletion: function(key, anchor) {
+    const option = {
+      label: anchor,
+      type: 'keyword',
+      title: key
+    }
+    yaml.completions.push(option)
+  },
     
   parse: function(content) {
     const parsedDoc = content ? YAML.parseDocument(content) : ''
@@ -275,6 +287,7 @@ var home = {
     }
     if (ds.file && /\.(yml|yaml)/.test(ds.file.path)) {
       yaml.parseMarkdown()
+      ds.file.completions = yaml.completions
     }
   },
 
