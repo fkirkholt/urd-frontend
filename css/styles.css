@@ -392,6 +392,7 @@ summary {
 }
 summary:hover { background-color: #e2e2e2; }
 details:target > summary,
+details[open] > summary,
 summary.is-targeted {
   background-color: #0066cc;
   color: white;
