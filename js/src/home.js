@@ -22,6 +22,19 @@ const marked = new Marked(
   })
 )
 
+marked.use({
+  walkTokens(token) {
+    if (token.type === 'list_item') {
+      const first = token.tokens?.[0]
+      if (first?.type === 'text') {
+        first.text = first.text.replace(/^([\w\s]+):(?!\w+:)\s/, '**$1**: ')
+        first.tokens = marked.Lexer.lexInline(first.text)
+      }
+    }
+  }
+})
+
+
 
 var yaml = {
   escapeHtml: function(text) {
@@ -240,18 +253,6 @@ var home = {
     }
     let result = content.replace(/(^|\s)(:[\w+:-]*:)/gi, function (_, p1, p2) {
       return p1 + '<mark class="gray" data-value="' + p2 + '">' + p2 + '</mark>'
-    })
-
-    marked.use({
-      walkTokens(token) {
-        if (token.type === 'list_item') {
-          const first = token.tokens?.[0]
-          if (first?.type === 'text') {
-            first.text = first.text.replace(/^([^:]+):(?!\w+:)/, '**$1**:')
-            first.tokens = marked.Lexer.lexInline(first.text)
-          }
-        }
-      }
     })
 
     // Hack to make marked format first list item like the rest.
@@ -694,7 +695,6 @@ document.addEventListener('toggle', (event) => {
   // Generate references if node has an anchor
   if (details.id && yaml.backlinks && !details.querySelector('.backlinks-section')) {
     const refs = yaml.backlinks[details.id]
-    console.log('refs', refs)
 
     if (refs && refs.length > 0) {
       const links = refs
