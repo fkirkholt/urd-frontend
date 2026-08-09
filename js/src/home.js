@@ -319,6 +319,7 @@ var home = {
       const t = i.parentElement
       if (t.childElementCount > 1 && !t.className.includes('fold')) {
         t.className = "fold open"
+        i.className = "b"
         i.onclick = function(event) {
           event.stopPropagation()
           t.classList.toggle("open")
@@ -611,7 +612,9 @@ var home = {
               selector + " ol, "  + selector + " ul li p:first-child"
             )) {
               const t = i.parentElement
-              t.className = ds.file.folded ? "fold open" : "fold close"
+              if (t.childElementCount > 1) {
+                t.className = ds.file.folded ? "fold open" : "fold close"
+              }
             }
             ds.file.folded = !ds.file.folded
           }
