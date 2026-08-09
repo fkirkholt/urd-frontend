@@ -158,8 +158,46 @@ var yaml = {
         details.setAttribute('data-expanded', 'true')
       }
     }
+  },
+
+  openHeading: function() {
+    const hash = decodeURIComponent(window.location.hash);
+    if (!hash) return;
+
+    document.querySelectorAll('summary.is-targeted').forEach(function(el) {
+      el.classList.remove('is-targeted');
+    });
+
+    // Close all open nodes first
+    const openDetails = document.querySelectorAll('details[open]');
+    openDetails.forEach(function(details) {
+      details.open = false;
+    });
+    
+    const targetId = hash.substring(1);
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      // open all parent nodes
+      let parent = targetElement.parentElement;
+      
+      while (parent) {
+        if (parent.tagName === "DETAILS") {
+          parent.open = true;
+        }
+        parent = parent.parentElement;
+      }
+      
+      targetElement.scrollIntoView({ behavior: "instant", block: "start" });
+      targetElement.open = true
+      const summaryElement = targetElement.querySelector('summary');
+      if (summaryElement) {
+        summaryElement.classList.add('is-targeted');
+      }
+    }
   }
 }
+
 
 var home = {
 
@@ -290,6 +328,7 @@ var home = {
     if (ds.file && /\.(yml|yaml)/.test(ds.file.path)) {
       yaml.parseMarkdown()
       ds.file.completions = yaml.completions
+      yaml.openHeading()
     }
   },
 
