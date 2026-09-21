@@ -36,7 +36,7 @@ const Filetree = {
     const convert = new Convert()
   
     recs.forEach(rec => {
-      const filepath = (path ? path + '/' : '') + convert.toHtml(rec.columns.label)
+      const filepath = (path ? path + '/' : '') + convert.toHtml(rec.columns.name)
       const parts = filepath.split('/')
       const desc = rec.columns.description
       let currentLevel = tree.children
