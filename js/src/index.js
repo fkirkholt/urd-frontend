@@ -85,8 +85,10 @@ m.route($('#main')[0], '/', {
         }
       })
       .then(function(result) {
-        ds.dblist = result.data
-        ds.dblist.grep = query.params.grep
+        if (result) {
+          ds.dblist = result.data
+          ds.dblist.grep = query.params.grep
+        }
       })
       .catch(function(error) {
         console.error("Error:", error)
