@@ -397,10 +397,19 @@ var Export_dialog = {
         m('input[type=button]', {
           value: 'Cancel',
           class: 'fr',
-          disabled: Export_dialog.running,
           onclick: function() {
-            $('div.curtain').hide()
-            $('#export-dialog').hide()
+            if (Export_dialog.running) {
+              m.request({
+                method: "post",
+                url: "/cancel",
+                params: { job_id: 'export' }
+              }).then(function(result) {
+                Export_dialog.running = false
+              })
+            } else {
+              $('div.curtain').hide()
+              $('#export-dialog').hide()
+            }
           }
         }),
         m('div', {class: 'fl'}, [
