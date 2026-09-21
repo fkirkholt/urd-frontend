@@ -563,7 +563,8 @@ var home = {
             config.edit_mode ? 'dn' : ''
           ].join(' '),
           title: 'Fold all lists',
-          onclick: function() {
+          onclick: function(e) {
+            e.redraw = false
             var selector = 'div.markdown'
 
             for (const i of document.querySelectorAll(
