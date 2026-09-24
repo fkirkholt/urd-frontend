@@ -325,9 +325,14 @@ var Search = {
           field.attrs.type === 'checkbox')) &&
       filter.operator !== ''
     ) {
+      const options = [
+          { value: 0, label: 'No'}, 
+          { value: 1, label: 'Yes'}
+        ]
+
       return m(Select, {
         name: filter.field,
-        options: field.options,
+        options: field.options || options,
         valueField: 'value',
         value: filter.value,
         label: filter.label,
