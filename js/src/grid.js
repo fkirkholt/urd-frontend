@@ -49,7 +49,7 @@ var Grid = {
       ds.table.query = data.filter
       ds.table.filters = Search.parse_query(data.filter)
       ds.base.name = data.base
-      index = ds.table.selection || index
+      index = ds.table.selection ?? index
 
       // Shows record if filter represents a primary key
       var is_pkey = true
